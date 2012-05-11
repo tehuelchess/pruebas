@@ -14,7 +14,7 @@
 </ul>
 
 <ul class="nav nav-pills">
-    <li class="active"><a href="<?= site_url('backend/procesos/proceso/' . $proceso->id) ?>">Diseñador</a></li>
+    <li class="active"><a href="<?= site_url('backend/procesos/editar/' . $proceso->id) ?>">Diseñador</a></li>
     <li><a href="<?= site_url('backend/formularios/listar/' . $proceso->id) ?>">Formularios</a></li>
 </ul>
 
