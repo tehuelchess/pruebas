@@ -12,8 +12,7 @@ class Procesos extends CI_Controller {
     }
 
     public function index() {
-        $usuario=UsuarioBackendSesion::usuario();
-        $data['procesos'] = Doctrine::getTable('Proceso')->findByCuentaId($usuario->cuenta_id);
+        $data['procesos'] = Doctrine::getTable('Proceso')->findByCuentaId(UsuarioBackendSesion::usuario()->cuenta_id);
 
         $data['title'] = 'Listado de Procesos';
         $data['content'] = 'backend/procesos/index';
@@ -23,6 +22,8 @@ class Procesos extends CI_Controller {
     public function crear(){
         $proceso=new Proceso();
         $proceso->nombre='Proceso';
+        $proceso->cuenta_id=UsuarioBackendSesion::usuario()->cuenta_id;
+        
         $proceso->save();
         
         redirect('backend/procesos/editar/'.$proceso->id);
