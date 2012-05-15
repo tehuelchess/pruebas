@@ -54,15 +54,19 @@ class Tramite extends Doctrine_Record {
         $etapa_antigua=$this->getEtapaActual();
         $tarea_proxima=$this->getTareaProxima();
         
-        $etapa=new Etapa();
-        $etapa->tramite_id=$this->id;
-        $etapa->usuario_id=NULL;
-        $etapa->tarea_id=$tarea_proxima->id;
-        $etapa->pendiente=1;
-        
-        $this->Etapas[]=$etapa;
-        
-        $this->save();
+        if($tarea_proxima){
+            $etapa=new Etapa();
+            $etapa->tramite_id=$this->id;
+            $etapa->usuario_id=NULL;
+            $etapa->tarea_id=$tarea_proxima->id;
+            $etapa->pendiente=1;
+            $this->Etapas[]=$etapa;
+            $this->save();         
+        } else{
+            $this->pendiente=0;
+            $this->ended_at=date( 'Y-m-d H:i:s' );
+            $this->save();
+        }
         
         $etapa_antigua->pendiente=0;
         $etapa_antigua->ended_at=date( 'Y-m-d H:i:s' );
@@ -82,8 +86,10 @@ class Tramite extends Doctrine_Record {
     public function getTareaProxima(){
         $tarea_actual=$this->getEtapaActual()->Tarea;
         
-        $conexiones=$tarea_actual->ConexionesOrigen;
+        if($tarea_actual->final)
+            return NULL;
         
+        $conexiones=$tarea_actual->ConexionesOrigen;
         $tarea_proxima=$conexiones[0]->TareaDestino;
         
         return $tarea_proxima;
