@@ -43,9 +43,10 @@
                     <ul class="nav nav-list">    
                         <li><a href="<?= site_url('tramites/disponibles') ?>">Iniciar trámite</a></li>
                         <li class="nav-header">En curso</li>
-                        <li><a href="<?= site_url('tramites/inbox') ?>">Bandeja de Entrada</a></li>
-                        <li><a href="<?= site_url('tramites/sinasignar') ?>">Sin asignar</a></li>
-                        <li><a href="<?= site_url('tramites/participados') ?>">Participados</a></li>
+                        <?php $conteo=Doctrine::getTable('Tramite')->countBySeccion(UsuarioSesion::usuario()->id)?>
+                        <li><a href="<?= site_url('tramites/inbox') ?>">Bandeja de Entrada (<?=$conteo->inbox?>)</a></li>
+                        <li><a href="<?= site_url('tramites/sinasignar') ?>">Sin asignar  (<?=$conteo->sinasignar?>)</a></li>
+                        <li><a href="<?= site_url('tramites/participados') ?>">Participados  (<?=$conteo->participados?>)</a></li>
                     </ul>
                 </div>
                 <div class="span9">

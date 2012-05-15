@@ -33,4 +33,13 @@ class TramiteTable extends Doctrine_Table {
                 ->execute();
     }
     
+    //Hace el conteo de tramites que va en cada seccion del menu.
+    public function countBySeccion($usuario_id){
+        $count->inbox=$this->findPendientes($usuario_id)->count();
+        $count->sinasignar=$this->findSinAsignar($usuario_id)->count();
+        $count->participados=$this->findParticipados($usuario_id)->count();
+                
+        return $count;
+    }
+    
 }
