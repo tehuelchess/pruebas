@@ -358,5 +358,13 @@ $config['rewrite_short_tags'] = FALSE;
 $config['proxy_ips'] = '';
 
 
+/*
+ * Configuracion del servidor Pusher (pusher.com) para poder modelar procesos
+ * en forma colaborativa.
+ */
+$config['pusher_api_key'] = '';
+$config['pusher_secret'] = '';
+$config['pusher_app_id'] = '';
+
 /* End of file config.php */
 /* Location: ./application/config/config.php */

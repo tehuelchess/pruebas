@@ -33,7 +33,7 @@
         <script src="assets/js/jquery.doubletap/jquery.doubletap.js" type="text/javascript"></script> <?php //JS para soportar dobleclick en iPad  ?>      
         <script src="http://js.pusher.com/1.11/pusher.min.js" type="text/javascript"></script> <?php //JS para recibir eventos push via websockets  ?>
         <script type="text/javascript">
-            var pusher = new Pusher('1d0c7c642dd687fbf31d');
+            var pusher = new Pusher('<?=$this->config->item('pusher_api_key')?>');
             var channel = pusher.subscribe('modelador');
             pusher.connection.bind('connected', function() {
                 socketId = pusher.connection.socket_id;
