@@ -25,22 +25,22 @@
         <!-- Le fav and touch icons -->
 
         <script src="assets/js/jquery-ui/js/jquery-1.7.1.min.js" type="text/javascript"></script>
-        <script src="assets/js/bootstrap.min.js" type="text/javascript"></script> <?php //JS base  ?>
-        <script src="assets/js/jquery.chosen/chosen.jquery.min.js"></script> <?php //Soporte para selects con multiple choices  ?>
+        <script src="assets/js/bootstrap.min.js" type="text/javascript"></script> <?php //JS base   ?>
+        <script src="assets/js/jquery.chosen/chosen.jquery.min.js"></script> <?php //Soporte para selects con multiple choices   ?>
         <script src="assets/js/jquery-ui/js/jquery-ui-1.8.18.custom.min.js" type="text/javascript"></script>
-        <script src="assets/js/jquery.ui.touch-punch/jquery.ui.touch-punch.min.js" type="text/javascript"></script> <?php //JS para soportar drag & drop en iPad  ?>
-        <script src="assets/js/jquery.ui.livedraggable/jquery.ui.livedraggable.js" type="text/javascript"></script> <?php //JS para que evento draggable sea live  ?>
-        <script src="assets/js/jquery.doubletap/jquery.doubletap.js" type="text/javascript"></script> <?php //JS para soportar dobleclick en iPad  ?>      
-        <script src="http://js.pusher.com/1.11/pusher.min.js" type="text/javascript"></script> <?php //JS para recibir eventos push via websockets  ?>
+        <script src="assets/js/jquery.ui.touch-punch/jquery.ui.touch-punch.min.js" type="text/javascript"></script> <?php //JS para soportar drag & drop en iPad   ?>
+        <script src="assets/js/jquery.ui.livedraggable/jquery.ui.livedraggable.js" type="text/javascript"></script> <?php //JS para que evento draggable sea live   ?>
+        <script src="assets/js/jquery.doubletap/jquery.doubletap.js" type="text/javascript"></script> <?php //JS para soportar dobleclick en iPad   ?>      
+        <script src="http://js.pusher.com/1.11/pusher.min.js" type="text/javascript"></script> <?php //JS para recibir eventos push via websockets   ?>
         <script type="text/javascript">
-            var pusher = new Pusher('<?=$this->config->item('pusher_api_key')?>');
+            var pusher = new Pusher('<?= $this->config->item('pusher_api_key') ?>');
             var channel = pusher.subscribe('modelador');
             pusher.connection.bind('connected', function() {
                 socketId = pusher.connection.socket_id;
             });
         </script>
-        <script src="assets/js/json-js/json2.js" type="text/javascript"></script> <?php //JS para convertir objetos a notacion JSON en multiples browsers  ?>
-        <script src="assets/js/jquery.jsplumb/jquery.jsPlumb-1.3.7-all-min.js" type="text/javascript"></script> <?php //JS para conectar elementos como diagramas de flujos  ?>
+        <script src="assets/js/json-js/json2.js" type="text/javascript"></script> <?php //JS para convertir objetos a notacion JSON en multiples browsers   ?>
+        <script src="assets/js/jquery.jsplumb/jquery.jsPlumb-1.3.7-all-min.js" type="text/javascript"></script> <?php //JS para conectar elementos como diagramas de flujos   ?>
         <script type="text/javascript">
             var site_url="<?= site_url() ?>";
             var base_url="<?= base_url() ?>";
@@ -58,23 +58,25 @@
     </head>
     <body>
         <div class="container-fluid">
-            
-            <div class="row">
+
+            <div class="row-fluid">
                 <ul class="nav nav-pills pull-right">
                     <li class="dropdown">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Bienvenido <?=UsuarioBackendSesion::usuario()->nombre?><b class="caret"></b></a>
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Bienvenido <?= UsuarioBackendSesion::usuario()->nombre ?><b class="caret"></b></a>
                         <ul class="dropdown-menu">
-                            <li><a href="<?=site_url('backend/autenticacion/logout')?>">Cerrar sesión</a></li>
+                            <li><a href="<?= site_url('backend/autenticacion/logout') ?>">Cerrar sesión</a></li>
                         </ul>
                     </li>
                 </ul>
             </div>
-            
-            <ul class="nav nav-tabs">
-                <li <?= $this->uri->segment(2) == 'portada' ? 'class="active"' : '' ?>><a href="<?= site_url('backend/portada') ?>">Inicio</a></li>
-                <li <?= $this->uri->segment(2) == 'procesos' || $this->uri->segment(2) == 'formularios' ? 'class="active"' : '' ?>><a href="<?= site_url('backend/procesos') ?>">Modelador de Procesos</a></li>
-                <li <?= $this->uri->segment(2) == 'configuracion' ? 'class="active"' : '' ?>><a href="<?= site_url('backend/configuracion') ?>">Configuración</a></li>
-            </ul>
+
+            <div class="row-fluid">
+                <ul class="nav nav-tabs">
+                    <li <?= $this->uri->segment(2) == 'portada' ? 'class="active"' : '' ?>><a href="<?= site_url('backend/portada') ?>">Inicio</a></li>
+                    <li <?= $this->uri->segment(2) == 'procesos' || $this->uri->segment(2) == 'formularios' ? 'class="active"' : '' ?>><a href="<?= site_url('backend/procesos') ?>">Modelador de Procesos</a></li>
+                    <li <?= $this->uri->segment(2) == 'configuracion' ? 'class="active"' : '' ?>><a href="<?= site_url('backend/configuracion') ?>">Configuración</a></li>
+                </ul>
+            </div>
             <?php $this->load->view($content) ?>
         </div>
 
