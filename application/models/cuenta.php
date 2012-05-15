@@ -15,6 +15,16 @@ class Cuenta extends Doctrine_Record {
             'foreign'=>'cuenta_id'
         ));
         
+        $this->hasMany('Usuario as Usuarios',array(
+            'local'=>'id',
+            'foreign'=>'cuenta_id'
+        ))
+        
+        ;$this->hasMany('GrupoUsuarios as GruposUsuarios',array(
+            'local'=>'id',
+            'foreign'=>'cuenta_id'
+        ));
+        
         $this->hasMany('Proceso as Procesos',array(
             'local'=>'id',
             'foreign'=>'cuenta_id'

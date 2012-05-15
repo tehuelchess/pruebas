@@ -1,4 +1,6 @@
 $(document).ready(function(){
+    $(".chosen").chosen();
+    
     $(document).on("submit",".ajaxForm",function(){
         var form=this;
         if(!form.submitting){
