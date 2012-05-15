@@ -13,6 +13,16 @@ class Etapas extends CI_Controller {
 
     public function ejecutar($etapa_id, $paso = 0) {
         $etapa = Doctrine::getTable('Etapa')->find($etapa_id);
+        
+        if($etapa->usuario_id!=UsuarioSesion::usuario()->id){
+            echo 'Usuario no tiene permisos para ejecutar esta etapa.';
+            exit;
+        }
+        if(!$etapa->pendiente){
+            echo 'Esta etapa ya fue completada';
+            exit;
+        }
+            
         $data['etapa'] = $etapa;
         $data['paso'] = $paso;
 
@@ -23,6 +33,16 @@ class Etapas extends CI_Controller {
 
     public function ejecutar_form($etapa_id, $paso) {
         $etapa = Doctrine::getTable('Etapa')->find($etapa_id);
+        
+        if($etapa->usuario_id!=UsuarioSesion::usuario()->id){
+            echo 'Usuario no tiene permisos para ejecutar esta etapa.';
+            exit;
+        }
+        if(!$etapa->pendiente){
+            echo 'Esta etapa ya fue completada';
+            exit;
+        }
+        
         $formulario = $etapa->Tarea->Pasos[$paso]->Formulario;
         $modo = $etapa->Tarea->Pasos[$paso]->modo;
 
@@ -69,6 +89,22 @@ class Etapas extends CI_Controller {
 
     public function asignar($etapa_id) {
         $etapa = Doctrine::getTable('Etapa')->find($etapa_id);
+        
+        if($etapa->usuario_id){
+            echo 'Etapa ya fue asignada.';
+            exit;
+        }
+        
+        $asignable=FALSE;
+        foreach(UsuarioSesion::usuario()->GruposUsuarios as $g)
+            if($etapa->Tarea->hasGrupoUsuarios($g->id))
+                $asignable=TRUE;
+        if(!$asignable){
+            echo 'Usuario no puede asignarse esta etapa.';
+            exit;
+        }
+        
+        
         $etapa->usuario_id = UsuarioSesion::usuario()->id;
         $etapa->save();
 
