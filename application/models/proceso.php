@@ -129,5 +129,18 @@ class Proceso extends Doctrine_Record {
                 ->where('t.inicial = 1 AND p.id = ?',$this->id)
                 ->fetchOne();
     }
+    
+    //Verifica si el usuario_id tiene permisos para iniciar este proceso como tramite.
+    public function canUsuarioIniciarlo($usuario_id){
+        $proceso=Doctrine_Query::create()
+                ->from('Proceso p, p.Tareas t, t.GruposUsuarios.Usuarios u')
+                ->where('t.inicial = 1 and u.id = ? and p.id = ?',array($usuario_id,$this->id))
+                ->fetchOne();
+        
+        if($proceso)
+            return TRUE;
+        
+        return FALSE;
+    }
 
 }

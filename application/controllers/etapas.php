@@ -95,11 +95,7 @@ class Etapas extends CI_Controller {
             exit;
         }
         
-        $asignable=FALSE;
-        foreach(UsuarioSesion::usuario()->GruposUsuarios as $g)
-            if($etapa->Tarea->hasGrupoUsuarios($g->id))
-                $asignable=TRUE;
-        if(!$asignable){
+        if(!$etapa->canUsuarioAsignarsela(UsuarioSesion::usuario()->id)){
             echo 'Usuario no puede asignarse esta etapa.';
             exit;
         }

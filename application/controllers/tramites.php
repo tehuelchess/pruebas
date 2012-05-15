@@ -49,9 +49,15 @@ class Tramites extends CI_Controller {
     }
 
     public function iniciar($proceso_id) {
+        $proceso=Doctrine::getTable('Proceso')->find($proceso_id);
+        
+        if(!$proceso->canUsuarioIniciarlo(UsuarioSesion::usuario()->id)){
+            echo 'Usuario no puede iniciar este proceso';
+            exit;
+        }
         
         $tramite=new Tramite();
-        $tramite->iniciar($proceso_id);
+        $tramite->iniciar($proceso->id);
         
         
         
