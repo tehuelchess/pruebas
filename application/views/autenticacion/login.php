@@ -29,10 +29,10 @@
         <div class="container">
             <div class="row" style="margin-top: 100px;">
                 <div class="span6 offset3">
-                    <form method="post" class="ajaxForm" action="<?= site_url('autenticacion/login_form') ?>">
-                        <div class="validacion"></div>
+                    <form method="post" class="ajaxForm" action="<?= site_url('autenticacion/login_form') ?>">        
                         <fieldset>
                             <legend>Ingrese al sistema</legend>
+                            <div class="validacion"></div>
                             <input type="hidden" name="redirect" value="<?= $redirect ?>" />
                             <label>Usuario</label>
                             <input name="usuario" type="text" class="span3">
@@ -56,6 +56,7 @@
         <!-- Placed at the end of the document so the pages load faster -->
         <script src="assets/js/jquery-ui/js/jquery-1.7.1.min.js"></script>
         <script src="assets/js/bootstrap.min.js"></script>
+        <script src="assets/js/jquery.chosen/chosen.jquery.min.js"></script> <?php //Soporte para selects con multiple choices   ?>
         <script src="assets/js/common.js"></script>
     </body>
 </html>
