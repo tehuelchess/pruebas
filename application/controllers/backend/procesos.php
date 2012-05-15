@@ -31,13 +31,26 @@ class Procesos extends CI_Controller {
     
     public function eliminar($proceso_id){
         $proceso=Doctrine::getTable('Proceso')->find($proceso_id);
+        
+        if($proceso->cuenta_id!=UsuarioBackendSesion::usuario()->cuenta_id){
+            echo 'Usuario no tiene permisos para eliminar este proceso';
+            exit;
+        }
+        
         $proceso->delete();
         
         redirect('backend/procesos/index/');
     }
 
     public function editar($proceso_id) {
-        $data['proceso'] = Doctrine::getTable('Proceso')->find($proceso_id);
+        $proceso=Doctrine::getTable('Proceso')->find($proceso_id);
+        
+        if($proceso->cuenta_id!=UsuarioBackendSesion::usuario()->cuenta_id){
+            echo 'Usuario no tiene permisos para editar este proceso';
+            exit;
+        }
+        
+        $data['proceso'] = $proceso;
 
         $data['title'] = 'Modelador';
         $data['content'] = 'backend/procesos/editar';
@@ -45,16 +58,29 @@ class Procesos extends CI_Controller {
     }
     
     public function ajax_editar($proceso_id){
-        $data['proceso']=Doctrine::getTable('Proceso')->find($proceso_id);
+        $proceso=Doctrine::getTable('Proceso')->find($proceso_id);
+        
+        if($proceso->cuenta_id!=UsuarioBackendSesion::usuario()->cuenta_id){
+            echo 'Usuario no tiene permisos para editar este proceso';
+            exit;
+        }
+        
+        $data['proceso']=$proceso;
         
         $this->load->view('backend/procesos/ajax_editar',$data);
     }
     
     public function editar_form($proceso_id){
+        $proceso=Doctrine::getTable('Proceso')->find($proceso_id);
+        
+        if($proceso->cuenta_id!=UsuarioBackendSesion::usuario()->cuenta_id){
+            echo 'Usuario no tiene permisos para editar este proceso';
+            exit;
+        }
+        
         $this->form_validation->set_rules('nombre', 'Nombre', 'required');
 
         if ($this->form_validation->run() == TRUE) {
-            $proceso=Doctrine::getTable('Proceso')->find($proceso_id);
             $proceso->nombre=$this->input->post('nombre');
             $proceso->save();
             
@@ -74,7 +100,14 @@ class Procesos extends CI_Controller {
     }
     
     public function ajax_editar_tarea($proceso_id,$tarea_identificador){
-        $data['tarea'] = Doctrine::getTable('Tarea')->findOneByProcesoIdAndIdentificador($proceso_id,$tarea_identificador);
+        $tarea=Doctrine::getTable('Tarea')->findOneByProcesoIdAndIdentificador($proceso_id,$tarea_identificador);
+        
+        if($tarea->Proceso->cuenta_id!=UsuarioBackendSesion::usuario()->cuenta_id){
+            echo 'Usuario no tiene permisos para editar esta tarea.';
+            exit;
+        }
+        
+        $data['tarea'] = $tarea;
         $data['grupos_usuarios']=Doctrine::getTable('GrupoUsuarios')->findAll();
         $data['formularios']=Doctrine::getTable('Formulario')->findByProcesoId($proceso_id);
         
@@ -82,10 +115,16 @@ class Procesos extends CI_Controller {
     }
     
     public function editar_tarea_form($tarea_id){
+        $tarea=Doctrine::getTable('Tarea')->find($tarea_id);
+        
+        if($tarea->Proceso->cuenta_id!=UsuarioBackendSesion::usuario()->cuenta_id){
+            echo 'Usuario no tiene permisos para editar esta tarea.';
+            exit;
+        }
+        
         $this->form_validation->set_rules('nombre', 'Nombre', 'required');
 
         if ($this->form_validation->run() == TRUE) {
-            $tarea=Doctrine::getTable('Tarea')->find($tarea_id);
             $tarea->nombre=$this->input->post('nombre');
             $tarea->inicial=$this->input->post('inicial');
             $tarea->final=$this->input->post('final');
@@ -110,6 +149,12 @@ class Procesos extends CI_Controller {
     
     public function eliminar_tarea($tarea_id){
         $tarea=Doctrine::getTable('Tarea')->find($tarea_id);
+        
+        if($tarea->Proceso->cuenta_id!=UsuarioBackendSesion::usuario()->cuenta_id){
+            echo 'Usuario no tiene permisos para eliminar esta tarea.';
+            exit;
+        }
+        
         $proceso=$tarea->Proceso;
         $tarea->delete();
         
@@ -121,12 +166,16 @@ class Procesos extends CI_Controller {
     }
 
     public function ajax_editar_modelo($proceso_id) {
+        $proceso = Doctrine::getTable('Proceso')->find($proceso_id);
+
+        if($proceso->cuenta_id!=UsuarioBackendSesion::usuario()->cuenta_id){
+            echo 'Usuario no tiene permisos para editar este proceso';
+            exit;
+        }
+        
         $modelo=$this->input->post('modelo');
         $socket_id_emisor=$this->input->post('socket_id_emisor');
-        
-        
-        $proceso = Doctrine::getTable('Proceso')->find($proceso_id);
-        //$proceso->modelo = $modelo;
+                
         $proceso->updateModelFromJSON($modelo);
              
         $this->load->library('pusher');
