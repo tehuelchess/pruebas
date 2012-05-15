@@ -35,6 +35,7 @@
         <script type="text/javascript">
             var pusher = new Pusher('<?= $this->config->item('pusher_api_key') ?>');
             var channel = pusher.subscribe('modelador');
+            var socketId;
             pusher.connection.bind('connected', function() {
                 socketId = pusher.connection.socket_id;
             });
