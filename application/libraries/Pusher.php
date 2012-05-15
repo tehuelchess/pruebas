@@ -42,7 +42,7 @@ class Pusher
 
 		// Get Codeigniter instance, and config.
 		$this->CI = get_instance();
-		$this->CI->load->config('pusher');
+		//$this->CI->load->config('pusher');
 
 		// Setup defaults
 		$this->settings['server']	= 'http://api.pusherapp.com';
