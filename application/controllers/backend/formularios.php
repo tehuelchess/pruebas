@@ -128,18 +128,30 @@ class Formularios extends CI_Controller {
         $this->load->view('backend/formularios/ajax_editar_campo',$data);
     }
     
-    public function editar_campo_form($campo_id){
-        $campo=Doctrine::getTable('Campo')->find($campo_id);
-        
-        if($campo->Formulario->Proceso->cuenta_id!=UsuarioBackendSesion::usuario()->cuenta_id){
-            echo 'Usuario no tiene permisos para editar este campo.';
-            exit;
+    public function editar_campo_form($campo_id=NULL){
+        $campo=NULL;
+        if($campo_id){
+            $campo=Doctrine::getTable('Campo')->find($campo_id);
+
+            if($campo->Formulario->Proceso->cuenta_id!=UsuarioBackendSesion::usuario()->cuenta_id){
+                echo 'Usuario no tiene permisos para editar este campo.';
+                exit;
+            }
         }
         
         $this->form_validation->set_rules('nombre','Nombre','required');
         $this->form_validation->set_rules('etiqueta','Etiqueta','required');
+        if(!$campo_id){
+            $this->form_validation->set_rules('formulario_id','Formulario','required|callback_check_permiso_formulario');
+            $this->form_validation->set_rules('tipo','Tipo de Campo','required');
+        }
         
         if($this->form_validation->run()==TRUE){
+            if(!$campo){
+                $campo=new Campo();
+                $campo->formulario_id=$this->input->post('formulario_id');
+                $campo->tipo=$this->input->post('tipo');
+            }
             $campo->nombre=$this->input->post('nombre');
             $campo->etiqueta=$this->input->post('etiqueta');
             $campo->validacion=$this->input->post('validacion');
@@ -167,39 +179,7 @@ class Formularios extends CI_Controller {
         
         $data['formulario_id']=$formulario->id;
         $data['tipo']=$tipo;
-        $this->load->view('backend/formularios/ajax_agregar_campo',$data);
-    }
-    
-    public function agregar_campo_form($formulario_id, $tipo){
-        $formulario=Doctrine::getTable('Formulario')->find($formulario_id);
-        
-        if($formulario->Proceso->cuenta_id!=UsuarioBackendSesion::usuario()->cuenta_id){
-            echo 'Usuario no tiene permisos para agregar campos a este formulario.';
-            exit;
-        }
-        
-        $this->form_validation->set_rules('nombre','Nombre','required');
-        $this->form_validation->set_rules('etiqueta','Etiqueta','required');
-        
-        if($this->form_validation->run()==TRUE){
-            $campo=new Campo();
-            $campo->formulario_id=$formulario->id;
-            $campo->tipo=$tipo;
-            $campo->nombre=$this->input->post('nombre');
-            $campo->etiqueta=$this->input->post('etiqueta');
-            $campo->validacion=$this->input->post('validacion');
-            $campo->save();
-            
-            $respuesta->validacion=TRUE;
-            $respuesta->redirect=site_url('backend/formularios/editar/'.$campo->Formulario->id);
-            
-        } else{
-            $respuesta->validacion=FALSE;
-            $respuesta->errores=validation_errors();
-            
-        }
-        
-        echo json_encode($respuesta);
+        $this->load->view('backend/formularios/ajax_editar_campo',$data);
     }
     
     public function eliminar_campo($campo_id){
@@ -228,6 +208,17 @@ class Formularios extends CI_Controller {
         $formulario->updatePosicionesCamposFromJSON($json);
         
         
+    }
+    
+    public function check_permiso_formulario($formulario_id){
+        $formulario=Doctrine::getTable('Formulario')->find($formulario_id);
+        
+        if($formulario->Proceso->cuenta_id!=UsuarioBackendSesion::usuario()->cuenta_id){
+            $this->form_validation->set_message('check_permiso_formulario' ,'Usuario no tiene permisos para agregar campos a este formulario.');
+            return FALSE;
+        }
+        
+        return TRUE;
     }
 
 }
