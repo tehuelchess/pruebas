@@ -18,7 +18,8 @@
 
     <div class="btn-toolbar">
         <div class="btn-group">
-            <button class="btn" onclick="return agregarCampo(<?= $formulario->id ?>,'text')">Agregar textbox</button>
+            <button class="btn" onclick="return agregarCampo(<?= $formulario->id ?>,'text')">Textbox</button>
+            <button class="btn" onclick="return agregarCampo(<?= $formulario->id ?>,'select')">Select</button>
         </div>
     </div>
 

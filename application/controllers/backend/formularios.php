@@ -155,6 +155,7 @@ class Formularios extends CI_Controller {
             $campo->nombre=$this->input->post('nombre');
             $campo->etiqueta=$this->input->post('etiqueta');
             $campo->validacion=$this->input->post('validacion');
+            $campo->setDatosFromArray($this->input->post('datos'));
             $campo->save();
             
             $respuesta->validacion=TRUE;

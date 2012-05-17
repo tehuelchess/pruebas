@@ -10,6 +10,7 @@ class Campo extends Doctrine_Record {
         $this->hasColumn('formulario_id');
         $this->hasColumn('etiqueta');
         $this->hasColumn('validacion');
+        $this->hasColumn('datos');
     }
 
     function setUp() {
@@ -40,9 +41,28 @@ class Campo extends Doctrine_Record {
         if ($this->tipo == 'text') {
             $display.='<label>' . $this->etiqueta . (in_array('required', $validacion) ? '' : ' (Opcional)') . '</label>';
             $display.='<input ' . ($modo == 'visualizacion' ? 'readonly' : '') . ' type="text" name="' . $this->nombre . '" value="' . $dato_almacenado . '" />';
+        }else if ($this->tipo == 'select') {
+            $display.='<label>' . $this->etiqueta . (in_array('required', $validacion) ? '' : ' (Opcional)') . '</label>';
+            $display.='<select name="'.$this->nombre.'" '.($modo=='visualizacion'?'disabled':'').'>';
+            foreach ($this->getDatosFromJSON() as $d){
+                $display.='<option value="'.$d->valor.'" '.($d->valor==$dato_almacenado?'selected':'').'>'.$d->etiqueta.'</option>';
+            }
+            $display.='</select>';
         }
 
         return $display;
+    }
+    
+    public function setDatosFromArray($datos_array){
+        if($datos_array){
+            $this->datos=json_encode($datos_array);
+        }else{
+            $this->datos=NULL;
+        }
+    }
+    
+    public function getDatosFromJSON(){
+        return json_decode($this->datos);
     }
 
 }
