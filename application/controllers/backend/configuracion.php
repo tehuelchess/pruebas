@@ -43,6 +43,7 @@ class Configuracion extends CI_Controller {
     }
 
     public function grupo_usuarios_editar_form($grupo_usuarios_id = NULL) {
+        $grupo_usuarios=NULL;
         if ($grupo_usuarios_id) {
             $grupo_usuarios = Doctrine::getTable('GrupoUsuarios')->find($grupo_usuarios_id);
 
@@ -114,6 +115,7 @@ class Configuracion extends CI_Controller {
     }
 
     public function usuario_editar_form($usuario_id = NULL) {
+        $usuario=NULL;
         if ($usuario_id) {
             $usuario = Doctrine::getTable('Usuario')->find($usuario_id);
 
