@@ -59,7 +59,7 @@
     <a class="close" data-dismiss="modal">×</a>
     <h3>Editar Tarea</h3>
 </div>
-<div class="modal-body">
+<div class="modal-body" style="min-height: 320px;">
     <form id="formEditarTarea" class="ajaxForm" method="POST" action="<?= site_url('backend/procesos/editar_tarea_form/' . $tarea->id) ?>">
         <div class="validacion"></div>
 
