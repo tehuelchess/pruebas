@@ -41,4 +41,16 @@ class Formulario extends Doctrine_Record {
         }
         Doctrine_Manager::connection()->commit();
     }
+    
+    //Obtiene la ultima posicion de los campos de este formulario
+    public function getUltimaPosicionCampo(){
+        $max=0;
+        foreach($this->Campos as $c){
+            if($c->posicion>$max){
+                $max=$c->posicion;
+                break;
+            }
+        }
+        return $max;
+    }
 }

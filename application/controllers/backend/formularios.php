@@ -148,9 +148,11 @@ class Formularios extends CI_Controller {
         
         if($this->form_validation->run()==TRUE){
             if(!$campo){
+                $formulario=Doctrine::getTable('Formulario')->find($this->input->post('formulario_id'));
                 $campo=new Campo();
-                $campo->formulario_id=$this->input->post('formulario_id');
+                $campo->formulario_id=$formulario->id;
                 $campo->tipo=$this->input->post('tipo');
+                $campo->posicion=1+$formulario->getUltimaPosicionCampo();
             }
             $campo->nombre=$this->input->post('nombre');
             $campo->etiqueta=$this->input->post('etiqueta');
