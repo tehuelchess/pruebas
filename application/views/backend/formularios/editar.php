@@ -20,6 +20,7 @@
         <div class="btn-group">
             <button class="btn" onclick="return agregarCampo(<?= $formulario->id ?>,'text')">Textbox</button>
             <button class="btn" onclick="return agregarCampo(<?= $formulario->id ?>,'select')">Select</button>
+            <button class="btn" onclick="return agregarCampo(<?= $formulario->id ?>,'radio')">Radio</button>
         </div>
     </div>
 

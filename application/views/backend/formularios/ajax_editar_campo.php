@@ -15,7 +15,8 @@
         <input type="text" name="etiqueta" value="<?= isset($campo) ? $campo->etiqueta : '' ?>" />
         <label>Reglas de validación</label>
         <input type="text" name="validacion" value="<?= isset($campo) ? $campo->validacion : '' ?>" />
-        <?php if ((isset($campo) && $campo->tipo=='select') || (!isset($campo) && $tipo == 'select')): ?>
+        <?php if ((isset($campo) && ($campo->tipo=='select' || $campo->tipo=='radio')) ||
+                (!isset($campo) && ($tipo == 'select' || $tipo=='radio'))): ?>
             <div class="datos">
                 <script type="text/javascript">
                     $(document).ready(function(){

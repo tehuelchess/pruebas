@@ -48,6 +48,13 @@ class Campo extends Doctrine_Record {
                 $display.='<option value="'.$d->valor.'" '.($d->valor==$dato_almacenado?'selected':'').'>'.$d->etiqueta.'</option>';
             }
             $display.='</select>';
+        }else if ($this->tipo == 'radio') {
+            $display.='<label>' . $this->etiqueta . (in_array('required', $validacion) ? '' : ' (Opcional)') . '</label>';
+            foreach ($this->getDatosFromJSON() as $d){
+                $display.='<label class="radio">';
+                $display.='<input '.($modo=='visualizacion'?'disabled':'').' type="radio" name="'.$this->nombre.'" value="'.$d->valor.'" '.($d->valor==$dato_almacenado?'checked':'').' />';
+                $display.=$d->etiqueta.'</label>';
+            }
         }
 
         return $display;
