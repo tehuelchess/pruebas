@@ -21,6 +21,7 @@
             <button class="btn" onclick="return agregarCampo(<?= $formulario->id ?>,'text')">Textbox</button>
             <button class="btn" onclick="return agregarCampo(<?= $formulario->id ?>,'select')">Select</button>
             <button class="btn" onclick="return agregarCampo(<?= $formulario->id ?>,'radio')">Radio</button>
+            <button class="btn" onclick="return agregarCampo(<?= $formulario->id ?>,'checkbox')">Checkbox</button>
         </div>
     </div>
 
