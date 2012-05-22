@@ -71,6 +71,14 @@ class Campo extends Doctrine_Record {
                 $display.='<input ' . ($modo == 'visualizacion' ? 'disabled' : '') . ' type="checkbox" name="' . $this->nombre . '[]" value="' . $d->valor . '" ' . (in_array($d->valor, $dato_almacenado) ? 'checked' : '') . ' />';
                 $display.=$d->etiqueta . '</label>';
             }
+        }else if ($this->tipo == 'file') {
+            $display.='<label>' . $this->etiqueta . (in_array('required', $validacion) ? '' : ' (Opcional)') . '</label>';
+            $display.='<div>';
+            $display.='<div class="'.($modo=='visualizacion'?'':'file-uploader').'" name="' . $this->nombre . '" value="' . $dato_almacenado[0] . '"></div>';
+            $display.='<input type="hidden" name="' . $this->nombre . '" value="' . $dato_almacenado[0] . '" />';
+            //if($dato_almacenado[0])
+                $display.='<p><a href="'.base_url().'uploads/datos/'.$dato_almacenado[0].'" target="_blank">'.$dato_almacenado[0].'</a></p>';
+            $display.='</div>';
         }
 
         return $display;

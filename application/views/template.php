@@ -11,6 +11,8 @@
         <!-- Le styles -->
         <link href="assets/css/bootstrap.css" rel="stylesheet">
         <link href="assets/css/bootstrap-responsive.css" rel="stylesheet">
+        <link href="assets/js/jquery.chosen/chosen.css" rel="stylesheet">
+        <link href="assets/js/file-uploader/fileuploader.css" rel="stylesheet">
 
         <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
         <!--[if lt IE 9]>
@@ -83,6 +85,11 @@
         <script src="assets/js/jquery-ui/js/jquery-1.7.1.min.js"></script>
         <script src="assets/js/bootstrap.min.js"></script>
         <script src="assets/js/jquery.chosen/chosen.jquery.min.js"></script> <?php //Soporte para selects con multiple choices   ?>
+        <script src="assets/js/file-uploader/fileuploader.js"></script> <?php //Soporte para subir archivos con ajax   ?>
+        <script type="text/javascript">
+            var site_url="<?= site_url() ?>";
+            var base_url="<?= base_url() ?>";
+        </script>
         <script src="assets/js/common.js"></script>
     </body>
 </html>

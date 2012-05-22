@@ -1,6 +1,19 @@
 $(document).ready(function(){
     $(".chosen").chosen();
     
+    $(".file-uploader").each(function(i,el){
+        var $parentDiv=$(el).parent();
+        new qq.FileUploader({
+            element: el,
+            action: site_url+'uploader/datos',
+            onComplete: function(id,filename,respuesta){
+                $parentDiv.find("input[type=hidden]").val(respuesta.file_name);
+                $parentDiv.find("a").text(respuesta.file_name).attr("href",base_url+"uploads/datos/"+respuesta.file_name);
+                //$parentDiv.append();
+            }
+        }); 
+    });
+    
     $(document).on("submit",".ajaxForm",function(){
         var form=this;
         if(!form.submitting){
