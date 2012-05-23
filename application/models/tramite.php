@@ -90,9 +90,13 @@ class Tramite extends Doctrine_Record {
             return NULL;
         
         $conexiones=$tarea_actual->ConexionesOrigen;
-        $tarea_proxima=$conexiones[0]->TareaDestino;
         
-        return $tarea_proxima;
+        foreach($conexiones as $c){
+            if($c->evaluarRegla($this->id))
+                return $c->TareaDestino;
+        }
+        
+        return NULL;
     }
 
 }

@@ -46,3 +46,6 @@
     bottom: -25px;
     left: 49%;
 }
+#areaDibujo ._jsPlumb_connector{
+    cursor: pointer;
+}

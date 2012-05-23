@@ -164,6 +164,69 @@ class Procesos extends CI_Controller {
     
         redirect('backend/procesos/editar/'.$proceso->id);
     }
+    
+    public function ajax_editar_conexion($proceso_id,$conexion_identificador){        
+        $conexion=  Doctrine_Query::create()
+                ->from('Conexion c, c.TareaOrigen t')
+                ->where('t.proceso_id=? AND c.identificador=?',array($proceso_id,$conexion_identificador))
+                ->fetchOne();
+        
+        if($conexion->TareaOrigen->Proceso->cuenta_id!=UsuarioBackendSesion::usuario()->cuenta_id){
+            echo 'Usuario no tiene permisos para editar esta tarea.';
+            exit;
+        }
+        
+        $data['conexion'] = $conexion;
+        
+        $this->load->view('backend/procesos/ajax_editar_conexion',$data);
+    }
+    
+    public function editar_conexion_form($conexion_id){
+        $conexion=Doctrine::getTable('Conexion')->find($conexion_id);
+        
+        if($conexion->TareaOrigen->Proceso->cuenta_id!=UsuarioBackendSesion::usuario()->cuenta_id){
+            echo 'Usuario no tiene permisos para editar esta tarea.';
+            exit;
+        }
+        
+        $this->form_validation->set_rules('regla', 'Regla');
+
+        if ($this->form_validation->run() == TRUE) {
+            $conexion->regla=$this->input->post('regla');
+            $conexion->save();
+            
+            //$socket_id_emisor=$this->input->post('socket_id_emisor');
+            $this->load->library('pusher');
+            $this->pusher->trigger('modelador', 'updateModel', array('modelo' => $conexion->TareaOrigen->Proceso->getJSONFromModel()));
+            
+            $respuesta->validacion=TRUE;
+            $respuesta->redirect=site_url('backend/procesos/editar/'.$conexion->TareaOrigen->Proceso->id);
+            
+        }else{
+            $respuesta->validacion=FALSE;
+            $respuesta->errores=validation_errors();
+        }
+        
+        echo json_encode($respuesta);
+    }
+    
+    public function eliminar_conexion($conexion_id){
+        $conexion=Doctrine::getTable('Conexion')->find($conexion_id);
+        
+        if($conexion->TareaOrigen->Proceso->cuenta_id!=UsuarioBackendSesion::usuario()->cuenta_id){
+            echo 'Usuario no tiene permisos para eliminar esta conexion.';
+            exit;
+        }
+        
+        $proceso=$conexion->TareaOrigen->Proceso;
+        $conexion->delete();
+        
+        //$socket_id_emisor=$this->input->get('socket_id_emisor');
+        $this->load->library('pusher');
+        $this->pusher->trigger('modelador', 'updateModel', array('modelo' => $proceso->getJSONFromModel()));
+    
+        redirect('backend/procesos/editar/'.$proceso->id);
+    }
 
     public function ajax_editar_modelo($proceso_id) {
         $proceso = Doctrine::getTable('Proceso')->find($proceso_id);

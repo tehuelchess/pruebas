@@ -7,7 +7,7 @@ class Conexion extends Doctrine_Record {
         $this->hasColumn('identificador');
         $this->hasColumn('tarea_id_origen');
         $this->hasColumn('tarea_id_destino');
-        $this->hasColumn('tipo');
+        $this->hasColumn('regla');
     }
 
     function setUp() {
@@ -23,5 +23,10 @@ class Conexion extends Doctrine_Record {
             'foreign'=>'id'
         ));
     }
-
+    
+    public function evaluarRegla($tramite_id){
+        $regla=new Regla($this->regla);
+        return $regla->evaluar($tramite_id);
+    }
+    
 }

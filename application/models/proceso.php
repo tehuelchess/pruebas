@@ -70,7 +70,6 @@ class Proceso extends Doctrine_Record {
             $conexion->identificador=$c->id;
             $conexion->tarea_id_origen=Doctrine::getTable('Tarea')->findOneByIdentificadorAndProcesoId($c->source,$this->id);
             $conexion->tarea_id_destino = Doctrine::getTable('Tarea')->findOneByIdentificadorAndProcesoId($c->target,$this->id);
-            $conexion->tipo="";
             $conexion->save();
         }
         //Borramos las que estan de mas.

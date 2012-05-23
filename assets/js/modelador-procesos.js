@@ -90,15 +90,41 @@ $(document).ready(function(){
         }
     });
 
-
+    //Asigno los eventos a los boxes tareas
     $(document).on("dblclick doubletap","#areaDibujo .box",function(event){
         var id=$(event.target).attr("id");
-        //$('#modalEditarTarea form input[name=id]').val(id);
-        //$('#modalEditarTarea form input[name=nombre]').val("");
         $('#modal').load(site_url+"backend/procesos/ajax_editar_tarea/"+procesoId+"/"+id);
         $('#modal').modal('show')
     });
     
+    //Asigno los eventos a los conectores
+    $(document).on("dblclick doubletap","#areaDibujo ._jsPlumb_connector",function(event){
+        var conectorSeleccionado=$(event.target).closest("._jsPlumb_connector").get(0);
+        var connections=jsPlumb.getConnections();
+        $(connections).each(function(i,connection){
+            if(connection.canvas==conectorSeleccionado){
+                var id=connection.id;
+                $('#modal').load(site_url+"backend/procesos/ajax_editar_conexion/"+procesoId+"/"+id);
+                $('#modal').modal('show')
+            }
+        });
+    });
+
+    /*
+    $(document).on("mouseover","#areaDibujo ._jsPlumb_connector",function(event){
+        var connections=jsPlumb.getConnections();
+        $(connections).each(function(i,connection){
+            var id=connection.id;
+            $(connection.canvas).unbind("dblclick doubletap");
+            $(connection.canvas).bind("dblclick doubletap", function(conn) {
+                $('#modal').load(site_url+"backend/procesos/ajax_editar_conexion/"+procesoId+"/"+id);
+                $('#modal').modal('show')
+            });
+        });
+    });
+    */
+    
+    //Asigno el evento para editar el proceso al hacerle click al titulo
     $(document).on("dblclick doubletap","#areaDibujo h1",function(event){
         $('#modal').load(site_url+"backend/procesos/ajax_editar/"+procesoId);
         $('#modal').modal('show')
