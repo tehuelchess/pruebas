@@ -30,59 +30,14 @@ class Proceso extends Doctrine_Record {
     public function updateModelFromJSON($json){
         Doctrine_Manager::connection()->beginTransaction();
         $modelo = json_decode($json);
-        
-        $this->nombre=$modelo->nombre;
-        $this->save();
 
         //Agregamos los elementos nuevos y/o existentes
         foreach ($modelo->elements as $e) {
-
             $tarea = Doctrine::getTable('Tarea')->findOneByIdentificadorAndProcesoId($e->id, $this->id);
-            if (!$tarea)
-                $tarea = new Tarea();
-            $tarea->identificador = $e->id;
-            $tarea->proceso_id = $this->id;
-            $tarea->nombre = $e->name;
             $tarea->posx = $e->left;
             $tarea->posy = $e->top;
             $tarea->save();
         }
-        //Borramos las que estan de mas.
-        $ids_existentes = array();
-        foreach($modelo->elements as $e)
-            $ids_existentes[]=$e->id;
-        Doctrine_Query::create()
-                ->delete()
-                ->from('Tarea t')
-                ->where('t.proceso_id = ?', $this->id)
-                ->andWhereNotIn('t.identificador', $ids_existentes)
-                ->execute();
-        
-
-        //Agregamos las conecciones nuevos y/o existentes
-        foreach ($modelo->connections as $c) {
-            $conexion = Doctrine_Query::create()
-                    ->from('Conexion c, c.TareaOrigen t')
-                    ->where('c.identificador = ? AND t.proceso_id = ?',array($c->id,$this->id))
-                    ->fetchOne();
-            if (!$conexion)
-                $conexion = new Conexion();
-            $conexion->identificador=$c->id;
-            $conexion->tarea_id_origen=Doctrine::getTable('Tarea')->findOneByIdentificadorAndProcesoId($c->source,$this->id);
-            $conexion->tarea_id_destino = Doctrine::getTable('Tarea')->findOneByIdentificadorAndProcesoId($c->target,$this->id);
-            $conexion->save();
-        }
-        //Borramos las que estan de mas.
-        $ids_existentes = array();
-        foreach($modelo->connections as $c)
-            $ids_existentes[]=$c->id;
-        $basura=Doctrine_Query::create()
-                ->from('Conexion c,c.TareaOrigen t')
-                ->where('t.proceso_id = ?', $this->id)
-                ->andWhereNotIn('c.identificador', $ids_existentes)
-                ->execute();
-        foreach($basura as $b)
-            $b->delete();
 
         Doctrine_Manager::connection()->commit();
         

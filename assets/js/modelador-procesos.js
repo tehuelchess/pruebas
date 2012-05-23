@@ -1,12 +1,5 @@
 $(document).ready(function(){
     
-    /*
-    $("#areaDibujo .box").each(function(i,e){
-        alert(1);
-        jsPlumb.draggable(e);
-    });
-    */
-    
     jsPlumb.Defaults.PaintStyle={
         strokeStyle:"#333", 
         lineWidth:4
@@ -20,19 +13,6 @@ $(document).ready(function(){
         length:16
     } ]]; 
     
-
-    /*
-    jsPlumb.connect({
-        source: $("#div1"),
-        target: $("#div2"),
-        overlays:[ ["Arrow", {
-            location:1, 
-            width:20, 
-            length:20
-        } ]]
-    });
-    */
-
     
     var modo=null;
     var elements=new Array();
@@ -68,7 +48,7 @@ $(document).ready(function(){
             jsPlumb.draggable($("#areaDibujo .box"));
             modo=null;
             $("#areaDibujo .botonera .createBox").removeClass("disabled");
-            updateModel();
+            $.post(site_url+"backend/procesos/ajax_crear_tarea/"+procesoId+"/"+id,"nombre=Tarea&posx="+left+"&posy="+top);
         }
     });
     $("#areaDibujo").on("click",".box",function(event){
@@ -76,7 +56,7 @@ $(document).ready(function(){
         if(modo=="createConnection"){
             elements.push(this.id);
             if(elements.length==2){
-                jsPlumb.connect({
+                var conn=jsPlumb.connect({
                     source: elements[0],
                     target: elements[1]
                 });
@@ -85,7 +65,7 @@ $(document).ready(function(){
                 elements.length=0;
                 $("#areaDibujo .botonera .createConnection").removeClass("disabled");
                 $("#areaDibujo .box").css("cursor","move")
-                updateModel();
+                $.post(site_url+"backend/procesos/ajax_crear_conexion/"+procesoId+"/"+conn.id,"tarea_id_origen="+conn.sourceId+"&tarea_id_destino="+conn.targetId);
             }
         }
     });
@@ -109,20 +89,6 @@ $(document).ready(function(){
             }
         });
     });
-
-    /*
-    $(document).on("mouseover","#areaDibujo ._jsPlumb_connector",function(event){
-        var connections=jsPlumb.getConnections();
-        $(connections).each(function(i,connection){
-            var id=connection.id;
-            $(connection.canvas).unbind("dblclick doubletap");
-            $(connection.canvas).bind("dblclick doubletap", function(conn) {
-                $('#modal').load(site_url+"backend/procesos/ajax_editar_conexion/"+procesoId+"/"+id);
-                $('#modal').modal('show')
-            });
-        });
-    });
-    */
     
     //Asigno el evento para editar el proceso al hacerle click al titulo
     $(document).on("dblclick doubletap","#areaDibujo h1",function(event){
@@ -138,36 +104,26 @@ $(document).ready(function(){
     channel.bind('updateModel', function(data) {
         drawFromModel(JSON.parse(data.modelo));
     });
-
-/*    
-    $("#modalEditarTarea form").submit(function(){
-        var id=$(this).find("input[name=id]").val();
-        var nombre=$(this).find("input[name=nombre]").val();
-        $("#"+id).text(nombre);
-        $('#modalEditarTarea').modal('hide');
-        updateModel();
-        return false;
-    });
-    */
     
 
 });
 
 function updateModel(){
     var model=new Object();
-    model.nombre=$("#areaDibujo h1").text();
+    //model.nombre=$("#areaDibujo h1").text();
     model.elements=new Array();
-    model.connections=new Array();
+    //model.connections=new Array();
     
     $("#areaDibujo .box").each(function(i,e){
         var tmp=new Object();
         tmp.id=e.id;
-        tmp.name=$(e).text();
+        //tmp.name=$(e).text();
         tmp.left=$(e).position().left;
         tmp.top=$(e).position().top;
         model.elements.push(tmp);
     });
-        
+    
+    /*
     var connections=jsPlumb.getConnections();
     for(var i in connections){
         var tmp=new Object();
@@ -176,6 +132,7 @@ function updateModel(){
         tmp.target=connections[i].targetId;
         model.connections.push(tmp);
     }
+    */
     
     json=JSON.stringify(model);
     

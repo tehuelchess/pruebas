@@ -99,6 +99,26 @@ class Procesos extends CI_Controller {
         echo json_encode($respuesta);
     }
     
+    public function ajax_crear_tarea($proceso_id,$tarea_identificador){
+        $proceso=Doctrine::getTable('Proceso')->find($proceso_id);
+        
+        if($proceso->cuenta_id!=UsuarioBackendSesion::usuario()->cuenta_id){
+            echo 'Usuario no tiene permisos para crear esta tarea.';
+            exit;
+        }
+        
+        $tarea=new Tarea();
+        $tarea->proceso_id=$proceso->id;
+        $tarea->identificador=$tarea_identificador;
+        $tarea->nombre=$this->input->post('nombre');
+        $tarea->posx=$this->input->post('posx');
+        $tarea->posy=$this->input->post('posy');
+        $tarea->save();
+        
+        $this->load->library('pusher');
+        $this->pusher->trigger('modelador', 'updateModel', array('modelo' => $tarea->Proceso->getJSONFromModel()));
+    }
+    
     public function ajax_editar_tarea($proceso_id,$tarea_identificador){
         $tarea=Doctrine::getTable('Tarea')->findOneByProcesoIdAndIdentificador($proceso_id,$tarea_identificador);
         
@@ -163,6 +183,31 @@ class Procesos extends CI_Controller {
         $this->pusher->trigger('modelador', 'updateModel', array('modelo' => $proceso->getJSONFromModel()));
     
         redirect('backend/procesos/editar/'.$proceso->id);
+    }
+    
+    public function ajax_crear_conexion($proceso_id,$conexion_identificador){        
+        $proceso=Doctrine::getTable('Proceso')->find($proceso_id);
+        $tarea_origen=Doctrine::getTable('Tarea')->findOneByProcesoIdAndIdentificador($proceso_id,$this->input->post('tarea_id_origen'));
+        $tarea_destino=Doctrine::getTable('Tarea')->findOneByProcesoIdAndIdentificador($proceso_id,$this->input->post('tarea_id_destino'));
+        
+        if($proceso->cuenta_id!=UsuarioBackendSesion::usuario()->cuenta_id){
+            echo 'Usuario no tiene permisos para crear esta conexion.';
+            exit;
+        }
+        if($tarea_origen->Proceso->cuenta_id!=UsuarioBackendSesion::usuario()->cuenta_id){
+            echo 'Usuario no tiene permisos para crear esta conexion.';
+            exit;
+        }
+        if($tarea_destino->Proceso->cuenta_id!=UsuarioBackendSesion::usuario()->cuenta_id){
+            echo 'Usuario no tiene permisos para crear esta conexion.';
+            exit;
+        }
+        
+        $conexion=new Conexion();
+        $conexion->identificador=$conexion_identificador;
+        $conexion->tarea_id_origen=$tarea_origen->id;
+        $conexion->tarea_id_destino=$tarea_destino->id;
+        $conexion->save();
     }
     
     public function ajax_editar_conexion($proceso_id,$conexion_identificador){        
