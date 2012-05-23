@@ -32,7 +32,7 @@
             <div class="row">
                 <ul class="nav nav-pills pull-right">
                     <li class="dropdown">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Bienvenido <?=UsuarioSesion::usuario()->nombre?><b class="caret"></b></a>
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Bienvenido <?=UsuarioSesion::usuario()->usuario?><b class="caret"></b></a>
                         <ul class="dropdown-menu">
                             <li><a href="<?=site_url('autenticacion/logout')?>">Cerrar sesión</a></li>
                         </ul>
