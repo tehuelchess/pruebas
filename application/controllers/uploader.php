@@ -5,6 +5,8 @@ class Uploader extends CI_Controller {
 
     function __construct() {
         parent::__construct();
+        
+        UsuarioSesion::force_login();
     }
 
     function datos() {
