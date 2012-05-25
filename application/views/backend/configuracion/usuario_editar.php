@@ -20,6 +20,10 @@
                 <div class="validacion"></div>
                 <label>Nombre de Usuario</label>
                 <input type="text" name="usuario" value="<?=isset($usuario)?$usuario->usuario:''?>"/>
+                <label>Contraseña</label>
+                <input type="password" name="password" value=""/>
+                <label>Confirmar contraseña</label>
+                <input type="password" name="password_confirm" value=""/>
                 <label>Nombre</label>
                 <input type="text" name="nombre" value="<?=isset($usuario)?$usuario->nombre:''?>"/>
                 <label>Apellidos</label>
