@@ -1,6 +1,4 @@
-<?php if ($paso>0): ?>
-<a href="<?=site_url('etapas/ejecutar/'.$etapa->id.'/'.($paso-1))?>">Paso anterior</a>
-<?php endif; ?>
+
 <form method="POST" class="ajaxForm" action="<?=site_url('etapas/ejecutar_form/'.$etapa->id.'/'.$paso)?>">    
     <fieldset>
         <div class="validacion"></div>
@@ -9,7 +7,8 @@
         <?=$c->display($etapa->Tarea->Pasos[$paso]->modo,$etapa->Tramite->id)?>
         <?php endforeach ?>
         <div class="form-actions">
-            <button class="btn" type="submit"><?=$etapa->Tarea->Pasos->count()-1==$paso?'Finalizar':'Siguiente'?></button>
+            <?php if ($paso>0): ?><a class="btn" href="<?=site_url('etapas/ejecutar/'.$etapa->id.'/'.($paso-1))?>"><i class="icon-step-backward"></i> Volver</a><?php endif; ?>
+            <button class="btn btn-primary" type="submit"><?=$etapa->Tarea->Pasos->count()-1==$paso?'Finalizar':'Siguiente'?></button>
         </div>
     </fieldset>
 </form>
