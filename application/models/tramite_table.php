@@ -12,6 +12,7 @@ class TramiteTable extends Doctrine_Table {
                 ->from('Tramite t, t.Etapas e, e.Tarea tar, tar.GruposUsuarios g')
                 ->where('e.usuario_id IS NULL')
                 ->andWhereIn('g.id',$grupos_array)
+                ->orderBy('t.updated_at desc')
                 ->execute();
     }
     
@@ -21,6 +22,7 @@ class TramiteTable extends Doctrine_Table {
         return Doctrine_Query::create()
                 ->from('Tramite t, t.Etapas e, e.Usuario u')
                 ->where('u.id = ?',$usuario_id)
+                ->orderBy('t.updated_at desc')
                 ->execute();
     }
     
@@ -30,6 +32,7 @@ class TramiteTable extends Doctrine_Table {
         return Doctrine_Query::create()
                 ->from('Tramite t, t.Etapas e, e.Usuario u')
                 ->where('e.pendiente = 1 and u.id = ?',$usuario_id)
+                ->orderBy('t.updated_at desc')
                 ->execute();
     }
     

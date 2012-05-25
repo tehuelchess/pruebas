@@ -6,6 +6,7 @@ class ProcesoTable extends Doctrine_Table {
         return Doctrine_Query::create()
                 ->from('Proceso p, p.Tareas t, t.GruposUsuarios.Usuarios u')
                 ->where('t.inicial = 1 and u.id = ?',$usuario_id)
+                ->orderBy('p.id desc')
                 ->execute();
     }
     
