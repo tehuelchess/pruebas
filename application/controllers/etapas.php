@@ -13,16 +13,16 @@ class Etapas extends CI_Controller {
 
     public function ejecutar($etapa_id, $paso = 0) {
         $etapa = Doctrine::getTable('Etapa')->find($etapa_id);
-        
-        if($etapa->usuario_id!=UsuarioSesion::usuario()->id){
+
+        if ($etapa->usuario_id != UsuarioSesion::usuario()->id) {
             echo 'Usuario no tiene permisos para ejecutar esta etapa.';
             exit;
         }
-        if(!$etapa->pendiente){
+        if (!$etapa->pendiente) {
             echo 'Esta etapa ya fue completada';
             exit;
         }
-            
+
         $data['etapa'] = $etapa;
         $data['paso'] = $paso;
 
@@ -33,16 +33,16 @@ class Etapas extends CI_Controller {
 
     public function ejecutar_form($etapa_id, $paso) {
         $etapa = Doctrine::getTable('Etapa')->find($etapa_id);
-        
-        if($etapa->usuario_id!=UsuarioSesion::usuario()->id){
+
+        if ($etapa->usuario_id != UsuarioSesion::usuario()->id) {
             echo 'Usuario no tiene permisos para ejecutar esta etapa.';
             exit;
         }
-        if(!$etapa->pendiente){
+        if (!$etapa->pendiente) {
             echo 'Esta etapa ya fue completada';
             exit;
         }
-        
+
         $formulario = $etapa->Tarea->Pasos[$paso]->Formulario;
         $modo = $etapa->Tarea->Pasos[$paso]->modo;
 
@@ -52,15 +52,13 @@ class Etapas extends CI_Controller {
 
             if ($this->form_validation->run() == TRUE) {
                 foreach ($formulario->Campos as $c) {
-                    Doctrine::getTable('Dato')->findByTramiteIdAndNombre($etapa->Tramite->id, $c->nombre)->delete();
-                    $input_array=is_array($this->input->post($c->nombre))?$this->input->post($c->nombre):array($this->input->post($c->nombre));
-                    foreach($input_array as $input){
+                    $dato = Doctrine::getTable('Dato')->findOneByTramiteIdAndNombre($etapa->Tramite->id, $c->nombre);
+                    if (!$dato)
                         $dato = new Dato();
-                        $dato->nombre = $c->nombre;
-                        $dato->valor = $input;
-                        $dato->tramite_id=$etapa->Tramite->id;
-                        $dato->save();
-                    }
+                    $dato->nombre = $c->nombre;
+                    $dato->valor = json_encode($this->input->post($c->nombre));
+                    $dato->tramite_id = $etapa->Tramite->id;
+                    $dato->save();
                 }
                 $etapa->save();
 
@@ -92,18 +90,18 @@ class Etapas extends CI_Controller {
 
     public function asignar($etapa_id) {
         $etapa = Doctrine::getTable('Etapa')->find($etapa_id);
-        
-        if($etapa->usuario_id){
+
+        if ($etapa->usuario_id) {
             echo 'Etapa ya fue asignada.';
             exit;
         }
-        
-        if(!$etapa->canUsuarioAsignarsela(UsuarioSesion::usuario()->id)){
+
+        if (!$etapa->canUsuarioAsignarsela(UsuarioSesion::usuario()->id)) {
             echo 'Usuario no puede asignarse esta etapa.';
             exit;
         }
-        
-        
+
+
         $etapa->usuario_id = UsuarioSesion::usuario()->id;
         $etapa->save();
 
