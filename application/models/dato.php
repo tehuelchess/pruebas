@@ -21,5 +21,13 @@ class Dato extends Doctrine_Record {
         
 
     }
+    
+    public function setValor($valor){
+        $this->_set('valor', json_encode($valor));
+    }
+    
+    public function getValor(){
+        return json_decode($this->_get('valor'));
+    }
 
 }

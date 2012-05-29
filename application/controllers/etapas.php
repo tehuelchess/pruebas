@@ -56,7 +56,7 @@ class Etapas extends CI_Controller {
                     if (!$dato)
                         $dato = new Dato();
                     $dato->nombre = $c->nombre;
-                    $dato->valor = json_encode($this->input->post($c->nombre));
+                    $dato->valor = $this->input->post($c->nombre);
                     $dato->tramite_id = $etapa->Tramite->id;
                     $dato->save();
                 }

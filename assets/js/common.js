@@ -8,7 +8,7 @@ $(document).ready(function(){
             action: site_url+'uploader/datos',
             onComplete: function(id,filename,respuesta){
                 $parentDiv.find("input[type=hidden]").val(respuesta.file_name);
-                $parentDiv.find("a").text(respuesta.file_name).attr("href",base_url+"uploads/datos/"+respuesta.file_name);
+                $parentDiv.find("a").text(respuesta.file_name).attr("href",site_url+"uploader/datos_get/"+respuesta.id);
                 //$parentDiv.append();
             }
         }); 
