@@ -14,7 +14,7 @@
         <label>Etiqueta</label>
         <input type="text" name="etiqueta" value="<?= isset($campo) ? $campo->etiqueta : '' ?>" />
         <label>Reglas de validación</label>
-        <input type="text" name="validacion" value="<?= isset($campo) ? $campo->validacion : '' ?>" />
+        <input type="text" name="validacion" value="<?= isset($campo) ? implode('|',$campo->validacion) : '' ?>" />
         <?php if ((isset($campo) && ($campo->tipo=='select' || $campo->tipo=='radio' || $campo->tipo=='checkbox')) ||
                 (!isset($campo) && ($tipo == 'select' || $tipo=='radio' || $tipo=='checkbox'))): ?>
             <div class="datos">
@@ -46,7 +46,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php if(isset($campo)) foreach($campo->getDatosFromJSON() as $key=>$d):?>
+                        <?php if(isset($campo)) foreach($campo->datos as $key=>$d):?>
                         <tr>
                             <td><input class="input-small" type="text" name="datos[<?=$key?>][valor]" value="<?=$d->valor?>" /></td>
                             <td><input type="text" name="datos[<?=$key?>][etiqueta]" value="<?=$d->etiqueta?>" /></td>

@@ -45,20 +45,26 @@ class Campo extends Doctrine_Record {
         return $dato;
     }
     
+    public function setValidacion($validacion){
+        if($validacion)
+            $this->_set('validacion',  implode ('|', $validacion));
+        else
+            $this->_set('validacion',NULL);
+    }
+    
     public function getValidacion(){
         return explode('|',$this->_get('validacion'));
     }
 
-    public function setDatosFromArray($datos_array) {
-        if ($datos_array) {
-            $this->datos = json_encode($datos_array);
-        } else {
-            $this->datos = NULL;
-        }
+    public function setDatos($datos_array) {
+        if ($datos_array) 
+            $this->_set('datos' , json_encode($datos_array));
+        else 
+            $this->_set('datos' , NULL);
     }
 
-    public function getDatosFromJSON() {
-        return json_decode($this->datos);
+    public function getDatos() {
+        return json_decode($this->_get('datos'));
     }
 
 }

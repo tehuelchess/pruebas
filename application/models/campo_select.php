@@ -9,7 +9,7 @@ class CampoSelect extends Campo {
 
         $display = '<label>' . $this->etiqueta . (in_array('required', $this->validacion) ? '' : ' (Opcional)') . '</label>';
         $display.='<select name="' . $this->nombre . '" ' . ($modo == 'visualizacion' ? 'disabled' : '') . '>';
-        foreach ($this->getDatosFromJSON() as $d) {
+        foreach ($this->datos as $d) {
             $display.='<option value="' . $d->valor . '" ' . ($dato && $d->valor == $dato->valor ? 'selected' : '') . '>' . $d->etiqueta . '</option>';
         }
         $display.='</select>';
