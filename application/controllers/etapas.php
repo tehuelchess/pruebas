@@ -48,7 +48,7 @@ class Etapas extends CI_Controller {
 
         if ($modo == 'edicion') {
             foreach ($formulario->Campos as $c)
-                $this->form_validation->set_rules($c->nombre, $c->etiqueta, $c->validacion);
+                $this->form_validation->set_rules($c->nombre, $c->etiqueta, implode('|',$c->validacion));
 
             if ($this->form_validation->run() == TRUE) {
                 foreach ($formulario->Campos as $c) {

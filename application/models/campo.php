@@ -11,6 +11,16 @@ class Campo extends Doctrine_Record {
         $this->hasColumn('etiqueta');
         $this->hasColumn('validacion');
         $this->hasColumn('datos');
+        
+        $this->setSubclasses(array(
+                'CampoText'  => array('tipo' => 'text'),
+                'CampoTextArea'  => array('tipo' => 'textarea'),
+                'CampoSelect'  => array('tipo' => 'select'),
+                'CampoRadio'  => array('tipo' => 'radio'),
+                'CampoCheckbox'  => array('tipo' => 'checkbox'),
+                'CampoFile'  => array('tipo' => 'file')
+            )
+        );
     }
 
     function setUp() {
@@ -25,53 +35,18 @@ class Campo extends Doctrine_Record {
     //Despliega la vista de un campo del formulario
     //tramite_id indica al tramite que pertenece este campo
     //modo es visualizacion o edicion
-    public function display($modo = 'edicion', $tramite_id = NULL) {
-        $display = NULL;
-
-        $validacion = explode('|', $this->validacion);
-
-        $dato= NULL;
-        if ($tramite_id)
-            $dato = Doctrine::getTable('Dato')->findOneByTramiteIdAndNombre($tramite_id, $this->nombre);
-
-        if ($this->tipo == 'text') {
-            $display.='<label>' . $this->etiqueta . (in_array('required', $validacion) ? '' : ' (Opcional)') . '</label>';
-            $display.='<input ' . ($modo == 'visualizacion' ? 'readonly' : '') . ' type="text" name="' . $this->nombre . '" value="' . ($dato?$dato->valor:'') . '" />';
-        }else if ($this->tipo == 'textarea') {
-            $display.='<label>' . $this->etiqueta . (in_array('required', $validacion) ? '' : ' (Opcional)') . '</label>';
-            $display.='<textarea ' . ($modo == 'visualizacion' ? 'readonly' : '') . ' name="' . $this->nombre . '">' . ($dato?$dato->valor:'') . '</textarea>';
-        } else if ($this->tipo == 'select') {
-            $display.='<label>' . $this->etiqueta . (in_array('required', $validacion) ? '' : ' (Opcional)') . '</label>';
-            $display.='<select name="' . $this->nombre . '" ' . ($modo == 'visualizacion' ? 'disabled' : '') . '>';
-            foreach ($this->getDatosFromJSON() as $d) {
-                $display.='<option value="' . $d->valor . '" ' . ($dato && $d->valor == $dato->valor ? 'selected' : '') . '>' . $d->etiqueta . '</option>';
-            }
-            $display.='</select>';
-        } else if ($this->tipo == 'radio') {
-            $display.='<label>' . $this->etiqueta . (in_array('required', $validacion) ? '' : ' (Opcional)') . '</label>';
-            foreach ($this->getDatosFromJSON() as $d) {
-                $display.='<label class="radio">';
-                $display.='<input ' . ($modo == 'visualizacion' ? 'disabled' : '') . ' type="radio" name="' . $this->nombre . '" value="' . $d->valor . '" ' . ($dato && $d->valor == $dato->valor ? 'checked' : '') . ' />';
-                $display.=$d->etiqueta . '</label>';
-            }
-        } else if ($this->tipo == 'checkbox') {
-            $display.='<label>' . $this->etiqueta . (in_array('required', $validacion) ? '' : ' (Opcional)') . '</label>';
-            foreach ($this->getDatosFromJSON() as $d) {
-                $display.='<label class="checkbox">';
-                $display.='<input ' . ($modo == 'visualizacion' ? 'disabled' : '') . ' type="checkbox" name="' . $this->nombre . '[]" value="' . $d->valor . '" ' . ($dato && $dato->valor && in_array($d->valor, $dato->valor) ? 'checked' : '') . ' />';
-                $display.=$d->etiqueta . '</label>';
-            }
-        }else if ($this->tipo == 'file') {
-            $display.='<label>' . $this->etiqueta . (in_array('required', $validacion) ? '' : ' (Opcional)') . '</label>';
-            $display.='<div>';
-            $display.='<div class="'.($modo=='visualizacion'?'':'file-uploader').'" name="' . $this->nombre . '" value="' . ($dato?$dato->valor:'') . '"></div>';
-            $display.='<input type="hidden" name="' . $this->nombre . '" value="' . ($dato?$dato->valor:'') . '" />';
-            if($dato)
-                $display.='<p><a href="'.site_url('uploader/datos_get/'.$dato->valor).'" target="_blank">'.$dato->valor.'</a></p>';
-            $display.='</div>';
-        }
-
-        return $display;
+    public function display($modo = 'edicion', $tramite_id = NULL){
+        return '';
+    }
+    
+    protected function getDatoDeTramite($tramite_id){
+        $dato = Doctrine::getTable('Dato')->findOneByTramiteIdAndNombre($tramite_id, $this->nombre);
+        
+        return $dato;
+    }
+    
+    public function getValidacion(){
+        return explode('|',$this->_get('validacion'));
     }
 
     public function setDatosFromArray($datos_array) {
