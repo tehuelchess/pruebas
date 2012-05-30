@@ -14,7 +14,13 @@
         <label>Etiqueta</label>
         <input type="text" name="etiqueta" value="<?= isset($campo) ? $campo->etiqueta : '' ?>" />
         <label>Reglas de validación</label>
-        <input type="text" name="validacion" value="<?= isset($campo) ? implode('|',$campo->validacion) : '' ?>" />
+        <input type="text"
+               name="validacion"
+               data-provide="typeahead"
+               data-mode="multiple"
+               data-delimiter="|"
+               data-source="[&quot;required&quot;,&quot;rut&quot;,&quot;min_length[num]&quot;,&quot;max_length[num]&quot;,&quot;exact_length[num]&quot;,&quot;greater_than[num]&quot;,&quot;less_than[num]&quot;,&quot;alpha&quot;,&quot;alpha_numeric&quot;,&quot;alpha_dash&quot;,&quot;numeric&quot;,&quot;integer&quot;,&quot;decimal&quot;,&quot;is_natural&quot;,&quot;is_natural_no_zero&quot;,&quot;valid_email&quot;,&quot;valid_emails&quot;,&quot;valid_ip&quot;,&quot;valid_base64&quot;]"
+               value="<?= isset($campo) ? implode('|',$campo->validacion) : '' ?>"/>
         <?php if ((isset($campo) && ($campo->tipo=='select' || $campo->tipo=='radio' || $campo->tipo=='checkbox')) ||
                 (!isset($campo) && ($tipo == 'select' || $tipo=='radio' || $tipo=='checkbox'))): ?>
             <div class="datos">

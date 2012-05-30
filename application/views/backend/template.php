@@ -27,6 +27,7 @@
 
         <script src="assets/js/jquery-ui/js/jquery-1.7.1.min.js" type="text/javascript"></script>
         <script src="assets/js/bootstrap.min.js" type="text/javascript"></script> <?php //JS base   ?>
+        <script src="assets/js/bootstrap-typeahead-multiple.js" type="text/javascript"></script> <?php //JS typeahead modificado para multiples items   ?>
         <script src="assets/js/jquery.chosen/chosen.jquery.min.js"></script> <?php //Soporte para selects con multiple choices   ?>
         <script src="assets/js/file-uploader/fileuploader.js"></script> <?php //Soporte para subir archivos con ajax   ?>
         <script src="assets/js/jquery-ui/js/jquery-ui-1.8.18.custom.min.js" type="text/javascript"></script>

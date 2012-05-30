@@ -141,6 +141,7 @@ class Formularios extends CI_Controller {
         
         $this->form_validation->set_rules('nombre','Nombre','required');
         $this->form_validation->set_rules('etiqueta','Etiqueta','required');
+        $this->form_validation->set_rules('validacion','Validación','callback_clean_validacion');
         if(!$campo_id){
             $this->form_validation->set_rules('formulario_id','Formulario','required|callback_check_permiso_formulario');
             $this->form_validation->set_rules('tipo','Tipo de Campo','required');
@@ -222,6 +223,10 @@ class Formularios extends CI_Controller {
         }
         
         return TRUE;
+    }
+    
+    function clean_validacion($validacion){
+        return preg_replace('/\|\s*$/','',$validacion);
     }
 
 }
