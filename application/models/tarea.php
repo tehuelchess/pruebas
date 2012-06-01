@@ -11,6 +11,7 @@ class Tarea extends Doctrine_Record {
         $this->hasColumn('nombre');
         $this->hasColumn('posx');
         $this->hasColumn('posy');
+        $this->hasColumn('asignacion');
     }
 
     function setUp() {
@@ -50,6 +51,36 @@ class Tarea extends Doctrine_Record {
                 return true;
             
         return false;
+    }
+    
+    //Obtiene el listado de usuarios que tienen acceso a esta tarea.
+    public function getUsuarios(){
+        return Doctrine_Query::create()
+                ->from('Usuario u, u.GruposUsuarios g, g.Tareas t')
+                ->where('t.id = ?',$this->id)
+                ->execute();
+    }
+    
+    //Obtiene si el usuarios tiene acceso a esta tarea.
+    public function hasUsuario($usuario_id){
+        $existe= Doctrine_Query::create()
+                ->from('Usuario u, u.GruposUsuarios g, g.Tareas t')
+                ->where('t.id = ? AND u.id=?',array($this->id,$usuario_id))
+                ->count();
+        
+        if($existe)
+            return TRUE;
+        
+        return FALSE;
+    }
+    
+    //Obtiene el ultimo usuario que fue a asignado a esta tarea dentro del tramite tramite_id
+    public function getUltimoUsuarioAsignado($proceso_id){
+        return Doctrine_Query::create()
+                ->from('Usuario u, u.Etapas e, e.Tarea t, e.Tramite.Proceso p')
+                ->where('t.id = ? AND p.id = ?',array($this->id,$proceso_id))
+                ->orderBy('e.created_at DESC')
+                ->fetchOne();
     }
     
     public function setGruposUsuariosFromArray($grupos_usuarios_ids){        

@@ -8,7 +8,7 @@
         <?php endforeach ?>
         <div class="form-actions">
             <?php if ($paso>0): ?><a class="btn" href="<?=site_url('etapas/ejecutar/'.$etapa->id.'/'.($paso-1))?>"><i class="icon-chevron-left"></i> Volver</a><?php endif; ?>
-            <button class="btn btn-primary" type="submit"><?=$etapa->Tarea->Pasos->count()-1==$paso?'Finalizar':'Siguiente'?></button>
+            <button class="btn btn-primary" type="submit">Siguiente</button>
         </div>
     </fieldset>
 </form>

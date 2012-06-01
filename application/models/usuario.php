@@ -20,6 +20,11 @@ class Usuario extends Doctrine_Record {
             'refClass' => 'GrupoUsuariosHasUsuario'
         ));
         
+        $this->hasMany('Etapa as Etapas',array(
+            'local'=>'id',
+            'foreign'=>'usuario_id'
+        ));
+        
         $this->hasOne('Cuenta',array(
             'local'=>'cuenta_id',
             'foreign'=>'id'

@@ -66,8 +66,9 @@
         <div class="tabbable">
             <ul class="nav nav-tabs">
                 <li class="active"><a href="#tab1">Definición</a></li>
-                <li><a href="#tab2">Usuarios</a></li>
-                <li><a href="#tab3">Pasos</a></li>
+                <li><a href="#tab2">Regla de asignación</a></li>
+                <li><a href="#tab3">Usuarios</a></li>
+                <li><a href="#tab4">Pasos</a></li>
             </ul>
             <div class="tab-content">
                 <div class="tab-pane active" id="tab1">
@@ -77,14 +78,20 @@
                     <label class="checkbox"><input name="final" value="1" type="checkbox" <?= $tarea->final ? 'checked' : '' ?>> Tarea Final</label>
                 </div>
                 <div class="tab-pane" id="tab2">
-                    <label>Grupos de Usuarios:</label>
+                    <label>Regla de asignación</label>
+                    <label class="radio"><input type="radio" name="asignacion" value="ciclica" <?=$tarea->asignacion=='ciclica'?'checked':''?> /> Cíclica</label>
+                    <label class="radio"><input type="radio" name="asignacion" value="manual" <?=$tarea->asignacion=='manual'?'checked':''?> /> Manual</label>
+                    <label class="radio"><input type="radio" name="asignacion" value="autoservicio" <?=$tarea->asignacion=='autoservicio'?'checked':''?> /> Auto Servicio</label>
+                </div>
+                <div class="tab-pane" id="tab3">
+                    <label>Grupos de Usuarios</label>
                     <select name="grupos_usuarios[]" class="chosen" multiple>
                         <?php foreach ($grupos_usuarios as $g): ?>
                             <option value="<?= $g->id ?>" <?= $tarea->hasGrupoUsuarios($g->id) ? 'selected="selected"' : '' ?>><?= $g->nombre ?></option>
                         <?php endforeach; ?>
                     </select>
                 </div>
-                <div class="tab-pasos tab-pane" id="tab3">
+                <div class="tab-pasos tab-pane" id="tab4">
                     <div class="form-inline">
                         <select>
                             <?php foreach ($formularios as $f): ?>
