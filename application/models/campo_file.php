@@ -1,5 +1,5 @@
 <?php
-
+require_once('campo.php');
 class CampoFile extends Campo {
 
     public function display($modo = 'edicion', $tramite_id = NULL) {
