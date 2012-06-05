@@ -29,6 +29,37 @@ class Autenticacion extends CI_Controller {
         echo json_encode($respuesta);
 
     }
+    
+    public function registrar(){        
+        $this->load->view('autenticacion/registrar');
+    }
+    
+    public function registrar_form() {
+        $this->form_validation->set_rules('usuario', 'Usuario', 'required|callback_check_usuario');
+        $this->form_validation->set_rules('password', 'Contraseña', 'required|matches[password_confirm]');
+        $this->form_validation->set_rules('password_confirm', 'Confirmar contraseña');
+        $this->form_validation->set_rules('email', 'Correo electrónico','valid_email');
+
+        if ($this->form_validation->run() == TRUE) {
+            $usuario=new Usuario();
+            $usuario->usuario=$this->input->post('usuario');
+            $usuario->password=$this->input->post('password');
+            $usuario->email=$this->input->post('email');
+            $usuario->save();
+            
+            UsuarioSesion::login($this->input->post('usuario'),$this->input->post('password'));
+            
+            $respuesta->validacion=TRUE;
+            $respuesta->redirect=site_url();
+            
+        }else{
+            $respuesta->validacion=FALSE;
+            $respuesta->errores=validation_errors();
+        }
+        
+        echo json_encode($respuesta);
+
+    }
 
 
     function logout() {
@@ -44,6 +75,17 @@ class Autenticacion extends CI_Controller {
             return TRUE;
         
         $this->form_validation->set_message('check_password','Usuario y/o contraseña incorrecta.');
+        return FALSE;
+        
+    }
+    
+    function check_usuario($usuario){
+        $usuario=Doctrine::getTable('Usuario')->findOneByUsuario($usuario);
+        
+        if(!$usuario)
+            return TRUE;
+        
+        $this->form_validation->set_message('check_usuario','Usuario ya existe.');
         return FALSE;
         
     }

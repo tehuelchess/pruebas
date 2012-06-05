@@ -3,15 +3,10 @@
 class TramiteTable extends Doctrine_Table {
 
     public function findSinAsignar($usuario_id){
-        $grupos=Doctrine::getTable('Usuario')->find($usuario_id)->GruposUsuarios;
-        $grupos_array=array();
-        foreach($grupos as $g)
-            $grupos_array[]=$g->id;
-        
         return Doctrine_Query::create()
                 ->from('Tramite t, t.Etapas e, e.Tarea tar, tar.GruposUsuarios g')
                 ->where('e.usuario_id IS NULL')
-                ->andWhereIn('g.id',$grupos_array)
+                ->andWhere('g.id IN (SELECT gru.id FROM GrupoUsuarios gru, gru.Usuarios usr WHERE usr.id = ?) OR g.registrados = 1',$usuario_id)
                 ->orderBy('t.updated_at desc')
                 ->execute();
     }

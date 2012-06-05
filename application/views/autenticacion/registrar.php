@@ -29,17 +29,21 @@
         <div class="container">
             <div class="row" style="margin-top: 100px;">
                 <div class="span6 offset3">
-                    <form method="post" class="ajaxForm" action="<?= site_url('autenticacion/login_form') ?>">        
+                    <form method="post" class="ajaxForm" action="<?= site_url('autenticacion/registrar_form') ?>">        
                         <fieldset>
-                            <legend>Ingrese al sistema</legend>
+                            <legend>Registrarse en el sistema</legend>
                             <div class="validacion"></div>
-                            <input type="hidden" name="redirect" value="<?= $redirect ?>" />
                             <label>Usuario</label>
                             <input name="usuario" type="text" class="input-xlarge">
                             <label>Contraseña</label>
                             <input name="password" type="password" class="input-xlarge">
-                            <p>¿No esta registrado? <a href="<?=site_url('autenticacion/registrar')?>">Registrese acá</a></p>
+                            <label>Confirmar contraseña</label>
+                            <input name="password_confirm" type="password" class="input-xlarge">
+                            <label>Correo electrónico (Opcional)</label>
+                            <input type="text" name="email" class="input-xlarge" />
+                            <p class="help-block">Importante para recibor notificaciones del estado de sus trámites.</p>
                             <div class="form-actions">
+                                <a class="btn" href="<?=site_url('autenticacion/login')?>">Volver</a>
                                 <button class="btn btn-primary" type="submit">Ingresar</button>
                             </div>
                         </fieldset>

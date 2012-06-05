@@ -20,6 +20,7 @@
                 <div class="validacion"></div>
                 <label>Nombre</label>
                 <input type="text" name="nombre" value="<?=isset($grupo_usuarios)?$grupo_usuarios->nombre:''?>"/>
+                <label class="checkbox"><input type="checkbox" name="registrados" value="1" <?=$grupo_usuarios->registrados?'checked':''?> /> Este grupo lo componen todos los usuarios del sistema.</label>
                 <div class="form-actions">
                     <button class="btn btn-primary" type="submit">Guardar</button>
                     <a class="btn" href="<?=site_url('backend/configuracion/grupos_usuarios')?>">Cancelar</a>

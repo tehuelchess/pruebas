@@ -8,6 +8,7 @@ class Usuario extends Doctrine_Record {
         $this->hasColumn('password');
         $this->hasColumn('nombre');
         $this->hasColumn('apellidos');
+        $this->hasColumn('email');
         $this->hasColumn('cuenta_id');
     }
 
@@ -48,8 +49,9 @@ class Usuario extends Doctrine_Record {
         foreach($this->GruposUsuarios as $key=>$val)
             unset($this->GruposUsuarios[$key]);
         
-        foreach($grupos_usuarios_array as $g)
-            $this->GruposUsuarios[]=Doctrine::getTable('GrupoUsuarios')->find($g);
+        if($grupos_usuarios_array)
+            foreach($grupos_usuarios_array as $g)
+                $this->GruposUsuarios[]=Doctrine::getTable('GrupoUsuarios')->find($g);
     }
 
 }

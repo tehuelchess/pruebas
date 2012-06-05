@@ -28,6 +28,8 @@
                 <input type="text" name="nombre" value="<?=isset($usuario)?$usuario->nombre:''?>"/>
                 <label>Apellidos</label>
                 <input type="text" name="apellidos" value="<?=isset($usuario)?$usuario->apellidos:''?>"/>
+                <label>Correo electrónico</label>
+                <input type="text" name="email" value="<?=isset($usuario)?$usuario->email:''?>"/>
                 <label>Grupos de Usuarios</label>
                 <select class="chosen" name="grupos_usuarios[]" multiple>
                     <?php foreach($grupos_usuarios as $g): ?>

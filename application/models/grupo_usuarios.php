@@ -6,6 +6,7 @@ class GrupoUsuarios extends Doctrine_Record {
         $this->hasColumn('id');
         $this->hasColumn('nombre');
         $this->hasColumn('cuenta_id');
+        $this->hasColumn('registrados');
     }
 
     function setUp() {
