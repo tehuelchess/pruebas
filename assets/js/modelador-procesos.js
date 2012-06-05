@@ -5,7 +5,6 @@ $(document).ready(function(){
         lineWidth:4
     };
     jsPlumb.Defaults.Endpoint="Blank";
-    jsPlumb.Defaults.Anchor=["BottomCenter", "TopCenter"];
     jsPlumb.Defaults.Connector="Flowchart";
     jsPlumb.Defaults.ConnectionOverlays = [[ "Arrow", {
         location:1, 
@@ -58,7 +57,8 @@ $(document).ready(function(){
             if(elements.length==2){
                 var conn=jsPlumb.connect({
                     source: elements[0],
-                    target: elements[1]
+                    target: elements[1],
+                    anchors: ["BottomCenter", "TopCenter"]
                 });
                 
                 modo=null;
@@ -156,7 +156,8 @@ function drawFromModel(model){
     $(model.connections).each(function(i,c){
         var connection=jsPlumb.connect({
             source: c.source,
-            target: c.target
+            target: c.target,
+            anchors: ["BottomCenter", "TopCenter"]
         });
         connection.id=c.id;
     });
