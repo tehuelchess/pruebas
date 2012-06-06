@@ -38,7 +38,7 @@
                             <input name="usuario" type="text" class="input-xlarge">
                             <label>Contraseña</label>
                             <input name="password" type="password" class="input-xlarge">
-                            <p>¿No esta registrado? <a href="<?=site_url('autenticacion/registrar')?>">Registrese acá</a></p>
+                            <p>¿No esta registrado? <a href="<?=site_url('autenticacion/registrar')?>">Regístrese acá</a></p>
                             <div class="form-actions">
                                 <button class="btn btn-primary" type="submit">Ingresar</button>
                             </div>
