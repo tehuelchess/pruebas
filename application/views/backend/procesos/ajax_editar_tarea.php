@@ -2,6 +2,8 @@
     $(document).ready(function(){
         $(".chosen").chosen();
         
+        $("[rel=tooltip]").tooltip();
+        
         $('.nav-tabs a').click(function (e) {
             e.preventDefault();
             $(this).tab('show');
@@ -59,7 +61,7 @@
     <a class="close" data-dismiss="modal">×</a>
     <h3>Editar Tarea</h3>
 </div>
-<div class="modal-body" style="min-height: 320px;">
+<div class="modal-body" >
     <form id="formEditarTarea" class="ajaxForm" method="POST" action="<?= site_url('backend/procesos/editar_tarea_form/' . $tarea->id) ?>">
         <div class="validacion"></div>
 
@@ -69,6 +71,7 @@
                 <li><a href="#tab2">Regla de asignación</a></li>
                 <li><a href="#tab3">Usuarios</a></li>
                 <li><a href="#tab4">Pasos</a></li>
+                <li><a href="#tab5">Otros</a></li>
             </ul>
             <div class="tab-content">
                 <div class="tab-pane active" id="tab1">
@@ -78,12 +81,26 @@
                     <label class="checkbox"><input name="final" value="1" type="checkbox" <?= $tarea->final ? 'checked' : '' ?>> Tarea Final</label>
                 </div>
                 <div class="tab-pane" id="tab2">
+                    <script type="text/javascript">
+                        $(document).ready(function(){
+                            $("input[name=asignacion]").click(function(){
+                                if(this.value=="usuario")
+                                    $("#optionalAsignacionUsuario").removeClass("hide");
+                                else
+                                    $("#optionalAsignacionUsuario").addClass("hide");
+                            });
+                        });
+                    </script>
                     <label>Regla de asignación</label>
-                    <label class="radio"><input type="radio" name="asignacion" value="ciclica" <?=$tarea->asignacion=='ciclica'?'checked':''?> /> Cíclica</label>
-                    <label class="radio"><input type="radio" name="asignacion" value="manual" <?=$tarea->asignacion=='manual'?'checked':''?> /> Manual</label>
-                    <label class="radio"><input type="radio" name="asignacion" value="autoservicio" <?=$tarea->asignacion=='autoservicio'?'checked':''?> /> Auto Servicio</label>
+                    <label class="radio" rel="tooltip" title="Los usuarios se asignan en forma ciclica. Se van turnando dentro del grupo de usuarios en forma circular."><input type="radio" name="asignacion" value="ciclica" <?= $tarea->asignacion == 'ciclica' ? 'checked' : '' ?> /> Cíclica</label>
+                    <label class="radio" rel="tooltip" title="Al finalizar cada tarea, se le pregunta al usuario a quien se le va a asignar la próxima tarea."><input type="radio" name="asignacion" value="manual" <?= $tarea->asignacion == 'manual' ? 'checked' : '' ?> /> Manual</label>
+                    <label class="radio" rel="tooltip" title="La tarea queda sin asignar, y los usuarios mismos deciden asignarsela segun corresponda."><input type="radio" name="asignacion" value="autoservicio" <?= $tarea->asignacion == 'autoservicio' ? 'checked' : '' ?> /> Auto Servicio</label>
+                    <label class="radio" rel="tooltip" title="Ingresar el id de usuario a quien se le va asignar. Se puede ingresar una variable que haya almacenado esta información. Ej: @@usuario_inical"><input type="radio" name="asignacion" value="usuario" <?= $tarea->asignacion == 'usuario' ? 'checked' : '' ?> /> Usuario</label>
+                    <div id="optionalAsignacionUsuario" class="<?=$tarea->asignacion=='usuario'?'':'hide'?>">
+                        <input type="text" name="asignacion_usuario" value="<?= $tarea->asignacion_usuario ?>" />
+                    </div>
                 </div>
-                <div class="tab-pane" id="tab3">
+                <div class="tab-pane" id="tab3" style="min-height: 160px;">
                     <label>Grupos de Usuarios</label>
                     <select name="grupos_usuarios[]" class="chosen" multiple>
                         <?php foreach ($grupos_usuarios as $g): ?>
@@ -121,14 +138,33 @@
                                     <td><a title="Editar" target="_blank" href="<?= site_url('backend/formularios/editar/' . $p->Formulario->id) ?>"><?= $p->Formulario->nombre ?></a></td>
                                     <td><?= $p->modo ?></td>
                                     <td>
-                                        <input type="hidden" name="pasos[<?= $key+1 ?>][formulario_id]" value="<?= $p->formulario_id ?>" />
-                                        <input type="hidden" name="pasos[<?= $key+1 ?>][modo]" value="<?= $p->modo ?>" />
+                                        <input type="hidden" name="pasos[<?= $key + 1 ?>][formulario_id]" value="<?= $p->formulario_id ?>" />
+                                        <input type="hidden" name="pasos[<?= $key + 1 ?>][modo]" value="<?= $p->modo ?>" />
                                         <a class="delete" title="Eliminar" href="#"><i class="icon-remove"></i></a>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>
                     </table>
+                </div>
+                <div class="tab-pane" id="tab5">
+                    <script type="text/javascript">
+                        $(document).ready(function(){
+                            $("input[name=almacenar_usuario]").click(function(){
+                                if(this.checked)
+                                    $("#optionalAlmacenarUsuario").removeClass("hide");
+                                else
+                                    $("#optionalAlmacenarUsuario").addClass("hide");
+                            });
+                        });
+                    </script>
+                    <label><input type="checkbox" name="almacenar_usuario" value="1" <?= $tarea->almacenar_usuario ? 'checked' : '' ?> /> ¿Almacenar id de usuario que ejecuta esta tarea?</label>
+                    <div id="optionalAlmacenarUsuario" class="<?= $tarea->almacenar_usuario ? '' : 'hide' ?>">
+                        <label>Variable</label>
+                        <div class="input-prepend">
+                            <span class="add-on">@@</span><input type="text" name="almacenar_usuario_variable" value="<?= $tarea->almacenar_usuario_variable ?>" />
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

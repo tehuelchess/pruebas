@@ -53,11 +53,22 @@ class Tramite extends Doctrine_Record {
     //Este parametro solamente es valido si la asignacion de la prox tarea es manual.
     public function avanzarEtapa($usuario_a_asignar_id = NULL) {
         Doctrine_Manager::connection()->beginTransaction();
-
-        $usuario_asignado_id = NULL;
+        //Cerramos la etapa antigua
         $etapa_antigua = $this->getEtapaActual();
-        $tarea_proxima = $this->getTareaProxima();
+        if ($etapa_antigua->Tarea->almacenar_usuario) {
+            $dato = Doctrine::getTable('Dato')->findOneByTramiteIdAndNombre($this->id, $etapa_antigua->Tarea->almacenar_usuario_variable);
+            if (!$dato)
+                $dato = new Dato();
+            $dato->nombre = $etapa_antigua->Tarea->almacenar_usuario_variable;
+            $dato->valor = UsuarioSesion::usuario()->id;
+            $dato->tramite_id = $this->id;
+            $dato->save();
+        }
 
+
+        //Generamos la etapa nueva
+        $tarea_proxima = $this->getTareaProxima();
+        $usuario_asignado_id = NULL;
         if ($tarea_proxima) {
             if ($tarea_proxima->asignacion == 'ciclica') {
                 $usuarios_asignables = $tarea_proxima->getUsuarios();
@@ -74,6 +85,11 @@ class Tramite extends Doctrine_Record {
             } else if ($tarea_proxima->asignacion == 'manual') {
                 if ($tarea_proxima->hasUsuario($usuario_a_asignar_id))
                     $usuario_asignado_id = $usuario_a_asignar_id;
+            } else if ($tarea_proxima->asignacion == 'usuario'){
+                $regla=new Regla($tarea_proxima->asignacion_usuario);
+                $u=$regla->evaluar($this->id);
+                if($tarea_proxima->hasUsuario($u))
+                    $usuario_asignado_id=$u;
             }
 
 
