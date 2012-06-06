@@ -8,6 +8,7 @@
 <ul class="nav nav-pills">
     <li><a href="<?=site_url('backend/procesos/editar/'.$proceso->id)?>">Diseñador</a></li>
     <li class="active"><a href="<?=site_url('backend/formularios/listar/'.$proceso->id)?>">Formularios</a></li>
+    <li><a href="<?=site_url('backend/acciones/listar/'.$proceso->id)?>">Acciones</a></li>
 </ul>
 
 <a class="btn" href="<?=site_url('backend/formularios/crear/'.$proceso->id)?>"><i class="icon-file"></i> Nuevo</a>

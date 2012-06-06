@@ -52,6 +52,7 @@
         <script src="assets/js/common.js" type="text/javascript"></script>
         <script src="assets/js/modelador-procesos.js" type="text/javascript"></script>
         <script src="assets/js/modelador-formularios.js" type="text/javascript"></script>
+        <script src="assets/js/modelador-acciones.js" type="text/javascript"></script>
 
 
         <link rel="shortcut icon" href="assets/ico/favicon.ico">
