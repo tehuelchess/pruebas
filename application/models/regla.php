@@ -17,7 +17,7 @@ class Regla {
                     $nombre_dato = $match[1];
                     $dato = Doctrine::getTable('Dato')->findOneByTramiteIdAndNombre($tramite_id, $nombre_dato);
                     if ($dato) {
-                        $dato_almacenado = json_decode($dato->valor);
+                        $dato_almacenado = $dato->valor;
                         if (is_array($dato_almacenado)) {
                             $valor_dato = 'array(' . implode(',', $dato_almacenado) . ')';
                         }
