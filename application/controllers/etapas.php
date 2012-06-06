@@ -48,7 +48,7 @@ class Etapas extends CI_Controller {
 
         if ($modo == 'edicion') {
             foreach ($formulario->Campos as $c)
-                $this->form_validation->set_rules($c->nombre, $c->etiqueta, implode('|',$c->validacion));
+                $this->form_validation->set_rules($c->nombre, $c->etiqueta, implode('|', $c->validacion));
 
             if ($this->form_validation->run() == TRUE) {
                 foreach ($formulario->Campos as $c) {
@@ -66,7 +66,7 @@ class Etapas extends CI_Controller {
 
                 if ($etapa->Tarea->Pasos->count() - 1 == $paso) {
                     //$etapa->Tramite->avanzarEtapa();
-                    $respuesta->redirect = site_url('etapas/ejecutar_fin/'.$etapa_id);
+                    $respuesta->redirect = site_url('etapas/ejecutar_fin/' . $etapa_id);
                 } else {
                     $respuesta->redirect = site_url('etapas/ejecutar/' . $etapa_id . '/' . ($paso + 1));
                 }
@@ -79,7 +79,7 @@ class Etapas extends CI_Controller {
 
             if ($etapa->Tarea->Pasos->count() - 1 == $paso) {
                 //$etapa->Tramite->avanzarEtapa();
-                $respuesta->redirect = site_url('etapas/ejecutar_fin/'.$etapa_id);
+                $respuesta->redirect = site_url('etapas/ejecutar_fin/' . $etapa_id);
             } else {
                 $respuesta->redirect = site_url('etapas/ejecutar/' . $etapa_id . '/' . ($paso + 1));
             }
@@ -107,8 +107,8 @@ class Etapas extends CI_Controller {
 
         redirect('tramites/inbox');
     }
-    
-    public function ejecutar_fin($etapa_id){
+
+    public function ejecutar_fin($etapa_id) {
         $etapa = Doctrine::getTable('Etapa')->find($etapa_id);
 
         if ($etapa->usuario_id != UsuarioSesion::usuario()->id) {
@@ -119,20 +119,20 @@ class Etapas extends CI_Controller {
             echo 'Esta etapa ya fue completada';
             exit;
         }
-        
+
         //if($etapa->Tarea->asignacion!='manual'){
         //    $etapa->Tramite->avanzarEtapa();
         //    redirect();
         //    exit;
         //}
-        
-        $data['etapa']=$etapa;
+
+        $data['etapa'] = $etapa;
         $data['content'] = 'etapas/ejecutar_fin';
         $data['title'] = $etapa->Tarea->nombre;
         $this->load->view('template', $data);
     }
-    
-    public function ejecutar_fin_form($etapa_id){
+
+    public function ejecutar_fin_form($etapa_id) {
         $etapa = Doctrine::getTable('Etapa')->find($etapa_id);
 
         if ($etapa->usuario_id != UsuarioSesion::usuario()->id) {
@@ -143,20 +143,15 @@ class Etapas extends CI_Controller {
             echo 'Esta etapa ya fue completada';
             exit;
         }
-        
-        $this->form_validation->set_rules('usuario_id','Usuario');
-        
-        if($this->form_validation->run()==TRUE){
-            $etapa->Tramite->avanzarEtapa($this->input->post('usuario_id'));
-            
-            $respuesta->validacion=TRUE;
-            $respuesta->redirect=site_url();
-        }else{
-            $respuesta->validacion=FALSE;
-            $respuesta->errores=validation_errors();
-        }
-        
-        
+
+
+        $etapa->Tramite->avanzarEtapa($this->input->post('usuario_id'));
+
+        $respuesta->validacion = TRUE;
+        $respuesta->redirect = site_url();
+
+
+
         echo json_encode($respuesta);
     }
 
