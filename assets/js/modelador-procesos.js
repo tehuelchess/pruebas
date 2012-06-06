@@ -2,14 +2,14 @@ $(document).ready(function(){
     
     jsPlumb.Defaults.PaintStyle={
         strokeStyle:"#333", 
-        lineWidth:4
+        lineWidth:2
     };
     jsPlumb.Defaults.Endpoint="Blank";
     jsPlumb.Defaults.Connector="Flowchart";
     jsPlumb.Defaults.ConnectionOverlays = [[ "Arrow", {
         location:1, 
-        width:16 ,
-        length:16
+        width:8 ,
+        length:8
     } ]]; 
     
     
