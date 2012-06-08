@@ -24,13 +24,13 @@
     <h1><?= $proceso->nombre ?></h1>
     <div class="botonera btn-toolbar">
         <div class="btn-group">
-            <button class="btn createBox" title="Crear tarea">Tarea</button>
+            <button class="btn createBox" title="Crear tarea"><img src="assets/img/tarea.png" /></button>
         </div>
         <div class="btn-group">
-            <button class="btn createConnection" data-tipo="secuencial" title="Crear conexión" >Conector Secuencial</button>
-            <button class="btn createConnection" data-tipo="evaluacion" title="Crear conexión" >Conector Evaluación</button>
-            <button class="btn createConnection" data-tipo="paralelo" title="Crear conexión" >Conector Paralelo</button>
-            <button class="btn createConnection" data-tipo="paralelo_evaluacion" title="Crear conexión" >Conector Paralelo con Evaluación</button>
+            <button class="btn createConnection" data-tipo="secuencial" title="Crear conexión secuencial" ><img src="assets/img/secuencial.gif" /></button>
+            <button class="btn createConnection" data-tipo="evaluacion" title="Crear conexión por evaluación" ><img src="assets/img/evaluacion.gif" /></button>
+            <button class="btn createConnection" data-tipo="paralelo" title="Crear conexión paralela" ><img src="assets/img/paralelo.gif" /></button>
+            <button class="btn createConnection" data-tipo="paralelo_evaluacion" title="Crear conexión paralela con evaluación" ><img src="assets/img/paralelo_evaluacion.gif" /></button>
         </div>
     </div>
 </div>
