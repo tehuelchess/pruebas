@@ -70,7 +70,7 @@ CREATE  TABLE IF NOT EXISTS `tramitador`.`conexion` (
   `identificador` VARCHAR(32) NOT NULL ,
   `tarea_id_origen` INT(10) UNSIGNED NOT NULL ,
   `tarea_id_destino` INT(10) UNSIGNED NOT NULL ,
-  `tipo` ENUM('secuencial','evaluacion') NOT NULL ,
+  `tipo` ENUM('secuencial','evaluacion','paralelo') NOT NULL ,
   `regla` VARCHAR(256) NOT NULL ,
   PRIMARY KEY (`id`) ,
   UNIQUE INDEX `tarea_origen_destino` (`tarea_id_origen` ASC, `tarea_id_destino` ASC) ,

@@ -5,7 +5,7 @@
         <tr>
             <th>Id</th>
             <th>Nombre</th>
-            <th>Etapa</th>
+            <th>Etapa actual</th>
             <th>Fecha Modificación</th>
             <th>Estado</th>
         </tr>
@@ -15,7 +15,14 @@
             <tr>
                 <td><?=$t->id?></td>
                 <td><?= $t->Proceso->nombre ?></td>
-                <td><?=$t->getEtapaActual()?$t->getEtapaActual()->Tarea->nombre:'Ninguna' ?></td>
+                <td>
+                    <?php
+                        $etapas_array=array();
+                        foreach($t->getEtapasActuales() as $e)
+                            $etapas_array[]=$e->Tarea->nombre;
+                        echo implode(', ',$etapas_array);
+                    ?>
+                </td>
                 <td><?= strftime('%c',mysql_to_unix($t->updated_at))?></td>
                 <td><?=$t->pendiente?'Pendiente':'Completado'?></td>
             </tr>

@@ -12,7 +12,7 @@ class Tramites extends CI_Controller {
     }
 
     public function index() {
-        redirect('tramites/inbox');
+        redirect('etapas/inbox');
     }
 
 
@@ -21,22 +21,6 @@ class Tramites extends CI_Controller {
         
         $data['content'] = 'tramites/participados';
         $data['title'] = 'Bienvenido';
-        $this->load->view('template', $data);
-    }
-    
-    public function inbox() {
-        $data['tramites']=Doctrine::getTable('Tramite')->findPendientes(UsuarioSesion::usuario()->id);
-        
-        $data['content'] = 'tramites/inbox';
-        $data['title'] = 'Bandeja de Entrada';
-        $this->load->view('template', $data);
-    }
-    
-    public function sinasignar() {
-        $data['tramites']=Doctrine::getTable('Tramite')->findSinAsignar(UsuarioSesion::usuario()->id);
-        
-        $data['content'] = 'tramites/sinasignar';
-        $data['title'] = 'Sin Asignar';
         $this->load->view('template', $data);
     }
 
@@ -62,7 +46,7 @@ class Tramites extends CI_Controller {
         
         
         
-        redirect('etapas/ejecutar/'.$tramite->getEtapaActual()->id);
+        redirect('etapas/ejecutar/'.$tramite->getEtapasActuales()->get(0)->id);
     }
 
 }

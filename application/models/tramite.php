@@ -48,6 +48,7 @@ class Tramite extends Doctrine_Record {
         $this->save();
     }
 
+    /*
     //Avanza el tramite a la siguiente etapa.
     //Si se desea especificar el usuario a cargo de la prox etapa, se debe pasar como parametro $usuario_a_asignar_id.
     //Este parametro solamente es valido si la asignacion de la prox tarea es manual.
@@ -112,14 +113,15 @@ class Tramite extends Doctrine_Record {
 
         Doctrine_Manager::connection()->commit();
     }
+     */
 
-    public function getEtapaActual() {
+    public function getEtapasActuales() {
         return Doctrine_Query::create()
                         ->from('Etapa e, e.Tramite t')
                         ->where('t.id = ? AND e.pendiente=1', $this->id)
-                        ->fetchOne();
+                        ->execute();
     }
-
+/*
     public function getTareaProxima() {
         $tarea_actual = $this->getEtapaActual()->Tarea;
 
@@ -135,6 +137,8 @@ class Tramite extends Doctrine_Record {
 
         return NULL;
     }
+     * 
+     */
 
     //Chequea si el usuario_id ha tenido participacion en este tramite.
     public function usuarioHaParticipado($usuario_id) {
@@ -147,6 +151,19 @@ class Tramite extends Doctrine_Record {
             return TRUE;
 
         return FALSE;
+    }
+    
+    public function cerrar(){
+        Doctrine_Manager::connection()->beginTransaction();
+        
+        foreach($this->Etapas as $e){
+            $e->cerrar();
+        }
+        $this->pendiente = 0;
+        $this->ended_at = date('Y-m-d H:i:s');
+        $this->save();
+        
+        Doctrine_Manager::connection()->commit();
     }
 
 }

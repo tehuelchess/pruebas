@@ -26,6 +26,7 @@
         <button class="btn createBox" title="Crear tarea">Tarea</button>
         <button class="btn createConnection" data-tipo="secuencial" title="Crear conexión" >Conector Secuencial</button>
         <button class="btn createConnection" data-tipo="evaluacion" title="Crear conexión" >Conector Evaluación</button>
+        <button class="btn createConnection" data-tipo="paralelo" title="Crear conexión" >Conector Paralelo</button>
     </div>
 </div>
 <div class="modal hide fade" id="modal">

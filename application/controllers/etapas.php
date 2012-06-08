@@ -10,6 +10,22 @@ class Etapas extends CI_Controller {
 
         UsuarioSesion::force_login();
     }
+    
+    public function inbox() {
+        $data['etapas']=Doctrine::getTable('Etapa')->findPendientes(UsuarioSesion::usuario()->id);
+        
+        $data['content'] = 'etapas/inbox';
+        $data['title'] = 'Bandeja de Entrada';
+        $this->load->view('template', $data);
+    }
+    
+    public function sinasignar() {
+        $data['etapas']=Doctrine::getTable('Etapa')->findSinAsignar(UsuarioSesion::usuario()->id);
+        
+        $data['content'] = 'etapas/sinasignar';
+        $data['title'] = 'Sin Asignar';
+        $this->load->view('template', $data);
+    }
 
     public function ejecutar($etapa_id, $paso = 0) {
         $etapa = Doctrine::getTable('Etapa')->find($etapa_id);
@@ -105,7 +121,7 @@ class Etapas extends CI_Controller {
         $etapa->usuario_id = UsuarioSesion::usuario()->id;
         $etapa->save();
 
-        redirect('tramites/inbox');
+        redirect('etapas/inbox');
     }
 
     public function ejecutar_fin($etapa_id) {
@@ -127,6 +143,7 @@ class Etapas extends CI_Controller {
         //}
 
         $data['etapa'] = $etapa;
+        $data['tareas_proximas']=$etapa->getTareasProximas();
         $data['content'] = 'etapas/ejecutar_fin';
         $data['title'] = $etapa->Tarea->nombre;
         $this->load->view('template', $data);
@@ -145,7 +162,7 @@ class Etapas extends CI_Controller {
         }
 
 
-        $etapa->Tramite->avanzarEtapa($this->input->post('usuario_id'));
+        $etapa->avanzar($this->input->post('usuarios_a_asignar'));
 
         $respuesta->validacion = TRUE;
         $respuesta->redirect = site_url();
