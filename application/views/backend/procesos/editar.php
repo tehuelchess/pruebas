@@ -24,7 +24,7 @@
     <h1><?= $proceso->nombre ?></h1>
     <div class="botonera btn-group">
         <button class="btn createBox" title="Crear tarea">Tarea</button>
-        <button class="btn createConnection" data-tipo="secuencial" title="Crear conexión" onclick="createConnection(this,'secuencial')">Conector Secuencial</button>
+        <button class="btn createConnection" data-tipo="secuencial" title="Crear conexión" >Conector Secuencial</button>
         <button class="btn createConnection" data-tipo="evaluacion" title="Crear conexión" >Conector Evaluación</button>
     </div>
 </div>
