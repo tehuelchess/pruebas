@@ -101,6 +101,7 @@ CREATE  TABLE IF NOT EXISTS `tramitador`.`grupo_usuarios` (
   `registrados` TINYINT(1) NOT NULL DEFAULT 0 ,
   PRIMARY KEY (`id`) ,
   INDEX `fk_grupo_usuarios_cuenta1` (`cuenta_id` ASC) ,
+  UNIQUE INDEX `grupo_usuarios_UNIQUE` (`cuenta_id` ASC, `nombre` ASC) ,
   CONSTRAINT `fk_grupo_usuarios_cuenta1`
     FOREIGN KEY (`cuenta_id` )
     REFERENCES `tramitador`.`cuenta` (`id` )
