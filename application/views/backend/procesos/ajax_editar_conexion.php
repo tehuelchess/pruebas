@@ -12,7 +12,8 @@
         <label>Tarea Destino</label>
         <input type="text" value="<?=$conexion->TareaDestino->nombre?>" disabled />
 
-        <?php if(!$conexion->tipo=='secuencial'):?>
+        
+        <?php if($conexion->tipo=='evaluacion'):?>
         <label>Regla</label>
         <p class="help-block">Los nombres de campos escribalos anteponiendo @@. Ej: @@edad >= 18</p>
         <input type="text" name="regla" value="<?=$conexion->regla?>" /> 
