@@ -27,6 +27,7 @@
         <button class="btn createConnection" data-tipo="secuencial" title="Crear conexión" >Conector Secuencial</button>
         <button class="btn createConnection" data-tipo="evaluacion" title="Crear conexión" >Conector Evaluación</button>
         <button class="btn createConnection" data-tipo="paralelo" title="Crear conexión" >Conector Paralelo</button>
+        <button class="btn createConnection" data-tipo="paralelo_evaluacion" title="Crear conexión" >Conector Paralelo con Evaluación</button>
     </div>
 </div>
 <div class="modal hide fade" id="modal">

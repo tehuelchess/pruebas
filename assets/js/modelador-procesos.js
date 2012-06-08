@@ -1,5 +1,6 @@
 var evaluacionEndpoint=["Image",{src: "assets/img/evaluacion.gif", cssClass: "endpoint"}];
 var paraleloEndpoint=["Image",{src: "assets/img/paralelo.gif", cssClass: "endpoint"}];
+var paraleloEvaluacionEndpoint=["Image",{src: "assets/img/paralelo_evaluacion.gif", cssClass: "endpoint"}];
 
 $(document).ready(function(){
     
@@ -65,6 +66,8 @@ $(document).ready(function(){
                     endpoint=evaluacionEndpoint;
                 else if(tipo=='paralelo')
                     endpoint=paraleloEndpoint;
+                else if(tipo=='paralelo_evaluacion')
+                    endpoint=paraleloEvaluacionEndpoint;
                 
                 
                 var conn=jsPlumb.connect({
@@ -171,7 +174,9 @@ function drawFromModel(model){
         if(c.tipo=='evaluacion')
             endpoint=evaluacionEndpoint;
         else if(c.tipo=='paralelo')
-                    endpoint=paraleloEndpoint;
+            endpoint=paraleloEndpoint;
+        else if(c.tipo=='paralelo_evaluacion')
+            endpoint=paraleloEvaluacionEndpoint;
         
         var connection=jsPlumb.connect({
             source: c.source,

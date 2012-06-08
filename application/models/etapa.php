@@ -118,7 +118,7 @@ class Etapa extends Doctrine_Record {
         foreach ($conexiones as $c) {
             if ($c->evaluarRegla($this->Tramite->id)){
                 $tareas[] = $c->TareaDestino;
-                if($c->tipo!='paralelo')
+                if($c->tipo=='secuencial' || $c->tipo=='evaluacion')
                     break;
             }
         }
