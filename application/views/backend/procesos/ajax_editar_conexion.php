@@ -2,7 +2,7 @@
     <a class="close" data-dismiss="modal">×</a>
     <h3>Editar Conexión</h3>
 </div>
-<div class="modal-body" style="min-height: 320px;">
+<div class="modal-body">
     <form id="formEditarConexion" class="ajaxForm" method="POST" action="<?= site_url('backend/procesos/editar_conexion_form/' . $conexion->id) ?>">
         <div class="validacion"></div>
 
@@ -12,10 +12,11 @@
         <label>Tarea Destino</label>
         <input type="text" value="<?=$conexion->TareaDestino->nombre?>" disabled />
 
+        <?php if(!$conexion->tipo=='secuencial'):?>
         <label>Regla</label>
         <p class="help-block">Los nombres de campos escribalos anteponiendo @@. Ej: @@edad >= 18</p>
         <input type="text" name="regla" value="<?=$conexion->regla?>" /> 
-        
+        <?php endif; ?>
     </form>
 </div>
 <div class="modal-footer">

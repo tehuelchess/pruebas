@@ -211,6 +211,7 @@ class Procesos extends CI_Controller {
         $conexion->identificador=$conexion_identificador;
         $conexion->tarea_id_origen=$tarea_origen->id;
         $conexion->tarea_id_destino=$tarea_destino->id;
+        $conexion->tipo=$this->input->post('tipo');
         $conexion->save();
     }
     

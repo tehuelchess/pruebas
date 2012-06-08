@@ -1,3 +1,5 @@
+var evaluacionEndpoint=["Image",{src: "assets/img/evaluacion.gif", cssClass: "endpoint"}];
+
 $(document).ready(function(){
     
     jsPlumb.Defaults.PaintStyle={
@@ -11,10 +13,12 @@ $(document).ready(function(){
         width:8 ,
         length:8
     } ]]; 
-    
-    
-    var modo=null;
+
+     
     var elements=new Array();
+    var modo=null;
+    var tipo=null;
+    
     $("#areaDibujo .botonera").on("click",function(event){
         event.stopPropagation();
     });
@@ -28,8 +32,8 @@ $(document).ready(function(){
     $("#areaDibujo .botonera .createConnection").on("click",function(){
         $(this).addClass("disabled");
         $("#areaDibujo .box").css("cursor","crosshair")
-        modo="createConnection";
-        
+       modo="createConnection";
+       tipo=$(this).data("tipo");    
     });
 
     $("#areaDibujo").on("click",function(event){
@@ -55,17 +59,23 @@ $(document).ready(function(){
         if(modo=="createConnection"){
             elements.push(this.id);
             if(elements.length==2){
+                var endpoint=null;
+                if(tipo=='evaluacion')
+                    endpoint=evaluacionEndpoint;
+                
+                
                 var conn=jsPlumb.connect({
                     source: elements[0],
                     target: elements[1],
-                    anchors: ["BottomCenter", "TopCenter"]
+                    anchors: ["BottomCenter", "TopCenter"],
+                    endpoints: [endpoint]
                 });
                 
                 modo=null;
                 elements.length=0;
                 $("#areaDibujo .botonera .createConnection").removeClass("disabled");
                 $("#areaDibujo .box").css("cursor","move")
-                $.post(site_url+"backend/procesos/ajax_crear_conexion/"+procesoId+"/"+conn.id,"tarea_id_origen="+conn.sourceId+"&tarea_id_destino="+conn.targetId);
+                $.post(site_url+"backend/procesos/ajax_crear_conexion/"+procesoId+"/"+conn.id,"tarea_id_origen="+conn.sourceId+"&tarea_id_destino="+conn.targetId+"&tipo="+tipo);
             }
         }
     });
@@ -154,10 +164,15 @@ function drawFromModel(model){
     
     //Creamos las conexiones
     $(model.connections).each(function(i,c){
+        var endpoint=null;
+        if(c.tipo=='evaluacion')
+            endpoint=evaluacionEndpoint;
+        
         var connection=jsPlumb.connect({
             source: c.source,
             target: c.target,
-            anchors: ["BottomCenter", "TopCenter"]
+            anchors: ["BottomCenter", "TopCenter"],
+            endpoints:[endpoint]
         });
         connection.id=c.id;
     });

@@ -7,6 +7,7 @@ class Conexion extends Doctrine_Record {
         $this->hasColumn('identificador');
         $this->hasColumn('tarea_id_origen');
         $this->hasColumn('tarea_id_destino');
+        $this->hasColumn('tipo');
         $this->hasColumn('regla');
     }
 
@@ -25,6 +26,9 @@ class Conexion extends Doctrine_Record {
     }
     
     public function evaluarRegla($tramite_id){
+        if($this->tipo=='secuencial')
+            return true;
+        
         $regla=new Regla($this->regla);
         return $regla->evaluar($tramite_id);
     }

@@ -74,6 +74,7 @@ class Proceso extends Doctrine_Record {
             $conexion->id=$c->identificador;
             $conexion->source=$c->TareaOrigen->identificador;
             $conexion->target=$c->TareaDestino->identificador;
+            $conexion->tipo=$c->tipo;
             $modelo->connections[]=clone $conexion;
         }
         

@@ -49,3 +49,8 @@
 #areaDibujo ._jsPlumb_connector{
     cursor: pointer;
 }
+
+.endpoint{
+    margin-top: 12px !important;
+    z-index: 1000;
+}
