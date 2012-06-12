@@ -6,6 +6,9 @@
     <form id="formEditarConexion" class="ajaxForm" method="POST" action="<?= site_url('backend/procesos/editar_conexion_form/' . $conexion->id) ?>">
         <div class="validacion"></div>
 
+        <label>Tipo</label>
+        <input type="text" value="<?=$conexion->tipo?>" disabled />
+        
         <label>Tarea Origen</label>
         <input type="text" value="<?=$conexion->TareaOrigen->nombre?>" disabled />
 
