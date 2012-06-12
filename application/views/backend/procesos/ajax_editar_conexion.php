@@ -19,7 +19,7 @@
         <?php if($conexion->tipo=='evaluacion' || $conexion->tipo=='paralelo_evaluacion'):?>
         <label>Regla</label>
         <p class="help-block">Los nombres de campos escribalos anteponiendo @@. Ej: @@edad >= 18</p>
-        <input type="text" name="regla" value="<?=$conexion->regla?>" /> 
+        <input type="text" name="regla" value="<?=htmlspecialchars($conexion->regla)?>" /> 
         <?php endif; ?>
     </form>
 </div>
