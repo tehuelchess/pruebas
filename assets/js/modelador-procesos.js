@@ -34,6 +34,7 @@ $(document).ready(function(){
     
     $("#areaDibujo .botonera .createConnection").on("click",function(){
         $(this).addClass("disabled");
+        $( "#areaDibujo .box" ).draggable({ disabled: true });
         $("#areaDibujo .box").css("cursor","crosshair")
        modo="createConnection";
        tipo=$(this).data("tipo");    
@@ -83,8 +84,13 @@ $(document).ready(function(){
                 modo=null;
                 elements.length=0;
                 $("#areaDibujo .botonera .createConnection").removeClass("disabled");
+                $("#areaDibujo .box").removeClass("selected");
+                $( "#areaDibujo .box" ).draggable({ disabled: false });
                 $("#areaDibujo .box").css("cursor","move")
                 $.post(site_url+"backend/procesos/ajax_crear_conexion/"+procesoId+"/"+conn.id,"tarea_id_origen="+conn.sourceId+"&tarea_id_destino="+conn.targetId+"&tipo="+tipo);
+                
+            }else{
+                $(this).addClass("selected");
             }
         }
     });
