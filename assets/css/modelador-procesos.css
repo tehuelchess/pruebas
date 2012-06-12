@@ -50,7 +50,11 @@
     cursor: pointer;
 }
 
-.endpoint{
+.endpoint1{
     margin-top: 12px !important;
+    z-index: 1000;
+}
+.endpoint2{
+    margin-top: -18px !important;
     z-index: 1000;
 }

@@ -25,6 +25,11 @@ class Tarea extends Doctrine_Record {
             'foreign'=>'id'
         ));
         
+        $this->hasMany('Etapa as Etapas',array(
+            'local'=>'id',
+            'foreign'=>'tarea_id'
+        ));
+        
         $this->hasMany('Conexion as ConexionesOrigen',array(
             'local'=>'id',
             'foreign'=>'tarea_id_origen'

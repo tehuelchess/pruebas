@@ -31,6 +31,7 @@
             <button class="btn createConnection" data-tipo="evaluacion" title="Crear conexión por evaluación" ><img src="assets/img/evaluacion.gif" /></button>
             <button class="btn createConnection" data-tipo="paralelo" title="Crear conexión paralela" ><img src="assets/img/paralelo.gif" /></button>
             <button class="btn createConnection" data-tipo="paralelo_evaluacion" title="Crear conexión paralela con evaluación" ><img src="assets/img/paralelo_evaluacion.gif" /></button>
+            <button class="btn createConnection" data-tipo="union" title="Crear conexión de unión" ><img src="assets/img/union.gif" /></button>
         </div>
     </div>
 </div>

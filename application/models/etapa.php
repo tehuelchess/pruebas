@@ -116,14 +116,37 @@ class Etapa extends Doctrine_Record {
 
         $tareas = null;
         foreach ($conexiones as $c) {
-            if ($c->evaluarRegla($this->Tramite->id)){
-                $tareas[] = $c->TareaDestino;
-                if($c->tipo=='secuencial' || $c->tipo=='evaluacion')
+            if ($c->evaluarRegla($this->Tramite->id)){  
+                if($c->tipo=='secuencial' || $c->tipo=='evaluacion'){
+                    $tareas[] = $c->TareaDestino;
                     break;
+                } else if($c->tipo=='paralelo' || $c->tipo=='paralelo_evaluacion'){
+                    $tareas[] = $c->TareaDestino;
+                } else if($c->tipo=='union'){
+                    if(!$this->hayEtapasParalelasPendientes()){
+                        $tareas[] = $c->TareaDestino;
+                        break;
+                    }
+                        
+                }
             }
         }
 
         return $tareas;
+    }
+    
+    public function hayEtapasParalelasPendientes(){     
+        $netapas_paralelas_pendientes=  Doctrine_Query::create()
+                ->from('Etapa e, e.Tarea t, t.ConexionesDestino c, c.TareaOrigen tarea_padre, tarea_padre.ConexionesOrigen c2, c2.TareaDestino.Etapas etapa_this')
+                ->where('c.tipo = "paralelo" OR c.tipo = "paralelo_evaluacion"') //Las conexiones hacia la etapa sean paralelas
+                ->andWhere('c2.tipo = "paralelo" OR c2.tipo = "paralelo_evaluacion"') //Las conexiones hacia la etapa sean paralelas
+                ->andWhere('e.pendiente = 1')   //Esten pendientes
+                ->andWhere('e.tramite_id = ?',$this->tramite_id)    //Pertenezcan a este tramite
+                ->andWhere('e.id != ?',$this->id)   //No sean esta misma etapa. Busco a las etapas hermanas.
+                ->andWhere('etapa_this.id = ?',  $this->id)
+                ->count();
+        
+        return $netapas_paralelas_pendientes?true:false;
     }
     
     public function cerrar(){

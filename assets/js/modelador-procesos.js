@@ -1,6 +1,7 @@
-var evaluacionEndpoint=["Image",{src: "assets/img/evaluacion.gif", cssClass: "endpoint"}];
-var paraleloEndpoint=["Image",{src: "assets/img/paralelo.gif", cssClass: "endpoint"}];
-var paraleloEvaluacionEndpoint=["Image",{src: "assets/img/paralelo_evaluacion.gif", cssClass: "endpoint"}];
+var evaluacionEndpoint=["Image",{src: "assets/img/evaluacion.gif", cssClass: "endpoint1"}];
+var paraleloEndpoint=["Image",{src: "assets/img/paralelo.gif", cssClass: "endpoint1"}];
+var paraleloEvaluacionEndpoint=["Image",{src: "assets/img/paralelo_evaluacion.gif", cssClass: "endpoint1"}];
+var unionEndpoint=["Image",{src: "assets/img/union.gif", cssClass: "endpoint2"}];
 
 $(document).ready(function(){
     
@@ -61,20 +62,22 @@ $(document).ready(function(){
         if(modo=="createConnection"){
             elements.push(this.id);
             if(elements.length==2){
-                var endpoint=null;
+                var endpoint1,endpoint2;
                 if(tipo=='evaluacion')
-                    endpoint=evaluacionEndpoint;
+                    endpoint1=evaluacionEndpoint;
                 else if(tipo=='paralelo')
-                    endpoint=paraleloEndpoint;
+                    endpoint1=paraleloEndpoint;
                 else if(tipo=='paralelo_evaluacion')
-                    endpoint=paraleloEvaluacionEndpoint;
+                    endpoint1=paraleloEvaluacionEndpoint;
+                else if(tipo=='union')
+                    endpoint=unionEndpoint;
                 
                 
                 var conn=jsPlumb.connect({
                     source: elements[0],
                     target: elements[1],
                     anchors: ["BottomCenter", "TopCenter"],
-                    endpoints: [endpoint]
+                    endpoints: [endpoint1,endpoint2]
                 });
                 
                 modo=null;
@@ -171,19 +174,21 @@ function drawFromModel(model){
     
     //Creamos las conexiones
     $(model.connections).each(function(i,c){
-        var endpoint=null;
+        var endpoint1, endpoint2;
         if(c.tipo=='evaluacion')
-            endpoint=evaluacionEndpoint;
+            endpoint1=evaluacionEndpoint;
         else if(c.tipo=='paralelo')
-            endpoint=paraleloEndpoint;
+            endpoint1=paraleloEndpoint;
         else if(c.tipo=='paralelo_evaluacion')
-            endpoint=paraleloEvaluacionEndpoint;
+            endpoint1=paraleloEvaluacionEndpoint;
+        else if(c.tipo=='union')
+            endpoint2=unionEndpoint;
         
         var connection=jsPlumb.connect({
             source: c.source,
             target: c.target,
             anchors: ["BottomCenter", "TopCenter"],
-            endpoints:[endpoint]
+            endpoints:[endpoint1,endpoint2]
         });
         connection.id=c.id;
     });
