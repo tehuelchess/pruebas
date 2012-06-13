@@ -4,7 +4,7 @@
         
         $("[rel=tooltip]").tooltip();
         
-        $('.nav-tabs a').click(function (e) {
+        $('#formEditarTarea .nav-tabs a').click(function (e) {
             e.preventDefault();
             $(this).tab('show');
         });
