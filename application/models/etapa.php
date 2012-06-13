@@ -78,14 +78,14 @@ class Etapa extends Doctrine_Record {
                 $etapa->asignar($usuario_asignado_id);
                 //$this->Tramite->Etapas[] = $etapa;     
             }
-            $this->Tramite->updated_at=date("Y-m-d H:i:s");
+            $this->Tramite->updated_at = date("Y-m-d H:i:s");
             $this->Tramite->save();
         }
 
         //Cerramos esta etapa
         $this->cerrar();
-        
-        if($this->Tramite->getEtapasActuales()->count()==0)
+
+        if ($this->Tramite->getEtapasActuales()->count() == 0)
             $this->Tramite->cerrar();
 
         Doctrine_Manager::connection()->commit();
@@ -101,55 +101,59 @@ class Etapa extends Doctrine_Record {
 
         $tareas = null;
         foreach ($conexiones as $c) {
-            if ($c->evaluarRegla($this->Tramite->id)){  
-                if($c->tipo=='secuencial' || $c->tipo=='evaluacion'){
+            if ($c->evaluarRegla($this->Tramite->id)) {
+                if ($c->tipo == 'secuencial' || $c->tipo == 'evaluacion') {
                     $tareas[] = $c->TareaDestino;
                     break;
-                } else if($c->tipo=='paralelo' || $c->tipo=='paralelo_evaluacion'){
+                } else if ($c->tipo == 'paralelo' || $c->tipo == 'paralelo_evaluacion') {
                     $tareas[] = $c->TareaDestino;
-                } else if($c->tipo=='union'){
-                    if(!$this->hayEtapasParalelasPendientes()){
+                } else if ($c->tipo == 'union') {
+                    if (!$this->hayEtapasParalelasPendientes()) {
                         $tareas[] = $c->TareaDestino;
                         break;
                     }
-                        
                 }
             }
         }
 
         return $tareas;
     }
-    
-    public function hayEtapasParalelasPendientes(){     
-        $netapas_paralelas_pendientes=  Doctrine_Query::create()
+
+    public function hayEtapasParalelasPendientes() {
+        $netapas_paralelas_pendientes = Doctrine_Query::create()
                 ->from('Etapa e, e.Tarea t, t.ConexionesDestino c, c.TareaOrigen tarea_padre, tarea_padre.ConexionesOrigen c2, c2.TareaDestino.Etapas etapa_this')
                 ->where('c.tipo = "paralelo" OR c.tipo = "paralelo_evaluacion"') //Las conexiones hacia la etapa sean paralelas
                 ->andWhere('c2.tipo = "paralelo" OR c2.tipo = "paralelo_evaluacion"') //Las conexiones hacia la etapa sean paralelas
                 ->andWhere('e.pendiente = 1')   //Esten pendientes
-                ->andWhere('e.tramite_id = ?',$this->tramite_id)    //Pertenezcan a este tramite
-                ->andWhere('e.id != ?',$this->id)   //No sean esta misma etapa. Busco a las etapas hermanas.
-                ->andWhere('etapa_this.id = ?',  $this->id)
+                ->andWhere('e.tramite_id = ?', $this->tramite_id)    //Pertenezcan a este tramite
+                ->andWhere('e.id != ?', $this->id)   //No sean esta misma etapa. Busco a las etapas hermanas.
+                ->andWhere('etapa_this.id = ?', $this->id)
                 ->count();
-        
-        return $netapas_paralelas_pendientes?true:false;
+
+        return $netapas_paralelas_pendientes ? true : false;
     }
-    
-    public function asignar($usuario_id){
-        if($this->canUsuarioAsignarsela($usuario_id)){
-            $this->usuario_id=$usuario_id;
-            $this->save();
-            
-            if($this->Tarea->asignacion_notificar){
-                $usuario=Doctrine::getTable('Usuario')->find($usuario_id);
-                if($usuario->email)
-                    mail($usuario->email,'Tramitador - Tiene una tarea pendiente','Tiene una tarea pendiente por realizar. Podra realizarla en: '.  site_url());
+
+    public function asignar($usuario_id) {
+        if ($this->canUsuarioAsignarsela($usuario_id)) {
+            $this->usuario_id = $usuario_id;
+            //$this->save();
+
+            if ($this->Tarea->asignacion_notificar) {
+                $usuario = Doctrine::getTable('Usuario')->find($usuario_id);
+                if ($usuario->email) {
+                    $CI=& get_instance();
+                    $CI->email->from($CI->config->item('email_from'), 'Tramitador');
+                    $CI->email->to($usuario->email);
+                    $CI->email->subject('Tramitador - Tiene una tarea pendiente');
+                    $CI->email->message('Tiene una tarea pendiente por realizar. Podra realizarla en: ' . site_url());
+                    $CI->email->send();
+                    exit;
+                }
             }
         }
-        
-        
     }
-    
-    public function cerrar(){
+
+    public function cerrar() {
         if ($this->Tarea->almacenar_usuario) {
             $dato = Doctrine::getTable('Dato')->findOneByTramiteIdAndNombre($this->Tramite->id, $this->Tarea->almacenar_usuario_variable);
             if (!$dato)
@@ -159,7 +163,7 @@ class Etapa extends Doctrine_Record {
             $dato->tramite_id = $this->Tramite->id;
             $dato->save();
         }
-        
+
         $this->pendiente = 0;
         $this->ended_at = date('Y-m-d H:i:s');
         $this->save();
