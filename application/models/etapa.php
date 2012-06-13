@@ -136,7 +136,7 @@ class Etapa extends Doctrine_Record {
     public function asignar($usuario_id) {
         if ($this->canUsuarioAsignarsela($usuario_id)) {
             $this->usuario_id = $usuario_id;
-            //$this->save();
+            $this->save();
 
             if ($this->Tarea->asignacion_notificar) {
                 $usuario = Doctrine::getTable('Usuario')->find($usuario_id);
@@ -147,7 +147,6 @@ class Etapa extends Doctrine_Record {
                     $CI->email->subject('Tramitador - Tiene una tarea pendiente');
                     $CI->email->message('Tiene una tarea pendiente por realizar. Podra realizarla en: ' . site_url());
                     $CI->email->send();
-                    exit;
                 }
             }
         }
