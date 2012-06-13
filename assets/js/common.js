@@ -18,6 +18,9 @@ $(document).ready(function(){
         var form=this;
         if(!form.submitting){
             form.submitting=true;
+            $(form).append("<div class='ajaxLoader'>Cargando</div>");
+            var ajaxLoader=$(form).find(".ajaxLoader");
+            $(ajaxLoader).css({left: ($(form).width()/2 - $(ajaxLoader).width()/2)+"px", top: ($(form).height()/2 - $(ajaxLoader).height()/2)+"px"});
             $.ajax({
                 url: form.action,
                 data: $(form).serialize(),
@@ -35,6 +38,7 @@ $(document).ready(function(){
                     }
                 },
                 complete: function(){
+                    $(ajaxLoader).remove();
                     form.submitting=false;
                 }
             });

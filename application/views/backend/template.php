@@ -12,6 +12,7 @@
 
         <link href="assets/css/bootstrap.css" rel="stylesheet">
         <link href="assets/css/bootstrap-responsive.css" rel="stylesheet">
+        <link href="assets/css/common.css" rel="stylesheet">
         <link href="assets/js/jquery.chosen/chosen.css" rel="stylesheet">
         <link href="assets/js/file-uploader/fileuploader.css" rel="stylesheet">
         <link href="assets/css/modelador-procesos.css" rel="stylesheet">
