@@ -32,17 +32,33 @@
         <div class="container">
             <div class="row">
                 <ul class="nav nav-pills pull-right">
-                    <?php if(!UsuarioSesion::usuario()->registrado): ?>
-                    <li>
-                        <a href="<?=site_url('autenticacion/login')?>">Iniciar sesión</a>
-                    </li>
+                    <?php if (!UsuarioSesion::usuario()->registrado): ?>
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">Iniciar sesión<b class="caret"></b></a>
+                            <ul class="dropdown-menu pull-right">
+                                <li style="padding: 20px;">
+                                    <form method="post" class="ajaxForm" action="<?= site_url('autenticacion/login_form') ?>">        
+                                        <fieldset>
+                                            <div class="validacion"></div>
+                                            <input type="hidden" name="redirect" value="<?= current_url() ?>" />
+                                            <label>Usuario</label>
+                                            <input name="usuario" type="text" class="input-xlarge">
+                                            <label>Contraseña</label>
+                                            <input name="password" type="password" class="input-xlarge">
+                                            <p>¿No esta registrado? <a href="<?= site_url('autenticacion/registrar') ?>">Regístrese acá</a></p>
+                                            <button class="btn btn-primary pull-right" type="submit">Ingresar</button>
+                                        </fieldset>
+                                    </form>
+                                </li>
+                            </ul>
+                        </li>
                     <?php else: ?>
-                    <li class="dropdown">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Bienvenido <?=UsuarioSesion::usuario()->usuario?><b class="caret"></b></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="<?=site_url('autenticacion/logout')?>">Cerrar sesión</a></li>
-                        </ul>
-                    </li>
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">Bienvenido <?= UsuarioSesion::usuario()->usuario ?><b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="<?= site_url('autenticacion/logout') ?>">Cerrar sesión</a></li>
+                            </ul>
+                        </li>
                     <?php endif; ?>
                 </ul>
             </div>
@@ -50,12 +66,12 @@
             <div class="row">
                 <div class="span3">
                     <ul class="nav nav-list">    
-                        <li class="<?=$this->uri->segment(2)=='disponibles'?'active':''?>"><a href="<?= site_url('tramites/disponibles') ?>">Iniciar trámite</a></li>
-                        <?php if(UsuarioSesion::usuario()->registrado): ?>
-                        <li class="nav-header">En curso</li>
-                        <li class="<?=$this->uri->segment(2)=='inbox'?'active':''?>"><a href="<?= site_url('etapas/inbox') ?>">Bandeja de Entrada (<?=Doctrine::getTable('Etapa')->findPendientes(UsuarioSesion::usuario()->id)->count()?>)</a></li>
-                        <li class="<?=$this->uri->segment(2)=='sinasignar'?'active':''?>"><a href="<?= site_url('etapas/sinasignar') ?>">Sin asignar  (<?=Doctrine::getTable('Etapa')->findSinAsignar(UsuarioSesion::usuario()->id)->count()?>)</a></li>
-                        <li class="<?=$this->uri->segment(2)=='participados'?'active':''?>"><a href="<?= site_url('tramites/participados') ?>">Participados  (<?=Doctrine::getTable('Tramite')->findParticipados(UsuarioSesion::usuario()->id)->count()?>)</a></li>
+                        <li class="<?= $this->uri->segment(2) == 'disponibles' ? 'active' : '' ?>"><a href="<?= site_url('tramites/disponibles') ?>">Iniciar trámite</a></li>
+                        <?php if (UsuarioSesion::usuario()->registrado): ?>
+                            <li class="nav-header">En curso</li>
+                            <li class="<?= $this->uri->segment(2) == 'inbox' ? 'active' : '' ?>"><a href="<?= site_url('etapas/inbox') ?>">Bandeja de Entrada (<?= Doctrine::getTable('Etapa')->findPendientes(UsuarioSesion::usuario()->id)->count() ?>)</a></li>
+                            <li class="<?= $this->uri->segment(2) == 'sinasignar' ? 'active' : '' ?>"><a href="<?= site_url('etapas/sinasignar') ?>">Sin asignar  (<?= Doctrine::getTable('Etapa')->findSinAsignar(UsuarioSesion::usuario()->id)->count() ?>)</a></li>
+                            <li class="<?= $this->uri->segment(2) == 'participados' ? 'active' : '' ?>"><a href="<?= site_url('tramites/participados') ?>">Participados  (<?= Doctrine::getTable('Tramite')->findParticipados(UsuarioSesion::usuario()->id)->count() ?>)</a></li>
                         <?php endif; ?>
                     </ul>
                 </div>
@@ -67,33 +83,14 @@
 
         </div> <!-- /container -->
 
-        <div class="modal hide fade" id="loginModal">
-            <div class="modal-header">
-                <a class="close" data-dismiss="modal">×</a>
-                <h3>Iniciar Sesión</h3>
-            </div>
-            <div class="modal-body">
-                <form method="post" class="ajaxForm" action="<?= site_url('autenticacion/ajax_login') ?>">
-                    <div class="validacion"></div>
-                    <label>Rut</label>
-                    <input name="usuario" type="text" class="span3">
-                    <label>Contraseña</label>
-                    <input name="password" type="password" class="span3">
-                </form>
-            </div>
-            <div class="modal-footer">
-                <a href="#" class="btn btn-primary" onclick="javascript:$('#loginModal').find('form').submit(); return false;">Enviar</a>
-                <a href="#" data-dismiss="modal" class="btn">Cerrar</a>
-            </div>
-        </div>
 
         <!-- Le javascript
         ================================================== -->
         <!-- Placed at the end of the document so the pages load faster -->
         <script src="assets/js/jquery-ui/js/jquery-1.7.1.min.js"></script>
         <script src="assets/js/bootstrap.min.js"></script>
-        <script src="assets/js/jquery.chosen/chosen.jquery.min.js"></script> <?php //Soporte para selects con multiple choices   ?>
-        <script src="assets/js/file-uploader/fileuploader.js"></script> <?php //Soporte para subir archivos con ajax   ?>
+        <script src="assets/js/jquery.chosen/chosen.jquery.min.js"></script> <?php //Soporte para selects con multiple choices    ?>
+        <script src="assets/js/file-uploader/fileuploader.js"></script> <?php //Soporte para subir archivos con ajax    ?>
         <script type="text/javascript">
             var site_url="<?= site_url() ?>";
             var base_url="<?= base_url() ?>";

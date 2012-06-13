@@ -4,12 +4,6 @@ class Autenticacion extends CI_Controller {
     public function  __construct() {
         parent::__construct();
     }
-    
-    public function login(){
-        $data['redirect']=$this->session->flashdata('redirect');
-        
-        $this->load->view('autenticacion/login', $data);
-    }
 
     public function login_form() {
 
