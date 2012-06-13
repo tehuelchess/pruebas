@@ -63,6 +63,13 @@ class Tarea extends Doctrine_Record {
     
     //Obtiene el listado de usuarios que tienen acceso a esta tarea.
     public function getUsuarios(){
+        foreach($this->GruposUsuarios as $g){
+            if($g->tipo=='todos')
+                return Doctrine::getTable('Usuario')->findAll();
+            else if($g->tipo=='registrados')
+                return Doctrine::getTable('Usuario')->findByRegistrado(1);
+        }
+        
         return Doctrine_Query::create()
                 ->from('Usuario u, u.GruposUsuarios g, g.Tareas t')
                 ->where('t.id = ?',$this->id)
@@ -71,15 +78,18 @@ class Tarea extends Doctrine_Record {
     
     //Obtiene si el usuarios tiene acceso a esta tarea.
     public function hasUsuario($usuario_id){
-        $existe= Doctrine_Query::create()
+        foreach($this->GruposUsuarios as $g){
+            if($g->tipo=='todos')
+                return Doctrine::getTable('Usuario')->findById($usuario_id)->count()?true:false;
+            else if($g->tipo=='registrados')
+                return Doctrine::getTable('Usuario')->findByIdAndRegistrado($usuario_id,1)?true:false;
+        }
+        
+        return Doctrine_Query::create()
                 ->from('Usuario u, u.GruposUsuarios g, g.Tareas t')
                 ->where('t.id = ? AND u.id=?',array($this->id,$usuario_id))
-                ->count();
+                ->count()?true:false;
         
-        if($existe)
-            return TRUE;
-        
-        return FALSE;
     }
     
     //Obtiene el ultimo usuario que fue a asignado a esta tarea dentro del tramite tramite_id

@@ -20,7 +20,17 @@
                 <div class="validacion"></div>
                 <label>Nombre</label>
                 <input type="text" name="nombre" value="<?=isset($grupo_usuarios)?$grupo_usuarios->nombre:''?>"/>
-                <label class="checkbox"><input type="checkbox" name="registrados" value="1" <?=isset($grupo_usuarios) && $grupo_usuarios->registrados?'checked':''?> /> Este grupo lo componen todos los usuarios del sistema.</label>
+                <label>Este grupo lo componen</label>
+                <label><input name="tipo" value="manual" type="radio" <?=!isset($grupo_usuarios) || (isset($grupo_usuarios) && $grupo_usuarios->tipo=='manual')?'checked':''?> /> Solo los usuarios que sean agregados a este grupo</label>
+                <?php if(isset($grupo_usuarios) and $grupo_usuarios->Usuarios->count()): ?>
+                <select multiple readonly>
+                    <?php foreach($grupo_usuarios->Usuarios as $u): ?>
+                    <option><?=$u->usuario?></option>
+                    <?php endforeach; ?>
+                </select>
+                <?php endif; ?>
+                <label><input name="tipo" value="registrados" type="radio" <?=isset($grupo_usuarios) && $grupo_usuarios->tipo=='registrados'?'checked':''?> /> Todos los usuarios registrados en el sistema</label>
+                <label><input name="tipo" value="todos" type="radio" <?=isset($grupo_usuarios) && $grupo_usuarios->tipo=='todos'?'checked':''?> /> Cualquier visita al sitio (Sin necesidad de registro)</label>
                 <div class="form-actions">
                     <button class="btn btn-primary" type="submit">Guardar</button>
                     <a class="btn" href="<?=site_url('backend/configuracion/grupos_usuarios')?>">Cancelar</a>

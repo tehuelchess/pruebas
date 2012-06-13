@@ -10,10 +10,13 @@ class Usuario extends Doctrine_Record {
         $this->hasColumn('apellidos');
         $this->hasColumn('email');
         $this->hasColumn('cuenta_id');
+        $this->hasColumn('registrado');
     }
 
     function setUp() {
         parent::setUp();
+        
+        $this->actAs('Timestampable');
         
         $this->hasMany('GrupoUsuarios as GruposUsuarios',array(
             'local'=>'usuario_id',

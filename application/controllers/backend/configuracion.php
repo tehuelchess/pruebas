@@ -54,13 +54,14 @@ class Configuracion extends CI_Controller {
         }
 
         $this->form_validation->set_rules('nombre', 'Nombre', 'required');
+        $this->form_validation->set_rules('tipo', 'Tipo', 'required');
 
         if ($this->form_validation->run() == TRUE) {
             if (!$grupo_usuarios)
                 $grupo_usuarios = new GrupoUsuarios();
 
             $grupo_usuarios->nombre = $this->input->post('nombre');
-            $grupo_usuarios->registrados = $this->input->post('registrados');
+            $grupo_usuarios->tipo = $this->input->post('tipo');
             $grupo_usuarios->cuenta_id = UsuarioBackendSesion::usuario()->cuenta_id;
             $grupo_usuarios->save();
 

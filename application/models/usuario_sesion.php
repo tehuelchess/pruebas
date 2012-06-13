@@ -31,8 +31,18 @@ class UsuarioSesion {
         $CI = & get_instance();
         
         if(!self::usuario()){
-            $CI->session->set_flashdata('redirect',current_url());
-            redirect('autenticacion/login');
+            //Elimino los antiguos
+            Doctrine::getTable('Usuario')->cleanNoRegistrados();
+            
+            //Creo un usuario no registrado
+            $usuario=new Usuario();
+            $usuario->usuario=random_string('unique');
+            $usuario->password=random_string('alnum', 32);
+            $usuario->registrado=0;
+            $usuario->save();
+            
+            $CI->session->set_userdata('usuario_id', $usuario->id);
+            self::$user=$usuario;
         }
             
     }

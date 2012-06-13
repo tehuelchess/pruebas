@@ -29,6 +29,10 @@
     z-index: 1000;
 }
 
+#areaDibujo .box.selected{
+    background: #666;
+}
+
 #areaDibujo .box .inicial{
     background: url(../img/inicial.gif);
     width: 30px;

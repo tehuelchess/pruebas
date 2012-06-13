@@ -36,22 +36,15 @@ class Etapa extends Doctrine_Record {
 
     //Verifica si el usuario_id tiene permisos para asignarse esta etapa del tramite.
     public function canUsuarioAsignarsela($usuario_id) {
-        $grupos = Doctrine::getTable('Usuario')->find($usuario_id)->GruposUsuarios;
-        $grupos_array = array();
-        foreach ($grupos as $g)
-            $grupos_array[] = $g->id;
-
-        $tramite = Doctrine_Query::create()
+        $usuario=Doctrine::getTable('Usuario')->find($usuario_id);
+        
+        return Doctrine_Query::create()
                 ->from('Etapa e, e.Tarea tar, tar.GruposUsuarios g')
-                ->where('e.usuario_id IS NULL')
-                ->andWhere('e.id = ?', $this->id)
-                ->andWhereIn('g.id', $grupos_array)
-                ->fetchOne();
-
-        if ($tramite)
-            return TRUE;
-
-        return FALSE;
+                ->where('e.id = ?',$this->id)
+                ->andWhere('e.usuario_id IS NULL')            
+                ->andWhere('(g.tipo="manual" AND g.id IN (SELECT gru.id FROM GrupoUsuarios gru, gru.Usuarios usr WHERE usr.id = ?)) OR (g.tipo = "registrados" AND 1 = ?) OR (g.tipo="todos")',array($usuario->id,$usuario->registrado))
+                ->orderBy('e.updated_at desc')
+                ->count()?true:false;
     }
 
     //Avanza a la siguiente etapa.

@@ -31,12 +31,18 @@
         <div class="container">
             <div class="row">
                 <ul class="nav nav-pills pull-right">
+                    <?php if(!UsuarioSesion::usuario()->registrado): ?>
+                    <li>
+                        <a href="<?=site_url('autenticacion/login')?>">Iniciar sesión</a>
+                    </li>
+                    <?php else: ?>
                     <li class="dropdown">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#">Bienvenido <?=UsuarioSesion::usuario()->usuario?><b class="caret"></b></a>
                         <ul class="dropdown-menu">
                             <li><a href="<?=site_url('autenticacion/logout')?>">Cerrar sesión</a></li>
                         </ul>
                     </li>
+                    <?php endif; ?>
                 </ul>
             </div>
 
@@ -44,10 +50,12 @@
                 <div class="span3">
                     <ul class="nav nav-list">    
                         <li class="<?=$this->uri->segment(2)=='disponibles'?'active':''?>"><a href="<?= site_url('tramites/disponibles') ?>">Iniciar trámite</a></li>
+                        <?php if(UsuarioSesion::usuario()->registrado): ?>
                         <li class="nav-header">En curso</li>
                         <li class="<?=$this->uri->segment(2)=='inbox'?'active':''?>"><a href="<?= site_url('etapas/inbox') ?>">Bandeja de Entrada (<?=Doctrine::getTable('Etapa')->findPendientes(UsuarioSesion::usuario()->id)->count()?>)</a></li>
                         <li class="<?=$this->uri->segment(2)=='sinasignar'?'active':''?>"><a href="<?= site_url('etapas/sinasignar') ?>">Sin asignar  (<?=Doctrine::getTable('Etapa')->findSinAsignar(UsuarioSesion::usuario()->id)->count()?>)</a></li>
                         <li class="<?=$this->uri->segment(2)=='participados'?'active':''?>"><a href="<?= site_url('tramites/participados') ?>">Participados  (<?=Doctrine::getTable('Tramite')->findParticipados(UsuarioSesion::usuario()->id)->count()?>)</a></li>
+                        <?php endif; ?>
                     </ul>
                 </div>
                 <div class="span9">
