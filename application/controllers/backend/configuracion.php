@@ -127,13 +127,12 @@ class Configuracion extends CI_Controller {
             }
         }
 
-
-        $this->form_validation->set_rules('usuario', 'Nombre de Usuario', 'required|callback_check_usuario');
+        $this->form_validation->set_rules('usuario', 'Nombre de Usuario', 'required');
         $this->form_validation->set_rules('password', 'Contraseña', 'matches[password_confirm]');
         $this->form_validation->set_rules('password_confirm', 'Confirmar contraseña');
         $this->form_validation->set_rules('nombre', 'Nombre', 'required');
         $this->form_validation->set_rules('apellidos', 'Apellidos', 'required');
-        $this->form_validation->set_rules('apellidos', 'Apellidos', 'valid_email');
+        $this->form_validation->set_rules('email', 'Correo electrónico', 'valid_email');
 
         if ($this->form_validation->run() == TRUE) {
             if (!$usuario)
@@ -170,17 +169,7 @@ class Configuracion extends CI_Controller {
 
         redirect('backend/configuracion/usuarios');
     }
-    
-    function check_usuario($usuario){
-        $usuario=Doctrine::getTable('Usuario')->findOneByUsuario($usuario);
-        
-        if(!$usuario)
-            return TRUE;
-        
-        $this->form_validation->set_message('check_usuario','Usuario ya existe.');
-        return FALSE;
-        
-    }
+
 
 }
 
