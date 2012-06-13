@@ -13,6 +13,7 @@ class Tarea extends Doctrine_Record {
         $this->hasColumn('posy');
         $this->hasColumn('asignacion');                     //Modo de asignacion
         $this->hasColumn('asignacion_usuario');             //Id de usuario al que se le va a asignar en caso que modo de asignacion sea 'usuario'
+        $this->hasColumn('asignacion_notificar');             //Indica si se le debe notificar via email al usuario que se le asigna esta tarea
         $this->hasColumn('almacenar_usuario');              //Se almacena el usuario o no
         $this->hasColumn('almacenar_usuario_variable');     //Nombre de la variable con que se debe almacenar
     }

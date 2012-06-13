@@ -150,6 +150,7 @@ class Procesos extends CI_Controller {
             $tarea->final=$this->input->post('final');
             $tarea->asignacion=$this->input->post('asignacion');
             $tarea->asignacion_usuario=$this->input->post('asignacion_usuario');
+            $tarea->asignacion_notificar=$this->input->post('asignacion_notificar');
             $tarea->setGruposUsuariosFromArray($this->input->post('grupos_usuarios'));
             $tarea->setPasosFromArray($this->input->post('pasos'));
             $tarea->almacenar_usuario=$this->input->post('almacenar_usuario');

@@ -68,7 +68,7 @@
         <div class="tabbable">
             <ul class="nav nav-tabs">
                 <li class="active"><a href="#tab1">Definición</a></li>
-                <li><a href="#tab2">Regla de asignación</a></li>
+                <li><a href="#tab2">Asignación</a></li>
                 <li><a href="#tab3">Usuarios</a></li>
                 <li><a href="#tab4">Pasos</a></li>
                 <li><a href="#tab5">Otros</a></li>
@@ -99,6 +99,8 @@
                     <div id="optionalAsignacionUsuario" class="<?=$tarea->asignacion=='usuario'?'':'hide'?>">
                         <input type="text" name="asignacion_usuario" value="<?= $tarea->asignacion_usuario ?>" />
                     </div>
+                    <br />
+                    <label><input type="checkbox" name="asignacion_notificar" value="1" <?=$tarea->asignacion_notificar?'checked':''?> /> Notificar vía correo electrónico al usuario asignado.</label>
                 </div>
                 <div class="tab-pane" id="tab3" style="min-height: 160px;">
                     <label>Grupos de Usuarios</label>

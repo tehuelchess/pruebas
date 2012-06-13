@@ -45,6 +45,7 @@ CREATE  TABLE IF NOT EXISTS `tramitador`.`tarea` (
   `posy` INT(10) UNSIGNED NOT NULL DEFAULT '0' ,
   `asignacion` ENUM('ciclica','manual','autoservicio','usuario') NOT NULL DEFAULT 'ciclica' ,
   `asignacion_usuario` VARCHAR(128) NULL ,
+  `asignacion_notificar` TINYINT(1) NOT NULL DEFAULT 0 ,
   `proceso_id` INT(10) UNSIGNED NOT NULL ,
   `almacenar_usuario` TINYINT(1) NOT NULL DEFAULT 0 ,
   `almacenar_usuario_variable` VARCHAR(128) NULL ,

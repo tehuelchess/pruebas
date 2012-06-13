@@ -120,9 +120,7 @@ class Etapas extends CI_Controller {
             exit;
         }
 
-
-        $etapa->usuario_id = UsuarioSesion::usuario()->id;
-        $etapa->save();
+        $etapa->asignar(UsuarioSesion::usuario()->id);
 
         redirect('etapas/inbox');
     }

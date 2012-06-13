@@ -36,15 +36,7 @@ class Etapa extends Doctrine_Record {
 
     //Verifica si el usuario_id tiene permisos para asignarse esta etapa del tramite.
     public function canUsuarioAsignarsela($usuario_id) {
-        $usuario=Doctrine::getTable('Usuario')->find($usuario_id);
-        
-        return Doctrine_Query::create()
-                ->from('Etapa e, e.Tarea tar, tar.GruposUsuarios g')
-                ->where('e.id = ?',$this->id)
-                ->andWhere('e.usuario_id IS NULL')            
-                ->andWhere('(g.tipo="manual" AND g.id IN (SELECT gru.id FROM GrupoUsuarios gru, gru.Usuarios usr WHERE usr.id = ?)) OR (g.tipo = "registrados" AND 1 = ?) OR (g.tipo="todos")',array($usuario->id,$usuario->registrado))
-                ->orderBy('e.updated_at desc')
-                ->count()?true:false;
+        return $this->Tarea->hasUsuario($usuario_id);
     }
 
     //Avanza a la siguiente etapa.
@@ -71,22 +63,22 @@ class Etapa extends Doctrine_Record {
                         }
                     }
                 } else if ($tarea_proxima->asignacion == 'manual') {
-                    if ($tarea_proxima->hasUsuario($usuarios_a_asignar[$tarea_proxima->id]))
-                        $usuario_asignado_id = $usuarios_a_asignar[$tarea_proxima->id];
+                    $usuario_asignado_id = $usuarios_a_asignar[$tarea_proxima->id];
                 } else if ($tarea_proxima->asignacion == 'usuario') {
                     $regla = new Regla($tarea_proxima->asignacion_usuario);
                     $u = $regla->evaluar($this->Tramite->id);
-                    if ($tarea_proxima->hasUsuario($u))
-                        $usuario_asignado_id = $u;
+                    $usuario_asignado_id = $u;
                 }
 
                 $etapa = new Etapa();
                 $etapa->tramite_id = $this->Tramite->id;
-                $etapa->usuario_id = $usuario_asignado_id;
                 $etapa->tarea_id = $tarea_proxima->id;
                 $etapa->pendiente = 1;
-                $this->Tramite->Etapas[] = $etapa;     
+                $etapa->save();
+                $etapa->asignar($usuario_asignado_id);
+                //$this->Tramite->Etapas[] = $etapa;     
             }
+            $this->Tramite->updated_at=date("Y-m-d H:i:s");
             $this->Tramite->save();
         }
 
@@ -140,6 +132,21 @@ class Etapa extends Doctrine_Record {
                 ->count();
         
         return $netapas_paralelas_pendientes?true:false;
+    }
+    
+    public function asignar($usuario_id){
+        if($this->canUsuarioAsignarsela($usuario_id)){
+            $this->usuario_id=$usuario_id;
+            $this->save();
+            
+            if($this->Tarea->asignacion_notificar){
+                $usuario=Doctrine::getTable('Usuario')->find($usuario_id);
+                if($usuario->email)
+                    mail($usuario->email,'Tramitador - Tiene una tarea pendiente','Tiene una tarea pendiente por realizar. Podra realizarla en: '.  site_url());
+            }
+        }
+        
+        
     }
     
     public function cerrar(){
