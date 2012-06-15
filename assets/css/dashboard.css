@@ -45,13 +45,14 @@
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
   border: 1px solid #ccc;
   width: 100%;
+  height: 460px;
   position: absolute;
   top: 0;
   left: 0;
 }
 #dashboard .widget .front .cabecera,
 #dashboard .widget .back .cabecera {
-  background: #999;
+  background: #75aadb;
   color: #fff;
   padding: 5px;
   cursor: move;
@@ -80,7 +81,7 @@
   right: 10px;
 }
 #dashboard .widget .back {
-  background: #ccc;
+  background: #75aadb;
   transform: rotatey(-180deg);
   -webkit-transform: rotatey(-180deg);
   -moz-transform: rotatey(-180deg);

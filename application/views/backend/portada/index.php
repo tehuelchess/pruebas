@@ -5,7 +5,7 @@
                 <div class="front">
                     <div class="cabecera">
                         <h3>Tramites en curso</h3>
-                        <a class="config" href="#"><i class="icon-wrench"></i></a>
+                        <a class="config" href="#"><i class="icon-wrench icon-white"></i></a>
                     </div>
                     <div class="contenido">
                         <div id="grafico1"></div>
@@ -24,7 +24,7 @@
                 <div class="front">
                     <div class="cabecera">
                         <h3>Tendencia Bla bla</h3>
-                        <a class="config" href="#"><i class="icon-wrench"></i></a>
+                        <a class="config" href="#"><i class="icon-wrench icon-white"></i></a>
                     </div>
                     <div class="contenido">
                         <div id="grafico2"></div>
@@ -43,7 +43,7 @@
                 <div class="front">
                     <div class="cabecera">
                         <h3>Mas tramitados</h3>
-                        <a class="config" href="#"><i class="icon-wrench"></i></a>
+                        <a class="config" href="#"><i class="icon-wrench icon-white"></i></a>
                     </div>
                     <div class="contenido">
                         <div id="grafico3"></div>
