@@ -12,7 +12,9 @@ class Portada extends CI_Controller {
     }
 
     public function index() {
-        redirect('backend/procesos');
+        $data['title']='Portada';
+        $data['content']='backend/portada/index';
+        $this->load->view('backend/template',$data);
     }
 
 }

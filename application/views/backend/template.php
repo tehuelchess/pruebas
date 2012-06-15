@@ -17,6 +17,7 @@
         <link href="assets/js/file-uploader/fileuploader.css" rel="stylesheet">
         <link href="assets/css/modelador-procesos.css" rel="stylesheet">
         <link href="assets/css/modelador-formularios.css" rel="stylesheet">
+        <link href="assets/css/dashboard.css" rel="stylesheet">
 
 
         <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
@@ -54,6 +55,7 @@
         <script src="assets/js/modelador-procesos.js" type="text/javascript"></script>
         <script src="assets/js/modelador-formularios.js" type="text/javascript"></script>
         <script src="assets/js/modelador-acciones.js" type="text/javascript"></script>
+        <script src="assets/js/dashboard.js" type="text/javascript"></script>
 
 
         <link rel="shortcut icon" href="assets/ico/favicon.ico">
