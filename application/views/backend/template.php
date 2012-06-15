@@ -46,7 +46,7 @@
             });
         </script>
         <script src="assets/js/json-js/json2.js" type="text/javascript"></script> <?php //JS para convertir objetos a notacion JSON en multiples browsers   ?>
-        <script src="assets/js/jquery.jsplumb/jquery.jsPlumb-1.3.7-all-min.js" type="text/javascript"></script> <?php //JS para conectar elementos como diagramas de flujos   ?>
+        <script src="assets/js/jquery.jsplumb/jquery.jsPlumb-1.3.9-all-min.js" type="text/javascript"></script> <?php //JS para conectar elementos como diagramas de flujos   ?>
         <script type="text/javascript">
             var site_url="<?= site_url() ?>";
             var base_url="<?= base_url() ?>";
