@@ -8,7 +8,7 @@
                         <a class="config" href="#"><i class="icon-wrench"></i></a>
                     </div>
                     <div class="contenido">
-                        <p>Hola mundo</p>
+                        <div id="grafico1"></div>
                     </div>
                 </div>
                 <div class="back">
@@ -23,11 +23,11 @@
             <div class="widget">
                 <div class="front">
                     <div class="cabecera">
-                        <h3>Bla bla</h3>
+                        <h3>Tendencia Bla bla</h3>
                         <a class="config" href="#"><i class="icon-wrench"></i></a>
                     </div>
                     <div class="contenido">
-                        <p>Hola mundo</p>
+                        <div id="grafico2"></div>
                     </div>
                 </div>
                 <div class="back">
@@ -42,11 +42,11 @@
             <div class="widget">
                 <div class="front">
                     <div class="cabecera">
-                        <h3>Procesos en curso</h3>
+                        <h3>Mas tramitados</h3>
                         <a class="config" href="#"><i class="icon-wrench"></i></a>
                     </div>
                     <div class="contenido">
-                        <p>Bla bla bla</p>
+                        <div id="grafico3"></div>
                     </div>
                 </div>
                 <div class="back">
