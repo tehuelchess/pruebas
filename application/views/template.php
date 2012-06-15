@@ -30,8 +30,9 @@
     <body>
 
         <div class="container">
-            <div class="row">
-                <ul class="nav nav-pills pull-right">
+            <header class="row">
+                <h1><a href="<?=site_url('backend/portada')?>"><img src="assets/img/logo.png" alt="Tramitador" /></a></h1>
+                <ul class="nav nav-pills">
                     <?php if (!UsuarioSesion::usuario()->registrado): ?>
                         <li class="dropdown">
                             <a class="dropdown-toggle" data-toggle="dropdown" href="#">Iniciar sesión<b class="caret"></b></a>
@@ -61,7 +62,7 @@
                         </li>
                     <?php endif; ?>
                 </ul>
-            </div>
+            </header>
 
             <div class="row">
                 <div class="span3">

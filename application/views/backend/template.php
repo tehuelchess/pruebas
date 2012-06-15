@@ -28,15 +28,15 @@
         <!-- Le fav and touch icons -->
 
         <script src="assets/js/jquery-ui/js/jquery-1.7.1.min.js" type="text/javascript"></script>
-        <script src="assets/js/bootstrap.min.js" type="text/javascript"></script> <?php //JS base   ?>
-        <script src="assets/js/bootstrap-typeahead-multiple.js" type="text/javascript"></script> <?php //JS typeahead modificado para multiples items   ?>
-        <script src="assets/js/jquery.chosen/chosen.jquery.min.js"></script> <?php //Soporte para selects con multiple choices   ?>
-        <script src="assets/js/file-uploader/fileuploader.js"></script> <?php //Soporte para subir archivos con ajax   ?>
+        <script src="assets/js/bootstrap.min.js" type="text/javascript"></script> <?php //JS base    ?>
+        <script src="assets/js/bootstrap-typeahead-multiple.js" type="text/javascript"></script> <?php //JS typeahead modificado para multiples items    ?>
+        <script src="assets/js/jquery.chosen/chosen.jquery.min.js"></script> <?php //Soporte para selects con multiple choices    ?>
+        <script src="assets/js/file-uploader/fileuploader.js"></script> <?php //Soporte para subir archivos con ajax    ?>
         <script src="assets/js/jquery-ui/js/jquery-ui-1.8.18.custom.min.js" type="text/javascript"></script>
-        <script src="assets/js/jquery.ui.touch-punch/jquery.ui.touch-punch.min.js" type="text/javascript"></script> <?php //JS para soportar drag & drop en iPad   ?>
-        <script src="assets/js/jquery.ui.livedraggable/jquery.ui.livedraggable.js" type="text/javascript"></script> <?php //JS para que evento draggable sea live   ?>
-        <script src="assets/js/jquery.doubletap/jquery.doubletap.js" type="text/javascript"></script> <?php //JS para soportar dobleclick en iPad   ?>      
-        <script src="http://js.pusher.com/1.11/pusher.min.js" type="text/javascript"></script> <?php //JS para recibir eventos push via websockets   ?>
+        <script src="assets/js/jquery.ui.touch-punch/jquery.ui.touch-punch.min.js" type="text/javascript"></script> <?php //JS para soportar drag & drop en iPad    ?>
+        <script src="assets/js/jquery.ui.livedraggable/jquery.ui.livedraggable.js" type="text/javascript"></script> <?php //JS para que evento draggable sea live    ?>
+        <script src="assets/js/jquery.doubletap/jquery.doubletap.js" type="text/javascript"></script> <?php //JS para soportar dobleclick en iPad    ?>      
+        <script src="http://js.pusher.com/1.11/pusher.min.js" type="text/javascript"></script> <?php //JS para recibir eventos push via websockets    ?>
         <script type="text/javascript">
             var pusher = new Pusher('<?= $this->config->item('pusher_api_key') ?>');
             var channel = pusher.subscribe('modelador');
@@ -45,8 +45,8 @@
                 socketId = pusher.connection.socket_id;
             });
         </script>
-        <script src="assets/js/json-js/json2.js" type="text/javascript"></script> <?php //JS para convertir objetos a notacion JSON en multiples browsers   ?>
-        <script src="assets/js/jquery.jsplumb/jquery.jsPlumb-1.3.9-all-min.js" type="text/javascript"></script> <?php //JS para conectar elementos como diagramas de flujos   ?>
+        <script src="assets/js/json-js/json2.js" type="text/javascript"></script> <?php //JS para convertir objetos a notacion JSON en multiples browsers    ?>
+        <script src="assets/js/jquery.jsplumb/jquery.jsPlumb-1.3.9-all-min.js" type="text/javascript"></script> <?php //JS para conectar elementos como diagramas de flujos    ?>
         <script type="text/javascript">
             var site_url="<?= site_url() ?>";
             var base_url="<?= base_url() ?>";
@@ -67,8 +67,9 @@
     <body>
         <div class="container-fluid">
 
-            <div class="row-fluid">
-                <ul class="nav nav-pills pull-right">
+            <header class="row-fluid">
+                <h1><a href="<?=site_url('backend/portada')?>"><img src="assets/img/logo.png" alt="Tramitador" /></a></h1>
+                <ul class="nav nav-pills">
                     <li class="dropdown">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#">Bienvenido <?= UsuarioBackendSesion::usuario()->usuario ?><b class="caret"></b></a>
                         <ul class="dropdown-menu">
@@ -76,7 +77,7 @@
                         </ul>
                     </li>
                 </ul>
-            </div>
+            </header>
 
             <div class="row-fluid">
                 <ul class="nav nav-tabs">
