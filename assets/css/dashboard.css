@@ -49,9 +49,16 @@
   top: 0;
   left: 0;
 }
+#dashboard .widget .front .cabecera,
+#dashboard .widget .back .cabecera {
+  background: #999;
+  color: #fff;
+  padding: 5px;
+  cursor: move;
+}
 #dashboard .widget .front .contenido,
 #dashboard .widget .back .contenido {
-  margin: 10px;
+  padding: 5px;
 }
 #dashboard .widget .front {
   background: #fff;

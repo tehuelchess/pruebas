@@ -3,7 +3,10 @@
         <div class="span4">
             <div class="widget">
                 <div class="front">
-                    <a class="config" href="#"><i class="icon-wrench"></i></a>
+                    <div class="cabecera">
+                        <h3>Tramites en curso</h3>
+                        <a class="config" href="#"><i class="icon-wrench"></i></a>
+                    </div>
                     <div class="contenido">
                         <p>Hola mundo</p>
                     </div>
@@ -19,7 +22,10 @@
         <div class="span4">
             <div class="widget">
                 <div class="front">
-                    <a class="config" href="#"><i class="icon-wrench"></i></a>
+                    <div class="cabecera">
+                        <h3>Bla bla</h3>
+                        <a class="config" href="#"><i class="icon-wrench"></i></a>
+                    </div>
                     <div class="contenido">
                         <p>Hola mundo</p>
                     </div>
@@ -35,9 +41,12 @@
         <div class="span4">
             <div class="widget">
                 <div class="front">
-                    <a class="config" href="#"><i class="icon-wrench"></i></a>
+                    <div class="cabecera">
+                        <h3>Procesos en curso</h3>
+                        <a class="config" href="#"><i class="icon-wrench"></i></a>
+                    </div>
                     <div class="contenido">
-                        <p>Hola mundo</p>
+                        <p>Bla bla bla</p>
                     </div>
                 </div>
                 <div class="back">
