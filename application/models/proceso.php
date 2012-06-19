@@ -16,6 +16,11 @@ class Proceso extends Doctrine_Record {
             'foreign'=>'id'
         ));
         
+        $this->hasMany('Tramite as Tramites',array(
+            'local'=>'id',
+            'foreign'=>'proceso_id',
+        ));
+        
         $this->hasMany('Tarea as Tareas',array(
             'local'=>'id',
             'foreign'=>'proceso_id',

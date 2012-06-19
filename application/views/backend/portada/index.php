@@ -1,61 +1,11 @@
 <div id="dashboard">
     <div class="row-fluid">
+        <?php foreach($widgets as $w):?>
         <div class="span4">
-            <div class="widget">
-                <div class="front">
-                    <div class="cabecera">
-                        <h3>Tramites en curso</h3>
-                        <a class="config" href="#"><i class="icon-wrench icon-white"></i></a>
-                    </div>
-                    <div class="contenido">
-                        <div id="grafico1"></div>
-                    </div>
-                </div>
-                <div class="back">
-                    <a class="volver btn" href="#">ok</a>
-                    <div class="contenido">
-                        <p>Configuración</p>
-                    </div>
-                </div>
+            <div class="widget" data-id="<?=$w->id?>">
+            <?php $data['widget']=$w; $this->load->view('backend/portada/widget_load',$data) ?>
             </div>
         </div>
-        <div class="span4">
-            <div class="widget">
-                <div class="front">
-                    <div class="cabecera">
-                        <h3>Tendencia Bla bla</h3>
-                        <a class="config" href="#"><i class="icon-wrench icon-white"></i></a>
-                    </div>
-                    <div class="contenido">
-                        <div id="grafico2"></div>
-                    </div>
-                </div>
-                <div class="back">
-                    <a class="volver btn" href="#">ok</a>
-                    <div class="contenido">
-                        <p>Configuración</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="span4">
-            <div class="widget">
-                <div class="front">
-                    <div class="cabecera">
-                        <h3>Mas tramitados</h3>
-                        <a class="config" href="#"><i class="icon-wrench icon-white"></i></a>
-                    </div>
-                    <div class="contenido">
-                        <div id="grafico3"></div>
-                    </div>
-                </div>
-                <div class="back">
-                    <a class="volver btn" href="#">ok</a>
-                    <div class="contenido">
-                        <p>Configuración</p>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <?php endforeach; ?>
     </div>
 </div>

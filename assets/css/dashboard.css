@@ -81,7 +81,7 @@
   right: 10px;
 }
 #dashboard .widget .back {
-  background: #75aadb;
+  background: #eee;
   transform: rotatey(-180deg);
   -webkit-transform: rotatey(-180deg);
   -moz-transform: rotatey(-180deg);

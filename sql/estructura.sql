@@ -385,6 +385,26 @@ CREATE  TABLE IF NOT EXISTS `tramitador`.`accion` (
 ENGINE = InnoDB;
 
 
+-- -----------------------------------------------------
+-- Table `tramitador`.`widget`
+-- -----------------------------------------------------
+CREATE  TABLE IF NOT EXISTS `tramitador`.`widget` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
+  `tipo` VARCHAR(32) NOT NULL ,
+  `nombre` VARCHAR(128) NOT NULL ,
+  `posicion` INT UNSIGNED NOT NULL ,
+  `config` TEXT NULL ,
+  `cuenta_id` INT UNSIGNED NOT NULL ,
+  PRIMARY KEY (`id`) ,
+  INDEX `fk_widget_cuenta1` (`cuenta_id` ASC) ,
+  CONSTRAINT `fk_widget_cuenta1`
+    FOREIGN KEY (`cuenta_id` )
+    REFERENCES `tramitador`.`cuenta` (`id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;

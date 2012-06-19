@@ -29,6 +29,12 @@ class Cuenta extends Doctrine_Record {
             'local'=>'id',
             'foreign'=>'cuenta_id'
         ));
+        
+        $this->hasMany('Widget as Widgets',array(
+            'local'=>'id',
+            'foreign'=>'cuenta_id',
+            'orderBy'=>'posicion'
+        ));
     }
 
 }
