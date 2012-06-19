@@ -21,9 +21,9 @@ class WidgetTramiteEtapas extends Widget {
     
     $datos=array();
     foreach($tmp as $t)
-        $datos[]=array($t->nombre,$t->porcentaje);
+        $datos[]=array($t->nombre,(float)$t->porcentaje);
     
-    $datos=json_encode($datos,JSON_NUMERIC_CHECK);
+    $datos=json_encode($datos);
 
     $display='<div class="grafico"></div>';
     $display.='
