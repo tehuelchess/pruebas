@@ -1,3 +1,30 @@
+.clearfix {
+  *zoom: 1;
+}
+.clearfix:before,
+.clearfix:after {
+  display: table;
+  content: "";
+}
+.clearfix:after {
+  clear: both;
+}
+.hide-text {
+  font: 0/0 a;
+  color: transparent;
+  text-shadow: none;
+  background-color: transparent;
+  border: 0;
+}
+.input-block-level {
+  display: block;
+  width: 100%;
+  min-height: 28px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  box-sizing: border-box;
+}
 header {
   height: 120px;
   position: relative;
@@ -17,11 +44,13 @@ header .nav {
 }
 .ajaxForm .ajaxLoader {
   width: 80px;
-  height: 20px;
-  background: #ffffff url("../img/ajax-loader.gif") 25px 20px no-repeat;
-  border: 2px solid #999;
+  height: 24px;
+  background: #000000 url("../img/ajax-loader.gif") 25px 16px no-repeat;
+  color: #fff;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
   border-radius: 5px;
   position: absolute;
   text-align: center;
-  padding-top: 60px;
+  padding-top: 56px;
 }
