@@ -12,13 +12,6 @@ class CampoDate extends Campo{
         $display.='<input class="datepicker" ' . ($modo == 'visualizacion' ? 'disabled' : '') . ' type="text" value="' . ($dato?date('d/m/Y',mysql_to_unix($dato->valor)):'') . '" />';
         $display.='<input type="hidden" name="'.$this->nombre.'" value="" />';
         
-        $display.='
-            <script>
-                $(document).ready(function(){
-                    
-                });
-            </script>';
-        
         return $display;
     }
     
