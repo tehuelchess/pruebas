@@ -12,6 +12,7 @@
         <link href="assets/css/bootstrap.css" rel="stylesheet">
         <link href="assets/css/bootstrap-responsive.css" rel="stylesheet">
         <link href="assets/css/common.css" rel="stylesheet">
+        <link href="assets/js/bootstrap-datepicker/css/datepicker.css" rel="stylesheet">
         <link href="assets/js/jquery.chosen/chosen.css" rel="stylesheet">
         <link href="assets/js/file-uploader/fileuploader.css" rel="stylesheet">
 
@@ -88,8 +89,10 @@
         <!-- Le javascript
         ================================================== -->
         <!-- Placed at the end of the document so the pages load faster -->
-        <script src="assets/js/jquery-ui/js/jquery-1.7.1.min.js"></script>
+        <script src="assets/js/jquery-ui/js/jquery-1.7.2.min.js"></script>
         <script src="assets/js/bootstrap.min.js"></script>
+        <script src="assets/js/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+        <script src="assets/js/bootstrap-datepicker/js/locales/bootstrap-datepicker.es.js"></script>
         <script src="assets/js/jquery.chosen/chosen.jquery.min.js"></script> <?php //Soporte para selects con multiple choices    ?>
         <script src="assets/js/file-uploader/fileuploader.js"></script> <?php //Soporte para subir archivos con ajax    ?>
         <script type="text/javascript">

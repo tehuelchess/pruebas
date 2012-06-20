@@ -13,6 +13,7 @@
         <link href="assets/css/bootstrap.css" rel="stylesheet">
         <link href="assets/css/bootstrap-responsive.css" rel="stylesheet">
         <link href="assets/css/common.css" rel="stylesheet">
+        <link href="assets/js/bootstrap-datepicker/css/datepicker.css" rel="stylesheet">
         <link href="assets/js/jquery.chosen/chosen.css" rel="stylesheet">
         <link href="assets/js/file-uploader/fileuploader.css" rel="stylesheet">
         <link href="assets/css/modelador-procesos.css" rel="stylesheet">
@@ -27,12 +28,14 @@
 
         <!-- Le fav and touch icons -->
 
-        <script src="assets/js/jquery-ui/js/jquery-1.7.1.min.js" type="text/javascript"></script>
+        <script src="assets/js/jquery-ui/js/jquery-1.7.2.min.js" type="text/javascript"></script>
         <script src="assets/js/bootstrap.min.js" type="text/javascript"></script> <?php //JS base    ?>
+        <script src="assets/js/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+        <script src="assets/js/bootstrap-datepicker/js/locales/bootstrap-datepicker.es.js"></script>
         <script src="assets/js/bootstrap-typeahead-multiple.js" type="text/javascript"></script> <?php //JS typeahead modificado para multiples items    ?>
         <script src="assets/js/jquery.chosen/chosen.jquery.min.js"></script> <?php //Soporte para selects con multiple choices    ?>
         <script src="assets/js/file-uploader/fileuploader.js"></script> <?php //Soporte para subir archivos con ajax    ?>
-        <script src="assets/js/jquery-ui/js/jquery-ui-1.8.18.custom.min.js" type="text/javascript"></script>
+        <script src="assets/js/jquery-ui/js/jquery-ui-1.8.21.custom.min.js" type="text/javascript"></script>
         <script src="assets/js/jquery.ui.touch-punch/jquery.ui.touch-punch.min.js" type="text/javascript"></script> <?php //JS para soportar drag & drop en iPad    ?>
         <script src="assets/js/jquery.ui.livedraggable/jquery.ui.livedraggable.js" type="text/javascript"></script> <?php //JS para que evento draggable sea live    ?>
         <script src="assets/js/jquery.doubletap/jquery.doubletap.js" type="text/javascript"></script> <?php //JS para soportar dobleclick en iPad    ?>      

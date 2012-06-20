@@ -18,7 +18,8 @@ class Campo extends Doctrine_Record {
                 'CampoSelect'  => array('tipo' => 'select'),
                 'CampoRadio'  => array('tipo' => 'radio'),
                 'CampoCheckbox'  => array('tipo' => 'checkbox'),
-                'CampoFile'  => array('tipo' => 'file')
+                'CampoFile'  => array('tipo' => 'file'),
+                'CampoDate'  => array('tipo' => 'date')
             )
         );
     }

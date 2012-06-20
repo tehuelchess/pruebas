@@ -1,6 +1,18 @@
 $(document).ready(function(){
     $(".chosen").chosen();
     
+    $(".datepicker")
+        .datepicker({
+            format: "dd/mm/yyyy",
+            weekStart: 1,
+            autoclose: true,
+            language: "es"
+        })
+        .on("changeDate",function(event){
+            var fecha=event.date.getFullYear()+"-"+(event.date.getMonth()+1)+"-"+event.date.getDate();
+            $(this).next("input:hidden").val(fecha);
+        });
+    
     $(".file-uploader").each(function(i,el){
         var $parentDiv=$(el).parent();
         new qq.FileUploader({
