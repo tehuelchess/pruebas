@@ -47,7 +47,7 @@ class Tarea extends Doctrine_Record {
             'refClass' => 'TareaHasGrupoUsuarios'
         ));
         
-        $this->hasMany('paso as Pasos',array(
+        $this->hasMany('Paso as Pasos',array(
             'local'=>'id',
             'foreign'=>'tarea_id',
             'orderBy'=>'orden'
