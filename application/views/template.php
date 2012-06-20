@@ -26,6 +26,18 @@
         <link rel="apple-touch-icon-precomposed" sizes="114x114" href="assets/ico/apple-touch-icon-114-precomposed.png">
         <link rel="apple-touch-icon-precomposed" sizes="72x72" href="assets/ico/apple-touch-icon-72-precomposed.png">
         <link rel="apple-touch-icon-precomposed" href="assets/ico/apple-touch-icon-57-precomposed.png">
+        
+        <script src="assets/js/jquery-ui/js/jquery-1.7.2.min.js"></script>
+        <script src="assets/js/bootstrap.min.js"></script>
+        <script src="assets/js/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+        <script src="assets/js/bootstrap-datepicker/js/locales/bootstrap-datepicker.es.js"></script>
+        <script src="assets/js/jquery.chosen/chosen.jquery.min.js"></script> <?php //Soporte para selects con multiple choices    ?>
+        <script src="assets/js/file-uploader/fileuploader.js"></script> <?php //Soporte para subir archivos con ajax    ?>
+        <script type="text/javascript">
+            var site_url="<?= site_url() ?>";
+            var base_url="<?= base_url() ?>";
+        </script>
+        <script src="assets/js/common.js"></script>
     </head>
 
     <body>
@@ -85,20 +97,5 @@
 
         </div> <!-- /container -->
 
-
-        <!-- Le javascript
-        ================================================== -->
-        <!-- Placed at the end of the document so the pages load faster -->
-        <script src="assets/js/jquery-ui/js/jquery-1.7.2.min.js"></script>
-        <script src="assets/js/bootstrap.min.js"></script>
-        <script src="assets/js/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
-        <script src="assets/js/bootstrap-datepicker/js/locales/bootstrap-datepicker.es.js"></script>
-        <script src="assets/js/jquery.chosen/chosen.jquery.min.js"></script> <?php //Soporte para selects con multiple choices    ?>
-        <script src="assets/js/file-uploader/fileuploader.js"></script> <?php //Soporte para subir archivos con ajax    ?>
-        <script type="text/javascript">
-            var site_url="<?= site_url() ?>";
-            var base_url="<?= base_url() ?>";
-        </script>
-        <script src="assets/js/common.js"></script>
     </body>
 </html>

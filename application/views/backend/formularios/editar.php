@@ -27,6 +27,9 @@
             <button class="btn" onclick="return agregarCampo(<?= $formulario->id ?>,'file')">File</button>
             <button class="btn" onclick="return agregarCampo(<?= $formulario->id ?>,'date')">Date</button>
         </div>
+        <div class="btn-group">
+            <button class="btn" onclick="return agregarCampo(<?= $formulario->id ?>,'instituciones_gob')">Instituciones</button>
+        </div>
     </div>
 
     <form onsubmit="return false">
