@@ -55,7 +55,7 @@
         <!-- Le javascript
         ================================================== -->
         <!-- Placed at the end of the document so the pages load faster -->
-        <script src="assets/js/jquery-ui/js/jquery-1.7.1.min.js"></script>
+        <script src="assets/js/jquery-ui/js/jquery-1.7.2.min.js"></script>
         <script src="assets/js/bootstrap.min.js"></script>
         <script src="assets/js/jquery.chosen/chosen.jquery.min.js"></script> <?php //Soporte para selects con multiple choices   ?>
         <script src="assets/js/common.js"></script>
