@@ -405,6 +405,30 @@ CREATE  TABLE IF NOT EXISTS `tramitador`.`widget` (
 ENGINE = InnoDB;
 
 
+-- -----------------------------------------------------
+-- Table `tramitador`.`evento`
+-- -----------------------------------------------------
+CREATE  TABLE IF NOT EXISTS `tramitador`.`evento` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
+  `instante` ENUM('antes','despues') NOT NULL ,
+  `tarea_id` INT(10) UNSIGNED NOT NULL ,
+  `accion_id` INT UNSIGNED NOT NULL ,
+  PRIMARY KEY (`id`) ,
+  INDEX `fk_evento_tarea1` (`tarea_id` ASC) ,
+  INDEX `fk_evento_accion1` (`accion_id` ASC) ,
+  CONSTRAINT `fk_evento_tarea1`
+    FOREIGN KEY (`tarea_id` )
+    REFERENCES `tramitador`.`tarea` (`id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_evento_accion1`
+    FOREIGN KEY (`accion_id` )
+    REFERENCES `tramitador`.`accion` (`id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;

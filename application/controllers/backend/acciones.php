@@ -104,24 +104,28 @@ class Acciones extends CI_Controller {
         $accion=NULL;
         if($accion_id){
             $accion=Doctrine::getTable('Accion')->find($accion_id);
-
-            if($accion->Proceso->cuenta_id!=UsuarioBackendSesion::usuario()->cuenta_id){
+        }else{
+            if($this->input->post('tipo')=='enviar_correo')
+                $accion=new AccionEnviarCorreo();
+            $accion->proceso_id=$this->input->post('proceso_id');
+            $accion->tipo=$this->input->post('tipo');
+        }
+        
+        if($accion->Proceso->cuenta_id!=UsuarioBackendSesion::usuario()->cuenta_id){
                 echo 'Usuario no tiene permisos para editar esta accion.';
                 exit;
             }
-        }
         
         $this->form_validation->set_rules('nombre','Nombre','required');
+        $accion->validateForm();
         if(!$accion_id){
-            $this->form_validation->set_rules('proceso_id','Proceso','required|callback_check_permiso_proceso');
+            $this->form_validation->set_rules('proceso_id','Proceso','required');
             $this->form_validation->set_rules('tipo','Tipo de Campo','required');
         }
         
         if($this->form_validation->run()==TRUE){
             if(!$accion){
-                $accion=new Accion();
-                $accion->proceso_id=$this->input->post('proceso_id');
-                $accion->tipo=$this->input->post('tipo');
+                
             }
             
             $accion->nombre=$this->input->post('nombre');
@@ -152,18 +156,6 @@ class Acciones extends CI_Controller {
         redirect('backend/acciones/listar/'.$proceso->id);
         
     }
-    
-    public function check_permiso_proceso($proceso_id){
-        $proceso=Doctrine::getTable('Proceso')->find($proceso_id);
-        
-        if($proceso->cuenta_id!=UsuarioBackendSesion::usuario()->cuenta_id){
-            $this->form_validation->set_message('check_permiso_proceso' ,'Usuario no tiene permisos para agregar acciones a este proceso.');
-            return FALSE;
-        }
-        
-        return TRUE;
-    }
-    
     
 
 }

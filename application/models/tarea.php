@@ -52,6 +52,11 @@ class Tarea extends Doctrine_Record {
             'foreign'=>'tarea_id',
             'orderBy'=>'orden'
         ));
+        
+        $this->hasMany('Evento as Eventos',array(
+            'local'=>'id',
+            'foreign'=>'tarea_id'
+        ));
     }
 
     public function hasGrupoUsuarios($grupo_id){
@@ -126,6 +131,22 @@ class Tarea extends Doctrine_Record {
                 $paso->modo=$p['modo'];
                 $paso->formulario_id=$p['formulario_id'];
                 $this->Pasos[]=$paso;
+            }
+        }
+    }
+    
+    public function setEventosFromArray($eventos_array){        
+        //Limpiamos la lista antigua
+        foreach($this->Eventos as $key=>$val)
+            unset($this->Eventos[$key]);
+        
+        //Agregamos los nuevos
+        if(is_array($eventos_array)){
+            foreach($eventos_array as $key=>$p){
+                $evento=new Evento();
+                $evento->instante=$p['instante'];
+                $evento->accion_id=$p['accion_id'];
+                $this->Eventos[]=$evento;
             }
         }
     }

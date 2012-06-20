@@ -134,22 +134,29 @@ class Etapa extends Doctrine_Record {
     }
 
     public function asignar($usuario_id) {
-        if ($this->canUsuarioAsignarsela($usuario_id)) {
-            $this->usuario_id = $usuario_id;
-            $this->save();
+        if (!$this->canUsuarioAsignarsela($usuario_id))
+            return;
 
-            if ($this->Tarea->asignacion_notificar) {
-                $usuario = Doctrine::getTable('Usuario')->find($usuario_id);
-                if ($usuario->email) {
-                    $CI=& get_instance();
-                    $CI->email->from($CI->config->item('email_from'), 'Tramitador');
-                    $CI->email->to($usuario->email);
-                    $CI->email->subject('Tramitador - Tiene una tarea pendiente');
-                    $CI->email->message('Tiene una tarea pendiente por realizar. Podra realizarla en: ' . site_url());
-                    $CI->email->send();
-                }
+        $this->usuario_id = $usuario_id;
+        $this->save();
+
+        if ($this->Tarea->asignacion_notificar) {
+            $usuario = Doctrine::getTable('Usuario')->find($usuario_id);
+            if ($usuario->email) {
+                $CI = & get_instance();
+                $CI->email->from($CI->config->item('email_from'), 'Tramitador');
+                $CI->email->to($usuario->email);
+                $CI->email->subject('Tramitador - Tiene una tarea pendiente');
+                $CI->email->message('Tiene una tarea pendiente por realizar. Podra realizarla en: ' . site_url());
+                $CI->email->send();
             }
         }
+
+
+        //Ejecutamos los eventos
+        foreach ($this->Tarea->Eventos as $e)
+            if ($e->instante == 'antes')
+                $e->Accion->ejecutar();
     }
 
     public function cerrar() {
@@ -166,6 +173,11 @@ class Etapa extends Doctrine_Record {
         $this->pendiente = 0;
         $this->ended_at = date('Y-m-d H:i:s');
         $this->save();
+
+        //Ejecutamos los eventos
+        foreach ($this->Tarea->Eventos as $e)
+            if ($e->instante == 'despues')
+                $e->Accion->ejecutar();
     }
 
 }

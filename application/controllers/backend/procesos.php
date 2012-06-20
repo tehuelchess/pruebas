@@ -130,6 +130,7 @@ class Procesos extends CI_Controller {
         $data['tarea'] = $tarea;
         $data['grupos_usuarios']=Doctrine::getTable('GrupoUsuarios')->findAll();
         $data['formularios']=Doctrine::getTable('Formulario')->findByProcesoId($proceso_id);
+        $data['acciones']=Doctrine::getTable('Accion')->findByProcesoId($proceso_id);
         
         $this->load->view('backend/procesos/ajax_editar_tarea',$data);
     }
@@ -153,6 +154,7 @@ class Procesos extends CI_Controller {
             $tarea->asignacion_notificar=$this->input->post('asignacion_notificar');
             $tarea->setGruposUsuariosFromArray($this->input->post('grupos_usuarios'));
             $tarea->setPasosFromArray($this->input->post('pasos'));
+            $tarea->setEventosFromArray($this->input->post('eventos'));
             $tarea->almacenar_usuario=$this->input->post('almacenar_usuario');
             $tarea->almacenar_usuario_variable=$this->input->post('almacenar_usuario_variable');
             $tarea->save();

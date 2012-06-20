@@ -23,10 +23,23 @@ class Accion extends Doctrine_Record {
             'local' => 'proceso_id',
             'foreign' => 'id'
         ));
+        
+        $this->hasMany('Evento as Eventos', array(
+            'local' => 'id',
+            'foreign' => 'accion_id'
+        ));
     }
     
     public function displayForm(){
         return NULL;
+    }
+    
+    public function validateForm(){
+        return;
+    }
+    
+    public function ejecutar(){
+        return;
     }
     
     public function setExtra($datos_array) {

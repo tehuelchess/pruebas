@@ -51,6 +51,37 @@
             }
         });
         
+        
+        //Permite borrar eventos
+        $(".tab-eventos").on("click",".delete",function(){
+            $(this).closest("tr").remove();
+            return false;
+        });
+        //Permite agregar nuevos eventos
+        $(".tab-eventos .form-inline button").click(function(){
+            var $form=$(this).closest(".form-inline");
+            
+            var pos=1+$(".tab-eventos table tbody tr").size();
+            var accionId=$form.find("select:nth-child(1) option:selected").val()
+            var accionNombre=$form.find("select:nth-child(1) option:selected").text()
+            var instante=$form.find("select:nth-child(2) option:selected").val()
+            
+            var html="<tr>";
+            html+="<td>"+pos+"</td>";
+            html+='<td><a title="Editar" target="_blank" href="'+site_url+'backend/acciones/editar/'+accionId+'">'+accionNombre+'</td>';
+            html+="<td>"+instante+"</td>";
+            html+='<td>';
+            html+='<input type="hidden" name="eventos['+pos+'][accion_id]" value="'+accionId+'" />';
+            html+='<input type="hidden" name="eventos['+pos+'][instante]" value="'+instante+'" />';
+            html+='<a class="delete" title="Eliminar" href="#"><i class="icon-remove"></i></a>';
+            html+='</td>';
+            html+="</tr>";
+            
+            $(".tab-eventos table tbody").append(html);
+            
+            return false;
+        });
+        
         //$("#modalEditarTarea form input[name=socket_id_emisor]").val(socketId);
         //$("#modalEditarTarea .botonEliminar").attr("href",function(i,href){return href+"?socket_id_emisor="+socketId;})
     });
@@ -71,7 +102,8 @@
                 <li><a href="#tab2">Asignación</a></li>
                 <li><a href="#tab3">Usuarios</a></li>
                 <li><a href="#tab4">Pasos</a></li>
-                <li><a href="#tab5">Otros</a></li>
+                <li><a href="#tab5">Eventos</a></li>
+                <li><a href="#tab6">Otros</a></li>
             </ul>
             <div class="tab-content">
                 <div class="tab-pane active" id="tab1">
@@ -130,7 +162,7 @@
                                 <th>#</th>
                                 <th>Formulario</th>
                                 <th>Modo</th>
-                                <th>Acciones</th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -149,7 +181,46 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="tab-pane" id="tab5">
+                <div class="tab-eventos tab-pane" id="tab5">
+                    <div class="form-inline">
+                        <select>
+                            <?php foreach ($acciones as $f): ?>
+                                <option value="<?= $f->id ?>"><?= $f->nombre ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                        <select>
+                            <option value="antes">Antes de ejecutar tarea</option>
+                            <option value="despues">Despues de finalizar tarea</option>
+                        </select>
+                        <button type="button" class="btn" title="Agregar"><i class="icon-plus"></i></button>
+                    </div>
+
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Accion</th>
+                                <th>Instante</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($tarea->Eventos as $key => $p): ?>
+                                <tr>
+                                    <td><?= $key + 1 ?></td>
+                                    <td><a title="Editar" target="_blank" href="<?= site_url('backend/acciones/editar/' . $p->Accion->id) ?>"><?= $p->Accion->nombre ?></a></td>
+                                    <td><?= $p->instante ?></td>
+                                    <td>
+                                        <input type="hidden" name="eventos[<?= $key + 1 ?>][accion_id]" value="<?= $p->accion_id ?>" />
+                                        <input type="hidden" name="eventos[<?= $key + 1 ?>][instante]" value="<?= $p->instante ?>" />
+                                        <a class="delete" title="Eliminar" href="#"><i class="icon-remove"></i></a>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="tab-pane" id="tab6">
                     <script type="text/javascript">
                         $(document).ready(function(){
                             $("input[name=almacenar_usuario]").click(function(){

@@ -2,17 +2,33 @@
 
 class AccionEnviarCorreo extends Accion {
 
-    
-    public function displayForm(){
+    public function displayForm() {
 
-        
-        $display='<label>Para</label>';
-        $display.='<input type="text" name="extra[para]" value="'.($this->extra?$this->extra->para:'').'" />';
+
+        $display = '<label>Para</label>';
+        $display.='<input type="text" name="extra[para]" value="' . ($this->extra ? $this->extra->para : '') . '" />';
+        $display.='<label>Tema</label>';
+        $display.='<input type="text" name="extra[tema]" value="' . ($this->extra ? $this->extra->tema : '') . '" />';
         $display.='<label>Contenido</label>';
-        $display.='<textarea name="extra[contenido]">'.($this->extra?$this->extra->contenido:'').'</textarea>';
-        
+        $display.='<textarea name="extra[contenido]">' . ($this->extra ? $this->extra->contenido : '') . '</textarea>';
+
         return $display;
     }
 
+    public function validateForm() {
+        $CI = & get_instance();
+        $CI->form_validation->set_rules('extra[para]', 'Para', 'required');
+        $CI->form_validation->set_rules('extra[tema]', 'Tema', 'required');
+        $CI->form_validation->set_rules('extra[contenido]', 'Contenido', 'required');
+    }
+
+    public function ejecutar() {
+        $CI = & get_instance();
+        $CI->email->from($CI->config->item('email_from'), 'Tramitador');
+        $CI->email->to($this->extra->para);
+        $CI->email->subject($this->extra->tema);
+        $CI->email->message($this->extra->contenido);
+        $CI->email->send();
+    }
 
 }
