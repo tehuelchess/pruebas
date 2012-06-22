@@ -41,6 +41,11 @@ class Campo extends Doctrine_Record {
         return '';
     }
     
+    public function formValidate(){
+        $CI=& get_instance();
+        $CI->form_validation->set_rules($this->nombre, $this->etiqueta, implode('|', $this->validacion));
+    }
+    
     protected function getDatoDeTramite($tramite_id){
         $dato = Doctrine::getTable('Dato')->findOneByTramiteIdAndNombre($tramite_id, $this->nombre);
         
