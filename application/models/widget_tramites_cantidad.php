@@ -78,7 +78,7 @@ class WidgetTramitesCantidad extends Widget {
         
         $procesos_array=$this->config?$this->config->procesos:array();
         
-        $display = '<label>Procesos a desplegar</p>';
+        $display = '<label>Procesos a desplegar</label>';
         foreach ($procesos as $p)
             $display.='<label><input type="checkbox" name="config[procesos][]" value="' . $p->id . '" ' . (in_array($p->id, $procesos_array) ? 'checked' : '') . ' /> ' . $p->nombre . '</label>';
 
