@@ -61,4 +61,31 @@ $(document).ready(function(){
         return false;
     });
     
+    //Para manejar los input dependientes en dynaforms
+    function prepareDynaForm(form){
+        $(form).find(".campo[data-dependiente-campo][data-dependiente-valor]").each(function(i,el){
+            var disabledElements=$(form).find(":input:disabled");
+            $(disabledElements).prop("disabled",false);
+            var items=$(form).find(":input").serializeArray();
+            $(disabledElements).prop("disabled",true);
+            var existe=false;
+            for(var i in items){
+                if(items[i].name==$(el).data("dependiente-campo") && items[i].value==$(el).data("dependiente-valor")){
+                    existe=true;
+                    break;
+                }
+            }
+            if(existe)
+                $(el).show();
+            else
+                $(el).hide();
+        });
+    }
+    prepareDynaForm(".dynaForm");
+    $(".dynaForm").on("change",":input",function(event){
+        prepareDynaForm($(event.target).closest(".dynaForm"))
+    });
+    
+    
+    
 });

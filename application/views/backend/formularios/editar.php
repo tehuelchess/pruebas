@@ -32,11 +32,11 @@
         </div>
     </div>
 
-    <form onsubmit="return false">
+    <form class="dynaForm" onsubmit="return false">
         <div class="row-fluid">
             <div class="span3">&nbsp;</div>
             <div class="span6">
-                <legend><?=$formulario->nombre?></legend>
+                <legend><?= $formulario->nombre ?></legend>
             </div>
             <div class="span3">
                 <a href="#" class="btn" onclick="return editarFormulario(<?= $formulario->id ?>)">Editar</a>
@@ -44,18 +44,18 @@
         </div>
         <div class="edicionFormulario">
             <?php foreach ($formulario->Campos as $c): ?>
-                <div data-id="<?= $c->id ?>" class="row-fluid">
-                    <div class="span3">
-                        <div class="handler pull-right"></div>
+                <div class="row-fluid">
+                    <div class="campo" data-id="<?= $c->id ?>" <?= $c->dependiente_campo ? 'data-dependiente-campo=' . $c->dependiente_campo : '' ?> <?= $c->dependiente_valor ? 'data-dependiente-valor=' . $c->dependiente_valor : '' ?> >
+                        <div class="span3">
+                            <div class="handler pull-right"></div>
+                        </div>
+                        <div class="span6"><?= $c->display() ?></div>
+                        <div class="span3">
+                            <a href="#" class="btn" onclick="return editarCampo(<?= $c->id ?>)">Editar</a>
+                            <a href="<?= site_url('backend/formularios/eliminar_campo/' . $c->id) ?>" class="btn" onclick="return confirm('¿Esta seguro que desea eliminar?')">Eliminar</a>
+                        </div>
                     </div>
-                    <div class="span6"><?= $c->display() ?></div>
-                    <div class="span3">
-                        <a href="#" class="btn" onclick="return editarCampo(<?= $c->id ?>)">Editar</a>
-                        <a href="<?= site_url('backend/formularios/eliminar_campo/' . $c->id) ?>" class="btn" onclick="return confirm('¿Esta seguro que desea eliminar?')">Eliminar</a>
-                    </div>
-
                 </div>
-
             <?php endforeach; ?>
         </div>
     </form>

@@ -10,6 +10,8 @@ class Campo extends Doctrine_Record {
         $this->hasColumn('formulario_id');
         $this->hasColumn('etiqueta');
         $this->hasColumn('validacion');
+        $this->hasColumn('dependiente_campo');
+        $this->hasColumn('dependiente_valor');
         $this->hasColumn('datos');
         
         $this->setSubclasses(array(

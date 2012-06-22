@@ -268,9 +268,10 @@ CREATE  TABLE IF NOT EXISTS `tramitador`.`campo` (
   `formulario_id` INT(10) UNSIGNED NOT NULL ,
   `etiqueta` VARCHAR(128) NOT NULL ,
   `validacion` VARCHAR(128) NOT NULL ,
+  `dependiente_campo` VARCHAR(32) NULL ,
+  `dependiente_valor` VARCHAR(32) NULL ,
   `datos` TEXT NULL ,
   PRIMARY KEY (`id`) ,
-  UNIQUE INDEX `nombre` (`nombre` ASC, `formulario_id` ASC) ,
   INDEX `fk_campo_formulario1` (`formulario_id` ASC) ,
   CONSTRAINT `campo_ibfk_1`
     FOREIGN KEY (`formulario_id` )

@@ -124,6 +124,7 @@ class Formularios extends CI_Controller {
         }
         
         $data['campo']=$campo;
+        $data['formulario']=$campo->Formulario;
         
         $this->load->view('backend/formularios/ajax_editar_campo',$data);
     }
@@ -158,6 +159,8 @@ class Formularios extends CI_Controller {
             $campo->nombre=$this->input->post('nombre');
             $campo->etiqueta=$this->input->post('etiqueta');
             $campo->validacion=explode('|',$this->input->post('validacion'));
+            $campo->dependiente_campo=$this->input->post('dependiente_campo');
+            $campo->dependiente_valor=$this->input->post('dependiente_valor');
             $campo->datos=$this->input->post('datos');
             $campo->save();
             
@@ -181,7 +184,7 @@ class Formularios extends CI_Controller {
             exit;
         }
         
-        $data['formulario_id']=$formulario->id;
+        $data['formulario']=$formulario;
         $data['tipo']=$tipo;
         $this->load->view('backend/formularios/ajax_editar_campo',$data);
     }

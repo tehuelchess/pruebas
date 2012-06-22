@@ -6,7 +6,7 @@
     <form id="formEditarCampo" class="ajaxForm" method="POST" action="<?= site_url('backend/formularios/editar_campo_form/' . (isset($campo) ? $campo->id : '')) ?>">
         <div class="validacion"></div>
         <?php if (!isset($campo)): ?>
-            <input type="hidden" name="formulario_id" value="<?= $formulario_id ?>" />
+            <input type="hidden" name="formulario_id" value="<?= $formulario->id ?>" />
             <input type="hidden" name="tipo" value="<?= $tipo ?>" />
         <?php endif; ?>
         <label>Nombre</label>
@@ -21,6 +21,15 @@
                data-delimiter="|"
                data-source="[&quot;required&quot;,&quot;rut&quot;,&quot;min_length[num]&quot;,&quot;max_length[num]&quot;,&quot;exact_length[num]&quot;,&quot;greater_than[num]&quot;,&quot;less_than[num]&quot;,&quot;alpha&quot;,&quot;alpha_numeric&quot;,&quot;alpha_dash&quot;,&quot;numeric&quot;,&quot;integer&quot;,&quot;decimal&quot;,&quot;is_natural&quot;,&quot;is_natural_no_zero&quot;,&quot;valid_email&quot;,&quot;valid_emails&quot;,&quot;valid_ip&quot;,&quot;valid_base64&quot;]"
                value="<?= isset($campo) ? implode('|',$campo->validacion) : '' ?>"/>
+        <label>Visible solo si (Opcional)</label>
+        <select name="dependiente_campo">
+            <option value=""></option>
+            <?php foreach($formulario->Campos as $c):?>
+            <option value="<?=$c->nombre?>" <?=isset($campo) && $campo->dependiente_campo==$c->nombre?'selected':''?>><?=$c->nombre?></option>
+            <?php endforeach; ?>
+        </select>
+        <span>=</span>
+        <input type="text" name="dependiente_valor" value="<?=isset($campo)?$campo->dependiente_valor:''?>" />
         <?php if ((isset($campo) && ($campo->tipo=='select' || $campo->tipo=='radio' || $campo->tipo=='checkbox')) ||
                 (!isset($campo) && ($tipo == 'select' || $tipo=='radio' || $tipo=='checkbox'))): ?>
             <div class="datos">
