@@ -48,7 +48,6 @@ class Formulario extends Doctrine_Record {
         foreach($this->Campos as $c){
             if($c->posicion>$max){
                 $max=$c->posicion;
-                break;
             }
         }
         return $max;
