@@ -28,7 +28,12 @@
     cursor: move;
     z-index: 1000;
 }
-
+#areaDibujo .box.actual{
+    background: goldenrod;
+}
+#areaDibujo .box.completado{
+    background: green;
+}
 #areaDibujo .box.selected{
     background: #666;
 }

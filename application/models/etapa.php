@@ -32,6 +32,11 @@ class Etapa extends Doctrine_Record {
             'local' => 'usuario_id',
             'foreign' => 'id'
         ));
+        
+        $this->hasMany('DatoSeguimiento as DatosSeguimiento', array(
+            'local' => 'id',
+            'foreign' => 'etapa_id'
+        ));
     }
 
     //Verifica si el usuario_id tiene permisos para asignarse esta etapa del tramite.
@@ -178,6 +183,29 @@ class Etapa extends Doctrine_Record {
         foreach ($this->Tarea->Eventos as $e)
             if ($e->instante == 'despues')
                 $e->Accion->ejecutar();
+    }
+    
+    public function saveDato($nombre,$valor){
+        Doctrine_Manager::connection()->beginTransaction();
+        //Guardamos el dato real
+        $dato = Doctrine::getTable('Dato')->findOneByTramiteIdAndNombre($this->Tramite->id, $nombre);
+        if (!$dato)
+            $dato = new Dato();
+        $dato->nombre = $nombre;
+        $dato->valor = $valor;
+        $dato->tramite_id = $this->Tramite->id;
+        $dato->save();
+        
+        //Guardamos el dato para el seguimiento
+        $dato = Doctrine::getTable('DatoSeguimiento')->findOneByEtapaIdAndNombre($this->id, $nombre);
+        if (!$dato)
+            $dato = new DatoSeguimiento();
+        $dato->nombre = $nombre;
+        $dato->valor = $valor;
+        $dato->etapa_id = $this->id;
+        $dato->save();
+        
+        Doctrine_Manager::connection()->commit();
     }
 
 }

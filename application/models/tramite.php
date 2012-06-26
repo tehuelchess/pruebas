@@ -121,6 +121,20 @@ class Tramite extends Doctrine_Record {
                         ->where('t.id = ? AND e.pendiente=1', $this->id)
                         ->execute();
     }
+    
+    public function getTareasActuales() {
+        return Doctrine_Query::create()
+                        ->from('Tarea tar, tar.Etapas e, e.Tramite t')
+                        ->where('t.id = ? AND e.pendiente=1', $this->id)
+                        ->execute();
+    }
+    
+    public function getTareasCompletadas() {
+        return Doctrine_Query::create()
+                        ->from('Tarea tar, tar.Etapas e, e.Tramite t')
+                        ->where('t.id = ? AND e.pendiente=0', $this->id)
+                        ->execute();
+    }
 /*
     public function getTareaProxima() {
         $tarea_actual = $this->getEtapaActual()->Tarea;

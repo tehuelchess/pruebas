@@ -71,6 +71,8 @@ class Etapas extends CI_Controller {
 
             if ($this->form_validation->run() == TRUE) {
                 foreach ($formulario->Campos as $c) {
+                    $etapa->saveDato($c->nombre, $this->input->post($c->nombre));
+                    /*
                     $dato = Doctrine::getTable('Dato')->findOneByTramiteIdAndNombre($etapa->Tramite->id, $c->nombre);
                     if (!$dato)
                         $dato = new Dato();
@@ -78,6 +80,8 @@ class Etapas extends CI_Controller {
                     $dato->valor = $this->input->post($c->nombre);
                     $dato->tramite_id = $etapa->Tramite->id;
                     $dato->save();
+                     * 
+                     */
                 }
                 $etapa->save();
 

@@ -1,3 +1,5 @@
+<script src="assets/js/dashboard.js" type="text/javascript"></script>
+
 <div id="dashboard">
     <div class="row-fluid">
         <?php foreach($widgets as $w):?>

@@ -430,6 +430,25 @@ CREATE  TABLE IF NOT EXISTS `tramitador`.`evento` (
 ENGINE = InnoDB;
 
 
+-- -----------------------------------------------------
+-- Table `tramitador`.`dato_seguimiento`
+-- -----------------------------------------------------
+CREATE  TABLE IF NOT EXISTS `tramitador`.`dato_seguimiento` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
+  `nombre` VARCHAR(128) NOT NULL ,
+  `valor` TEXT NOT NULL ,
+  `etapa_id` INT(10) UNSIGNED NOT NULL ,
+  PRIMARY KEY (`id`) ,
+  INDEX `fk_dato_seguimiento_etapa1` (`etapa_id` ASC) ,
+  UNIQUE INDEX `nombre_etapa` (`nombre` ASC, `etapa_id` ASC) ,
+  CONSTRAINT `fk_dato_seguimiento_etapa1`
+    FOREIGN KEY (`etapa_id` )
+    REFERENCES `tramitador`.`etapa` (`id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;

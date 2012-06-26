@@ -56,10 +56,6 @@
             var base_url="<?= base_url() ?>";
         </script>
         <script src="assets/js/common.js" type="text/javascript"></script>
-        <script src="assets/js/modelador-procesos.js" type="text/javascript"></script>
-        <script src="assets/js/modelador-formularios.js" type="text/javascript"></script>
-        <script src="assets/js/modelador-acciones.js" type="text/javascript"></script>
-        <script src="assets/js/dashboard.js" type="text/javascript"></script>
 
 
         <link rel="shortcut icon" href="assets/ico/favicon.ico">
@@ -88,6 +84,7 @@
                     <li <?= $this->uri->segment(2) == 'portada' ? 'class="active"' : '' ?>><a href="<?= site_url('backend/portada') ?>">Inicio</a></li>
                     <li <?= $this->uri->segment(2) == 'procesos' || $this->uri->segment(2) == 'formularios' ? 'class="active"' : '' ?>><a href="<?= site_url('backend/procesos') ?>">Modelador de Procesos</a></li>
                     <li <?= $this->uri->segment(2) == 'configuracion' ? 'class="active"' : '' ?>><a href="<?= site_url('backend/configuracion') ?>">Configuración</a></li>
+                    <li <?= $this->uri->segment(2) == 'seguimiento' ? 'class="active"' : '' ?>><a href="<?= site_url('backend/seguimiento') ?>">Seguimiento</a></li>
                 </ul>
             </div>
             <?php $this->load->view($content) ?>

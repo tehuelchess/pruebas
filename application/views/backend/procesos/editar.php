@@ -1,3 +1,6 @@
+<script type="text/javascript" src="assets/js/diagrama-procesos.js"></script>
+<script type="text/javascript" src="assets/js/modelador-procesos.js"></script>
+
 <script type="text/javascript">
     $(document).ready(function(){
         procesoId=<?= $proceso->id ?>;

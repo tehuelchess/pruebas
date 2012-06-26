@@ -1,3 +1,5 @@
+<script src="assets/js/modelador-acciones.js" type="text/javascript"></script>
+
 <ul class="breadcrumb">
     <li>
         <a href="<?=site_url('backend/procesos')?>">Listado de Procesos</a> <span class="divider">/</span>
