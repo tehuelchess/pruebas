@@ -16,7 +16,7 @@
         <link href="assets/js/bootstrap-datepicker/css/datepicker.css" rel="stylesheet">
         <link href="assets/js/jquery.chosen/chosen.css" rel="stylesheet">
         <link href="assets/js/file-uploader/fileuploader.css" rel="stylesheet">
-        <link href="assets/css/modelador-procesos.css" rel="stylesheet">
+        <link href="assets/css/diagrama-procesos.css" rel="stylesheet">
         <link href="assets/css/modelador-formularios.css" rel="stylesheet">
         <link href="assets/css/dashboard.css" rel="stylesheet">
 
