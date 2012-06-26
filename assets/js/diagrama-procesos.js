@@ -47,9 +47,9 @@ function drawFromModel(model){
             source: c.source,
             target: c.target,
             anchors: ["BottomCenter", "TopCenter"],
-            endpoints:[endpoint1,endpoint2]
+            endpoints:[endpoint1,endpoint2],
+            parameters: {"id":c.id}
         });
-        connection.id=c.id;
     });
     
     jsPlumb.draggable($("#areaDibujo .box"));

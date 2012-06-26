@@ -26,13 +26,17 @@ $(document).ready(function(){
         if(modo=="createBox"){
             var left=event.pageX - $(this).position().left;
             var top=event.pageY - $(this).position().top;
-            var id=0;
+            
+            //Buscamos un id para asignarle
+            var i=0;
             while(true){
-                id++;
+                i++;
+                var id="box_"+i;
                 if($("#"+id).size()==0){   
                     break;
                 }   
             }
+            
             $(this).append("<div id='"+id+"' class='box' style='top: "+top+"px; left: "+left+"px;'>Tarea</div>");
             jsPlumb.draggable($("#areaDibujo .box"));
             modo=null;
@@ -55,12 +59,29 @@ $(document).ready(function(){
                 else if(tipo=='union')
                     endpoint=unionEndpoint;
                 
+                //Buscamos un id para asignarle
+                var i=0;
+                while(true){
+                    i++;
+                    id="conn_"+i;
+                    var connections=jsPlumb.getConnections();
+                    var existe=false;
+                    for (var j in connections){
+                        if(connections[j].getParameter("id")==id){
+                            existe=true;
+                            break;
+                        }
+                    }
+                    if(!existe)
+                        break;
+                }
                 
                 var conn=jsPlumb.connect({
                     source: elements[0],
                     target: elements[1],
                     anchors: ["BottomCenter", "TopCenter"],
-                    endpoints: [endpoint1,endpoint2]
+                    endpoints: [endpoint1,endpoint2],
+                    parameters: {"id": id}
                 });
                 
                 modo=null;
@@ -69,7 +90,7 @@ $(document).ready(function(){
                 $("#areaDibujo .box").removeClass("selected");
                 $( "#areaDibujo .box" ).draggable({ disabled: false });
                 $("#areaDibujo .box").css("cursor","move")
-                $.post(site_url+"backend/procesos/ajax_crear_conexion/"+procesoId+"/"+conn.id,"tarea_id_origen="+conn.sourceId+"&tarea_id_destino="+conn.targetId+"&tipo="+tipo);
+                $.post(site_url+"backend/procesos/ajax_crear_conexion/"+procesoId+"/"+conn.getParameter("id"),"tarea_id_origen="+conn.sourceId+"&tarea_id_destino="+conn.targetId+"&tipo="+tipo);
                 
             }else{
                 $(this).addClass("selected");
@@ -91,7 +112,7 @@ $(document).ready(function(){
         var connections=jsPlumb.getConnections();
         $(connections).each(function(i,connection){
             if(connection.canvas==conectorSeleccionado){
-                var id=connection.id;
+                var id=connection.getParameter("id");
                 $('#modal').load(site_url+"backend/procesos/ajax_editar_conexion/"+procesoId+"/"+id);
                 $('#modal').modal('show')
             }
