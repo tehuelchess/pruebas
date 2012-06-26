@@ -9,6 +9,13 @@
     });
 </script>
 
+<ul class="breadcrumb">
+    <li>
+        <a href="<?=site_url('backend/seguimiento')?>">Listado de Trámites</a> <span class="divider">/</span>
+    </li>
+    <li class="active"><?=$tramite->Proceso->nombre?></li>
+</ul>
+
 <div id="areaDibujo">
-    <h1><?= $proceso->nombre ?></h1>
+    <h1><?= $tramite->Proceso->nombre ?></h1>
 </div>

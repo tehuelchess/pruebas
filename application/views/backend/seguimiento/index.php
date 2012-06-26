@@ -1,3 +1,7 @@
+<ul class="breadcrumb">
+    <li class="active">Listado de Trámites</li>
+</ul>
+
 <table class="table">
     <thead>
         <tr>
