@@ -7,6 +7,7 @@
         <tr>
             <th>Id</th>
             <th>Tramite</th>
+            <th>Estado</th>
             <th>Etapa actual</th>
             <th>Último cambio</th>
             <th></th>
@@ -17,6 +18,7 @@
             <tr>
                 <td><?= $t->id ?></td>
                 <td><?= $t->Proceso->nombre ?></td>
+                <td><?= $t->pendiente?'En curso':'Completado' ?></td>
                 <td>
                     <?php
                     $etapas_array = array();
