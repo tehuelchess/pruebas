@@ -118,7 +118,7 @@ ENGINE = InnoDB;
 CREATE  TABLE IF NOT EXISTS `tramitador`.`usuario` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
   `usuario` VARCHAR(128) NOT NULL ,
-  `password` VARCHAR(256) NOT NULL ,
+  `password` VARCHAR(256) NULL ,
   `nombre` VARCHAR(128) NULL ,
   `apellidos` VARCHAR(128) NULL ,
   `email` VARCHAR(255) NULL ,
