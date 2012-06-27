@@ -50,7 +50,7 @@
                         <li class="dropdown">
                             <a class="dropdown-toggle" data-toggle="dropdown" href="#">Iniciar sesión<b class="caret"></b></a>
                             <ul class="dropdown-menu pull-right">
-                                <li style="padding: 20px;">
+                                <li style="margin: 20px;">
                                     <form method="post" class="ajaxForm" action="<?= site_url('autenticacion/login_form') ?>">        
                                         <fieldset>
                                             <div class="validacion"></div>
@@ -59,8 +59,8 @@
                                             <input name="usuario" type="text" class="input-xlarge">
                                             <label>Contraseña</label>
                                             <input name="password" type="password" class="input-xlarge">
-                                            <p>¿No esta registrado? <a style="display: inline; padding: 0;" href="<?= site_url('autenticacion/registrar') ?>">Regístrese acá</a></p>
-                                            <p><a href="<?=$this->lightopenid->authUrl()?>"><img src="assets/img/openid.png" alt="OpenID"/></a></p>
+                                            <p>¿No esta registrado? <a href="<?= site_url('autenticacion/registrar') ?>">Regístrese acá</a></p>
+                                            <p>O utilice <a href="<?=$this->lightopenid->authUrl()?>"><img src="assets/img/openid.png" alt="OpenID"/></a></p>
                                             <button class="btn btn-primary pull-right" type="submit">Ingresar</button>
                                         </fieldset>
                                     </form>
