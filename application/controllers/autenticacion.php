@@ -58,7 +58,7 @@ class Autenticacion extends CI_Controller {
 
     function logout() {
         UsuarioSesion::logout();
-        redirect($this->input->server('HTTP_REFERER'));
+        redirect('');
     }
 
 
