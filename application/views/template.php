@@ -44,7 +44,7 @@
 
         <div class="container">
             <header class="row">
-                <h1><a href="<?=site_url('backend/portada')?>"><img src="assets/img/logo.png" alt="Tramitador" /></a></h1>
+                <h1><a href="<?=site_url()?>"><img src="assets/img/logo.png" alt="Tramitador" /></a></h1>
                 <ul id="userMenu" class="nav nav-pills">
                     <?php if (!UsuarioSesion::usuario()->registrado): ?>
                         <li class="dropdown">
@@ -59,7 +59,8 @@
                                             <input name="usuario" type="text" class="input-xlarge">
                                             <label>Contraseña</label>
                                             <input name="password" type="password" class="input-xlarge">
-                                            <p>¿No esta registrado? <a href="<?= site_url('autenticacion/registrar') ?>">Regístrese acá</a></p>
+                                            <p>¿No esta registrado? <a style="display: inline; padding: 0;" href="<?= site_url('autenticacion/registrar') ?>">Regístrese acá</a></p>
+                                            <p><a href="<?=$this->lightopenid->authUrl()?>"><img src="assets/img/openid.png" alt="OpenID"/></a></p>
                                             <button class="btn btn-primary pull-right" type="submit">Ingresar</button>
                                         </fieldset>
                                     </form>
@@ -68,7 +69,7 @@
                         </li>
                     <?php else: ?>
                         <li class="dropdown">
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">Bienvenido <?= UsuarioSesion::usuario()->usuario ?><b class="caret"></b></a>
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">Bienvenido <?= UsuarioSesion::usuario()->displayName() ?><b class="caret"></b></a>
                             <ul class="dropdown-menu">
                                 <li><a href="<?= site_url('autenticacion/logout') ?>">Cerrar sesión</a></li>
                             </ul>

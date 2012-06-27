@@ -30,6 +30,25 @@ class UsuarioSesion {
     public static function force_login(){
         $CI = & get_instance();
         
+        if($CI->lightopenid->mode=='id_res'){
+            if($CI->lightopenid->validate()){
+                $atributos=$CI->lightopenid->getAttributes();
+                $usuario=Doctrine::getTable('Usuario')->findOneByUsuario($CI->lightopenid->identity);
+                if(!$usuario){
+                    $usuario=new Usuario();
+                    $usuario->usuario=$CI->lightopenid->identity;
+                    $usuario->registrado=1;
+                }
+                $usuario->email=$atributos['contact/email'];
+                $usuario->nombre=$atributos['namePerson/first'];
+                $usuario->apellidos=$atributos['namePerson/last'];
+                $usuario->save();
+                
+                $CI->session->set_userdata('usuario_id', $usuario->id);
+                self::$user=$usuario;
+            }
+        }
+        
         if(!self::usuario()){
             //Elimino los antiguos
             Doctrine::getTable('Usuario')->cleanNoRegistrados();

@@ -57,4 +57,10 @@ class Usuario extends Doctrine_Record {
                 $this->GruposUsuarios[]=Doctrine::getTable('GrupoUsuarios')->find($g);
     }
 
+    public function displayName(){
+        if($this->email)
+            return $this->email;
+        
+        return $this->usuario;
+    }
 }
