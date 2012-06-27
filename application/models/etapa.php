@@ -49,6 +49,9 @@ class Etapa extends Doctrine_Record {
     //Este parametro solamente es valido si la asignacion de la prox tarea es manual.
     public function avanzar($usuarios_a_asignar) {
         Doctrine_Manager::connection()->beginTransaction();
+        
+        //Cerramos esta etapa
+        $this->cerrar();
 
         //Generamos la etapa nueva
         $tareas_proximas = $this->getTareasProximas();
@@ -87,9 +90,8 @@ class Etapa extends Doctrine_Record {
             $this->Tramite->save();
         }
 
-        //Cerramos esta etapa
-        $this->cerrar();
-
+        
+        //Si no hay mas etapas pendientes, el tramite se acaba.
         if ($this->Tramite->getEtapasActuales()->count() == 0)
             $this->Tramite->cerrar();
 
