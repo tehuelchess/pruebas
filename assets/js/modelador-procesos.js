@@ -57,7 +57,7 @@ $(document).ready(function(){
                 else if(tipo=='paralelo_evaluacion')
                     endpoint1=paraleloEvaluacionEndpoint;
                 else if(tipo=='union')
-                    endpoint=unionEndpoint;
+                    endpoint2=unionEndpoint;
                 
                 //Buscamos un id para asignarle
                 var i=0;
