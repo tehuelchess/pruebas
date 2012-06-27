@@ -58,8 +58,8 @@ class Usuario extends Doctrine_Record {
     }
 
     public function displayName(){
-        if($this->email)
-            return $this->email;
+        if($this->nombre)
+            return trim($this->nombre.' '.$this->apellidos);
         
         return $this->usuario;
     }
