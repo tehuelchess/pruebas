@@ -14,9 +14,6 @@ class Etapas extends CI_Controller {
     public function inbox() {
         $data['etapas']=Doctrine::getTable('Etapa')->findPendientes(UsuarioSesion::usuario()->id);
         
-        if($data['etapas']->count()==0)
-            redirect('tramites/disponibles');
-        
         $data['content'] = 'etapas/inbox';
         $data['title'] = 'Bandeja de Entrada';
         $this->load->view('template', $data);

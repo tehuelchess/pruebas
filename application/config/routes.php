@@ -38,7 +38,7 @@
 |
 */
 
-$route['default_controller'] = "tramites";
+$route['default_controller'] = "portada";
 $route['404_override'] = '';
 
 $route['backend'] = "backend/portada";
