@@ -35,11 +35,35 @@ class Campo extends Doctrine_Record {
             'foreign' => 'id'
         ));
     }
-
-    //Despliega la vista de un campo del formulario
-    //tramite_id indica al tramite que pertenece este campo
+    
+    //Despliega la vista de un campo del formulario utilizando el dato real del tramite en este momento
+    //tramite_id indica a la etapa que pertenece este campo
     //modo es visualizacion o edicion
-    public function display($modo = 'edicion', $tramite_id = NULL){
+    public function displayConDato($tramite_id, $modo = 'edicion'){
+        $dato = NULL;
+        if ($tramite_id)
+            $dato =  Doctrine::getTable('Dato')->findOneByTramiteIdAndNombre($tramite_id, $this->nombre);
+        
+        return $this->display($modo,$dato);
+    }
+    
+    //Despliega la vista de un campo del formulario utilizando los datos de seguimiento (El dato que contenia el tramite al momento de cerrar la etapa)
+    //etapa_id indica a la etapa que pertenece este campo
+    //modo es visualizacion o edicion
+    public function displayConDatoSeguimiento($etapa_id, $modo = 'edicion'){
+        $dato = NULL;
+        if ($etapa_id)
+            $dato =  Doctrine::getTable('DatoSeguimiento')->findOneByEtapaIdAndNombre($etapa_id, $this->nombre);
+        
+        return $this->display($modo,$dato);
+    }
+    
+    public function displaySinDato($modo = 'edicion'){     
+        return $this->display($modo,NULL);
+    }
+
+    
+    protected function display($modo, $dato){
         return '';
     }
     
@@ -48,11 +72,6 @@ class Campo extends Doctrine_Record {
         $CI->form_validation->set_rules($this->nombre, $this->etiqueta, implode('|', $this->validacion));
     }
     
-    protected function getDatoDeTramite($tramite_id){
-        $dato = Doctrine::getTable('Dato')->findOneByTramiteIdAndNombre($tramite_id, $this->nombre);
-        
-        return $dato;
-    }
     
     public function setValidacion($validacion){
         if($validacion)

@@ -2,11 +2,7 @@
 require_once('campo.php');
 class CampoFile extends Campo {
 
-    public function display($modo = 'edicion', $tramite_id = NULL) {
-        $dato = NULL;
-        if ($tramite_id)
-            $dato = $this->getDatoDeTramite($tramite_id);
-        
+    protected function display($modo, $dato) {   
         $display='<label>' . $this->etiqueta . (in_array('required', $this->validacion) ? '' : ' (Opcional)') . '</label>';
         $display.='<div>';
         $display.='<div class="' . ($modo == 'visualizacion' ? '' : 'file-uploader') . '" name="' . $this->nombre . '" value="' . ($dato ? $dato->valor : '') . '"></div>';

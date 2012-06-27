@@ -51,7 +51,7 @@
                         <div class="span3">
                             <div class="handler pull-right"></div>
                         </div>
-                        <div class="span6"><?= $c->display() ?></div>
+                        <div class="span6"><?= $c->displaySinDato() ?></div>
                         <div class="span3">
                             <a href="#" class="btn" onclick="return editarCampo(<?= $c->id ?>)">Editar</a>
                             <a href="<?= site_url('backend/formularios/eliminar_campo/' . $c->id) ?>" class="btn" onclick="return confirm('¿Esta seguro que desea eliminar?')">Eliminar</a>

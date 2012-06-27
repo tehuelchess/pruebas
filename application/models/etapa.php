@@ -174,7 +174,19 @@ class Etapa extends Doctrine_Record {
             $dato->tramite_id = $this->Tramite->id;
             $dato->save();
         }
+        
+        //Le generamos los datos para el seguimiento
+        foreach($this->Tramite->Datos as $d){
+            //$dato = Doctrine::getTable('DatoSeguimiento')->findOneByEtapaIdAndNombre($this->id, $nombre);
+            //if (!$dato)
+            $dato = new DatoSeguimiento();
+            $dato->nombre = $d->nombre;
+            $dato->valor = $d->valor;
+            $dato->etapa_id = $this->id;
+            $this->DatosSeguimiento[]=$dato;
+        }
 
+        //Cerramos la etapa
         $this->pendiente = 0;
         $this->ended_at = date('Y-m-d H:i:s');
         $this->save();
@@ -183,29 +195,6 @@ class Etapa extends Doctrine_Record {
         foreach ($this->Tarea->Eventos as $e)
             if ($e->instante == 'despues')
                 $e->Accion->ejecutar();
-    }
-    
-    public function saveDato($nombre,$valor){
-        Doctrine_Manager::connection()->beginTransaction();
-        //Guardamos el dato real
-        $dato = Doctrine::getTable('Dato')->findOneByTramiteIdAndNombre($this->Tramite->id, $nombre);
-        if (!$dato)
-            $dato = new Dato();
-        $dato->nombre = $nombre;
-        $dato->valor = $valor;
-        $dato->tramite_id = $this->Tramite->id;
-        $dato->save();
-        
-        //Guardamos el dato para el seguimiento
-        $dato = Doctrine::getTable('DatoSeguimiento')->findOneByEtapaIdAndNombre($this->id, $nombre);
-        if (!$dato)
-            $dato = new DatoSeguimiento();
-        $dato->nombre = $nombre;
-        $dato->valor = $valor;
-        $dato->etapa_id = $this->id;
-        $dato->save();
-        
-        Doctrine_Manager::connection()->commit();
     }
 
 }
