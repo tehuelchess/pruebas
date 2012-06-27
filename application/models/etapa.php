@@ -167,6 +167,10 @@ class Etapa extends Doctrine_Record {
     }
 
     public function cerrar() {
+        //Si ya fue cerrada, retornamos inmediatamente.
+        if(!$this->pendiente)
+            return;
+        
         if ($this->Tarea->almacenar_usuario) {
             $dato = Doctrine::getTable('Dato')->findOneByTramiteIdAndNombre($this->Tramite->id, $this->Tarea->almacenar_usuario_variable);
             if (!$dato)
