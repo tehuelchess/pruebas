@@ -69,7 +69,7 @@
 
             <header class="row-fluid">
                 <h1><a href="<?=site_url('backend/portada')?>"><img src="assets/img/logo.png" alt="Tramitador" /></a></h1>
-                <ul class="nav nav-pills">
+                <ul id="userMenu" class="nav nav-pills">
                     <li class="dropdown">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#">Bienvenido <?= UsuarioBackendSesion::usuario()->usuario ?><b class="caret"></b></a>
                         <ul class="dropdown-menu">
@@ -77,16 +77,15 @@
                         </ul>
                     </li>
                 </ul>
-            </header>
-
-            <div class="row-fluid">
-                <ul class="nav nav-tabs">
+                <ul id="menu" class="nav nav-pills">
                     <li <?= $this->uri->segment(2) == 'portada' ? 'class="active"' : '' ?>><a href="<?= site_url('backend/portada') ?>">Inicio</a></li>
                     <li <?= $this->uri->segment(2) == 'procesos' || $this->uri->segment(2) == 'formularios' ? 'class="active"' : '' ?>><a href="<?= site_url('backend/procesos') ?>">Modelador de Procesos</a></li>
                     <li <?= $this->uri->segment(2) == 'configuracion' ? 'class="active"' : '' ?>><a href="<?= site_url('backend/configuracion') ?>">Configuración</a></li>
                     <li <?= $this->uri->segment(2) == 'seguimiento' ? 'class="active"' : '' ?>><a href="<?= site_url('backend/seguimiento') ?>">Seguimiento</a></li>
                 </ul>
-            </div>
+            </header>
+
+
             <?php $this->load->view($content) ?>
         </div>
 
