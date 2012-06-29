@@ -16,6 +16,7 @@ class Tarea extends Doctrine_Record {
         $this->hasColumn('asignacion_notificar');             //Indica si se le debe notificar via email al usuario que se le asigna esta tarea
         $this->hasColumn('almacenar_usuario');              //Se almacena el usuario o no
         $this->hasColumn('almacenar_usuario_variable');     //Nombre de la variable con que se debe almacenar
+        $this->hasColumn('acceso_modo');                    //Quienes pueden acceder: grupos_usuarios, publico o registrados
     }
 
     function setUp() {
@@ -69,12 +70,11 @@ class Tarea extends Doctrine_Record {
     
     //Obtiene el listado de usuarios que tienen acceso a esta tarea.
     public function getUsuarios(){
-        foreach($this->GruposUsuarios as $g){
-            if($g->tipo=='todos')
-                return Doctrine::getTable('Usuario')->findAll();
-            else if($g->tipo=='registrados')
-                return Doctrine::getTable('Usuario')->findByRegistrado(1);
-        }
+        if($this->acceso_modo=='publico')
+            return Doctrine::getTable('Usuario')->findAll();
+        else if($this->acceso_modo=='registrados')
+            return Doctrine::getTable('Usuario')->findByRegistrado(1);
+        
         
         return Doctrine_Query::create()
                 ->from('Usuario u, u.GruposUsuarios g, g.Tareas t')
@@ -84,12 +84,10 @@ class Tarea extends Doctrine_Record {
     
     //Obtiene si el usuarios tiene acceso a esta tarea.
     public function hasUsuario($usuario_id){
-        foreach($this->GruposUsuarios as $g){
-            if($g->tipo=='todos')
-                return Doctrine::getTable('Usuario')->findById($usuario_id)->count()?true:false;
-            else if($g->tipo=='registrados')
-                return Doctrine::getTable('Usuario')->findByIdAndRegistrado($usuario_id,1)?true:false;
-        }
+        if($this->acceso_modo=='publico')
+            return Doctrine::getTable('Usuario')->findById($usuario_id)->count()?true:false;
+        else if($this->acceso_modo=='registrados')
+            return Doctrine::getTable('Usuario')->findByIdAndRegistrado($usuario_id,1)?true:false;
         
         return Doctrine_Query::create()
                 ->from('Usuario u, u.GruposUsuarios g, g.Tareas t')

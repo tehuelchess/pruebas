@@ -9,7 +9,7 @@ class EtapaTable extends Doctrine_Table {
         return Doctrine_Query::create()
                 ->from('Etapa e, e.Tarea tar, tar.GruposUsuarios g')
                 ->where('e.usuario_id IS NULL')
-                ->andWhere('(g.tipo="manual" AND g.id IN (SELECT gru.id FROM GrupoUsuarios gru, gru.Usuarios usr WHERE usr.id = ?)) OR (g.tipo = "registrados" AND 1 = ?) OR (g.tipo="todos")',array($usuario->id,$usuario->registrado))
+                ->andWhere('(tar.acceso_modo="grupos_usuarios" AND g.id IN (SELECT gru.id FROM GrupoUsuarios gru, gru.Usuarios usr WHERE usr.id = ?)) OR (tar.acceso_modo = "registrados" AND 1 = ?) OR (tar.acceso_modo="publico")',array($usuario->id,$usuario->registrado))
                 ->orderBy('e.updated_at desc')
                 ->execute();
     }

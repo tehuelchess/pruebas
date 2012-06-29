@@ -134,13 +134,27 @@
                     <br />
                     <label><input type="checkbox" name="asignacion_notificar" value="1" <?=$tarea->asignacion_notificar?'checked':''?> /> Notificar vía correo electrónico al usuario asignado.</label>
                 </div>
-                <div class="tab-pane" id="tab3" style="min-height: 160px;">
-                    <label>Grupos de Usuarios</label>
-                    <select name="grupos_usuarios[]" class="chosen" multiple>
-                        <?php foreach ($grupos_usuarios as $g): ?>
-                            <option value="<?= $g->id ?>" <?= $tarea->hasGrupoUsuarios($g->id) ? 'selected="selected"' : '' ?>><?= $g->nombre ?></option>
-                        <?php endforeach; ?>
-                    </select>
+                <div class="tab-pane" id="tab3">
+                    <script type="text/javascript">
+                        $(document).ready(function(){
+                            $("input[name=acceso_modo]").change(function(){
+                                if(this.value=="grupos_usuarios")
+                                    $("#optionalGruposUsuarios").removeClass("hide");
+                                else
+                                    $("#optionalGruposUsuarios").addClass("hide");
+                            });
+                        });
+                    </script>
+                    <label><input type="radio" name="acceso_modo" value="publico" <?=$tarea->acceso_modo=='publico'?'checked':''?> /> Cualquier persona puede acceder.</label>
+                    <label><input type="radio" name="acceso_modo" value="registrados" <?=$tarea->acceso_modo=='registrados'?'checked':''?> /> Solo los usuarios registrados.</label>
+                    <label><input type="radio" name="acceso_modo" value="grupos_usuarios" <?=$tarea->acceso_modo=='grupos_usuarios'?'checked':''?> /> Solo los siguientes grupos de usuarios pueden acceder.</label>
+                    <div id="optionalGruposUsuarios" class="<?=$tarea->acceso_modo=='grupos_usuarios'?'':'hide'?>">
+                        <select name="grupos_usuarios[]" class="chosen" multiple>
+                            <?php foreach ($grupos_usuarios as $g): ?>
+                                <option value="<?= $g->id ?>" <?= $tarea->hasGrupoUsuarios($g->id) ? 'selected="selected"' : '' ?>><?= $g->nombre ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
                 </div>
                 <div class="tab-pasos tab-pane" id="tab4">
                     <div class="form-inline">

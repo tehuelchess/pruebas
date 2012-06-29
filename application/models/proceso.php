@@ -102,7 +102,7 @@ class Proceso extends Doctrine_Record {
         $proceso=Doctrine_Query::create()
                 ->from('Proceso p, p.Tareas t, t.GruposUsuarios g, g.Usuarios u')
                 ->where('t.inicial = 1 and p.id = ?',$this->id)
-                ->andWhere('(g.tipo="manual" AND u.id = ?) OR (g.tipo = "registrados" AND 1 = ?) OR (g.tipo="todos")',array($usuario->id,$usuario->registrado))
+                ->andWhere('(t.acceso_modo="grupos_usuarios" AND u.id = ?) OR (t.acceso_modo = "registrados" AND 1 = ?) OR (t.acceso_modo="publico")',array($usuario->id,$usuario->registrado))
                 ->fetchOne();
         
         if($proceso)
