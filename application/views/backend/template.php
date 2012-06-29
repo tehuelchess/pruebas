@@ -78,7 +78,7 @@
                     </li>
                 </ul>
                 <ul id="menu" class="nav nav-pills">
-                    <li <?= $this->uri->segment(2) == 'portada' ? 'class="active"' : '' ?>><a href="<?= site_url('backend/portada') ?>">Inicio</a></li>
+                    <li <?= $this->uri->segment(2) == 'portada' || !$this->uri->segment(2) ? 'class="active"' : '' ?>><a href="<?= site_url('backend/portada') ?>">Inicio</a></li>
                     <li <?= $this->uri->segment(2) == 'procesos' || $this->uri->segment(2) == 'formularios' ? 'class="active"' : '' ?>><a href="<?= site_url('backend/procesos') ?>">Modelador de Procesos</a></li>
                     <li <?= $this->uri->segment(2) == 'configuracion' ? 'class="active"' : '' ?>><a href="<?= site_url('backend/configuracion') ?>">Configuración</a></li>
                     <li <?= $this->uri->segment(2) == 'seguimiento' ? 'class="active"' : '' ?>><a href="<?= site_url('backend/seguimiento') ?>">Seguimiento</a></li>
