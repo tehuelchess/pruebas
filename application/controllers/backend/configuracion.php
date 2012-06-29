@@ -54,7 +54,6 @@ class Configuracion extends CI_Controller {
         }
 
         $this->form_validation->set_rules('nombre', 'Nombre', 'required');
-        $this->form_validation->set_rules('tipo', 'Tipo', 'required');
 
         if ($this->form_validation->run() == TRUE) {
             if (!$grupo_usuarios)
