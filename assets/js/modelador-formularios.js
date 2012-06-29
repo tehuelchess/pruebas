@@ -16,7 +16,7 @@ function editarFormulario(formularioId){
 
 function editarPosicionCampos(){
     var campos=new Array();
-    $("#areaFormulario .edicionFormulario > div").each(function(i,e){
+    $("#areaFormulario .edicionFormulario .campo").each(function(i,e){
         campos.push($(e).data('id'));
     });
     var json=JSON.stringify(campos);
