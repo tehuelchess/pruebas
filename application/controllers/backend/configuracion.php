@@ -61,7 +61,6 @@ class Configuracion extends CI_Controller {
                 $grupo_usuarios = new GrupoUsuarios();
 
             $grupo_usuarios->nombre = $this->input->post('nombre');
-            $grupo_usuarios->tipo = $this->input->post('tipo');
             $grupo_usuarios->cuenta_id = UsuarioBackendSesion::usuario()->cuenta_id;
             $grupo_usuarios->save();
 
