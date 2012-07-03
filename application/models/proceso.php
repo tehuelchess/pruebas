@@ -95,6 +95,14 @@ class Proceso extends Doctrine_Record {
                 ->fetchOne();
     }
     
+    //Obtiene todos los campos asociados a este proceso
+    public function getCampos(){
+        return Doctrine_Query::create()
+                ->from('Campo c, c.Formulario f, f.Proceso p')
+                ->where('p.id = ?',$this->id)
+                ->execute();
+    }
+    
     //Verifica si el usuario_id tiene permisos para iniciar este proceso como tramite.
     public function canUsuarioIniciarlo($usuario_id){
         $usuario=Doctrine::getTable('Usuario')->find($usuario_id);
