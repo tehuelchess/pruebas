@@ -1,4 +1,5 @@
 <?php
+require_once("campo.php");
 
 class CampoSubtitle extends Campo{
 
