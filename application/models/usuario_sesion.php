@@ -60,7 +60,7 @@ class UsuarioSesion {
             $u = Doctrine::getTable('Usuario')->findOneByUsuario($usuario);
 
             //Si estaba con tramites en curso antes de loguearse, se los transferimos.
-            if (!self::usuario()->registrado) {
+            if (self::usuario() && !self::usuario()->registrado) {
                 foreach (self::$user->Etapas as $t) {
                     $t->usuario_id = $u->id;
                     $t->save();
@@ -117,7 +117,7 @@ class UsuarioSesion {
             $usuario->save();
             
             //Si estaba con tramites en curso antes de loguearse, se los transferimos.
-            if (!self::usuario()->registrado) {
+            if (self::usuario() && !self::usuario()->registrado) {
                 foreach (self::$user->Etapas as $t) {
                     $t->usuario_id = $usuario->id;
                     $t->save();
