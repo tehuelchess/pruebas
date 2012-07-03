@@ -1,27 +1,40 @@
-<script type="text/javascript">   
-    $("#formEditarCampo .asistencia .dropdown-menu a").click(function(){
-        var nombre=$(this).text();
-        $("#formEditarCampo input[name=nombre]").val(nombre);
-        //return false;
+<script type="text/javascript">
+    $(document).ready(function(){
+        
+        //Funcionalidad del llenado de nombre usando el boton de asistencia
+        $("#formEditarCampo .asistencia .dropdown-menu a").click(function(){
+            var nombre=$(this).text();
+            $("#formEditarCampo input[name=nombre]").val(nombre);
+        });
+        
+        //Llenamos el select box de dependientes
+        var html='<option></option>';
+        $("#formEditarFormulario :input[name]").each(function(i,el){
+            html+='<option>'+$(el).attr("name")+'</option>';    
+        });
+        $("#formEditarCampo select[name=dependiente_campo]").html(html);
+        
+        //Llenado automatico del campo nomnre
+        $("#formEditarCampo input[name=etiqueta]").blur(ellipsize);
+        function ellipsize(){
+            var $etiqueta=$("#formEditarCampo input[name=etiqueta]");
+            var $nombre=$("#formEditarCampo input[name=nombre]");
+            if($nombre.val()==""){
+                var string=$etiqueta.val();
+                string=string.toLowerCase();
+                string=string.replace(/\s/g,"_");
+                string=string.replace(/á/g,"a");
+                string=string.replace(/é/g,"e");
+                string=string.replace(/í/g,"i");
+                string=string.replace(/ó/g,"o");
+                string=string.replace(/ú/g,"u");
+                string=string.replace(/\W/g,"");
+                $nombre.val(string);
+            }
+        }
+        
     });
     
-    $("#formEditarCampo input[name=etiqueta]").blur(ellipsize);
-    function ellipsize(){
-        var $etiqueta=$("#formEditarCampo input[name=etiqueta]");
-        var $nombre=$("#formEditarCampo input[name=nombre]");
-        if($nombre.val()==""){
-            var string=$etiqueta.val();
-            string=string.toLowerCase();
-            string=string.replace(/\s/g,"_");
-            string=string.replace(/á/g,"a");
-            string=string.replace(/é/g,"e");
-            string=string.replace(/í/g,"i");
-            string=string.replace(/ó/g,"o");
-            string=string.replace(/ú/g,"u");
-            string=string.replace(/\W/g,"");
-            $nombre.val(string);
-        }
-    }
 </script>
 
 <div class="modal-header">
@@ -67,9 +80,6 @@
         <label>Visible solo si</label>
         <select name="dependiente_campo">
             <option value=""></option>
-            <?php foreach ($formulario->Campos as $c): ?>
-                <option value="<?= $c->nombre ?>" <?= $campo->dependiente_campo == $c->nombre ? 'selected' : '' ?>><?= $c->nombre ?></option>
-            <?php endforeach; ?>
         </select>
         <span>=</span>
         <input type="text" name="dependiente_valor" value="<?= isset($campo) ? $campo->dependiente_valor : '' ?>" />
@@ -84,7 +94,7 @@
                             html+='<td><input type="text" name="datos['+pos+'][etiqueta]" /></td>';
                             html+='<td><button type="button" class="btn eliminar"><i class="icon-remove"></i> Eliminar</button></td>';
                             html+='</tr>';
-                                        
+                                            
                             $('#formEditarCampo .datos table tbody').append(html);
                         });
                         $('#formEditarCampo .datos').on('click','.eliminar',function(){
