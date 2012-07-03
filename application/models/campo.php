@@ -27,6 +27,8 @@ class Campo extends Doctrine_Record {
             $campo=new CampoTitle();
         else if($tipo=='subtitle')
             $campo=new CampoSubtitle();
+        else if($tipo=='paragraph')
+            $campo=new CampoParagraph();
         
         $campo->assignInheritanceValues();
         

@@ -23,6 +23,7 @@
         <div class="btn-group">
             <button class="btn" onclick="return agregarCampo(<?= $formulario->id ?>,'title')">Título</button>
             <button class="btn" onclick="return agregarCampo(<?= $formulario->id ?>,'subtitle')">Subtítulo</button>
+            <button class="btn" onclick="return agregarCampo(<?= $formulario->id ?>,'paragraph')">Parrafo</button>
         </div>
         <div class="btn-group">
             <button class="btn" onclick="return agregarCampo(<?= $formulario->id ?>,'text')">Textbox</button>
