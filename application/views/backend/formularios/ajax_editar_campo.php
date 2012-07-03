@@ -44,7 +44,7 @@
             <a class="btn dropdown-toggle" data-toggle="dropdown" href="#"><i class="icon-th-list"></i><span class="caret"></span></a>
             <ul class="dropdown-menu">
                 <?php foreach ($formulario->Proceso->getCampos() as $c): ?>
-                    <li><a><?= $c->nombre ?></a></li>
+                    <li><a href="#"><?= $c->nombre ?></a></li>
                 <?php endforeach; ?>
             </ul>
         </div>

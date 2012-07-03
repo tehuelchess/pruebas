@@ -1,7 +1,7 @@
-var evaluacionEndpoint=["Image",{src: "assets/img/evaluacion.gif", cssClass: "endpoint1"}];
-var paraleloEndpoint=["Image",{src: "assets/img/paralelo.gif", cssClass: "endpoint1"}];
-var paraleloEvaluacionEndpoint=["Image",{src: "assets/img/paralelo_evaluacion.gif", cssClass: "endpoint1"}];
-var unionEndpoint=["Image",{src: "assets/img/union.gif", cssClass: "endpoint2"}];
+var evaluacionEndpoint=["Image",{src: base_url+"assets/img/evaluacion.gif", cssClass: "endpoint1"}];
+var paraleloEndpoint=["Image",{src: base_url+"assets/img/paralelo.gif", cssClass: "endpoint1"}];
+var paraleloEvaluacionEndpoint=["Image",{src: base_url+"assets/img/paralelo_evaluacion.gif", cssClass: "endpoint1"}];
+var unionEndpoint=["Image",{src: base_url+"assets/img/union.gif", cssClass: "endpoint2"}];
 
 $(document).ready(function(){
     

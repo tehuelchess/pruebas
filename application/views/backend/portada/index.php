@@ -1,4 +1,4 @@
-<script src="assets/js/dashboard.js" type="text/javascript"></script>
+<script src="<?= base_url() ?>assets/js/dashboard.js" type="text/javascript"></script>
 
 <div id="dashboard">
     <div class="row-fluid">

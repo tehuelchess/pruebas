@@ -1,5 +1,5 @@
-<script type="text/javascript" src="assets/js/diagrama-procesos.js"></script>
-<script type="text/javascript" src="assets/js/modelador-procesos.js"></script>
+<script type="text/javascript" src="<?= base_url() ?>assets/js/diagrama-procesos.js"></script>
+<script type="text/javascript" src="<?= base_url() ?>assets/js/modelador-procesos.js"></script>
 
 <script type="text/javascript">
     $(document).ready(function(){
@@ -27,14 +27,14 @@
     <h1><?= $proceso->nombre ?></h1>
     <div class="botonera btn-toolbar">
         <div class="btn-group">
-            <button class="btn createBox" title="Crear tarea"><img src="assets/img/tarea.png" /></button>
+            <button class="btn createBox" title="Crear tarea"><img src="<?= base_url() ?>assets/img/tarea.png" /></button>
         </div>
         <div class="btn-group">
-            <button class="btn createConnection" data-tipo="secuencial" title="Crear conexión secuencial" ><img src="assets/img/secuencial.gif" /></button>
-            <button class="btn createConnection" data-tipo="evaluacion" title="Crear conexión por evaluación" ><img src="assets/img/evaluacion.gif" /></button>
-            <button class="btn createConnection" data-tipo="paralelo" title="Crear conexión paralela" ><img src="assets/img/paralelo.gif" /></button>
-            <button class="btn createConnection" data-tipo="paralelo_evaluacion" title="Crear conexión paralela con evaluación" ><img src="assets/img/paralelo_evaluacion.gif" /></button>
-            <button class="btn createConnection" data-tipo="union" title="Crear conexión de unión" ><img src="assets/img/union.gif" /></button>
+            <button class="btn createConnection" data-tipo="secuencial" title="Crear conexión secuencial" ><img src="<?= base_url() ?>assets/img/secuencial.gif" /></button>
+            <button class="btn createConnection" data-tipo="evaluacion" title="Crear conexión por evaluación" ><img src="<?= base_url() ?>assets/img/evaluacion.gif" /></button>
+            <button class="btn createConnection" data-tipo="paralelo" title="Crear conexión paralela" ><img src="<?= base_url() ?>assets/img/paralelo.gif" /></button>
+            <button class="btn createConnection" data-tipo="paralelo_evaluacion" title="Crear conexión paralela con evaluación" ><img src="<?= base_url() ?>assets/img/paralelo_evaluacion.gif" /></button>
+            <button class="btn createConnection" data-tipo="union" title="Crear conexión de unión" ><img src="<?= base_url() ?>assets/img/union.gif" /></button>
         </div>
     </div>
 </div>

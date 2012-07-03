@@ -1,5 +1,5 @@
-<script type="text/javascript" src="assets/js/diagrama-procesos.js"></script>
-<script type="text/javascript" src="assets/js/seguimiento.js"></script>
+<script type="text/javascript" src="<?= base_url() ?>assets/js/diagrama-procesos.js"></script>
+<script type="text/javascript" src="<?= base_url() ?>assets/js/seguimiento.js"></script>
 
 <script type="text/javascript">
     $(document).ready(function(){

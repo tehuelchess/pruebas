@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <base href="<?= base_url() ?>" />
         <meta charset="utf-8">
         <title>Tramitador - <?= $title ?></title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,12 +8,12 @@
         <meta name="author" content="">
 
         <!-- Le styles -->
-        <link href="assets/css/bootstrap.css" rel="stylesheet">
-        <link href="assets/css/bootstrap-responsive.css" rel="stylesheet">
-        <link href="assets/css/common.css" rel="stylesheet">
-        <link href="assets/js/bootstrap-datepicker/css/datepicker.css" rel="stylesheet">
-        <link href="assets/js/jquery.chosen/chosen.css" rel="stylesheet">
-        <link href="assets/js/file-uploader/fileuploader.css" rel="stylesheet">
+        <link href="<?= base_url() ?>assets/css/bootstrap.css" rel="stylesheet">
+        <link href="<?= base_url() ?>assets/css/bootstrap-responsive.css" rel="stylesheet">
+        <link href="<?= base_url() ?>assets/css/common.css" rel="stylesheet">
+        <link href="<?= base_url() ?>assets/js/bootstrap-datepicker/css/datepicker.css" rel="stylesheet">
+        <link href="<?= base_url() ?>assets/js/jquery.chosen/chosen.css" rel="stylesheet">
+        <link href="<?= base_url() ?>assets/js/file-uploader/fileuploader.css" rel="stylesheet">
 
         <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
         <!--[if lt IE 9]>
@@ -22,29 +21,29 @@
         <![endif]-->
 
         <!-- Le fav and touch icons -->
-        <link rel="shortcut icon" href="assets/ico/favicon.ico">
-        <link rel="apple-touch-icon-precomposed" sizes="114x114" href="assets/ico/apple-touch-icon-114-precomposed.png">
-        <link rel="apple-touch-icon-precomposed" sizes="72x72" href="assets/ico/apple-touch-icon-72-precomposed.png">
-        <link rel="apple-touch-icon-precomposed" href="assets/ico/apple-touch-icon-57-precomposed.png">
+        <link rel="shortcut icon" href="<?= base_url() ?>assets/ico/favicon.ico">
+        <link rel="apple-touch-icon-precomposed" sizes="114x114" href="<?= base_url() ?>assets/ico/apple-touch-icon-114-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" sizes="72x72" href="<?= base_url() ?>assets/ico/apple-touch-icon-72-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" href="<?= base_url() ?>assets/ico/apple-touch-icon-57-precomposed.png">
         
-        <script src="assets/js/jquery-ui/js/jquery-1.7.2.min.js"></script>
-        <script src="assets/js/bootstrap.min.js"></script>
-        <script src="assets/js/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
-        <script src="assets/js/bootstrap-datepicker/js/locales/bootstrap-datepicker.es.js"></script>
-        <script src="assets/js/jquery.chosen/chosen.jquery.min.js"></script> <?php //Soporte para selects con multiple choices    ?>
-        <script src="assets/js/file-uploader/fileuploader.js"></script> <?php //Soporte para subir archivos con ajax    ?>
+        <script src="<?= base_url() ?>assets/js/jquery-ui/js/jquery-1.7.2.min.js"></script>
+        <script src="<?= base_url() ?>assets/js/bootstrap.min.js"></script>
+        <script src="<?= base_url() ?>assets/js/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+        <script src="<?= base_url() ?>assets/js/bootstrap-datepicker/js/locales/bootstrap-datepicker.es.js"></script>
+        <script src="<?= base_url() ?>assets/js/jquery.chosen/chosen.jquery.min.js"></script> <?php //Soporte para selects con multiple choices    ?>
+        <script src="<?= base_url() ?>assets/js/file-uploader/fileuploader.js"></script> <?php //Soporte para subir archivos con ajax    ?>
         <script type="text/javascript">
             var site_url="<?= site_url() ?>";
             var base_url="<?= base_url() ?>";
         </script>
-        <script src="assets/js/common.js"></script>
+        <script src="<?= base_url() ?>assets/js/common.js"></script>
     </head>
 
     <body>
 
         <div class="container">
             <header class="row">
-                <h1><a href="<?=site_url()?>"><img src="assets/img/logo.png" alt="Tramitador" /></a></h1>
+                <h1><a href="<?=site_url()?>"><img src="<?= base_url() ?>assets/img/logo.png" alt="Tramitador" /></a></h1>
                 <ul id="userMenu" class="nav nav-pills">
                     <?php if (!UsuarioSesion::usuario()->registrado): ?>
                         <li class="dropdown">
@@ -60,7 +59,7 @@
                                             <label>Contraseña</label>
                                             <input name="password" type="password" class="input-xlarge">
                                             <p>¿No esta registrado? <a href="<?= site_url('autenticacion/registrar') ?>">Regístrese acá</a></p>
-                                            <p>O utilice <a href="<?=$this->lightopenid->authUrl()?>"><img src="assets/img/openid.png" alt="OpenID"/></a></p>
+                                            <p>O utilice <a href="<?=$this->lightopenid->authUrl()?>"><img src="<?= base_url() ?>assets/img/openid.png" alt="OpenID"/></a></p>
                                             <button class="btn btn-primary pull-right" type="submit">Ingresar</button>
                                         </fieldset>
                                     </form>

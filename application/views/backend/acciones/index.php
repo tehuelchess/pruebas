@@ -1,4 +1,4 @@
-<script src="assets/js/modelador-acciones.js" type="text/javascript"></script>
+<script src="<?= base_url() ?>assets/js/modelador-acciones.js" type="text/javascript"></script>
 
 <ul class="breadcrumb">
     <li>

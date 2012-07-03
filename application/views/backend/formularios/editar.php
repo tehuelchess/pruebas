@@ -1,4 +1,4 @@
-<script src="assets/js/modelador-formularios.js" type="text/javascript"></script>
+<script src="<?= base_url() ?>assets/js/modelador-formularios.js" type="text/javascript"></script>
 
 <script type="text/javascript">
     var formularioId=<?= $formulario->id ?>;
