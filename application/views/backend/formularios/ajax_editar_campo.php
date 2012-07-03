@@ -1,3 +1,24 @@
+<script type="text/javascript">
+    $("#formEditarCampo input[name=etiqueta]").blur(ellipsize);
+    
+    function ellipsize(){
+        var $etiqueta=$("#formEditarCampo input[name=etiqueta]");
+        var $nombre=$("#formEditarCampo input[name=nombre]");
+        if($nombre.val()==""){
+            var string=$etiqueta.val();
+            string=string.toLowerCase();
+            string=string.replace(/\s/g,"_");
+            string=string.replace(/á/g,"a");
+            string=string.replace(/é/g,"e");
+            string=string.replace(/í/g,"i");
+            string=string.replace(/ó/g,"o");
+            string=string.replace(/ú/g,"u");
+            string=string.replace(/\W/g,"");
+            $nombre.val(string);
+        }
+    }
+</script>
+
 <div class="modal-header">
     <button class="close" data-dismiss="modal">×</button>
     <h3>Edición de Campo</h3>
@@ -9,10 +30,10 @@
             <input type="hidden" name="formulario_id" value="<?= $formulario->id ?>" />
             <input type="hidden" name="tipo" value="<?= $campo->tipo ?>" />
         <?php endif; ?>
-        <label>Nombre</label>
-        <input type="text" name="nombre" value="<?= $campo->nombre ?>" />
         <label>Etiqueta</label>
         <input type="text" name="etiqueta" value="<?= $campo->etiqueta ?>" />
+        <label>Nombre</label>
+        <input type="text" name="nombre" value="<?= $campo->nombre ?>" />   
         <?php if($campo->requiere_readonly):?>
         <label><input type="checkbox" name="readonly" value="1" /> Solo lectura</label>
         <?php endif;?>
