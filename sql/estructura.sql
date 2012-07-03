@@ -263,6 +263,7 @@ ENGINE = InnoDB;
 CREATE  TABLE IF NOT EXISTS `tramitador`.`campo` (
   `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT ,
   `nombre` VARCHAR(32) NOT NULL ,
+  `readonly` TINYINT(1) NOT NULL DEFAULT 0 ,
   `posicion` INT(10) UNSIGNED NOT NULL ,
   `tipo` VARCHAR(32) NOT NULL ,
   `formulario_id` INT(10) UNSIGNED NOT NULL ,

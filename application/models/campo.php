@@ -1,6 +1,37 @@
 <?php
 
 class Campo extends Doctrine_Record {
+        
+    public $requiere_validacion=true;
+    public $requiere_datos=true;
+    public $requiere_readonly=true;
+    
+    public static function factory($tipo){
+        if($tipo=='text')
+            $campo=new CampoText();
+        else if($tipo=='textarea')
+            $campo=new CampoTextArea();
+        else if($tipo=='select')
+            $campo=new CampoSelect();
+        else if($tipo=='radio')
+            $campo=new CampoRadio();
+        else if($tipo=='checkbox')
+            $campo=new CampoCheckbox();
+        else if($tipo=='file')
+            $campo=new CampoFile();
+        else if($tipo=='date')
+            $campo=new CampoDate();
+        else if($tipo=='instituciones_gob')
+            $campo=new CampoInstitucionesGob();
+        else if($tipo=='title')
+            $campo=new CampoTitle();
+        else if($tipo=='subtitle')
+            $campo=new CampoSubtitle();
+        
+        $campo->assignInheritanceValues();
+        
+        return $campo;
+    }
 
     function setTableDefinition() {
         $this->hasColumn('id');
@@ -13,6 +44,7 @@ class Campo extends Doctrine_Record {
         $this->hasColumn('dependiente_campo');
         $this->hasColumn('dependiente_valor');
         $this->hasColumn('datos');
+        $this->hasColumn('readonly');
         
         $this->setSubclasses(array(
                 'CampoText'  => array('tipo' => 'text'),
@@ -22,9 +54,10 @@ class Campo extends Doctrine_Record {
                 'CampoCheckbox'  => array('tipo' => 'checkbox'),
                 'CampoFile'  => array('tipo' => 'file'),
                 'CampoDate'  => array('tipo' => 'date'),
-                'CampoInstitucionesGob'  => array('tipo' => 'instituciones_gob')
-            )
-        );
+                'CampoInstitucionesGob'  => array('tipo' => 'instituciones_gob'),
+                'CampoTitle'  => array('tipo' => 'title'),
+                'CampoSubtitle'  => array('tipo' => 'subtitle')
+            ));
     }
 
     function setUp() {

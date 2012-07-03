@@ -123,6 +123,7 @@ class Formularios extends CI_Controller {
             exit;
         }
         
+        $data['edit']=TRUE;
         $data['campo']=$campo;
         $data['formulario']=$campo->Formulario;
         
@@ -151,13 +152,13 @@ class Formularios extends CI_Controller {
         if($this->form_validation->run()==TRUE){
             if(!$campo){
                 $formulario=Doctrine::getTable('Formulario')->find($this->input->post('formulario_id'));
-                $campo=new Campo();
+                $campo=Campo::factory($this->input->post('tipo'));
                 $campo->formulario_id=$formulario->id;
-                $campo->tipo=$this->input->post('tipo');
                 $campo->posicion=1+$formulario->getUltimaPosicionCampo();
             }
             $campo->nombre=$this->input->post('nombre');
             $campo->etiqueta=$this->input->post('etiqueta');
+            $campo->readonly=$this->input->post('readonly');
             $campo->validacion=explode('|',$this->input->post('validacion'));
             $campo->dependiente_campo=$this->input->post('dependiente_campo');
             $campo->dependiente_valor=$this->input->post('dependiente_valor');
@@ -184,8 +185,12 @@ class Formularios extends CI_Controller {
             exit;
         }
         
+        $campo=Campo::factory($tipo);
+        
+        
+        $data['edit']=false;
         $data['formulario']=$formulario;
-        $data['tipo']=$tipo;
+        $data['campo']=$campo;
         $this->load->view('backend/formularios/ajax_editar_campo',$data);
     }
     

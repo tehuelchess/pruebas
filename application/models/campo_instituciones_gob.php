@@ -2,7 +2,8 @@
 
 class CampoInstitucionesGob extends Campo{
     
-
+    public $requiere_datos=false;
+    
     protected function display($modo, $dato) {
         $display = '<label>' . $this->etiqueta . (in_array('required', $this->validacion) ? '' : ' (Opcional)') . '</label>';
         $display.='<select class="entidades" data-id="'.$this->id.'" name="' . $this->nombre . '[entidad]" ' . ($modo == 'visualizacion' ? 'disabled' : '') . '>';
