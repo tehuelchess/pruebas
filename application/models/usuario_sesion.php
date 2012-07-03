@@ -1,4 +1,5 @@
 <?php
+
 class UsuarioSesion {
 
     private static $user;
@@ -26,44 +27,28 @@ class UsuarioSesion {
 
         return self::$user;
     }
-    
-    public static function force_login(){
+
+    public static function force_login() {
         $CI = & get_instance();
-        
-        if($CI->lightopenid->mode=='id_res'){
-            if($CI->lightopenid->validate()){
-                $atributos=$CI->lightopenid->getAttributes();
-                $usuario=Doctrine::getTable('Usuario')->findOneByUsuario($CI->lightopenid->identity);
-                if(!$usuario){
-                    $usuario=new Usuario();
-                    $usuario->usuario=$CI->lightopenid->identity;
-                    $usuario->registrado=1;
-                }
-                $usuario->email=$atributos['contact/email'];
-                $usuario->nombre=$atributos['namePerson/first'];
-                $usuario->apellidos=$atributos['namePerson/last'];
-                $usuario->save();
-                
-                $CI->session->set_userdata('usuario_id', $usuario->id);
-                self::$user=$usuario;
-            }
+
+        if ($CI->lightopenid->mode == 'id_res') {
+            self::login_open_id();
         }
-        
-        if(!self::usuario()){
+
+        if (!self::usuario()) {
             //Elimino los antiguos
             Doctrine::getTable('Usuario')->cleanNoRegistrados();
-            
+
             //Creo un usuario no registrado
-            $usuario=new Usuario();
-            $usuario->usuario=random_string('unique');
-            $usuario->password=random_string('alnum', 32);
-            $usuario->registrado=0;
+            $usuario = new Usuario();
+            $usuario->usuario = random_string('unique');
+            $usuario->password = random_string('alnum', 32);
+            $usuario->registrado = 0;
             $usuario->save();
-            
+
             $CI->session->set_userdata('usuario_id', $usuario->id);
-            self::$user=$usuario;
+            self::$user = $usuario;
         }
-            
     }
 
     public static function login($usuario, $password) {
@@ -74,6 +59,15 @@ class UsuarioSesion {
         if ($autorizacion) {
             $u = Doctrine::getTable('Usuario')->findOneByUsuario($usuario);
 
+            //Si estaba con tramites en curso antes de loguearse, se los transferimos.
+            if (!self::usuario()->registrado) {
+                foreach (self::$user->Etapas as $t) {
+                    $t->usuario_id = $u->id;
+                    $t->save();
+                }
+            }
+
+            //Logueamos al usuario
             $CI->session->set_userdata('usuario_id', $u->id);
             self::$user = $u;
 
@@ -105,6 +99,34 @@ class UsuarioSesion {
 
         // login failed
         return FALSE;
+    }
+
+    private static function login_open_id() {
+        $CI = & get_instance();
+        if ($CI->lightopenid->validate()) {
+            $atributos = $CI->lightopenid->getAttributes();
+            $usuario = Doctrine::getTable('Usuario')->findOneByUsuario($CI->lightopenid->identity);
+            if (!$usuario) {
+                $usuario = new Usuario();
+                $usuario->usuario = $CI->lightopenid->identity;
+                $usuario->registrado = 1;
+            }
+            $usuario->email = $atributos['contact/email'];
+            $usuario->nombre = $atributos['namePerson/first'];
+            $usuario->apellidos = $atributos['namePerson/last'];
+            $usuario->save();
+            
+            //Si estaba con tramites en curso antes de loguearse, se los transferimos.
+            if (!self::usuario()->registrado) {
+                foreach (self::$user->Etapas as $t) {
+                    $t->usuario_id = $usuario->id;
+                    $t->save();
+                }
+            }
+
+            $CI->session->set_userdata('usuario_id', $usuario->id);
+            self::$user = $usuario;
+        }
     }
 
     public static function logout() {
