@@ -20,5 +20,5 @@ function widgetConfigOk(form){
     $(widget).removeClass('flip');
     
     //Damos tiempo para que termine la animacion
-    setTimeout(function(){$(widget).load("backend/portada/widget_load/"+widgetId)},1000);
+    setTimeout(function(){$(widget).load(site_url+"backend/portada/widget_load/"+widgetId)},1000);
 }
