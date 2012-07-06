@@ -42,7 +42,7 @@ class UsuarioSesion {
             //Creo un usuario no registrado
             $usuario = new Usuario();
             $usuario->usuario = random_string('unique');
-            $usuario->password = random_string('alnum', 32);
+            $usuario->setPasswordWithSalt(random_string('alnum', 32));
             $usuario->registrado = 0;
             $usuario->save();
 
