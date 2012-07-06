@@ -59,14 +59,6 @@ class UsuarioSesion {
         if ($autorizacion) {
             $u = Doctrine::getTable('Usuario')->findOneByUsuario($usuario);
 
-            //Si estaba con tramites en curso antes de loguearse, se los transferimos.
-            if (self::usuario() && !self::usuario()->registrado) {
-                foreach (self::$user->Etapas as $t) {
-                    $t->usuario_id = $u->id;
-                    $t->save();
-                }
-            }
-
             //Logueamos al usuario
             $CI->session->set_userdata('usuario_id', $u->id);
             self::$user = $u;
@@ -115,14 +107,6 @@ class UsuarioSesion {
             $usuario->nombre = $atributos['namePerson/first'];
             $usuario->apellidos = $atributos['namePerson/last'];
             $usuario->save();
-            
-            //Si estaba con tramites en curso antes de loguearse, se los transferimos.
-            if (self::usuario() && !self::usuario()->registrado) {
-                foreach (self::$user->Etapas as $t) {
-                    $t->usuario_id = $usuario->id;
-                    $t->save();
-                }
-            }
 
             $CI->session->set_userdata('usuario_id', $usuario->id);
             self::$user = $usuario;
