@@ -32,7 +32,7 @@ class Etapa extends Doctrine_Record {
             'local' => 'usuario_id',
             'foreign' => 'id'
         ));
-        
+
         $this->hasMany('DatoSeguimiento as DatosSeguimiento', array(
             'local' => 'id',
             'foreign' => 'etapa_id'
@@ -49,81 +49,106 @@ class Etapa extends Doctrine_Record {
     //Este parametro solamente es valido si la asignacion de la prox tarea es manual.
     public function avanzar($usuarios_a_asignar) {
         Doctrine_Manager::connection()->beginTransaction();
-        
-        //Cerramos esta etapa
-        $this->cerrar();
+        $tp = $this->getTareasProximas();
 
-        //Generamos la etapa nueva
-        $tareas_proximas = $this->getTareasProximas();
-        if ($tareas_proximas) {
-            foreach ($tareas_proximas as $tarea_proxima) {
-                $usuario_asignado_id = NULL;
-                if ($tarea_proxima->asignacion == 'ciclica') {
-                    $usuarios_asignables = $tarea_proxima->getUsuarios();
-                    $usuario_asignado_id = $usuarios_asignables[0]->id;
-                    $ultimo_usuario = $tarea_proxima->getUltimoUsuarioAsignado($this->Tramite->Proceso->id);
-                    if ($ultimo_usuario) {
-                        foreach ($usuarios_asignables as $key => $u) {
-                            if ($u->id == $ultimo_usuario->id) {
-                                $usuario_asignado_id = $usuarios_asignables[$key + 1 % $usuarios_asignables->count()]->id;
-                                break;
-                            }
-                        }
-                    }
-                } else if ($tarea_proxima->asignacion == 'manual') {
-                    $usuario_asignado_id = $usuarios_a_asignar[$tarea_proxima->id];
-                } else if ($tarea_proxima->asignacion == 'usuario') {
-                    $regla = new Regla($tarea_proxima->asignacion_usuario);
-                    $u = $regla->evaluar($this->Tramite->id);
-                    $usuario_asignado_id = $u;
-                }
+        if ($tp->estado != 'sincontinuacion') {
+            //Cerramos esta etapa
+            $this->cerrar();
 
-                $etapa = new Etapa();
-                $etapa->tramite_id = $this->Tramite->id;
-                $etapa->tarea_id = $tarea_proxima->id;
-                $etapa->pendiente = 1;
-                $etapa->save();
-                $etapa->asignar($usuario_asignado_id);
-                //$this->Tramite->Etapas[] = $etapa;     
+            if ($tp->estado == 'completado') {
+                if ($this->Tramite->getEtapasActuales()->count() == 0)
+                    $this->Tramite->cerrar();
             }
-            $this->Tramite->updated_at = date("Y-m-d H:i:s");
-            $this->Tramite->save();
+            else {
+                if ($tp->estado == 'pendiente') {
+                    $tareas_proximas = $tp->tareas;
+                    foreach ($tareas_proximas as $tarea_proxima) {
+                        $usuario_asignado_id = NULL;
+                        if ($tarea_proxima->asignacion == 'ciclica') {
+                            $usuarios_asignables = $tarea_proxima->getUsuarios();
+                            $usuario_asignado_id = $usuarios_asignables[0]->id;
+                            $ultimo_usuario = $tarea_proxima->getUltimoUsuarioAsignado($this->Tramite->Proceso->id);
+                            if ($ultimo_usuario) {
+                                foreach ($usuarios_asignables as $key => $u) {
+                                    if ($u->id == $ultimo_usuario->id) {
+                                        $usuario_asignado_id = $usuarios_asignables[$key + 1 % $usuarios_asignables->count()]->id;
+                                        break;
+                                    }
+                                }
+                            }
+                        } else if ($tarea_proxima->asignacion == 'manual') {
+                            $usuario_asignado_id = $usuarios_a_asignar[$tarea_proxima->id];
+                        } else if ($tarea_proxima->asignacion == 'usuario') {
+                            $regla = new Regla($tarea_proxima->asignacion_usuario);
+                            $u = $regla->evaluar($this->Tramite->id);
+                            $usuario_asignado_id = $u;
+                        }
+
+                        $etapa = new Etapa();
+                        $etapa->tramite_id = $this->Tramite->id;
+                        $etapa->tarea_id = $tarea_proxima->id;
+                        $etapa->pendiente = 1;
+                        $etapa->save();
+                        $etapa->asignar($usuario_asignado_id);
+                        //$this->Tramite->Etapas[] = $etapa;     
+                    }
+                    $this->Tramite->updated_at = date("Y-m-d H:i:s");
+                    $this->Tramite->save();
+                }
+            }
         }
-
-        
-        //Si no hay mas etapas pendientes, el tramite se acaba.
-        if ($this->Tramite->getEtapasActuales()->count() == 0)
-            $this->Tramite->cerrar();
-
         Doctrine_Manager::connection()->commit();
     }
 
+    //Esta funcion entrega un listado de tareas a continuar y un estado que indica como se debe proceder con esta continuacion.
+    //tareas:   -Arreglo de tareas para continuar
+    //estado:   -sincontinuacion: No hay reglas para continuar. No se puede avanzar de etapa.
+    //          -completado: Se completa el tramite luego de esta etapa.
+    //          -pendiente: Hay etapas a continuacion
+    //          -standby: Hay etapas a continuacion pero no se puede avanzar todavia hasta que que se completen etapas paralelas. 
     public function getTareasProximas() {
+        $resultado->tareas = null;
+        $resultado->estado = 'sincontinuacion';
+
+
         $tarea_actual = $this->Tarea;
-
-        if ($tarea_actual->final)
-            return null;
-
         $conexiones = $tarea_actual->ConexionesOrigen;
 
-        $tareas = null;
+        //$tareas = null;
         foreach ($conexiones as $c) {
             if ($c->evaluarRegla($this->Tramite->id)) {
-                if ($c->tipo == 'secuencial' || $c->tipo == 'evaluacion') {
-                    $tareas[] = $c->TareaDestino;
+                //Si no hay destino es el fin del tramite.
+                if (!$c->tarea_id_destino) {
+                    $resultado->tareas = null;
+                    $resultado->estado = 'completado';
                     break;
-                } else if ($c->tipo == 'paralelo' || $c->tipo == 'paralelo_evaluacion') {
-                    $tareas[] = $c->TareaDestino;
-                } else if ($c->tipo == 'union') {
+                }
+
+                //Si no es en paralelo, retornamos con la tarea proxima.
+                if ($c->tipo == 'secuencial' || $c->tipo == 'evaluacion') {
+                    $resultado->tareas = array($c->TareaDestino);
+                    $resultado->estado = 'pendiente';
+                    break;
+                }
+                //Si son en paralelo, vamos juntando el grupo de tareas proximas.
+                else if ($c->tipo == 'paralelo' || $c->tipo == 'paralelo_evaluacion') {
+                    $resultado->tareas[] = $c->TareaDestino;
+                    $resultado->estado = 'pendiente';
+                }
+                //Si es de union, chequeamos que las etapas paralelas se hayan completado antes de continuar con la proxima.
+                else if ($c->tipo == 'union') {
                     if (!$this->hayEtapasParalelasPendientes()) {
-                        $tareas[] = $c->TareaDestino;
-                        break;
+                        $resultado->estado = 'pendiente';
+                    } else {
+                        $resultado->estado = 'standby';
                     }
+                    $resultado->tareas = array($c->TareaDestino);
+                    break;
                 }
             }
         }
 
-        return $tareas;
+        return $resultado;
     }
 
     public function hayEtapasParalelasPendientes() {
@@ -168,9 +193,9 @@ class Etapa extends Doctrine_Record {
 
     public function cerrar() {
         //Si ya fue cerrada, retornamos inmediatamente.
-        if(!$this->pendiente)
+        if (!$this->pendiente)
             return;
-        
+
         if ($this->Tarea->almacenar_usuario) {
             $dato = Doctrine::getTable('Dato')->findOneByTramiteIdAndNombre($this->Tramite->id, $this->Tarea->almacenar_usuario_variable);
             if (!$dato)
@@ -180,16 +205,16 @@ class Etapa extends Doctrine_Record {
             $dato->tramite_id = $this->Tramite->id;
             $dato->save();
         }
-        
+
         //Le generamos los datos para el seguimiento
-        foreach($this->Tramite->Datos as $d){
+        foreach ($this->Tramite->Datos as $d) {
             //$dato = Doctrine::getTable('DatoSeguimiento')->findOneByEtapaIdAndNombre($this->id, $nombre);
             //if (!$dato)
             $dato = new DatoSeguimiento();
             $dato->nombre = $d->nombre;
             $dato->valor = $d->valor;
             $dato->etapa_id = $this->id;
-            $this->DatosSeguimiento[]=$dato;
+            $this->DatosSeguimiento[] = $dato;
         }
 
         //Cerramos la etapa

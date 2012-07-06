@@ -67,7 +67,7 @@ class Proceso extends Doctrine_Record {
             $element->left=$t->posx;
             $element->top=$t->posy;
             $element->start=$t->inicial;
-            $element->stop=$t->final;
+            //$element->stop=$t->final;
             $modelo->elements[]=clone $element;
         }
         
@@ -76,7 +76,7 @@ class Proceso extends Doctrine_Record {
                 ->where('p.id = ?',$this->id)
                 ->execute();
         foreach($conexiones as $c){
-            $conexion->id=$c->identificador;
+            //$conexion->id=$c->identificador;
             $conexion->source=$c->TareaOrigen->identificador;
             $conexion->target=$c->TareaDestino->identificador;
             $conexion->tipo=$c->tipo;

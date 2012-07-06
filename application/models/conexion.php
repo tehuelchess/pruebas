@@ -4,7 +4,7 @@ class Conexion extends Doctrine_Record {
 
     function setTableDefinition() {
         $this->hasColumn('id');
-        $this->hasColumn('identificador');
+        //$this->hasColumn('identificador');
         $this->hasColumn('tarea_id_origen');
         $this->hasColumn('tarea_id_destino');
         $this->hasColumn('tipo');

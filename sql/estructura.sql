@@ -39,7 +39,6 @@ CREATE  TABLE IF NOT EXISTS `tramitador`.`tarea` (
   `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT ,
   `identificador` VARCHAR(32) NOT NULL ,
   `inicial` TINYINT(1) NOT NULL DEFAULT '0' ,
-  `final` TINYINT(1) NOT NULL DEFAULT '0' ,
   `nombre` VARCHAR(128) NOT NULL ,
   `posx` INT(10) UNSIGNED NOT NULL DEFAULT '0' ,
   `posy` INT(10) UNSIGNED NOT NULL DEFAULT '0' ,
@@ -69,9 +68,8 @@ COLLATE = utf8_general_ci;
 -- -----------------------------------------------------
 CREATE  TABLE IF NOT EXISTS `tramitador`.`conexion` (
   `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT ,
-  `identificador` VARCHAR(32) NOT NULL ,
   `tarea_id_origen` INT(10) UNSIGNED NOT NULL ,
-  `tarea_id_destino` INT(10) UNSIGNED NOT NULL ,
+  `tarea_id_destino` INT(10) UNSIGNED NULL ,
   `tipo` ENUM('secuencial','evaluacion','paralelo','paralelo_evaluacion','union') NOT NULL ,
   `regla` VARCHAR(256) NOT NULL ,
   PRIMARY KEY (`id`) ,

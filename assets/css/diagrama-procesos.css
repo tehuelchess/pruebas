@@ -44,26 +44,77 @@
     height: 30px;
     position: absolute;
     top: -30px;
-    left: 49%;
+    left: 50%;
+    margin-left: -15px;
 }
 
-#areaDibujo .box .final{
-    background: url(../img/final.gif);
+#areaDibujo .box .final-secuencial{
+    background: url(../img/final_secuencial.gif);
     width: 25px;
     height: 25px;
     position: absolute;
     bottom: -25px;
-    left: 49%;
+    left: 50%;
+    margin-left: -12px;
 }
+#areaDibujo .box .final{
+    background: url(../img/final.jpg);
+    width: 38px;
+    height: 38px;
+    position: absolute;
+    bottom: -50px;
+    left: 50%;
+    margin-left: 10px;
+}
+
+#areaDibujo .box .conector{
+    width: 25px;
+    height: 25px;
+    position: absolute;
+    bottom: -25px;
+    left: 50%;
+    margin-left: -12px;
+}
+
+#areaDibujo .box .conector.evaluacion{
+    background: url(../img/evaluacion.gif);
+}
+
+#areaDibujo .box .conector.paralelo{
+    background: url(../img/paralelo.gif);
+}
+
+#areaDibujo .box .conector.paralelo_evaluacion{
+    background: url(../img/paralelo_evaluacion.gif);
+}
+
+#areaDibujo .box .conector.secuencial{
+    background: url(../img/secuencial.gif);
+}
+
+#areaDibujo .box .union{
+    width: 25px;
+    height: 25px;
+    position: absolute;
+    top: -35px;
+    left: 50%;
+    margin-left: -12px;
+    background: url(../img/union.gif);
+}
+
 #areaDibujo ._jsPlumb_connector{
     cursor: pointer;
 }
 
+/*
 .endpoint1{
     margin-top: 12px !important;
     z-index: 1000;
+    cursor: pointer;
 }
 .endpoint2{
     margin-top: -18px !important;
     z-index: 1000;
+    cursor: pointer;
 }
+*/
