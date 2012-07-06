@@ -10,6 +10,7 @@ class Usuario extends Doctrine_Record {
         $this->hasColumn('apellidos');
         $this->hasColumn('email');
         $this->hasColumn('cuenta_id');
+        $this->hasColumn('salt');
         $this->hasColumn('registrado');
     }
 
@@ -36,8 +37,17 @@ class Usuario extends Doctrine_Record {
     }
     
     function setPassword($password) {
-        $hashPassword = sha1($password);
+        $hashPassword = sha1($password.$this->salt);
         $this->_set('password', $hashPassword);
+    }
+    
+    function setPasswordWithSalt($password,$salt=null){
+        if($salt!==null)
+            $this->salt=$salt;
+        else
+            $this->salt=random_string ('alnum', 32);
+        
+        $this->setPassword($password);
     }
     
     public function hasGrupoUsuarios($grupo_usuarios_id){

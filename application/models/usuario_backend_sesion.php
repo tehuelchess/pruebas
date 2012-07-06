@@ -60,7 +60,7 @@ class UsuarioBackendSesion {
 
             // this mutates (encrypts) the input password
             $u_input = new UsuarioBackend();
-            $u_input->password = $password;
+            $u_input->setPasswordWithSalt($password,$u->salt);
 
             // password match (comparing encrypted passwords)
             if ($u->password == $u_input->password) {

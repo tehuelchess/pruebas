@@ -8,6 +8,7 @@ class UsuarioBackend extends Doctrine_Record {
         $this->hasColumn('password');
         $this->hasColumn('nombre');
         $this->hasColumn('apellidos');
+        $this->hasColumn('salt');
         $this->hasColumn('cuenta_id');
     }
 
@@ -20,9 +21,18 @@ class UsuarioBackend extends Doctrine_Record {
         ));
     }
     
-    function setPassword($password) {
-        $hashPassword = sha1($password);
+    function setPassword($password,$salt=null) {        
+        $hashPassword = sha1($password.$this->salt);
         $this->_set('password', $hashPassword);
+    }
+    
+    function setPasswordWithSalt($password,$salt=null){
+        if($salt!==null)
+            $this->salt=$salt;
+        else
+            $this->salt=random_string ('alnum', 32);
+        
+        $this->setPassword($password);
     }
 
 }

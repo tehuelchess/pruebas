@@ -37,7 +37,7 @@ class Autenticacion extends CI_Controller {
         if ($this->form_validation->run() == TRUE) {
             $usuario=new Usuario();
             $usuario->usuario=$this->input->post('usuario');
-            $usuario->password=$this->input->post('password');
+            $usuario->setPasswordWithSalt($this->input->post('password'));
             $usuario->email=$this->input->post('email');
             $usuario->save();
             
