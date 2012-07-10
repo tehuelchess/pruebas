@@ -75,7 +75,6 @@ class LightOpenID
 
     function __construct()
     {
-        $CI=& get_instance();
         $host=site_url();
         
         $this->trustRoot = (strpos($host, '://') ? $host : 'http://' . $host);
