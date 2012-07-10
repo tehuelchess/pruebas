@@ -4,6 +4,11 @@ class Autenticacion extends CI_Controller {
     public function  __construct() {
         parent::__construct();
     }
+    
+    public function login_openid(){
+        $this->lightopenid->returnUrl=$this->input->server('HTTP_REFERER');
+        redirect($this->lightopenid->authUrl());
+    }
 
     public function login_form() {
 
