@@ -103,9 +103,7 @@ class UsuarioSesion {
                 $usuario->usuario = $CI->lightopenid->identity;
                 $usuario->registrado = 1;
             }
-            $usuario->email = $atributos['contact/email'];
-            $usuario->nombre = $atributos['namePerson/first'];
-            $usuario->apellidos = $atributos['namePerson/last'];
+            $usuario->rut=$atributos['person/guid'];
             $usuario->save();
 
             $CI->session->set_userdata('usuario_id', $usuario->id);
