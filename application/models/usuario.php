@@ -12,6 +12,7 @@ class Usuario extends Doctrine_Record {
         $this->hasColumn('email');
         $this->hasColumn('cuenta_id');
         $this->hasColumn('salt');
+        $this->hasColumn('open_id');
         $this->hasColumn('registrado');
     }
 

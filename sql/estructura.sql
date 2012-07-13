@@ -124,6 +124,7 @@ CREATE  TABLE IF NOT EXISTS `tramitador`.`usuario` (
   `registrado` TINYINT(1) NOT NULL DEFAULT 1 ,
   `cuenta_id` INT UNSIGNED NULL ,
   `salt` VARCHAR(32) NOT NULL ,
+  `open_id` TINYINT(1) NOT NULL DEFAULT 0 ,
   `created_at` DATETIME NULL ,
   `updated_at` DATETIME NULL ,
   PRIMARY KEY (`id`) ,

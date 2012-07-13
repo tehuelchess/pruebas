@@ -57,7 +57,7 @@ class UsuarioSesion {
         $autorizacion = self::validar_acceso($usuario, $password);
 
         if ($autorizacion) {
-            $u = Doctrine::getTable('Usuario')->findOneByUsuario($usuario);
+            $u = Doctrine::getTable('Usuario')->findOneByUsuarioAndOpenId($usuario,0);
 
             //Logueamos al usuario
             $CI->session->set_userdata('usuario_id', $u->id);
@@ -70,7 +70,7 @@ class UsuarioSesion {
     }
 
     public static function validar_acceso($usuario, $password) {
-        $u = Doctrine::getTable('Usuario')->findOneByUsuario($usuario);
+        $u = Doctrine::getTable('Usuario')->findOneByUsuarioAndOpenId($usuario,0);
 
         if ($u) {
 
@@ -97,11 +97,12 @@ class UsuarioSesion {
         $CI = & get_instance();
         if ($CI->lightopenid->validate()) {
             $atributos = $CI->lightopenid->getAttributes();
-            $usuario = Doctrine::getTable('Usuario')->findOneByUsuario($CI->lightopenid->identity);
+            $usuario = Doctrine::getTable('Usuario')->findOneByUsuarioAndOpenId($CI->lightopenid->identity,1);
             if (!$usuario) {
                 $usuario = new Usuario();
                 $usuario->usuario = $CI->lightopenid->identity;
                 $usuario->registrado = 1;
+                $usuario->open_id=1;
             }
             $usuario->rut=$atributos['person/guid'];
             $usuario->save();
