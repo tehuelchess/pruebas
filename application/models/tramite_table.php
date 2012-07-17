@@ -16,7 +16,7 @@ class TramiteTable extends Doctrine_Table {
     public function cleanIniciadosPorNoRegistrados(){
         $noregistrados=Doctrine_Query::create()
                 ->from('Tramite t, t.Etapas e, e.Usuario u')
-                ->where('u.registrado = 0 AND DATEDIFF(NOW(),t.updated_at) >= 0')
+                ->where('u.registrado = 0 AND DATEDIFF(NOW(),t.updated_at) >= 1')
                 ->groupBy('t.id')
                 ->having('COUNT(e.id) = 1')
                 ->execute();
