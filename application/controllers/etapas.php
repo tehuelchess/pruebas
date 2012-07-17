@@ -31,13 +31,6 @@ class Etapas extends CI_Controller {
         $iframe=$this->input->get('iframe');
         
         $etapa = Doctrine::getTable('Etapa')->find($etapa_id);
-        $paso = $etapa->getPasoEjecutable($secuencia);
-        
-        if(!$paso){
-            $qs=$this->input->server('QUERY_STRING');
-            redirect('etapas/ejecutar_fin/'.$etapa->id.($qs?'?'.$qs:''));
-        }
-
         if ($etapa->usuario_id != UsuarioSesion::usuario()->id) {
             echo 'Usuario no tiene permisos para ejecutar esta etapa.';
             exit;
@@ -45,6 +38,12 @@ class Etapas extends CI_Controller {
         if (!$etapa->pendiente) {
             echo 'Esta etapa ya fue completada';
             exit;
+        }
+        
+        $paso = $etapa->getPasoEjecutable($secuencia);
+        if(!$paso){
+            $qs=$this->input->server('QUERY_STRING');
+            redirect('etapas/ejecutar_fin/'.$etapa->id.($qs?'?'.$qs:''));
         }
 
         $data['secuencia']=$secuencia;
@@ -59,7 +58,7 @@ class Etapas extends CI_Controller {
         $this->load->view($template, $data);
     }
 
-    public function ejecutar_form($etapa_id, $paso) {
+    public function ejecutar_form($etapa_id, $secuencia) {
         $etapa = Doctrine::getTable('Etapa')->find($etapa_id);
 
         if ($etapa->usuario_id != UsuarioSesion::usuario()->id) {
@@ -71,8 +70,9 @@ class Etapas extends CI_Controller {
             exit;
         }
 
-        $formulario = $etapa->Tarea->Pasos[$paso]->Formulario;
-        $modo = $etapa->Tarea->Pasos[$paso]->modo;
+        $paso=$etapa->getPasoEjecutable($secuencia);
+        $formulario = $paso->Formulario;
+        $modo = $paso->modo;
 
         if ($modo == 'edicion') {
             foreach ($formulario->Campos as $c)
@@ -95,10 +95,10 @@ class Etapas extends CI_Controller {
                 $respuesta->validacion = TRUE;
 
                 $qs=$this->input->server('QUERY_STRING');
-                if ($etapa->Tarea->Pasos->count() - 1 == $paso) 
+                if ($etapa->Tarea->Pasos->count() - 1 == $secuencia) 
                     $respuesta->redirect = site_url('etapas/ejecutar_fin/' . $etapa_id).($qs?'?'.$qs:'');
                 else 
-                    $respuesta->redirect = site_url('etapas/ejecutar/' . $etapa_id . '/' . ($paso + 1)).($qs?'?'.$qs:'');
+                    $respuesta->redirect = site_url('etapas/ejecutar/' . $etapa_id . '/' . ($secuencia + 1)).($qs?'?'.$qs:'');
                 
                 
             } else {
@@ -109,10 +109,10 @@ class Etapas extends CI_Controller {
             $respuesta->validacion = TRUE;
 
             $qs=$this->input->server('QUERY_STRING');
-            if ($etapa->Tarea->Pasos->count() - 1 == $paso) 
+            if ($etapa->Tarea->Pasos->count() - 1 == $secuencia) 
                 $respuesta->redirect = site_url('etapas/ejecutar_fin/' . $etapa_id).($qs?'?'.$qs:'');
             else 
-                $respuesta->redirect = site_url('etapas/ejecutar/' . $etapa_id . '/' . ($paso + 1)).($qs?'?'.$qs:'');
+                $respuesta->redirect = site_url('etapas/ejecutar/' . $etapa_id . '/' . ($secuencia + 1)).($qs?'?'.$qs:'');
             
         }
 
