@@ -1,3 +1,38 @@
+<link rel="stylesheet" type="text/css" href="<?=base_url()?>assets/js/clippy/clippy.css" media="all">
+<script src="<?=base_url()?>assets/js/clippy/clippy.min.js"></script>
+<script type="text/javascript">
+    clippy.load('Clippy', function(agent) {
+        var textos=[
+            "Veo que estas escribiendo una carta. Necesitas ayuda?",
+            "Veo que necesitas ayuda.",
+            "Necesitas que te de una mano?",
+            "Estas seguro que no necesitas ayuda?",
+            "Yo soy tu amigo. Tu quieres ser mi amigo?",
+            "A veces yo aparezco por ninguna razon en particular. Como ahora.",
+            "Tu computador parece estar prendido.",
+            "Veo que estas tratando de trabajar. Necesitas que te moleste?",
+            "Veo que tu vida no tiene sentido. Necesitas consejo?"
+        ];
+        
+        var animaciones=agent.animations();
+        
+        // Do anything with the loaded agent
+        agent.show();
+        
+        setInterval(function(){
+            var randomTextId=Math.floor((Math.random()*textos.length));
+            agent.speak(textos[randomTextId]);
+        },5000);
+        
+        setInterval(function(){
+            var randomId=Math.floor((Math.random()*animaciones.length));
+            agent.play(animaciones[randomId]);
+        },7500);
+        
+    });
+</script>
+
+
 <script type="text/javascript" src="<?= base_url() ?>assets/js/diagrama-procesos.js"></script>
 <script type="text/javascript" src="<?= base_url() ?>assets/js/modelador-procesos.js"></script>
 
