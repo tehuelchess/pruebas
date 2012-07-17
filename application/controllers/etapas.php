@@ -28,11 +28,15 @@ class Etapas extends CI_Controller {
     }
 
     public function ejecutar($etapa_id, $secuencia = 0) {
+        $iframe=$this->input->get('iframe');
+        
         $etapa = Doctrine::getTable('Etapa')->find($etapa_id);
         $paso = $etapa->getPasoEjecutable($secuencia);
         
-        if(!$paso)
-            redirect('etapas/ejecutar_fin/'.$etapa->id);
+        if(!$paso){
+            $qs=$this->input->server('QUERY_STRING');
+            redirect('etapas/ejecutar_fin/'.$etapa->id.($qs?'?'.$qs:''));
+        }
 
         if ($etapa->usuario_id != UsuarioSesion::usuario()->id) {
             echo 'Usuario no tiene permisos para ejecutar esta etapa.';
@@ -46,10 +50,13 @@ class Etapas extends CI_Controller {
         $data['secuencia']=$secuencia;
         $data['etapa'] = $etapa;
         $data['paso'] = $paso;
+        $data['qs']=$this->input->server('QUERY_STRING');
 
         $data['content'] = 'etapas/ejecutar';
         $data['title'] = $etapa->Tarea->nombre;
-        $this->load->view('template', $data);
+        $template=$this->input->get('iframe')?'template_iframe':'template';
+
+        $this->load->view($template, $data);
     }
 
     public function ejecutar_form($etapa_id, $paso) {
@@ -87,12 +94,13 @@ class Etapas extends CI_Controller {
 
                 $respuesta->validacion = TRUE;
 
-                if ($etapa->Tarea->Pasos->count() - 1 == $paso) {
-                    //$etapa->Tramite->avanzarEtapa();
-                    $respuesta->redirect = site_url('etapas/ejecutar_fin/' . $etapa_id);
-                } else {
-                    $respuesta->redirect = site_url('etapas/ejecutar/' . $etapa_id . '/' . ($paso + 1));
-                }
+                $qs=$this->input->server('QUERY_STRING');
+                if ($etapa->Tarea->Pasos->count() - 1 == $paso) 
+                    $respuesta->redirect = site_url('etapas/ejecutar_fin/' . $etapa_id).($qs?'?'.$qs:'');
+                else 
+                    $respuesta->redirect = site_url('etapas/ejecutar/' . $etapa_id . '/' . ($paso + 1)).($qs?'?'.$qs:'');
+                
+                
             } else {
                 $respuesta->validacion = FALSE;
                 $respuesta->errores = validation_errors();
@@ -100,12 +108,12 @@ class Etapas extends CI_Controller {
         } else if ($modo == 'visualizacion') {
             $respuesta->validacion = TRUE;
 
-            if ($etapa->Tarea->Pasos->count() - 1 == $paso) {
-                //$etapa->Tramite->avanzarEtapa();
-                $respuesta->redirect = site_url('etapas/ejecutar_fin/' . $etapa_id);
-            } else {
-                $respuesta->redirect = site_url('etapas/ejecutar/' . $etapa_id . '/' . ($paso + 1));
-            }
+            $qs=$this->input->server('QUERY_STRING');
+            if ($etapa->Tarea->Pasos->count() - 1 == $paso) 
+                $respuesta->redirect = site_url('etapas/ejecutar_fin/' . $etapa_id).($qs?'?'.$qs:'');
+            else 
+                $respuesta->redirect = site_url('etapas/ejecutar/' . $etapa_id . '/' . ($paso + 1)).($qs?'?'.$qs:'');
+            
         }
 
         echo json_encode($respuesta);
@@ -149,9 +157,13 @@ class Etapas extends CI_Controller {
 
         $data['etapa'] = $etapa;
         $data['tareas_proximas']=$etapa->getTareasProximas();
+        $data['qs']=$this->input->server('QUERY_STRING');
+        
         $data['content'] = 'etapas/ejecutar_fin';
         $data['title'] = $etapa->Tarea->nombre;
-        $this->load->view('template', $data);
+        $template=$this->input->get('iframe')?'template_iframe':'template';
+        
+        $this->load->view($template, $data);
     }
 
     public function ejecutar_fin_form($etapa_id) {
@@ -170,11 +182,21 @@ class Etapas extends CI_Controller {
         $etapa->avanzar($this->input->post('usuarios_a_asignar'));
 
         $respuesta->validacion = TRUE;
-        $respuesta->redirect = site_url();
-
-
+        
+        if($this->input->get('iframe'))
+            $respuesta->redirect=site_url('etapas/ejecutar_exito');
+        else    
+            $respuesta->redirect = site_url();
 
         echo json_encode($respuesta);
     }
 
+    //Pagina que indica que la etapa se completo con exito. Solamente la ven los que acceden mediante iframe.
+    public function ejecutar_exito(){
+        $data['content']='etapas/ejecutar_exito';
+        $data['title']='Etapa completada con éxito';
+        
+        $this->load->view('template_iframe',$data);
+    }
+    
 }

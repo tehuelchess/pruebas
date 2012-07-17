@@ -1,5 +1,4 @@
-
-<form method="POST" class="ajaxForm dynaForm" action="<?=site_url('etapas/ejecutar_form/'.$etapa->id.'/'.$secuencia)?>">    
+<form method="POST" class="ajaxForm dynaForm" action="<?=site_url('etapas/ejecutar_form/'.$etapa->id.'/'.$secuencia.($qs?'?'.$qs:''))?>">    
     <fieldset>
         <div class="validacion"></div>
         <legend><?=$paso->Formulario->nombre?></legend>
@@ -9,7 +8,7 @@
             </div>
         <?php endforeach ?>
         <div class="form-actions">
-            <?php if ($secuencia>0): ?><a class="btn" href="<?=site_url('etapas/ejecutar/'.$etapa->id.'/'.($secuencia-1))?>"><i class="icon-chevron-left"></i> Volver</a><?php endif; ?>
+            <?php if ($secuencia>0): ?><a class="btn" href="<?=site_url('etapas/ejecutar/'.$etapa->id.'/'.($secuencia-1).($qs?'?'.$qs:''))?>"><i class="icon-chevron-left"></i> Volver</a><?php endif; ?>
             <button class="btn btn-primary" type="submit">Siguiente</button>
         </div>
     </fieldset>

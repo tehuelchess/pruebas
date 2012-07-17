@@ -1,4 +1,4 @@
-<form method="POST" class="ajaxForm" action="<?= site_url('etapas/ejecutar_fin_form/' . $etapa->id) ?>">
+<form method="POST" class="ajaxForm" action="<?= site_url('etapas/ejecutar_fin_form/' . $etapa->id.($qs?'?'.$qs:'')) ?>">
     <fieldset>
         <div class="validacion"></div>
         <legend>Finalizar</legend>
@@ -24,7 +24,7 @@
 
 
         <div class="form-actions">
-            <a class="btn" href="<?= site_url('etapas/ejecutar/' . $etapa->id . '/' . (count($etapa->getPasosEjecutables()) - 1)) ?>"><i class="icon-chevron-left"></i> Volver</a>
+            <a class="btn" href="<?= site_url('etapas/ejecutar/' . $etapa->id . '/' . (count($etapa->getPasosEjecutables()) - 1).($qs?'?'.$qs:'')) ?>"><i class="icon-chevron-left"></i> Volver</a>
             <?php if($tareas_proximas->estado!='sincontinuacion'):?><button class="btn btn-primary" type="submit">Finalizar</button><?php endif ?>
         </div>
     </fieldset>

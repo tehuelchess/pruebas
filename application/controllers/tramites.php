@@ -45,8 +45,8 @@ class Tramites extends CI_Controller {
         
         
         
-        
-        redirect('etapas/ejecutar/'.$tramite->getEtapasActuales()->get(0)->id);
+        $qs=$this->input->server('QUERY_STRING');
+        redirect('etapas/ejecutar/'.$tramite->getEtapasActuales()->get(0)->id.($qs?'?'.$qs:''));
     }
 
 }
