@@ -27,8 +27,12 @@ class Etapas extends CI_Controller {
         $this->load->view('template', $data);
     }
 
-    public function ejecutar($etapa_id, $paso = 0) {
+    public function ejecutar($etapa_id, $secuencia = 0) {
         $etapa = Doctrine::getTable('Etapa')->find($etapa_id);
+        $paso = $etapa->getPasoEjecutable($secuencia);
+        
+        if(!$paso)
+            redirect('etapas/ejecutar_fin/'.$etapa->id);
 
         if ($etapa->usuario_id != UsuarioSesion::usuario()->id) {
             echo 'Usuario no tiene permisos para ejecutar esta etapa.';
@@ -39,6 +43,7 @@ class Etapas extends CI_Controller {
             exit;
         }
 
+        $data['secuencia']=$secuencia;
         $data['etapa'] = $etapa;
         $data['paso'] = $paso;
 

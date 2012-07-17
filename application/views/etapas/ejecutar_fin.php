@@ -24,7 +24,7 @@
 
 
         <div class="form-actions">
-            <a class="btn" href="<?= site_url('etapas/ejecutar/' . $etapa->id . '/' . ($etapa->Tarea->Pasos->count() - 1)) ?>"><i class="icon-chevron-left"></i> Volver</a>
+            <a class="btn" href="<?= site_url('etapas/ejecutar/' . $etapa->id . '/' . (count($etapa->getPasosEjecutables()) - 1)) ?>"><i class="icon-chevron-left"></i> Volver</a>
             <?php if($tareas_proximas->estado!='sincontinuacion'):?><button class="btn btn-primary" type="submit">Finalizar</button><?php endif ?>
         </div>
     </fieldset>

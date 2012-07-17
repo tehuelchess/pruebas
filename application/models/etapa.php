@@ -227,5 +227,29 @@ class Etapa extends Doctrine_Record {
             if ($e->instante == 'despues')
                 $e->Accion->ejecutar();
     }
+    
+    //Retorna el paso correspondiente a la secuencia, dado los datos ingresados en el tramite hasta el momento.
+    //Es decir, tomando en cuenta las condiciones para que se ejecute cada paso.
+    public function getPasoEjecutable($secuencia){
+        $pasos=$this->getPasosEjecutables($this->tramite_id);
+        
+        if(isset($pasos[$secuencia]))
+            return $pasos[$secuencia];
+        
+        return null;
+    }
+    
+    //Retorna un arreglo con todos los pasos que son ejecutables dado los datos ingresados en el tramite hasta el momento.
+    //Es decir, tomando en cuenta las condiciones para que se ejecute cada paso.
+    public function getPasosEjecutables(){
+        $pasos=array();
+        foreach($this->Tarea->Pasos as $p){
+            $r=new Regla($p->regla);
+            if($r->evaluar($this->tramite_id))
+                $pasos[]=$p;
+        }
+        
+        return $pasos;
+    }
 
 }

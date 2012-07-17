@@ -6,6 +6,7 @@ class Paso extends Doctrine_Record {
         $this->hasColumn('id');
         $this->hasColumn('orden');
         $this->hasColumn('modo');
+        $this->hasColumn('regla');
         $this->hasColumn('formulario_id');
         $this->hasColumn('tarea_id');
     }

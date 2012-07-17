@@ -15,20 +15,23 @@
             return false;
         });
         //Permite agregar nuevos pasos
-        $(".tab-pasos .form-inline button").click(function(){
-            var $form=$(this).closest(".form-inline");
+        $(".tab-pasos .form-agregar-paso button").click(function(){
+            var $form=$(".tab-pasos .form-agregar-paso");
             
             var pos=1+$(".tab-pasos table tbody tr").size();
-            var formularioId=$form.find("select:nth-child(1) option:selected").val()
-            var formularioNombre=$form.find("select:nth-child(1) option:selected").text()
-            var modo=$form.find("select:nth-child(2) option:selected").val()
+            var formularioId=$form.find(".pasoFormulario option:selected").val();
+            var formularioNombre=$form.find(".pasoFormulario option:selected").text();
+            var modo=$form.find(".pasoModo option:selected").val();
+            var regla=$form.find(".pasoRegla").val();
             
             var html="<tr>";
             html+="<td>"+pos+"</td>";
             html+='<td><a title="Editar" target="_blank" href="'+site_url+'backend/formularios/editar/'+formularioId+'">'+formularioNombre+'</td>';
+            html+="<td>"+regla+"</td>";
             html+="<td>"+modo+"</td>";
             html+='<td>';
             html+='<input type="hidden" name="pasos['+pos+'][formulario_id]" value="'+formularioId+'" />';
+            html+='<input type="hidden" name="pasos['+pos+'][regla]" value="'+regla+'" />';
             html+='<input type="hidden" name="pasos['+pos+'][modo]" value="'+modo+'" />';
             html+='<a class="delete" title="Eliminar" href="#"><i class="icon-remove"></i></a>';
             html+='</td>';
@@ -128,11 +131,11 @@
                     <label class="radio" rel="tooltip" title="Al finalizar cada tarea, se le pregunta al usuario a quien se le va a asignar la próxima tarea."><input type="radio" name="asignacion" value="manual" <?= $tarea->asignacion == 'manual' ? 'checked' : '' ?> /> Manual</label>
                     <label class="radio" rel="tooltip" title="La tarea queda sin asignar, y los usuarios mismos deciden asignarsela segun corresponda."><input type="radio" name="asignacion" value="autoservicio" <?= $tarea->asignacion == 'autoservicio' ? 'checked' : '' ?> /> Auto Servicio</label>
                     <label class="radio" rel="tooltip" title="Ingresar el id de usuario a quien se le va asignar. Se puede ingresar una variable que haya almacenado esta información. Ej: @@usuario_inical"><input type="radio" name="asignacion" value="usuario" <?= $tarea->asignacion == 'usuario' ? 'checked' : '' ?> /> Usuario</label>
-                    <div id="optionalAsignacionUsuario" class="<?=$tarea->asignacion=='usuario'?'':'hide'?>">
+                    <div id="optionalAsignacionUsuario" class="<?= $tarea->asignacion == 'usuario' ? '' : 'hide' ?>">
                         <input type="text" name="asignacion_usuario" value="<?= $tarea->asignacion_usuario ?>" />
                     </div>
                     <br />
-                    <label><input type="checkbox" name="asignacion_notificar" value="1" <?=$tarea->asignacion_notificar?'checked':''?> /> Notificar vía correo electrónico al usuario asignado.</label>
+                    <label><input type="checkbox" name="asignacion_notificar" value="1" <?= $tarea->asignacion_notificar ? 'checked' : '' ?> /> Notificar vía correo electrónico al usuario asignado.</label>
                 </div>
                 <div class="tab-pane" id="tab3">
                     <script type="text/javascript">
@@ -145,10 +148,10 @@
                             });
                         });
                     </script>
-                    <label><input type="radio" name="acceso_modo" value="publico" <?=$tarea->acceso_modo=='publico'?'checked':''?> /> Cualquier persona puede acceder.</label>
-                    <label><input type="radio" name="acceso_modo" value="registrados" <?=$tarea->acceso_modo=='registrados'?'checked':''?> /> Solo los usuarios registrados.</label>
-                    <label><input type="radio" name="acceso_modo" value="grupos_usuarios" <?=$tarea->acceso_modo=='grupos_usuarios'?'checked':''?> /> Solo los siguientes grupos de usuarios pueden acceder.</label>
-                    <div id="optionalGruposUsuarios" class="<?=$tarea->acceso_modo=='grupos_usuarios'?'':'hide'?>">
+                    <label><input type="radio" name="acceso_modo" value="publico" <?= $tarea->acceso_modo == 'publico' ? 'checked' : '' ?> /> Cualquier persona puede acceder.</label>
+                    <label><input type="radio" name="acceso_modo" value="registrados" <?= $tarea->acceso_modo == 'registrados' ? 'checked' : '' ?> /> Solo los usuarios registrados.</label>
+                    <label><input type="radio" name="acceso_modo" value="grupos_usuarios" <?= $tarea->acceso_modo == 'grupos_usuarios' ? 'checked' : '' ?> /> Solo los siguientes grupos de usuarios pueden acceder.</label>
+                    <div id="optionalGruposUsuarios" class="<?= $tarea->acceso_modo == 'grupos_usuarios' ? '' : 'hide' ?>">
                         <select name="grupos_usuarios[]" class="chosen" multiple>
                             <?php foreach ($grupos_usuarios as $g): ?>
                                 <option value="<?= $g->id ?>" <?= $tarea->hasGrupoUsuarios($g->id) ? 'selected="selected"' : '' ?>><?= $g->nombre ?></option>
@@ -157,24 +160,35 @@
                     </div>
                 </div>
                 <div class="tab-pasos tab-pane" id="tab4">
-                    <div class="form-inline">
-                        <select>
-                            <?php foreach ($formularios as $f): ?>
-                                <option value="<?= $f->id ?>"><?= $f->nombre ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                        <select>
-                            <option value="edicion">Edición</option>
-                            <option value="visualizacion">Visualización</option>
-                        </select>
-                        <button type="button" class="btn" title="Agregar"><i class="icon-plus"></i></button>
-                    </div>
 
                     <table class="table">
                         <thead>
+                            <tr class="form-agregar-paso">
+                                <td></td>
+                                <td>
+                                    <select class="pasoFormulario">
+                                        <?php foreach ($formularios as $f): ?>
+                                            <option value="<?= $f->id ?>"><?= $f->nombre ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </td>
+                                <td>
+                                    <input class="pasoRegla" type="text" value="" />
+                                </td>
+                                <td>
+                                    <select class="pasoModo input-small">
+                                        <option value="edicion">Edición</option>
+                                        <option value="visualizacion">Visualización</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <button type="button" class="btn" title="Agregar"><i class="icon-plus"></i></button>
+                                </td>
+                            </tr>
                             <tr>
                                 <th>#</th>
                                 <th>Formulario</th>
+                                <th>Condicion</th>
                                 <th>Modo</th>
                                 <th></th>
                             </tr>
@@ -184,9 +198,11 @@
                                 <tr>
                                     <td><?= $key + 1 ?></td>
                                     <td><a title="Editar" target="_blank" href="<?= site_url('backend/formularios/editar/' . $p->Formulario->id) ?>"><?= $p->Formulario->nombre ?></a></td>
+                                    <td><?= $p->regla ?></td>
                                     <td><?= $p->modo ?></td>
                                     <td>
                                         <input type="hidden" name="pasos[<?= $key + 1 ?>][formulario_id]" value="<?= $p->formulario_id ?>" />
+                                        <input type="hidden" name="pasos[<?= $key + 1 ?>][regla]" value="<?= $p->regla ?>" />
                                         <input type="hidden" name="pasos[<?= $key + 1 ?>][modo]" value="<?= $p->modo ?>" />
                                         <a class="delete" title="Eliminar" href="#"><i class="icon-remove"></i></a>
                                     </td>

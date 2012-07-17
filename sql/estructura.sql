@@ -293,6 +293,7 @@ CREATE  TABLE IF NOT EXISTS `tramitador`.`paso` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
   `orden` INT UNSIGNED NOT NULL ,
   `modo` ENUM('edicion','visualizacion') NOT NULL ,
+  `regla` VARCHAR(256) NOT NULL ,
   `formulario_id` INT UNSIGNED NOT NULL ,
   `tarea_id` INT UNSIGNED NOT NULL ,
   PRIMARY KEY (`id`) ,

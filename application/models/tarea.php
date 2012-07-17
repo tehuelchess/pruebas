@@ -143,6 +143,7 @@ class Tarea extends Doctrine_Record {
             foreach ($pasos_array as $key => $p) {
                 $paso = new Paso();
                 $paso->orden = $key;
+                $paso->regla = $p['regla'];
                 $paso->modo = $p['modo'];
                 $paso->formulario_id = $p['formulario_id'];
                 $this->Pasos[] = $paso;
