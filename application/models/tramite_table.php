@@ -12,6 +12,16 @@ class TramiteTable extends Doctrine_Table {
                 ->execute();
     }
     
-
+    //Limpia los tramites que han sido iniciados por usuarios no registrados, y que llevan mas de 1 dia sin modificarse, y sin avanzar de etapa.
+    public function cleanIniciadosPorNoRegistrados(){
+        $noregistrados=Doctrine_Query::create()
+                ->from('Tramite t, t.Etapas e, e.Usuario u')
+                ->where('u.registrado = 0 AND DATEDIFF(NOW(),t.updated_at) >= 0')
+                ->groupBy('t.id')
+                ->having('COUNT(e.id) = 1')
+                ->execute();
+        
+        $noregistrados->delete();
+    }
     
 }

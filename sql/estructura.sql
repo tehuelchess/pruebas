@@ -449,8 +449,8 @@ CREATE  TABLE IF NOT EXISTS `tramitador`.`dato_seguimiento` (
   CONSTRAINT `fk_dato_seguimiento_etapa1`
     FOREIGN KEY (`etapa_id` )
     REFERENCES `tramitador`.`etapa` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 
