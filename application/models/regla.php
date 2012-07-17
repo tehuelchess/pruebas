@@ -25,14 +25,19 @@ class Regla {
                             $valor_dato = "'" . $dato_almacenado . "'";
                     }
                     else {
-                        $valor_dato = NULL;
+                        //No reemplazamos el dato
+                        $valor_dato = $match[0];
                     }
 
                     return $valor_dato;
                 }, $this->regla);
-
+        
+        //Si quedaron variables sin reemplazar, la evaluacion deberia ser siempre falsa.
+        if(preg_match('/@@\w+/', $new_regla))
+            return false;
+                
         $new_regla = 'return ' . $new_regla . ';';
-
+        
         $CI = & get_instance();
         $CI->load->library('SaferEval');
         $resultado = FALSE;
