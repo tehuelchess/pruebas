@@ -415,6 +415,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE  TABLE IF NOT EXISTS `tramitador`.`evento` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
+  `regla` VARCHAR(256) NOT NULL ,
   `instante` ENUM('antes','despues') NOT NULL ,
   `tarea_id` INT(10) UNSIGNED NOT NULL ,
   `accion_id` INT UNSIGNED NOT NULL ,

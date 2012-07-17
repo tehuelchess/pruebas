@@ -4,6 +4,7 @@ class Evento extends Doctrine_Record {
 
     function setTableDefinition() {
         $this->hasColumn('id');
+        $this->hasColumn('regla');
         $this->hasColumn('instante');
         $this->hasColumn('accion_id');
         $this->hasColumn('tarea_id');

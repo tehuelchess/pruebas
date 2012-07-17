@@ -186,9 +186,13 @@ class Etapa extends Doctrine_Record {
 
 
         //Ejecutamos los eventos
-        foreach ($this->Tarea->Eventos as $e)
-            if ($e->instante == 'antes')
-                $e->Accion->ejecutar();
+        foreach ($this->Tarea->Eventos as $e){
+            if ($e->instante == 'antes'){
+                $r=new Regla($e->regla);
+                if($r->evaluar($this->tramite_id))
+                    $e->Accion->ejecutar();
+            }
+        }
     }
 
     public function cerrar() {
@@ -223,9 +227,13 @@ class Etapa extends Doctrine_Record {
         $this->save();
 
         //Ejecutamos los eventos
-        foreach ($this->Tarea->Eventos as $e)
-            if ($e->instante == 'despues')
-                $e->Accion->ejecutar();
+        foreach ($this->Tarea->Eventos as $e){
+            if ($e->instante == 'despues'){
+                $r=new Regla($e->regla);
+                if($r->evaluar($this->tramite_id))
+                    $e->Accion->ejecutar();
+            }
+        }
     }
     
     //Retorna el paso correspondiente a la secuencia, dado los datos ingresados en el tramite hasta el momento.

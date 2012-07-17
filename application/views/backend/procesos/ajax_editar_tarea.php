@@ -61,20 +61,23 @@
             return false;
         });
         //Permite agregar nuevos eventos
-        $(".tab-eventos .form-inline button").click(function(){
-            var $form=$(this).closest(".form-inline");
+        $(".tab-eventos .form-agregar-evento button").click(function(){
+            var $form=$(".tab-eventos .form-agregar-evento");
             
             var pos=1+$(".tab-eventos table tbody tr").size();
-            var accionId=$form.find("select:nth-child(1) option:selected").val()
-            var accionNombre=$form.find("select:nth-child(1) option:selected").text()
-            var instante=$form.find("select:nth-child(2) option:selected").val()
+            var accionId=$form.find(".eventoAccion option:selected").val();
+            var accionNombre=$form.find(".eventoAccion option:selected").text();
+            var regla=$form.find(".eventoRegla").val();
+            var instante=$form.find(".eventoInstante option:selected").val()
             
             var html="<tr>";
             html+="<td>"+pos+"</td>";
             html+='<td><a title="Editar" target="_blank" href="'+site_url+'backend/acciones/editar/'+accionId+'">'+accionNombre+'</td>';
+            html+="<td>"+regla+"</td>";
             html+="<td>"+instante+"</td>";
             html+='<td>';
             html+='<input type="hidden" name="eventos['+pos+'][accion_id]" value="'+accionId+'" />';
+            html+='<input type="hidden" name="eventos['+pos+'][regla]" value="'+regla+'" />';
             html+='<input type="hidden" name="eventos['+pos+'][instante]" value="'+instante+'" />';
             html+='<a class="delete" title="Eliminar" href="#"><i class="icon-remove"></i></a>';
             html+='</td>';
@@ -212,24 +215,34 @@
                     </table>
                 </div>
                 <div class="tab-eventos tab-pane" id="tab5">
-                    <div class="form-inline">
-                        <select>
-                            <?php foreach ($acciones as $f): ?>
-                                <option value="<?= $f->id ?>"><?= $f->nombre ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                        <select>
-                            <option value="antes">Antes de ejecutar tarea</option>
-                            <option value="despues">Despues de finalizar tarea</option>
-                        </select>
-                        <button type="button" class="btn" title="Agregar"><i class="icon-plus"></i></button>
-                    </div>
-
                     <table class="table">
                         <thead>
+                            <tr class="form-agregar-evento">
+                                <td></td>
+                                <td>
+                                    <select class="eventoAccion input-medium">
+                                        <?php foreach ($acciones as $f): ?>
+                                            <option value="<?= $f->id ?>"><?= $f->nombre ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </td>
+                                <td>
+                                    <input class="eventoRegla" type="text" />
+                                </td>
+                                <td>
+                                    <select class="eventoInstante input-medium">
+                                        <option value="antes">Antes de ejecutar tarea</option>
+                                        <option value="despues">Despues de finalizar tarea</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <button type="button" class="btn" title="Agregar"><i class="icon-plus"></i></button>
+                                </td>
+                            </tr>
                             <tr>
                                 <th>#</th>
                                 <th>Accion</th>
+                                <th>Condición</th>
                                 <th>Instante</th>
                                 <th></th>
                             </tr>
@@ -239,9 +252,11 @@
                                 <tr>
                                     <td><?= $key + 1 ?></td>
                                     <td><a title="Editar" target="_blank" href="<?= site_url('backend/acciones/editar/' . $p->Accion->id) ?>"><?= $p->Accion->nombre ?></a></td>
+                                    <td><?= $p->regla ?></td>
                                     <td><?= $p->instante ?></td>
                                     <td>
                                         <input type="hidden" name="eventos[<?= $key + 1 ?>][accion_id]" value="<?= $p->accion_id ?>" />
+                                        <input type="hidden" name="eventos[<?= $key + 1 ?>][regla]" value="<?= $p->regla ?>" />
                                         <input type="hidden" name="eventos[<?= $key + 1 ?>][instante]" value="<?= $p->instante ?>" />
                                         <a class="delete" title="Eliminar" href="#"><i class="icon-remove"></i></a>
                                     </td>

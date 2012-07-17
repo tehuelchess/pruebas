@@ -160,6 +160,7 @@ class Tarea extends Doctrine_Record {
         if (is_array($eventos_array)) {
             foreach ($eventos_array as $key => $p) {
                 $evento = new Evento();
+                $evento->regla=$p['regla'];
                 $evento->instante = $p['instante'];
                 $evento->accion_id = $p['accion_id'];
                 $this->Eventos[] = $evento;
