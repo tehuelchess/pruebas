@@ -176,7 +176,7 @@
                                     </select>
                                 </td>
                                 <td>
-                                    <input class="pasoRegla" type="text" value="" />
+                                    <input class="pasoRegla" type="text" placeholder="Escribir regla condición aquí" />
                                 </td>
                                 <td>
                                     <select class="pasoModo input-small">
@@ -227,7 +227,7 @@
                                     </select>
                                 </td>
                                 <td>
-                                    <input class="eventoRegla" type="text" />
+                                    <input class="eventoRegla" type="text" placeholder="Escribir regla condición aquí" />
                                 </td>
                                 <td>
                                     <select class="eventoInstante input-medium">
