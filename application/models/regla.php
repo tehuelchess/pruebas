@@ -7,13 +7,10 @@ class Regla {
     function __construct($regla) {
         $this->regla = $regla;
     }
-
-    //Evalua la regla de acuerdo a los datos capturados en el tramite tramite_id
-    public function evaluar($tramite_id) {
-        if (!$this->regla)
-            return TRUE;
-
-        $new_regla = preg_replace_callback('/@@(\w+)/', function($match) use ($tramite_id) {
+    
+    //Obtiene la expresion con los reemplazos de variables ya hechos de acuerdo a los datos capturados en el tramite tramite_id.
+    public function getExpresion($tramite_id){
+        $new_regla=preg_replace_callback('/@@(\w+)/', function($match) use ($tramite_id) {
                     $nombre_dato = $match[1];
                     $dato = Doctrine::getTable('Dato')->findOneByTramiteIdAndNombre($tramite_id, $nombre_dato);
                     if ($dato) {
@@ -31,6 +28,16 @@ class Regla {
 
                     return $valor_dato;
                 }, $this->regla);
+          
+         return $new_regla;
+    }
+
+    //Evalua la regla de acuerdo a los datos capturados en el tramite tramite_id
+    public function evaluar($tramite_id) {
+        if (!$this->regla)
+            return TRUE;
+
+        $new_regla = $this->getExpresion($tramite_id);
         
         //Si quedaron variables sin reemplazar, la evaluacion deberia ser siempre falsa.
         if(preg_match('/@@\w+/', $new_regla))

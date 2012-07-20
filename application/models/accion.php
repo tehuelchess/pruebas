@@ -38,7 +38,8 @@ class Accion extends Doctrine_Record {
         return;
     }
     
-    public function ejecutar(){
+    //Ejecuta la regla, de acuerdo a los datos del tramite tramite_id
+    public function ejecutar($tramite_id){
         return;
     }
     

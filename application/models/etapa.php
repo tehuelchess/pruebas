@@ -190,7 +190,7 @@ class Etapa extends Doctrine_Record {
             if ($e->instante == 'antes'){
                 $r=new Regla($e->regla);
                 if($r->evaluar($this->tramite_id))
-                    $e->Accion->ejecutar();
+                    $e->Accion->ejecutar($this->tramite_id);
             }
         }
     }
@@ -231,7 +231,7 @@ class Etapa extends Doctrine_Record {
             if ($e->instante == 'despues'){
                 $r=new Regla($e->regla);
                 if($r->evaluar($this->tramite_id))
-                    $e->Accion->ejecutar();
+                    $e->Accion->ejecutar($this->tramite_id);
             }
         }
     }
