@@ -24,11 +24,11 @@ class AccionEnviarCorreo extends Accion {
 
     public function ejecutar($tramite_id) {
         $regla=new Regla($this->extra->para);
-        $to=$regla->getExpresion($tramite_id);
+        $to=$regla->getExpresionParaOutput($tramite_id);
         $regla=new Regla($this->extra->tema);
-        $subject=$regla->getExpresion($tramite_id);
+        $subject=$regla->getExpresionParaOutput($tramite_id);
         $regla=new Regla($this->extra->contenido);
-        $message=$regla->getExpresion($tramite_id);
+        $message=$regla->getExpresionParaOutput($tramite_id);
         
         $CI = & get_instance();
         $CI->email->from($CI->config->item('email_from'), 'Tramitador');
