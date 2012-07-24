@@ -8,6 +8,7 @@
         });
         
         //Llenamos el select box de dependientes
+        var selected=$("#formEditarCampo select[name=dependiente_campo]").val();
         var html='<option></option>';
         var names=new Array();
         $("#formEditarFormulario :input[name]").each(function(i,el){
@@ -18,6 +19,7 @@
             }
         });
         $("#formEditarCampo select[name=dependiente_campo]").html(html);
+        $("#formEditarCampo select[name=dependiente_campo]").val(selected);
         
         //Llenado automatico del campo nombre
         $("#formEditarCampo input[name=etiqueta]").blur(function(){
@@ -91,7 +93,7 @@
                <?php endif; ?>
         <label>Visible solo si</label>
         <select name="dependiente_campo">
-            <option value=""></option>
+            <option value="<?=$campo->dependiente_campo?>"><?=$campo->dependiente_campo?></option>
         </select>
         <span>=</span>
         <input type="text" name="dependiente_valor" value="<?= isset($campo) ? $campo->dependiente_valor : '' ?>" />
