@@ -19,13 +19,20 @@
         });
         $("#formEditarCampo select[name=dependiente_campo]").html(html);
         
-        //Llenado automatico del campo nomnre
-        $("#formEditarCampo input[name=etiqueta]").blur(ellipsize);
-        function ellipsize(){
-            var $etiqueta=$("#formEditarCampo input[name=etiqueta]");
-            var $nombre=$("#formEditarCampo input[name=nombre]");
-            if($nombre.val()==""){
-                var string=$etiqueta.val();
+        //Llenado automatico del campo nombre
+        $("#formEditarCampo input[name=etiqueta]").blur(function(){
+            ellipsize($("#formEditarCampo input[name=etiqueta]"),$("#formEditarCampo input[name=nombre]"));
+        });
+        //Llenado automatico del campo valor
+        $("#formEditarCampo").on("blur","input[name$='[etiqueta]']",function(){
+            var campoOrigen=$(this);
+            var campoDestino=$(this).closest("tr").find("input[name$='[valor]']")
+            ellipsize(campoOrigen,campoDestino);
+        });
+        
+        function ellipsize(campoOrigen,campoDestino){
+            if($(campoDestino).val()==""){
+                var string=$(campoOrigen).val();
                 string=string.toLowerCase();
                 string=string.replace(/\s/g,"_");
                 string=string.replace(/á/g,"a");
@@ -34,7 +41,7 @@
                 string=string.replace(/ó/g,"o");
                 string=string.replace(/ú/g,"u");
                 string=string.replace(/\W/g,"");
-                $nombre.val(string);
+                $(campoDestino).val(string);
             }
         }
         
