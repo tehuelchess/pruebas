@@ -95,8 +95,8 @@
                         $('#formEditarCampo .datos .nuevo').click(function(){
                             var pos=$('#formEditarCampo .datos table tbody tr').size();
                             var html='<tr>';
-                            html+='<td><input class="input-small" type="text" name="datos['+pos+'][valor]" /></td>';
                             html+='<td><input type="text" name="datos['+pos+'][etiqueta]" /></td>';
+                            html+='<td><input class="input-small" type="text" name="datos['+pos+'][valor]" /></td>';
                             html+='<td><button type="button" class="btn eliminar"><i class="icon-remove"></i> Eliminar</button></td>';
                             html+='</tr>';
                                             
@@ -112,16 +112,16 @@
                 <table class="table">
                     <thead>
                         <tr>
-                            <th>Valor</th>
                             <th>Etiqueta</th>
+                            <th>Valor</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php if ($campo->datos) foreach ($campo->datos as $key => $d): ?>
                                 <tr>
-                                    <td><input class="input-small" type="text" name="datos[<?= $key ?>][valor]" value="<?= $d->valor ?>" /></td>
                                     <td><input type="text" name="datos[<?= $key ?>][etiqueta]" value="<?= $d->etiqueta ?>" /></td>
+                                    <td><input class="input-small" type="text" name="datos[<?= $key ?>][valor]" value="<?= $d->valor ?>" /></td>           
                                     <td><button type="button" class="btn eliminar"><i class="icon-remove"></i> Eliminar</button></td>
                                 </tr>
                             <?php endforeach; ?>
