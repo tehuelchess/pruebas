@@ -50,7 +50,7 @@
 class LightOpenID
 {
     public $returnUrl
-         , $required = array('contact/email','namePerson/first','namePerson/last')
+         , $required = array()
          , $optional = array()
          , $verify_peer = null
          , $capath = null
