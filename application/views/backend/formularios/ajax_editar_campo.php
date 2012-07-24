@@ -9,8 +9,13 @@
         
         //Llenamos el select box de dependientes
         var html='<option></option>';
+        var names=new Array();
         $("#formEditarFormulario :input[name]").each(function(i,el){
-            html+='<option>'+$(el).attr("name")+'</option>';    
+            var name=$(el).attr("name");
+            if($.inArray(name, names)==-1){
+                names.push(name);
+                html+='<option>'+name+'</option>';
+            }
         });
         $("#formEditarCampo select[name=dependiente_campo]").html(html);
         
