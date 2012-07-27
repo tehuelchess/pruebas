@@ -40,10 +40,12 @@ $(document).ready(function(){
                 dataType: "json",
                 success: function(response){
                     if(response.validacion){
-                        if(response.redirect)
+                        if(response.redirect){
                             window.location=response.redirect;
-                        var f=window[$(form).data("onsuccess")];
-                        f(form);
+                        }else{
+                            var f=window[$(form).data("onsuccess")];
+                            f(form);
+                        }
                     }
                     else{
                         $(".validacion").html(response.errores);
