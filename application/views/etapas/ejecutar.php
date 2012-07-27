@@ -1,4 +1,5 @@
-<form method="POST" class="ajaxForm dynaForm" action="<?=site_url('etapas/ejecutar_form/'.$etapa->id.'/'.$secuencia.($qs?'?'.$qs:''))?>">    
+<form method="POST" class="ajaxForm dynaForm" action="<?=site_url('etapas/ejecutar_form/'.$etapa->id.'/'.$secuencia.($qs?'?'.$qs:''))?>">  
+    <input type="hidden" name="csrf" />
     <fieldset>
         <div class="validacion"></div>
         <legend><?=$paso->Formulario->nombre?></legend>
