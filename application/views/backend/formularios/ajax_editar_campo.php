@@ -76,7 +76,7 @@
             </ul>
         </div>
         <?php else: ?>
-        <input type="hidden" name="nombre" value="<?=uniqid();?>" />
+        <input type="hidden" name="nombre" value="<?=$campo->nombre?$campo->nombre:uniqid();?>" />
         <?php endif; ?>
 
         <?php if ($campo->requiere_readonly): ?>
