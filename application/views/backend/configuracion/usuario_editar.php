@@ -31,7 +31,7 @@
                 <label>Correo electrónico</label>
                 <input type="text" name="email" value="<?=isset($usuario)?$usuario->email:''?>"/>
                 <label>Grupos de Usuarios</label>
-                <select class="chosen" name="grupos_usuarios[]" multiple>
+                <select class="chosen" name="grupos_usuarios[]" data-placeholder="Seleccione los grupos de usuarios" multiple>
                     <?php foreach($grupos_usuarios as $g): ?>
                     <option value="<?=$g->id?>" <?=isset($usuario) && $usuario->hasGrupoUsuarios($g->id)?'selected':''?>><?=$g->nombre?></option>
                     <?php endforeach; ?>
