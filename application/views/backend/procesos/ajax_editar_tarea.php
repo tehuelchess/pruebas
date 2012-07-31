@@ -191,7 +191,7 @@
                             <tr>
                                 <th>#</th>
                                 <th>Formulario</th>
-                                <th>Condicion</th>
+                                <th>Condición</th>
                                 <th>Modo</th>
                                 <th></th>
                             </tr>
@@ -232,7 +232,7 @@
                                 <td>
                                     <select class="eventoInstante input-medium">
                                         <option value="antes">Antes de ejecutar tarea</option>
-                                        <option value="despues">Despues de finalizar tarea</option>
+                                        <option value="despues">Después de finalizar tarea</option>
                                     </select>
                                 </td>
                                 <td>
