@@ -1,5 +1,5 @@
 <?php
-
+require_once('campo.php');
 class CampoDocumento extends Campo {
 
     public $requiere_validacion = false;
