@@ -77,16 +77,21 @@ class Etapas extends CI_Controller {
         if ($modo == 'edicion') {
             foreach ($formulario->Campos as $c){
                 //Validamos los campos que no sean readonly y que esten disponibles (que su campo dependiente se cumpla)
-                if((!$c->readonly) && 
-                   (!$c->dependiente_campo || $this->input->post($c->dependiente_campo)==$c->dependiente_valor))
+                if($c->isEditableWithCurrentPOST())
                     $c->formValidate();
+                
+                
+                //if((!$c->readonly) && 
+                //   (!$c->dependiente_campo || $this->input->post($c->dependiente_campo)==$c->dependiente_valor))
+                //    $c->formValidate();
             }
 
             if ($this->form_validation->run() == TRUE) {
                 foreach ($formulario->Campos as $c) {
                     //Almacenamos los campos que no sean readonly y que esten disponibles (que su campo dependiente se cumpla)
-                    if((!$c->readonly) && 
-                       (!$c->dependiente_campo || $this->input->post($c->dependiente_campo)==$c->dependiente_valor)){
+                    if($c->isEditableWithCurrentPOST()){
+                    //if((!$c->readonly) && 
+                    //   (!$c->dependiente_campo || $this->input->post($c->dependiente_campo)==$c->dependiente_valor)){
                         $dato = Doctrine::getTable('Dato')->findOneByTramiteIdAndNombre($etapa->Tramite->id, $c->nombre);
                         if (!$dato)
                             $dato = new Dato();

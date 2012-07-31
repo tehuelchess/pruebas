@@ -111,6 +111,30 @@ class Campo extends Doctrine_Record {
         return '';
     }
     
+    //Funcion que retorna si este campo debiera poderse editar de acuerdo al input POST del usuario
+    public function isEditableWithCurrentPOST(){
+        $CI=& get_instance();
+        
+        if($this->readonly)
+           return false; 
+        
+        if($this->dependiente_campo){
+            $count=0;
+            $variable=  preg_replace('/\[\]$/', '', $this->dependiente_campo,-1,$count);
+            if(is_array($CI->input->post($variable))){ //Es un arreglo
+                if(!in_array($this->dependiente_valor, $CI->input->post($variable)))
+                    return false;   
+            }else{
+                if($CI->input->post($this->dependiente_campo)!=$this->dependiente_valor)
+                    return false;
+            }
+            
+            
+        }
+        
+        return true;
+    }
+    
     public function formValidate(){
         $CI=& get_instance();
         $CI->form_validation->set_rules($this->nombre, $this->etiqueta, implode('|', $this->validacion));
