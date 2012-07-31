@@ -14,6 +14,7 @@
 <ul class="nav nav-tabs">
     <li><a href="<?= site_url('backend/procesos/editar/' . $proceso->id) ?>">Diseñador</a></li>
     <li class="active"><a href="<?= site_url('backend/formularios/listar/' . $proceso->id) ?>">Formularios</a></li>
+    <li><a href="<?= site_url('backend/documentos/listar/' . $proceso->id) ?>">Documentos</a></li>
     <li><a href="<?= site_url('backend/acciones/listar/' . $proceso->id) ?>">Acciones</a></li>
 </ul>
 
@@ -24,6 +25,7 @@
             <button class="btn" onclick="return agregarCampo(<?= $formulario->id ?>,'title')">Título</button>
             <button class="btn" onclick="return agregarCampo(<?= $formulario->id ?>,'subtitle')">Subtítulo</button>
             <button class="btn" onclick="return agregarCampo(<?= $formulario->id ?>,'paragraph')">Parrafo</button>
+            <button class="btn" onclick="return agregarCampo(<?= $formulario->id ?>,'documento')">Documento</button>
         </div>
         <div class="btn-group">
             <button class="btn" onclick="return agregarCampo(<?= $formulario->id ?>,'text')">Textbox</button>

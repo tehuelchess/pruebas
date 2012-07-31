@@ -35,6 +35,11 @@ class Proceso extends Doctrine_Record {
             'local'=>'id',
             'foreign'=>'proceso_id',
         ));
+        
+        $this->hasMany('Documento as Documentos',array(
+            'local'=>'id',
+            'foreign'=>'proceso_id',
+        ));
     }
     
     public function updateModelFromJSON($json){

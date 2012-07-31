@@ -13,6 +13,10 @@ class CampoSubtitle extends Campo{
         return $display;
     }
     
+    public function getReadonly(){
+        return 1;
+    }
+    
     public function setReadonly($readonly){
         $this->_set('readonly', 1);
     }

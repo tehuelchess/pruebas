@@ -29,6 +29,8 @@ class Campo extends Doctrine_Record {
             $campo=new CampoSubtitle();
         else if($tipo=='paragraph')
             $campo=new CampoParagraph();
+        else if($tipo=='documento')
+            $campo=new CampoDocumento();
         
         $campo->assignInheritanceValues();
         
@@ -47,6 +49,7 @@ class Campo extends Doctrine_Record {
         $this->hasColumn('dependiente_valor');
         $this->hasColumn('datos');
         $this->hasColumn('readonly');
+        $this->hasColumn('documento_id');
         
         $this->setSubclasses(array(
                 'CampoText'  => array('tipo' => 'text'),
@@ -58,7 +61,9 @@ class Campo extends Doctrine_Record {
                 'CampoDate'  => array('tipo' => 'date'),
                 'CampoInstitucionesGob'  => array('tipo' => 'instituciones_gob'),
                 'CampoTitle'  => array('tipo' => 'title'),
-                'CampoSubtitle'  => array('tipo' => 'subtitle')
+                'CampoSubtitle'  => array('tipo' => 'subtitle'),
+                'CampoParagraph'  => array('tipo' => 'paragraph'),
+                'CampoDocumento'  => array('tipo' => 'documento')
             ));
     }
 
@@ -69,17 +74,22 @@ class Campo extends Doctrine_Record {
             'local' => 'formulario_id',
             'foreign' => 'id'
         ));
+        
+        $this->hasOne('Documento', array(
+            'local' => 'documento_id',
+            'foreign' => 'id'
+        ));
     }
     
     //Despliega la vista de un campo del formulario utilizando el dato real del tramite en este momento
-    //tramite_id indica a la etapa que pertenece este campo
+    //etapa_id indica a la etapa que pertenece este campo
     //modo es visualizacion o edicion
-    public function displayConDato($tramite_id, $modo = 'edicion'){
+    public function displayConDato($etapa_id, $modo = 'edicion'){
         $dato = NULL;
-        if ($tramite_id)
-            $dato =  Doctrine::getTable('Dato')->findOneByTramiteIdAndNombre($tramite_id, $this->nombre);
+        $etapa=Doctrine::getTable('Etapa')->find($etapa_id);
+        $dato =Doctrine::getTable('Dato')->findOneByTramiteIdAndNombre($etapa->Tramite->id, $this->nombre);
         
-        return $this->display($modo,$dato);
+        return $this->display($modo,$dato,$etapa_id);
     }
     
     //Despliega la vista de un campo del formulario utilizando los datos de seguimiento (El dato que contenia el tramite al momento de cerrar la etapa)
@@ -87,14 +97,13 @@ class Campo extends Doctrine_Record {
     //modo es visualizacion o edicion
     public function displayConDatoSeguimiento($etapa_id, $modo = 'edicion'){
         $dato = NULL;
-        if ($etapa_id)
-            $dato =  Doctrine::getTable('DatoSeguimiento')->findOneByEtapaIdAndNombre($etapa_id, $this->nombre);
+        $dato =  Doctrine::getTable('DatoSeguimiento')->findOneByEtapaIdAndNombre($etapa_id, $this->nombre);
         
-        return $this->display($modo,$dato);
+        return $this->display($modo,$dato,$etapa_id);
     }
     
     public function displaySinDato($modo = 'edicion'){     
-        return $this->display($modo,NULL);
+        return $this->display($modo,NULL,NULL);
     }
 
     
@@ -107,6 +116,16 @@ class Campo extends Doctrine_Record {
         $CI->form_validation->set_rules($this->nombre, $this->etiqueta, implode('|', $this->validacion));
     }
     
+    
+    //Señala como se debe mostrar en el formulario de edicion del backend, cualquier field extra.
+    public function backendExtraFields(){
+        return;
+    }
+    
+    //Validaciones adicionales que se le deben hacer a este campo en su edicion en el backend.
+    public function backendExtraValidate(){
+        
+    }
     
     public function setValidacion($validacion){
         if($validacion)

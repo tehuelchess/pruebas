@@ -135,11 +135,18 @@ class Formularios extends CI_Controller {
         if($campo_id){
             $campo=Doctrine::getTable('Campo')->find($campo_id);
 
-            if($campo->Formulario->Proceso->cuenta_id!=UsuarioBackendSesion::usuario()->cuenta_id){
+            
+        }else{
+            $formulario=Doctrine::getTable('Formulario')->find($this->input->post('formulario_id'));
+                $campo=Campo::factory($this->input->post('tipo'));
+                $campo->formulario_id=$formulario->id;
+                $campo->posicion=1+$formulario->getUltimaPosicionCampo();
+        }
+        
+        if($campo->Formulario->Proceso->cuenta_id!=UsuarioBackendSesion::usuario()->cuenta_id){
                 echo 'Usuario no tiene permisos para editar este campo.';
                 exit;
             }
-        }
         
         $this->form_validation->set_rules('nombre','Nombre','required');
         $this->form_validation->set_rules('etiqueta','Etiqueta','required');
@@ -148,13 +155,11 @@ class Formularios extends CI_Controller {
             $this->form_validation->set_rules('formulario_id','Formulario','required|callback_check_permiso_formulario');
             $this->form_validation->set_rules('tipo','Tipo de Campo','required');
         }
+        $campo->backendExtraValidate();
         
         if($this->form_validation->run()==TRUE){
             if(!$campo){
-                $formulario=Doctrine::getTable('Formulario')->find($this->input->post('formulario_id'));
-                $campo=Campo::factory($this->input->post('tipo'));
-                $campo->formulario_id=$formulario->id;
-                $campo->posicion=1+$formulario->getUltimaPosicionCampo();
+                
             }
             $campo->nombre=$this->input->post('nombre');
             $campo->etiqueta=$this->input->post('etiqueta');
@@ -186,6 +191,7 @@ class Formularios extends CI_Controller {
         }
         
         $campo=Campo::factory($tipo);
+        $campo->formulario_id=$formulario_id;
         
         
         $data['edit']=false;

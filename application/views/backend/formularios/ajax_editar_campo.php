@@ -64,8 +64,8 @@
         <?php endif; ?>
         <label>Etiqueta</label>
         <input type="text" name="etiqueta" value="<?= $campo->etiqueta ?>" />
+        <?php if(!$campo->readonly):?>
         <label>Nombre</label>
-
         <input type="text" name="nombre" value="<?= $campo->nombre ?>" />
         <div class="btn-group asistencia" style="display: inline-block; vertical-align: top;">
             <a class="btn dropdown-toggle" data-toggle="dropdown" href="#"><i class="icon-th-list"></i><span class="caret"></span></a>
@@ -75,8 +75,9 @@
                 <?php endforeach; ?>
             </ul>
         </div>
-
-
+        <?php else: ?>
+        <input type="hidden" name="nombre" value="<?=uniqid();?>" />
+        <?php endif; ?>
 
         <?php if ($campo->requiere_readonly): ?>
             <label><input type="checkbox" name="readonly" value="1" /> Solo lectura</label>
@@ -138,6 +139,8 @@
                 </table>
             </div>
         <?php endif; ?>
+        
+        <?=$campo->backendExtraFields()?>
 
 
     </form>

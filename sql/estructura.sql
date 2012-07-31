@@ -259,6 +259,24 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
+-- Table `tramitador`.`documento`
+-- -----------------------------------------------------
+CREATE  TABLE IF NOT EXISTS `tramitador`.`documento` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
+  `nombre` VARCHAR(128) NOT NULL ,
+  `contenido` TEXT NOT NULL ,
+  `proceso_id` INT UNSIGNED NOT NULL ,
+  PRIMARY KEY (`id`) ,
+  INDEX `fk_documento_proceso1` (`proceso_id` ASC) ,
+  CONSTRAINT `fk_documento_proceso1`
+    FOREIGN KEY (`proceso_id` )
+    REFERENCES `tramitador`.`proceso` (`id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
 -- Table `tramitador`.`campo`
 -- -----------------------------------------------------
 CREATE  TABLE IF NOT EXISTS `tramitador`.`campo` (
@@ -273,13 +291,20 @@ CREATE  TABLE IF NOT EXISTS `tramitador`.`campo` (
   `dependiente_campo` VARCHAR(32) NULL ,
   `dependiente_valor` VARCHAR(32) NULL ,
   `datos` TEXT NULL ,
+  `documento_id` INT UNSIGNED NULL ,
   PRIMARY KEY (`id`) ,
   INDEX `fk_campo_formulario1` (`formulario_id` ASC) ,
+  INDEX `fk_campo_documento1` (`documento_id` ASC) ,
   CONSTRAINT `campo_ibfk_1`
     FOREIGN KEY (`formulario_id` )
     REFERENCES `tramitador`.`formulario` (`id` )
     ON DELETE CASCADE
-    ON UPDATE CASCADE)
+    ON UPDATE CASCADE,
+  CONSTRAINT `fk_campo_documento1`
+    FOREIGN KEY (`documento_id` )
+    REFERENCES `tramitador`.`documento` (`id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
 ENGINE = InnoDB
 AUTO_INCREMENT = 8
 DEFAULT CHARACTER SET = utf8
@@ -451,6 +476,25 @@ CREATE  TABLE IF NOT EXISTS `tramitador`.`dato_seguimiento` (
     REFERENCES `tramitador`.`etapa` (`id` )
     ON DELETE CASCADE
     ON UPDATE CASCADE)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `tramitador`.`file`
+-- -----------------------------------------------------
+CREATE  TABLE IF NOT EXISTS `tramitador`.`file` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
+  `filename` VARCHAR(255) NOT NULL ,
+  `tipo` ENUM('dato','documento') NOT NULL ,
+  `tramite_id` INT UNSIGNED NOT NULL ,
+  PRIMARY KEY (`id`) ,
+  INDEX `fk_file_tramite1` (`tramite_id` ASC) ,
+  UNIQUE INDEX `filename_tipo` (`filename` ASC, `tipo` ASC) ,
+  CONSTRAINT `fk_file_tramite1`
+    FOREIGN KEY (`tramite_id` )
+    REFERENCES `tramitador`.`tramite` (`id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 

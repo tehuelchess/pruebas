@@ -17,11 +17,10 @@ $(document).ready(function(){
         var $parentDiv=$(el).parent();
         new qq.FileUploader({
             element: el,
-            action: site_url+'uploader/datos',
+            action: $(el).data("action"),
             onComplete: function(id,filename,respuesta){
                 $parentDiv.find("input[type=hidden]").val(respuesta.file_name);
-                $parentDiv.find("a").text(respuesta.file_name).attr("href",site_url+"uploader/datos_get/"+respuesta.filename);
-                //$parentDiv.append();
+                $parentDiv.find("a").text(respuesta.file_name).attr("href",site_url+"uploader/datos_get/"+respuesta.file_name);
             }
         }); 
     });

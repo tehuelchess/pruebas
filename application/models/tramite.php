@@ -30,6 +30,11 @@ class Tramite extends Doctrine_Record {
             'local' => 'id',
             'foreign' => 'tramite_id'
         ));
+        
+        $this->hasMany('File as Files', array(
+            'local' => 'id',
+            'foreign' => 'tramite_id'
+        ));
     }
 
     public function iniciar($proceso_id) {
