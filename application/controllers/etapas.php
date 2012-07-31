@@ -77,7 +77,6 @@ class Etapas extends CI_Controller {
         if ($modo == 'edicion') {
             foreach ($formulario->Campos as $c){
                 //Validamos los campos que no sean readonly y que esten disponibles (que su campo dependiente se cumpla)
-                $this->form_validation->set_rules('ca','ca');
                 if((!$c->readonly) && 
                    (!$c->dependiente_campo || $this->input->post($c->dependiente_campo)==$c->dependiente_valor))
                     $c->formValidate();
