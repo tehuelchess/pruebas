@@ -276,7 +276,7 @@
                             });
                         });
                     </script>
-                    <label><input type="checkbox" name="almacenar_usuario" value="1" <?= $tarea->almacenar_usuario ? 'checked' : '' ?> /> ¿Almacenar id de usuario que ejecuta esta tarea?</label>
+                    <label><input type="checkbox" name="almacenar_usuario" value="1" <?= $tarea->almacenar_usuario ? 'checked' : '' ?> /> ¿Almacenar el identificador del usuario que lleva a cabo esta tarea?</label>
                     <div id="optionalAlmacenarUsuario" class="<?= $tarea->almacenar_usuario ? '' : 'hide' ?>">
                         <label>Variable</label>
                         <div class="input-prepend">
