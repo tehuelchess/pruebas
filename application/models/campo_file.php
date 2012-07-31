@@ -6,7 +6,9 @@ class CampoFile extends Campo {
 
     protected function display($modo, $dato,$etapa_id) {
         if(!$etapa_id){
-            return '<button>Subir archivo</button>';
+            $display='<label>' . $this->etiqueta . (in_array('required', $this->validacion) ? '' : ' (Opcional)') . '</label>';
+            $display.='<button>Subir archivo</button>';
+            return $display;
         }
         
         $etapa = Doctrine::getTable('Etapa')->find($etapa_id);
