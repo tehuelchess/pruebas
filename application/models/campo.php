@@ -148,5 +148,12 @@ class Campo extends Doctrine_Record {
     public function getDatos() {
         return json_decode($this->_get('datos'));
     }
+    
+    public function setDocumentoId($documento_id){
+        if($documento_id=='')
+            $documento_id=null;
+        
+        $this->_set('documento_id',$documento_id);
+    }
 
 }
