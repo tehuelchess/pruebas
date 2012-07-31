@@ -168,6 +168,7 @@ class Formularios extends CI_Controller {
             $campo->dependiente_campo=$this->input->post('dependiente_campo');
             $campo->dependiente_valor=$this->input->post('dependiente_valor');
             $campo->datos=$this->input->post('datos');
+            $campo->documento_id=$this->input->post('documento_id');
             $campo->save();
             
             $respuesta->validacion=TRUE;
