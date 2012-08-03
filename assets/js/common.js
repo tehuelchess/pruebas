@@ -2,16 +2,16 @@ $(document).ready(function(){
     $(".chosen").chosen();
     
     $(".datepicker")
-        .datepicker({
-            format: "dd/mm/yyyy",
-            weekStart: 1,
-            autoclose: true,
-            language: "es"
-        })
-        .on("changeDate",function(event){
-            var fecha=event.date.getFullYear()+"-"+(event.date.getMonth()+1)+"-"+event.date.getDate();
-            $(this).next("input:hidden").val(fecha);
-        });
+    .datepicker({
+        format: "dd/mm/yyyy",
+        weekStart: 1,
+        autoclose: true,
+        language: "es"
+    })
+    .on("changeDate",function(event){
+        var fecha=event.date.getFullYear()+"-"+(event.date.getMonth()+1)+"-"+event.date.getDate();
+        $(this).next("input:hidden").val(fecha);
+    });
     
     $(".file-uploader").each(function(i,el){
         var $parentDiv=$(el).parent();
@@ -31,7 +31,10 @@ $(document).ready(function(){
             form.submitting=true;
             $(form).append("<div class='ajaxLoader'>Cargando</div>");
             var ajaxLoader=$(form).find(".ajaxLoader");
-            $(ajaxLoader).css({left: ($(form).width()/2 - $(ajaxLoader).width()/2)+"px", top: ($(form).height()/2 - $(ajaxLoader).height()/2)+"px"});
+            $(ajaxLoader).css({
+                left: ($(form).width()/2 - $(ajaxLoader).width()/2)+"px", 
+                top: ($(form).height()/2 - $(ajaxLoader).height()/2)+"px"
+                });
             $.ajax({
                 url: form.action,
                 data: $(form).serialize(),
@@ -64,17 +67,27 @@ $(document).ready(function(){
     
     //Para manejar los input dependientes en dynaforms
     function prepareDynaForm(form){
-        $(form).find(".campo[data-dependiente-campo][data-dependiente-valor]").each(function(i,el){
+        $(form).find(".campo[data-dependiente-campo]").each(function(i,el){
+            var tipo=$(el).data("dependiente-tipo");
+            var campo=$(el).data("dependiente-campo");
+            var valor=$(el).data("dependiente-valor");
+            
             var disabledElements=$(form).find(":input:disabled");
             $(disabledElements).prop("disabled",false);
             var items=$(form).find(":input").serializeArray();
             $(disabledElements).prop("disabled",true);
             var existe=false;
             for(var i in items){
-                if(items[i].name==$(el).data("dependiente-campo") && items[i].value==$(el).data("dependiente-valor")){
-                    existe=true;
-                    break;
-                }
+                if(items[i].name==campo){
+                    if(tipo=="regex"){
+                        var regex=new RegExp(valor);
+                        existe=regex.test(items[i].value);  
+                    }else{
+                        if(items[i].value==valor){
+                            existe=true;
+                        }
+                    }          
+                }     
             }
             if(existe)
                 $(el).show();

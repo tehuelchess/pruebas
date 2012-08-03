@@ -4,7 +4,7 @@
         <div class="validacion"></div>
         <legend><?=$paso->Formulario->nombre?></legend>
         <?php foreach($paso->Formulario->Campos as $c):?>
-            <div class="campo" data-id="<?=$c->id?>" <?=$c->dependiente_campo?'data-dependiente-campo='.$c->dependiente_campo:''?> <?=$c->dependiente_valor?'data-dependiente-valor='.$c->dependiente_valor:''?> >
+            <div class="campo" data-id="<?=$c->id?>" <?= $c->dependiente_campo ? 'data-dependiente-campo="' . $c->dependiente_campo.'" data-dependiente-valor="' . $c->dependiente_valor .'" data-dependiente-tipo="' . $c->dependiente_tipo.'"' : '' ?> >
             <?=$c->displayConDato($etapa->id,$paso->modo)?>
             </div>
         <?php endforeach ?>

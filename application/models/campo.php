@@ -45,6 +45,7 @@ class Campo extends Doctrine_Record {
         $this->hasColumn('formulario_id');
         $this->hasColumn('etiqueta');
         $this->hasColumn('validacion');
+        $this->hasColumn('dependiente_tipo');
         $this->hasColumn('dependiente_campo');
         $this->hasColumn('dependiente_valor');
         $this->hasColumn('datos');
@@ -119,14 +120,26 @@ class Campo extends Doctrine_Record {
            return false; 
         
         if($this->dependiente_campo){
-            $count=0;
-            $variable=  preg_replace('/\[\]$/', '', $this->dependiente_campo,-1,$count);
+            $variable=preg_replace('/\[\]$/', '', $this->dependiente_campo);
             if(is_array($CI->input->post($variable))){ //Es un arreglo
-                if(!in_array($this->dependiente_valor, $CI->input->post($variable)))
-                    return false;   
+                if($this->dependiente_tipo=='regex'){
+                    foreach($CI->input->post($variable) as $x){
+                        if(!preg_match('/'.$this->dependiente_valor.'/', $x))
+                            return false;
+                    }
+                }else{
+                    if(!in_array($this->dependiente_valor, $CI->input->post($variable)))
+                        return false;
+                }
             }else{
-                if($CI->input->post($this->dependiente_campo)!=$this->dependiente_valor)
-                    return false;
+                if($this->dependiente_tipo=='regex'){
+                    if(!preg_match('/'.$this->dependiente_valor.'/', $CI->input->post($variable)))
+                        return false;
+                }else{
+                    if($CI->input->post($variable)!=$this->dependiente_valor)
+                        return false;
+                }
+                
             }
             
             

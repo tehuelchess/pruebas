@@ -21,6 +21,23 @@
         $("#formEditarCampo select[name=dependiente_campo]").html(html);
         $("#formEditarCampo select[name=dependiente_campo]").val(selected);
         
+        //Funcionalidad en campo dependientes para seleccionar entre tipo regex y string
+        $buttonRegex=$("#formEditarCampo .campoDependientes .buttonRegex");
+        $buttonString=$("#formEditarCampo .campoDependientes .buttonString");
+        $inputDependienteTipo=$("#formEditarCampo input[name=dependiente_tipo]");
+        $buttonString.attr("disabled",$inputDependienteTipo.val()=="string");
+        $buttonRegex.attr("disabled",$inputDependienteTipo.val()=="regex");
+        $buttonRegex.click(function(){
+            $buttonString.prop("disabled",false);
+            $buttonRegex.prop("disabled",true);
+            $inputDependienteTipo.val("regex");
+        });
+        $buttonString.click(function(){
+            $buttonString.prop("disabled",true);
+            $buttonRegex.prop("disabled",false);
+            $inputDependienteTipo.val("string");
+        });
+        
         //Llenado automatico del campo nombre
         $("#formEditarCampo input[name=etiqueta]").blur(function(){
             ellipsize($("#formEditarCampo input[name=etiqueta]"),$("#formEditarCampo input[name=nombre]"));
@@ -92,12 +109,17 @@
                    data-source="[&quot;required&quot;,&quot;rut&quot;,&quot;min_length[num]&quot;,&quot;max_length[num]&quot;,&quot;exact_length[num]&quot;,&quot;greater_than[num]&quot;,&quot;less_than[num]&quot;,&quot;alpha&quot;,&quot;alpha_numeric&quot;,&quot;alpha_dash&quot;,&quot;numeric&quot;,&quot;integer&quot;,&quot;decimal&quot;,&quot;is_natural&quot;,&quot;is_natural_no_zero&quot;,&quot;valid_email&quot;,&quot;valid_emails&quot;,&quot;valid_ip&quot;,&quot;valid_base64&quot;]"
                    value="<?= isset($campo) ? implode('|', $campo->validacion) : '' ?>"/>
                <?php endif; ?>
-        <label>Visible solo si</label>
-        <select name="dependiente_campo">
-            <option value="<?=$campo->dependiente_campo?>"><?=$campo->dependiente_campo?></option>
-        </select>
-        <span>=</span>
-        <input type="text" name="dependiente_valor" value="<?= isset($campo) ? $campo->dependiente_valor : '' ?>" />
+            <div class="campoDependientes">                
+                <label>Visible solo si</label>
+                <select class="input-medium" name="dependiente_campo">
+                    <option value="<?=$campo->dependiente_campo?>"><?=$campo->dependiente_campo?></option>
+                </select>
+                <span>=</span>
+                <span class="input-append">
+                    <input type="text" name="dependiente_valor" value="<?= isset($campo) ? $campo->dependiente_valor : '' ?>" /><button type="button" class="buttonString btn">String</button><button type="button" class="buttonRegex btn">Regex</button>
+                </span>
+                <input type="hidden" name="dependiente_tipo" value="<?=isset($campo)? $campo->dependiente_tipo:'string' ?>" />
+            </div>
         <?php if ($campo->requiere_datos): ?>
             <div class="datos">
                 <script type="text/javascript">

@@ -54,7 +54,7 @@
         <div class="edicionFormulario">
             <?php foreach ($formulario->Campos as $c): ?>
                 <div class="row-fluid">
-                    <div class="campo" data-id="<?= $c->id ?>" <?= $c->dependiente_campo ? 'data-dependiente-campo=' . $c->dependiente_campo : '' ?> <?= $c->dependiente_valor ? 'data-dependiente-valor=' . $c->dependiente_valor : '' ?> >
+                    <div class="campo" data-id="<?= $c->id ?>" <?= $c->dependiente_campo ? 'data-dependiente-campo="' . $c->dependiente_campo.'" data-dependiente-valor="' . $c->dependiente_valor .'" data-dependiente-tipo="' . $c->dependiente_tipo.'"' : '' ?> >
                         <div class="span3">
                             <div class="handler pull-right"></div>
                         </div>
