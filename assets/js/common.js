@@ -72,10 +72,13 @@ $(document).ready(function(){
             var campo=$(el).data("dependiente-campo");
             var valor=$(el).data("dependiente-valor");
             
+            //Obtenemos el arreglo de inputs del sistema. Hacemos un hack para incluir los disabled elements ya que estos nos sirven
+            //para obtener los campos que son de solo visualizacion y armar el formulario acorde a ellos.
             var disabledElements=$(form).find(":input:disabled");
             $(disabledElements).prop("disabled",false);
             var items=$(form).find(":input").serializeArray();
             $(disabledElements).prop("disabled",true);
+            
             var existe=false;
             for(var i in items){
                 if(items[i].name==campo){
@@ -89,10 +92,14 @@ $(document).ready(function(){
                     }          
                 }     
             }
-            if(existe)
+            if(existe){
                 $(el).show();
-            else
+                $(el).find(":input").prop("disabled",false);
+            }
+            else{
                 $(el).hide();
+                $(el).find(":input").prop("disabled",true);
+            }
         });
     }
     prepareDynaForm(".dynaForm");
