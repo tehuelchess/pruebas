@@ -7,7 +7,7 @@ class CampoFile extends Campo {
     protected function display($modo, $dato,$etapa_id) {
         if(!$etapa_id){
             $display='<label>' . $this->etiqueta . (in_array('required', $this->validacion) ? '' : ' (Opcional)') . '</label>';
-            $display.='<button>Subir archivo</button>';
+            $display.='<button type="button" class="btn">Subir archivo</button>';
             return $display;
         }
         
