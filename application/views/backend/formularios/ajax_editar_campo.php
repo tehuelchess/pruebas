@@ -118,7 +118,7 @@
                 <span class="input-append">
                     <input type="text" name="dependiente_valor" value="<?= isset($campo) ? $campo->dependiente_valor : '' ?>" /><button type="button" class="buttonString btn">String</button><button type="button" class="buttonRegex btn">Regex</button>
                 </span>
-                <input type="hidden" name="dependiente_tipo" value="<?=isset($campo)? $campo->dependiente_tipo:'string' ?>" />
+                <input type="hidden" name="dependiente_tipo" value="<?=isset($campo) && $campo->dependiente_tipo? $campo->dependiente_tipo:'string' ?>" />
             </div>
         <?php if ($campo->requiere_datos): ?>
             <div class="datos">
