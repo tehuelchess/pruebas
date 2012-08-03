@@ -76,7 +76,7 @@ $(document).ready(function(){
             //para obtener los campos que son de solo visualizacion y armar el formulario acorde a ellos.
             var disabledElements=$(form).find(":input:disabled");
             $(disabledElements).prop("disabled",false);
-            var items=$(form).find(":input").serializeArray();
+            var items=$(form).find(":input:not(:hidden)").serializeArray();
             $(disabledElements).prop("disabled",true);
             
             var existe=false;
