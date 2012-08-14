@@ -11,7 +11,8 @@ class Accion extends Doctrine_Record {
 
         
         $this->setSubclasses(array(
-                'AccionEnviarCorreo'  => array('tipo' => 'enviar_correo')
+                'AccionEnviarCorreo'  => array('tipo' => 'enviar_correo'),
+                'AccionWebservice'  => array('tipo' => 'webservice')
             )
         );
     }

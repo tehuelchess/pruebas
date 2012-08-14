@@ -8,6 +8,7 @@
         <label>Tipo de acción</label>
         <select name="tipo">
             <option value="enviar_correo">Enviar correo</option>
+            <option value="webservice">Consultar Webservice</option>
         </select>
     </form>
 </div>

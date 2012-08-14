@@ -19,13 +19,13 @@
         <?php elseif($tareas_proximas->estado=='completado'):?>
             <p>Este tramite será finalizado.</p>
         <?php elseif($tareas_proximas->estado=='sincontinuacion'):?>
-            <p>Este tramite no se puede continuar.</p>
+            <p>Se finalizara esta etapa del trámite.</p>
         <?php endif; ?>
 
 
         <div class="form-actions">
             <a class="btn" href="<?= site_url('etapas/ejecutar/' . $etapa->id . '/' . (count($etapa->getPasosEjecutables()) - 1).($qs?'?'.$qs:'')) ?>"><i class="icon-chevron-left"></i> Volver</a>
-            <?php if($tareas_proximas->estado!='sincontinuacion'):?><button class="btn btn-primary" type="submit">Finalizar</button><?php endif ?>
+            <button class="btn btn-primary" type="submit">Finalizar</button>
         </div>
     </fieldset>
 </form>
