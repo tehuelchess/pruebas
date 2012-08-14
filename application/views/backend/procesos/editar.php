@@ -11,7 +11,16 @@
             "A veces yo aparezco por ninguna razon en particular. Como ahora.",
             "Tu computador parece estar prendido.",
             "Veo que estas tratando de trabajar. Necesitas que te moleste?",
-            "Veo que tu vida no tiene sentido. Necesitas consejo?"
+            "Veo que tu vida no tiene sentido. Necesitas consejo?",
+            "Parece que estas conectado a internet.",
+            "Veo que has estado usando el mouse.",
+            "Tu productividad ha ido decreciendo con el tiempo. Espero que estes bien.",
+            "He detectado un movimiento del mouse. Esto es normal.",
+            "Veo que tu postura no es la adecuada. Por favor sientate bien.",
+            "Tu monitor se encuentra 100% operacional.",
+            "Si necesitas ayuda, por favor pidemela.",
+            "Tu mouse esta sucio. Limpialo para un rendimiento optimo.",
+            "¿Quieres que me oculte? Esa funcionalidad no se ha implementado."
         ];
         
         var animaciones=agent.animations();
@@ -20,14 +29,10 @@
         agent.show();
         
         setInterval(function(){
+            agent.animate();
             var randomTextId=Math.floor((Math.random()*textos.length));
             agent.speak(textos[randomTextId]);
         },5000);
-        
-        setInterval(function(){
-            var randomId=Math.floor((Math.random()*animaciones.length));
-            agent.play(animaciones[randomId]);
-        },7500);
         
     });
 </script>
