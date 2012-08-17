@@ -1,0 +1,8 @@
+<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+
+$config['email_from']='tramitador@minsegpres.gob.cl';
+$config['protocol'] = 'sendmail';   //mail, sendmail o smtp
+$config['smtp_host'] = '';
+$config['smtp_user'] = '';
+$config['smpt_pass'] = '';
+$config['smtp_port'] = '';

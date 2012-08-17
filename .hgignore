@@ -1,0 +1,6 @@
+syntax: glob
+config.php
+database.php
+nbproject
+uploads
+email.php
