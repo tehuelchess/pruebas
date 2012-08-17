@@ -1,4 +1,5 @@
 <?php
+require_once('accion.php');
 
 class AccionWebservice extends Accion {
 
