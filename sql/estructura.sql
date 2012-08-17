@@ -150,13 +150,13 @@ CREATE  TABLE IF NOT EXISTS `tramitador`.`tarea_has_grupo_usuarios` (
   CONSTRAINT `fk_tarea_has_grupo_usuarios_grupo_usuarios1`
     FOREIGN KEY (`grupo_usuarios_id` )
     REFERENCES `tramitador`.`grupo_usuarios` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT `fk_tarea_has_grupo_usuarios_tarea1`
     FOREIGN KEY (`tarea_id` )
     REFERENCES `tramitador`.`tarea` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_general_ci;
@@ -199,8 +199,8 @@ CREATE  TABLE IF NOT EXISTS `tramitador`.`tramite` (
   CONSTRAINT `fk_tramite_proceso1`
     FOREIGN KEY (`proceso_id` )
     REFERENCES `tramitador`.`proceso` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 
@@ -228,8 +228,8 @@ CREATE  TABLE IF NOT EXISTS `tramitador`.`etapa` (
   CONSTRAINT `fk_etapa_tarea1`
     FOREIGN KEY (`tarea_id` )
     REFERENCES `tramitador`.`tarea` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT `fk_etapa_usuario1`
     FOREIGN KEY (`usuario_id` )
     REFERENCES `tramitador`.`usuario` (`id` )
@@ -253,8 +253,8 @@ CREATE  TABLE IF NOT EXISTS `tramitador`.`formulario` (
   CONSTRAINT `fk_formulario_proceso1`
     FOREIGN KEY (`proceso_id` )
     REFERENCES `tramitador`.`proceso` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 
@@ -271,8 +271,8 @@ CREATE  TABLE IF NOT EXISTS `tramitador`.`documento` (
   CONSTRAINT `fk_documento_proceso1`
     FOREIGN KEY (`proceso_id` )
     REFERENCES `tramitador`.`proceso` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 
@@ -333,8 +333,8 @@ CREATE  TABLE IF NOT EXISTS `tramitador`.`paso` (
   CONSTRAINT `fk_paso_tarea1`
     FOREIGN KEY (`tarea_id` )
     REFERENCES `tramitador`.`tarea` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 
@@ -411,8 +411,8 @@ CREATE  TABLE IF NOT EXISTS `tramitador`.`accion` (
   CONSTRAINT `fk_trigger_proceso1`
     FOREIGN KEY (`proceso_id` )
     REFERENCES `tramitador`.`proceso` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 
@@ -451,8 +451,8 @@ CREATE  TABLE IF NOT EXISTS `tramitador`.`evento` (
   CONSTRAINT `fk_evento_tarea1`
     FOREIGN KEY (`tarea_id` )
     REFERENCES `tramitador`.`tarea` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT `fk_evento_accion1`
     FOREIGN KEY (`accion_id` )
     REFERENCES `tramitador`.`accion` (`id` )
@@ -494,8 +494,8 @@ CREATE  TABLE IF NOT EXISTS `tramitador`.`file` (
   CONSTRAINT `fk_file_tramite1`
     FOREIGN KEY (`tramite_id` )
     REFERENCES `tramitador`.`tramite` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 
