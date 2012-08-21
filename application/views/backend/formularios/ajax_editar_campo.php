@@ -107,7 +107,7 @@
                    data-mode="multiple"
                    data-delimiter="|"
                    data-source="[&quot;required&quot;,&quot;rut&quot;,&quot;min_length[num]&quot;,&quot;max_length[num]&quot;,&quot;exact_length[num]&quot;,&quot;greater_than[num]&quot;,&quot;less_than[num]&quot;,&quot;alpha&quot;,&quot;alpha_numeric&quot;,&quot;alpha_dash&quot;,&quot;numeric&quot;,&quot;integer&quot;,&quot;decimal&quot;,&quot;is_natural&quot;,&quot;is_natural_no_zero&quot;,&quot;valid_email&quot;,&quot;valid_emails&quot;,&quot;valid_ip&quot;,&quot;valid_base64&quot;]"
-                   value="<?= isset($campo) ? implode('|', $campo->validacion) : '' ?>"/>
+                   value="<?= empty($campo) ? implode('|', $campo->validacion) : 'required' ?>"/>
                <?php endif; ?>
             <?php if(!$campo->readonly):?>
             <label>Valor por defecto</label>
