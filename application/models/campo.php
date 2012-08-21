@@ -50,6 +50,7 @@ class Campo extends Doctrine_Record {
         $this->hasColumn('dependiente_valor');
         $this->hasColumn('datos');
         $this->hasColumn('readonly');
+        $this->hasColumn('valor_default');
         $this->hasColumn('documento_id');
         
         $this->setSubclasses(array(
