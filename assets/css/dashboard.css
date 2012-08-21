@@ -5,6 +5,7 @@
 .clearfix:after {
   display: table;
   content: "";
+  line-height: 0;
 }
 .clearfix:after {
   clear: both;
@@ -19,10 +20,9 @@
 .input-block-level {
   display: block;
   width: 100%;
-  min-height: 28px;
+  min-height: 30px;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
-  -ms-box-sizing: border-box;
   box-sizing: border-box;
 }
 #dashboard .widget {
@@ -37,7 +37,6 @@
 #dashboard .widget .back {
   -webkit-transition: 1s;
   -moz-transition: 1s;
-  -ms-transition: 1s;
   -o-transition: 1s;
   transition: 1s;
   -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
@@ -63,11 +62,11 @@
 }
 #dashboard .widget .front {
   background: #fff;
-  transform: rotatey(0deg);
-  -webkit-transform: rotatey(0deg);
-  -moz-transform: rotatey(0deg);
-  -o-transform: rotatey(0deg);
-  -ms-transform: rotatey(0deg);
+  transform: rotateY(0deg);
+  -webkit-transform: rotateY(0deg);
+  -moz-transform: rotateY(0deg);
+  -o-transform: rotateY(0deg);
+  -ms-transform: rotateY(0deg);
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
   -moz-backface-visibility: hidden;
@@ -82,11 +81,11 @@
 }
 #dashboard .widget .back {
   background: #eee;
-  transform: rotatey(-180deg);
-  -webkit-transform: rotatey(-180deg);
-  -moz-transform: rotatey(-180deg);
-  -o-transform: rotatey(-180deg);
-  -ms-transform: rotatey(-180deg);
+  transform: rotateY(-180deg);
+  -webkit-transform: rotateY(-180deg);
+  -moz-transform: rotateY(-180deg);
+  -o-transform: rotateY(-180deg);
+  -ms-transform: rotateY(-180deg);
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
   -moz-backface-visibility: hidden;
@@ -100,11 +99,11 @@
   right: 10px;
 }
 #dashboard .widget.flip .front {
-  transform: rotatey(180deg);
-  -webkit-transform: rotatey(180deg);
-  -moz-transform: rotatey(180deg);
-  -o-transform: rotatey(180deg);
-  -ms-transform: rotatey(180deg);
+  transform: rotateY(180deg);
+  -webkit-transform: rotateY(180deg);
+  -moz-transform: rotateY(180deg);
+  -o-transform: rotateY(180deg);
+  -ms-transform: rotateY(180deg);
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
   -moz-backface-visibility: hidden;
@@ -113,11 +112,11 @@
   z-index: 900;
 }
 #dashboard .widget.flip .back {
-  transform: rotatey(0deg);
-  -webkit-transform: rotatey(0deg);
-  -moz-transform: rotatey(0deg);
-  -o-transform: rotatey(0deg);
-  -ms-transform: rotatey(0deg);
+  transform: rotateY(0deg);
+  -webkit-transform: rotateY(0deg);
+  -moz-transform: rotateY(0deg);
+  -o-transform: rotateY(0deg);
+  -ms-transform: rotateY(0deg);
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
   -moz-backface-visibility: hidden;
