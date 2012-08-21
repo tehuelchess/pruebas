@@ -49,6 +49,19 @@ class Regla {
                     return $valor_dato;
                 }, $this->regla);
                 
+         $new_regla=preg_replace_callback('/@!(\w+)/', function($match) {
+                    $nombre_dato = $match[1];
+                    $usuario=UsuarioSesion::usuario();
+                    if($nombre_dato=='rut')
+                        return "'".$usuario->rut."'";
+                    else if($nombre_dato=='nombre')
+                        return "'".$usuario->nombre."'";
+                    else if($nombre_dato=='apellidos')
+                        return "'".$usuario->apellidos."'";
+                    else if($nombre_dato=='email')
+                        return "'".$usuario->email."'";
+                }, $this->regla);
+                
          //Si quedaron variables sin reemplazar, la evaluacion deberia ser siempre falsa.
          if(preg_match('/@@\w+/', $new_regla))
             return false;
@@ -76,6 +89,19 @@ class Regla {
                     }
 
                     return $valor_dato;
+                }, $this->regla);
+         
+         $new_regla=preg_replace_callback('/@!(\w+)/', function($match) {
+                    $nombre_dato = $match[1];
+                    $usuario=UsuarioSesion::usuario();
+                    if($nombre_dato=='rut')
+                        return $usuario->rut;
+                    else if($nombre_dato=='nombre')
+                        return $usuario->nombre;
+                    else if($nombre_dato=='apellidos')
+                        return $usuario->apellidos;
+                    else if($nombre_dato=='email')
+                        return $usuario->email;
                 }, $this->regla);
           
          return $new_regla;
