@@ -35,6 +35,7 @@
                         <li class="dropdown">
                             <a class="dropdown-toggle" data-toggle="dropdown" href="#">Bienvenido <?= UsuarioSesion::usuario()->displayName() ?><b class="caret"></b></a>
                             <ul class="dropdown-menu">
+                                <li><a href="<?= site_url('cuenta/editar') ?>">Mi cuenta</a></li>
                                 <li><a href="<?= site_url('autenticacion/logout') ?>">Cerrar sesión</a></li>
                             </ul>
                         </li>
