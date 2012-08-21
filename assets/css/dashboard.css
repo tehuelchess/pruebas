@@ -56,6 +56,11 @@
   padding: 5px;
   cursor: move;
 }
+#dashboard .widget .front .cabecera h3,
+#dashboard .widget .back .cabecera h3 {
+  font-size: 14px;
+  line-height: 1;
+}
 #dashboard .widget .front .contenido,
 #dashboard .widget .back .contenido {
   padding: 5px;
