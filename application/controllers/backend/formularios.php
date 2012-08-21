@@ -164,6 +164,7 @@ class Formularios extends CI_Controller {
             $campo->nombre=$this->input->post('nombre');
             $campo->etiqueta=$this->input->post('etiqueta');
             $campo->readonly=$this->input->post('readonly');
+            $campo->valor_default=$this->input->post('valor_default');
             $campo->validacion=explode('|',$this->input->post('validacion'));
             $campo->dependiente_tipo=$this->input->post('dependiente_tipo');
             $campo->dependiente_campo=$this->input->post('dependiente_campo');
