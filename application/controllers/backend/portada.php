@@ -12,11 +12,30 @@ class Portada extends CI_Controller {
     }
 
     public function index() {
-        $data['widgets']=Doctrine::getTable('Cuenta')->find(UsuarioBackendSesion::usuario()->cuenta_id)->Widgets;
+        $data['widgets']=UsuarioBackendSesion::usuario()->Cuenta->Widgets;
         
         $data['title']='Portada';
         $data['content']='backend/portada/index';
         $this->load->view('backend/template',$data);
+    }
+    
+    public function widget_create($tipo){
+        $widget=new Widget();
+        $widget->nombre='Nuevo widget';
+        $widget->tipo=$tipo;
+        $widget->cuenta_id=UsuarioSesion::usuario()->cuenta_id;
+        $widget->save();
+        
+        redirect($this->input->server('HTTP_REFERER'));
+    }
+    
+    public function widget_change_positions(){
+        $cuenta=UsuarioBackendSesion::usuario()->Cuenta;
+
+        $json=$this->input->post('posiciones');
+        $cuenta->updatePosicionesWidgetsFromJSON($json);
+        
+        
     }
     
     public function widget_load($widget_id){
@@ -54,6 +73,18 @@ class Portada extends CI_Controller {
         }
         
         echo json_encode($respuesta);
+    }
+    
+    public function widget_remove($widget_id){
+        $widget=  Doctrine::getTable('Widget')->find($widget_id);
+        
+        if(UsuarioBackendSesion::usuario()->cuenta_id!=$widget->cuenta_id){
+            echo 'Usuario no tiene permisos';
+            exit;
+        }
+        
+        $widget->delete();
+        redirect($this->input->server('HTTP_REFERER'));
     }
 
 }

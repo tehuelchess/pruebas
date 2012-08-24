@@ -16,8 +16,8 @@ class UsuarioBackend extends Doctrine_Record {
         parent::setUp();
         
         $this->hasOne('Cuenta',array(
-            'local'=>'id',
-            'foreign'=>'cuenta_id'
+            'local'=>'cuenta_id',
+            'foreign'=>'id'
         ));
     }
     
