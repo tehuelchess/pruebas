@@ -1,12 +1,23 @@
 $(document).ready(function(){
-    $("#dashboard .row-fluid").sortable({
-        items: ".span4",
+    $("#dashboard").sortable({
+        items: ".widget",
         handle: ".cabecera",
-        revert: true
+        revert: true,
+        stop: widgetChangePositions
     });
     
     
 });
+
+function widgetChangePositions(){
+    var widgets=new Array();
+    $("#dashboard .widget").each(function(i,e){
+        widgets.push($(e).data('id'));
+    });
+    var json=JSON.stringify(widgets);
+    
+    $.post(site_url+"backend/portada/widget_change_positions/","posiciones="+json);
+}
 
 function widgetConfig(button){
     var widget=$(button).closest(".widget");

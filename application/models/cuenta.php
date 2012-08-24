@@ -36,5 +36,16 @@ class Cuenta extends Doctrine_Record {
             'orderBy'=>'posicion'
         ));
     }
+    
+    public function updatePosicionesWidgetsFromJSON($json){
+        $posiciones=  json_decode($json);
+        
+        Doctrine_Manager::connection()->beginTransaction();
+        foreach($this->Widgets as $c){
+            $c->posicion=array_search($c->id, $posiciones);
+            $c->save();
+        }
+        Doctrine_Manager::connection()->commit();
+    }
 
 }
