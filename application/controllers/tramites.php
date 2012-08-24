@@ -48,5 +48,22 @@ class Tramites extends CI_Controller {
         $qs=$this->input->server('QUERY_STRING');
         redirect('etapas/ejecutar/'.$tramite->getEtapasActuales()->get(0)->id.($qs?'?'.$qs:''));
     }
+    
+    public function eliminar($tramite_id){
+        $tramite=Doctrine::getTable('Tramite')->find($tramite_id);
+                
+        if($tramite->Etapas->count()>1){
+            echo 'Tramite no se puede eliminar, ya ha avanzado mas de una etapa';
+            exit;
+        }
+        
+        if(UsuarioSesion::usuario()->id!=$tramite->Etapas[0]->usuario_id){
+            echo 'Usuario no tiene permisos para eliminar este tramite';
+            exit;
+        }
+        
+        $tramite->delete();
+        redirect($this->input->server('HTTP_REFERER'));
+    }
 
 }

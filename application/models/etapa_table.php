@@ -17,7 +17,9 @@ class EtapaTable extends Doctrine_Table {
     //busca las etapqas donde esta pendiente una accion de $usuario_id
     public function findPendientes($usuario_id){        
         return Doctrine_Query::create()
-                ->from('Etapa e, e.Usuario u')
+                ->from('Etapa e, e.Usuario u, e.Tramite.Etapas hermanas')
+                ->select('e.*,COUNT(hermanas.id) as netapas')
+                ->groupBy('e.id')
                 ->where('e.pendiente = 1 and u.id = ?',$usuario_id)
                 ->orderBy('e.updated_at desc')
                 ->execute();

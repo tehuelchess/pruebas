@@ -17,7 +17,7 @@
                 <td><?= $e->Tramite->Proceso->nombre ?></td>
                 <td><?=$e->Tarea->nombre ?></td>
                 <td><?= strftime('%c',mysql_to_unix($e->updated_at))?></td>
-                <td><a href="<?=site_url('etapas/asignar/'.$e->id)?>" class="btn">Asignarmelo</a></td>
+                <td><a href="<?=site_url('etapas/asignar/'.$e->id)?>" class="btn btn-primary">Asignarmelo</a></td>
             </tr>
         <?php endforeach; ?>
     </tbody>

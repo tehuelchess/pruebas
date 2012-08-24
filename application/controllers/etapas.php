@@ -13,7 +13,7 @@ class Etapas extends CI_Controller {
     
     public function inbox() {
         $data['etapas']=Doctrine::getTable('Etapa')->findPendientes(UsuarioSesion::usuario()->id);
-        
+                
         $data['content'] = 'etapas/inbox';
         $data['title'] = 'Bandeja de Entrada';
         $this->load->view('template', $data);

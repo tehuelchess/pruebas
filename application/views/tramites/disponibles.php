@@ -13,7 +13,7 @@
             <tr>
                 <td><?= $p->nombre ?></td>
                 <td><?=$p->Cuenta->nombre?></td>
-                <td><a href="<?=site_url('tramites/iniciar/'.$p->id)?>" class="btn">Iniciar</a></td>
+                <td><a href="<?=site_url('tramites/iniciar/'.$p->id)?>" class="btn btn-primary">Iniciar</a></td>
             </tr>
         <?php endforeach; ?>
     </tbody>
