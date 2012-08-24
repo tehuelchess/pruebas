@@ -40,11 +40,21 @@ class Tramites extends CI_Controller {
             exit;
         }
         
-        $tramite=new Tramite();
-        $tramite->iniciar($proceso->id);
+        //Vemos si es que usuario ya tiene un tramite de proceso_id ya iniciado, y que se encuentre en su primera etapa.
+        //Si es asi, hacemos que lo continue. Si no, creamos uno nuevo
+        $tramite=Doctrine_Query::create()
+                ->from('Tramite t, t.Proceso p, t.Etapas e, e.Tramite.Etapas hermanas')
+                ->where('p.id = ? AND e.usuario_id = ?',array($proceso_id, UsuarioSesion::usuario()->id))
+                ->groupBy('t.id')
+                ->having('COUNT(hermanas.id) = 1')
+                ->fetchOne();
         
+        if(!$tramite){
+            $tramite=new Tramite();
+            $tramite->iniciar($proceso->id);
+        }  
         
-        
+    
         $qs=$this->input->server('QUERY_STRING');
         redirect('etapas/ejecutar/'.$tramite->getEtapasActuales()->get(0)->id.($qs?'?'.$qs:''));
     }
