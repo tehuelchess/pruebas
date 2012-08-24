@@ -25,7 +25,7 @@
 
         <div class="form-actions">
             <a class="btn" href="<?= site_url('etapas/ejecutar/' . $etapa->id . '/' . (count($etapa->getPasosEjecutables()) - 1).($qs?'?'.$qs:'')) ?>"><i class="icon-chevron-left"></i> Volver</a>
-            <button class="btn btn-primary" type="submit">Finalizar</button>
+            <button class="btn btn-success" type="submit">Finalizar</button>
         </div>
     </fieldset>
 </form>
