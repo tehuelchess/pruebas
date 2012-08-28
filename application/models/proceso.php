@@ -40,6 +40,11 @@ class Proceso extends Doctrine_Record {
             'local'=>'id',
             'foreign'=>'proceso_id',
         ));
+        
+        $this->hasMany('Reporte as Reportes',array(
+            'local'=>'id',
+            'foreign'=>'proceso_id',
+        ));
     }
     
     public function updateModelFromJSON($json){
@@ -101,11 +106,15 @@ class Proceso extends Doctrine_Record {
     }
     
     //Obtiene todos los campos asociados a este proceso
-    public function getCampos(){
-        return Doctrine_Query::create()
+    public function getCampos($excluir_estaticos=true){
+        $query= Doctrine_Query::create()
                 ->from('Campo c, c.Formulario f, f.Proceso p')
-                ->where('p.id = ?',$this->id)
-                ->execute();
+                ->where('p.id = ?',$this->id);
+        
+        if($excluir_estaticos)
+            $query->andWhere('c.estatico = 0');
+       
+        return $query->execute();
     }
     
     //Verifica si el usuario_id tiene permisos para iniciar este proceso como tramite.

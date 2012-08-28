@@ -12,6 +12,7 @@
     <li><a href="<?=site_url('backend/formularios/listar/'.$proceso->id)?>">Formularios</a></li>
     <li class="active"><a href="<?= site_url('backend/documentos/listar/' . $proceso->id) ?>">Documentos</a></li>
     <li><a href="<?=site_url('backend/acciones/listar/'.$proceso->id)?>">Acciones</a></li>
+    <li><a href="<?=site_url('backend/reportes/listar/'.$proceso->id)?>">Reportes</a></li>
 </ul>
 
 <a class="btn" href="<?=site_url('backend/documentos/crear/'.$proceso->id)?>"><i class="icon-file"></i> Nuevo</a>

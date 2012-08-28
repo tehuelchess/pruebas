@@ -4,7 +4,8 @@ class Campo extends Doctrine_Record {
         
     public $requiere_validacion=true;
     public $requiere_datos=true;
-    public $requiere_readonly=true;
+    public $siempre_readonly=false;
+    public $siempre_estatico=false;
     
     public static function factory($tipo){
         if($tipo=='text')
@@ -50,6 +51,7 @@ class Campo extends Doctrine_Record {
         $this->hasColumn('dependiente_valor');
         $this->hasColumn('datos');
         $this->hasColumn('readonly');
+        $this->hasColumn('estatico');
         $this->hasColumn('valor_default');
         $this->hasColumn('documento_id');
         
@@ -79,6 +81,11 @@ class Campo extends Doctrine_Record {
         
         $this->hasOne('Documento', array(
             'local' => 'documento_id',
+            'foreign' => 'id'
+        ));
+        
+        $this->hasOne('Reporte', array(
+            'local' => 'reporte_id',
             'foreign' => 'id'
         ));
     }
