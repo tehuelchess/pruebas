@@ -19,7 +19,7 @@
 <table class="table">
     <thead>
         <tr>
-            <th>Accion</th>
+            <th>Documento</th>
             <th>Tipo</th>
             <th></th>
         </tr>
