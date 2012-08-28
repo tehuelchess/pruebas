@@ -11,28 +11,27 @@
     <li><a href="<?=site_url('backend/procesos/editar/'.$proceso->id)?>">Diseñador</a></li>
     <li><a href="<?=site_url('backend/formularios/listar/'.$proceso->id)?>">Formularios</a></li>
     <li><a href="<?= site_url('backend/documentos/listar/' . $proceso->id) ?>">Documentos</a></li>
-    <li class="active"><a href="<?=site_url('backend/acciones/listar/'.$proceso->id)?>">Acciones</a></li>
-    <li><a href="<?= site_url('backend/reportes/listar/' . $proceso->id) ?>">Reportes</a></li>
+    <li><a href="<?=site_url('backend/acciones/listar/'.$proceso->id)?>">Acciones</a></li>
+    <li class="active"><a href="<?= site_url('backend/reportes/listar/' . $proceso->id) ?>">Reportes</a></li>
 </ul>
 
-<a class="btn" href="#" onclick="return seleccionarAccion(<?=$proceso->id?>);"><i class="icon-file"></i> Nuevo</a>
+<a class="btn" href="<?=site_url('backend/reportes/crear/'.$proceso->id)?>"><i class="icon-file"></i> Nuevo</a>
 
 <table class="table">
     <thead>
         <tr>
-            <th>Accion</th>
-            <th>Tipo</th>
+            <th>Reporte</th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-        <?php foreach($acciones as $p): ?>
+        <?php foreach($reportes as $p): ?>
         <tr>
             <td><?=$p->nombre?></td>
-            <td><?=$p->tipo?></td>
             <td>
-                <a href="<?=site_url('backend/acciones/editar/'.$p->id)?>" class="btn"><i class="icon-edit"></i> Editar</a>
-                <a href="<?=site_url('backend/acciones/eliminar/'.$p->id)?>" class="btn" onclick="return confirm('¿Esta seguro que desea eliminar?')"><i class="icon-remove"></i> Eliminar</a>
+                <a href="<?=site_url('backend/reportes/ver/'.$p->id)?>" class="btn"><i class="icon-eye-open"></i> Ver</a>
+                <a href="<?=site_url('backend/reportes/editar/'.$p->id)?>" class="btn"><i class="icon-edit"></i> Editar</a>
+                <a href="<?=site_url('backend/reportes/eliminar/'.$p->id)?>" class="btn" onclick="return confirm('¿Esta seguro que desea eliminar?')"><i class="icon-remove"></i> Eliminar</a>
             </td>
         </tr>
         <?php endforeach; ?>

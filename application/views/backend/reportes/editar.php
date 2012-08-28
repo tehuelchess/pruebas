@@ -9,28 +9,30 @@
     <li><a href="<?= site_url('backend/procesos/editar/' . $proceso->id) ?>">Diseñador</a></li>
     <li><a href="<?= site_url('backend/formularios/listar/' . $proceso->id) ?>">Formularios</a></li>
     <li><a href="<?= site_url('backend/documentos/listar/' . $proceso->id) ?>">Documentos</a></li>
-    <li class="active"><a href="<?= site_url('backend/acciones/listar/' . $proceso->id) ?>">Acciones</a></li>
-    <li><a href="<?= site_url('backend/reportes/listar/' . $proceso->id) ?>">Reportes</a></li>
+    <li><a href="<?= site_url('backend/acciones/listar/' . $proceso->id) ?>">Acciones</a></li>
+    <li class="active"><a href="<?= site_url('backend/reportes/listar/' . $proceso->id) ?>">Reportes</a></li>
 </ul>
 
 
-<form class="ajaxForm" method="POST" action="<?=site_url('backend/acciones/editar_form/'.($edit?$accion->id:''))?>">
+<form class="ajaxForm" method="POST" action="<?=site_url('backend/reportes/editar_form/'.($edit?$reporte->id:''))?>">
     <fieldset>
-        <legend>Crear Acción</legend>
+        <legend>Crear Reporte</legend>
         <div class="validacion"></div>
         <?php if(!$edit):?>
         <input type="hidden" name="proceso_id" value="<?=$proceso->id?>" />
-        <input type="hidden" name="tipo" value="<?=$tipo?>" />
         <?php endif; ?>
         <label>Nombre</label>
-        <input type="text" name="nombre" value="<?=$edit?$accion->nombre:''?>" />
-        <label>Tipo</label>
-        <input type="text" readonly value="<?=$edit?$accion->tipo:$tipo?>" />
+        <input type="text" name="nombre" value="<?=$edit?$reporte->nombre:''?>" />
+        <label>Campos</label>
+        <select name="campos[]" style="height: 240px;" multiple>
+            <?php foreach($proceso->getCampos() as $c):?>
+            <option value="<?=$c->nombre?>" <?=$edit && in_array($c->nombre,$reporte->campos)?'selected':''?>><?=$c->nombre?></option>
+            <?php endforeach; ?>
+        </select>
         
-        <?=$accion->displayForm()?>
         
         <div class="form-actions">
-            <a class="btn" href="<?=site_url('backend/acciones/listar/'.$proceso->id)?>">Cancelar</a>
+            <a class="btn" href="<?=site_url('backend/reportes/listar/'.$proceso->id)?>">Cancelar</a>
             <input class="btn btn-primary" type="submit" value="Guardar" />
         </div>
     </fieldset>

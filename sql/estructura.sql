@@ -283,6 +283,7 @@ CREATE  TABLE IF NOT EXISTS `tramitador`.`campo` (
   `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT ,
   `nombre` VARCHAR(32) NOT NULL ,
   `readonly` TINYINT(1) NOT NULL DEFAULT 0 ,
+  `estatico` TINYINT(1) NOT NULL DEFAULT 0 ,
   `valor_default` TEXT NOT NULL ,
   `posicion` INT(10) UNSIGNED NOT NULL ,
   `tipo` VARCHAR(32) NOT NULL ,
@@ -497,6 +498,24 @@ CREATE  TABLE IF NOT EXISTS `tramitador`.`file` (
     REFERENCES `tramitador`.`tramite` (`id` )
     ON DELETE CASCADE
     ON UPDATE CASCADE)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `tramitador`.`reporte`
+-- -----------------------------------------------------
+CREATE  TABLE IF NOT EXISTS `tramitador`.`reporte` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
+  `nombre` VARCHAR(128) NOT NULL ,
+  `campos` TEXT NOT NULL ,
+  `proceso_id` INT UNSIGNED NOT NULL ,
+  PRIMARY KEY (`id`) ,
+  INDEX `fk_reporte_proceso1` (`proceso_id` ASC) ,
+  CONSTRAINT `fk_reporte_proceso1`
+    FOREIGN KEY (`proceso_id` )
+    REFERENCES `tramitador`.`proceso` (`id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
