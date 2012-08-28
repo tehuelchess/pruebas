@@ -20,7 +20,6 @@
     <thead>
         <tr>
             <th>Documento</th>
-            <th>Tipo</th>
             <th></th>
         </tr>
     </thead>
