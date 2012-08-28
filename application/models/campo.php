@@ -2,10 +2,7 @@
 
 class Campo extends Doctrine_Record {
         
-    public $requiere_validacion=true;
     public $requiere_datos=true;
-    public $siempre_readonly=false;
-    public $siempre_estatico=false;
     
     public static function factory($tipo){
         if($tipo=='text')
@@ -50,8 +47,8 @@ class Campo extends Doctrine_Record {
         $this->hasColumn('dependiente_campo');
         $this->hasColumn('dependiente_valor');
         $this->hasColumn('datos');
-        $this->hasColumn('readonly');
-        $this->hasColumn('estatico');
+        $this->hasColumn('readonly');           //Indica que en este campo solo se mostrara la informacion.
+        $this->hasColumn('estatico');           //Indica si es un campo estatico, es decir que no es un input con informacion. Ej: Parrafos, titulos, etc.
         $this->hasColumn('valor_default');
         $this->hasColumn('documento_id');
         
