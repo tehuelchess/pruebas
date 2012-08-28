@@ -81,7 +81,7 @@
         <?php endif; ?>
         <label>Etiqueta</label>
         <input type="text" name="etiqueta" value="<?= $campo->etiqueta ?>" />
-        <?php if(!$campo->siempre_estatico):?>
+        <?php if(!$campo->estatico):?>
         <label>Nombre</label>
         <input type="text" name="nombre" value="<?= $campo->nombre ?>" />
         <div class="btn-group asistencia" style="display: inline-block; vertical-align: top;">
@@ -96,10 +96,10 @@
         <input type="hidden" name="nombre" value="<?=$campo->nombre?$campo->nombre:uniqid();?>" />
         <?php endif; ?>
 
-        <?php if (!$campo->siempre_readonly): ?>
+        <?php if (!$campo->estatico): ?>
             <label><input type="checkbox" name="readonly" value="1" <?=$campo->readonly?'checked':''?> /> Solo lectura</label>
         <?php endif; ?>
-        <?php if ($campo->requiere_validacion): ?>
+        <?php if (!$campo->readonly): ?>
             <label>Reglas de validación</label>
             <input type="text"
                    name="validacion"
@@ -109,7 +109,7 @@
                    data-source="[&quot;required&quot;,&quot;rut&quot;,&quot;min_length[num]&quot;,&quot;max_length[num]&quot;,&quot;exact_length[num]&quot;,&quot;greater_than[num]&quot;,&quot;less_than[num]&quot;,&quot;alpha&quot;,&quot;alpha_numeric&quot;,&quot;alpha_dash&quot;,&quot;numeric&quot;,&quot;integer&quot;,&quot;decimal&quot;,&quot;is_natural&quot;,&quot;is_natural_no_zero&quot;,&quot;valid_email&quot;,&quot;valid_emails&quot;,&quot;valid_ip&quot;,&quot;valid_base64&quot;]"
                    value="<?= empty($campo) ? implode('|', $campo->validacion) : 'required' ?>"/>
                <?php endif; ?>
-            <?php if(!($campo->readonly || $campo->siempre_readonly)):?>
+            <?php if(!$campo->estatico):?>
             <label>Valor por defecto</label>
             <input type="text" name="valor_default" value="<?=$campo->valor_default?>" />
             <?php endif ?>
