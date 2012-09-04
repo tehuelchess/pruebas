@@ -23,7 +23,7 @@ class Portada extends CI_Controller {
         $widget=new Widget();
         $widget->nombre='Nuevo widget';
         $widget->tipo=$tipo;
-        $widget->cuenta_id=UsuarioSesion::usuario()->cuenta_id;
+        $widget->cuenta_id=UsuarioBackendSesion::usuario()->cuenta_id;
         $widget->save();
         
         redirect($this->input->server('HTTP_REFERER'));
