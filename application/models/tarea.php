@@ -111,8 +111,11 @@ class Tarea extends Doctrine_Record {
 
         //Agregamos los nuevos
         if (is_array($grupos_usuarios_ids))
-            foreach ($grupos_usuarios_ids as $g)
-                $this->GruposUsuarios[] = Doctrine::getTable('GrupoUsuarios')->find($g);
+            foreach ($grupos_usuarios_ids as $g){
+                $grupo=Doctrine::getTable('GrupoUsuarios')->find($g);
+                if($grupo->cuenta_id==$this->Proceso->cuenta_id)
+                    $this->GruposUsuarios[] = $grupo;
+            }
     }
 
     public function setConexionesFromArray($conexiones_array) {

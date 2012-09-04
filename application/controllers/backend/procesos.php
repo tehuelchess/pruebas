@@ -128,7 +128,6 @@ class Procesos extends CI_Controller {
         }
         
         $data['tarea'] = $tarea;
-        $data['grupos_usuarios']=Doctrine::getTable('GrupoUsuarios')->findAll();
         $data['formularios']=Doctrine::getTable('Formulario')->findByProcesoId($proceso_id);
         $data['acciones']=Doctrine::getTable('Accion')->findByProcesoId($proceso_id);
         

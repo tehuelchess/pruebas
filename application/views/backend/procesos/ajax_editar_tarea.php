@@ -156,7 +156,7 @@
                     <label><input type="radio" name="acceso_modo" value="grupos_usuarios" <?= $tarea->acceso_modo == 'grupos_usuarios' ? 'checked' : '' ?> /> Sólo los siguientes grupos de usuarios pueden acceder.</label>
                     <div id="optionalGruposUsuarios" style="height: 300px;" class="<?= $tarea->acceso_modo == 'grupos_usuarios' ? '' : 'hide' ?>">
                         <select name="grupos_usuarios[]" class="chosen" multiple>
-                            <?php foreach ($grupos_usuarios as $g): ?>
+                            <?php foreach ($tarea->Proceso->Cuenta->GruposUsuarios as $g): ?>
                                 <option value="<?= $g->id ?>" <?= $tarea->hasGrupoUsuarios($g->id) ? 'selected="selected"' : '' ?>><?= $g->nombre ?></option>
                             <?php endforeach; ?>
                         </select>
