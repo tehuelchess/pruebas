@@ -25,8 +25,8 @@
         <input type="text" name="nombre" value="<?=$edit?$reporte->nombre:''?>" />
         <label>Campos</label>
         <select name="campos[]" style="height: 240px;" multiple>
-            <?php foreach($proceso->getCampos() as $c):?>
-            <option value="<?=$c->nombre?>" <?=$edit && in_array($c->nombre,$reporte->campos)?'selected':''?>><?=$c->nombre?></option>
+            <?php foreach($proceso->getNombresDeCampos() as $c):?>
+            <option value="<?=$c?>" <?=$edit && in_array($c,$reporte->campos)?'selected':''?>><?=$c?></option>
             <?php endforeach; ?>
         </select>
         

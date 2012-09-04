@@ -117,6 +117,21 @@ class Proceso extends Doctrine_Record {
         return $query->execute();
     }
     
+    //Retorna una arreglo con todos los nombres usados en los campos de este proceso.
+    public function getNombresDeCampos($excluir_estaticos=true){
+        $campos=$this->getCampos($excluir_estaticos);
+        
+        //Los insertamos a un arreglo.
+        $nombres_de_campos=array();
+        foreach($campos as $c)
+            $nombres_de_campos[]=$c->nombre;
+        
+        //Excluimos los repetidos.
+        $nombres_de_campos=array_unique($nombres_de_campos);
+        
+        return $nombres_de_campos;
+    }
+    
     //Verifica si el usuario_id tiene permisos para iniciar este proceso como tramite.
     public function canUsuarioIniciarlo($usuario_id){
         $usuario=Doctrine::getTable('Usuario')->find($usuario_id);
