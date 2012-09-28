@@ -50,7 +50,7 @@
 class LightOpenID
 {
     public $returnUrl
-         , $required = array('person/guid')
+         , $required = array()
          , $optional = array()
          , $verify_peer = null
          , $capath = null
