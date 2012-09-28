@@ -57,7 +57,7 @@ class LightOpenID
          , $cainfo = null
          , $data;
     //private $identity='https://www.google.com/accounts/o8/id';
-    private $identity='https://apis.modernizacion.cl/claveunica/autenticacion/openid';
+    private $identity='http://www.claveunica.cl/autenticacion/openid';
     private $claimed_id;
     protected $server, $version, $trustRoot, $aliases, $identifier_select = true
             , $ax = false, $sreg = false, $setup_url = null, $headers = array();
