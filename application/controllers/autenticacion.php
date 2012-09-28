@@ -7,6 +7,7 @@ class Autenticacion extends CI_Controller {
     
     public function login_openid(){
         $this->lightopenid->returnUrl=$this->input->server('HTTP_REFERER');
+        $this->lightopenid->required = array('person/guid');
         redirect($this->lightopenid->authUrl());
     }
 
