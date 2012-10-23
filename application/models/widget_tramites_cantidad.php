@@ -1,4 +1,5 @@
 <?php
+require_once 'widget.php';
 
 class WidgetTramitesCantidad extends Widget {
 
