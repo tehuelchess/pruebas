@@ -1,5 +1,5 @@
 <?php
-
+require_once('campo.php');
 class CampoInstitucionesGob extends Campo{
     
     public $requiere_datos=false;

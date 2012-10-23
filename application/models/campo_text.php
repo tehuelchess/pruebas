@@ -1,5 +1,5 @@
 <?php
-
+require_once('campo.php');
 class CampoText extends Campo{
     
     public $requiere_datos=false;

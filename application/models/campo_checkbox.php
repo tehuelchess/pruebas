@@ -1,5 +1,5 @@
 <?php
-
+require_once('campo.php');
 class CampoCheckbox extends Campo {
 
     protected function display($modo, $dato) {
