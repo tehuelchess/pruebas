@@ -4,6 +4,8 @@
 function subdomain() {
     $CI=&get_instance();
     preg_match('/(.+)\.chilesinpapeleo\.cl/', $CI->input->server('HTTP_HOST'), $matches);
-    $cuenta = isset($matches[1]) ? $matches[1] : null;
+    $cuenta=null;
+    if(isset($matches[1]) && $matches[1]!='simple')
+        $cuenta =  $matches[1];
     return $cuenta;
 }
