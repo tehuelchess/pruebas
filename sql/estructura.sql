@@ -11,7 +11,8 @@ USE `tramitador` ;
 CREATE  TABLE IF NOT EXISTS `tramitador`.`cuenta` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
   `nombre` VARCHAR(128) NOT NULL ,
-  PRIMARY KEY (`id`) )
+  PRIMARY KEY (`id`) ,
+  UNIQUE INDEX `nombre` (`nombre` ASC) )
 ENGINE = InnoDB;
 
 
