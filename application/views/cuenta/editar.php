@@ -1,4 +1,4 @@
-<form method="POST" class="ajaxForm" action="<?=site_url('cuenta/editar_form')?>">
+<form method="POST" class="ajaxForm" action="<?=site_url('cuentas/editar_form')?>">
     <fieldset>
         <legend>Edita la información de tu cuenta</legend>
         <div class="validacion"></div>
