@@ -44,7 +44,7 @@
                             <input type="text" name="email" class="input-xlarge" />
                             <p class="help-block">Importante para recibir notificaciones del estado de sus trámites.</p>
                             <div class="form-actions">
-                                <a class="btn" href="<?=site_url('autenticacion/login')?>">Volver</a>
+                                <a class="btn" href="#" onclick="javascript:history.back();">Volver</a>
                                 <button class="btn btn-primary" type="submit">Ingresar</button>
                             </div>
                         </fieldset>
