@@ -95,7 +95,7 @@ class UsuarioSesion {
 
     private static function login_open_id() {
         $CI = & get_instance();
-        if ($CI->lightopenid->validate()) {
+        if ($CI->lightopenid->validate() && strpos($CI->lightopenid->identity,'https://www.claveunica.cl/')===0) {
             $atributos = $CI->lightopenid->getAttributes();
             $usuario = Doctrine::getTable('Usuario')->findOneByUsuarioAndOpenId($CI->lightopenid->identity,1);
             if (!$usuario) {
