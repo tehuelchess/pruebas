@@ -4,14 +4,14 @@ class TramiteTable extends Doctrine_Table {
     
 
     //busca los tramites donde el $usuario_id ha participado
-    public function findParticipados($usuario_id,$cuenta_nombre=null){        
+    public function findParticipados($usuario_id,$cuenta=null){        
         $query=Doctrine_Query::create()
                 ->from('Tramite t, t.Proceso.Cuenta c, t.Etapas e, e.Usuario u')
                 ->where('u.id = ?',$usuario_id)
                 ->orderBy('t.updated_at desc');
         
-        if($cuenta_nombre)
-            $query->andWhere('c.nombre = ?',$cuenta_nombre);
+        if($cuenta)
+            $query->andWhere('c.nombre = ?',$cuenta->nombre);
         
         return $query->execute();
     }
