@@ -30,8 +30,8 @@ CREATE  TABLE IF NOT EXISTS `tramitador`.`proceso` (
   CONSTRAINT `fk_proceso_cuenta1`
     FOREIGN KEY (`cuenta_id` )
     REFERENCES `tramitador`.`cuenta` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 
@@ -108,8 +108,8 @@ CREATE  TABLE IF NOT EXISTS `tramitador`.`grupo_usuarios` (
   CONSTRAINT `fk_grupo_usuarios_cuenta1`
     FOREIGN KEY (`cuenta_id` )
     REFERENCES `tramitador`.`cuenta` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 
@@ -136,8 +136,8 @@ CREATE  TABLE IF NOT EXISTS `tramitador`.`usuario` (
   CONSTRAINT `fk_usuario_cuenta1`
     FOREIGN KEY (`cuenta_id` )
     REFERENCES `tramitador`.`cuenta` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 
@@ -177,13 +177,13 @@ CREATE  TABLE IF NOT EXISTS `tramitador`.`grupo_usuarios_has_usuario` (
   CONSTRAINT `fk_grupo_usuarios_has_usuario_grupo_usuarios1`
     FOREIGN KEY (`grupo_usuarios_id` )
     REFERENCES `tramitador`.`grupo_usuarios` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT `fk_grupo_usuarios_has_usuario_usuario1`
     FOREIGN KEY (`usuario_id` )
     REFERENCES `tramitador`.`usuario` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 
@@ -333,8 +333,8 @@ CREATE  TABLE IF NOT EXISTS `tramitador`.`paso` (
   CONSTRAINT `fk_paso_formulario1`
     FOREIGN KEY (`formulario_id` )
     REFERENCES `tramitador`.`formulario` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT `fk_paso_tarea1`
     FOREIGN KEY (`tarea_id` )
     REFERENCES `tramitador`.`tarea` (`id` )
@@ -381,8 +381,8 @@ CREATE  TABLE IF NOT EXISTS `tramitador`.`usuario_backend` (
   CONSTRAINT `fk_usuario_backend_cuenta1`
     FOREIGN KEY (`cuenta_id` )
     REFERENCES `tramitador`.`cuenta` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 
@@ -436,8 +436,8 @@ CREATE  TABLE IF NOT EXISTS `tramitador`.`widget` (
   CONSTRAINT `fk_widget_cuenta1`
     FOREIGN KEY (`cuenta_id` )
     REFERENCES `tramitador`.`cuenta` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 
@@ -461,8 +461,8 @@ CREATE  TABLE IF NOT EXISTS `tramitador`.`evento` (
   CONSTRAINT `fk_evento_accion1`
     FOREIGN KEY (`accion_id` )
     REFERENCES `tramitador`.`accion` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 
@@ -517,8 +517,8 @@ CREATE  TABLE IF NOT EXISTS `tramitador`.`reporte` (
   CONSTRAINT `fk_reporte_proceso1`
     FOREIGN KEY (`proceso_id` )
     REFERENCES `tramitador`.`proceso` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 
