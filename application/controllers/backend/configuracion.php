@@ -12,7 +12,7 @@ class Configuracion extends MY_Controller {
     }
 
     public function index() {
-        redirect('backend/configuracion/usuarios');
+        redirect('backend/configuracion/misitio');
     }
 
     public function grupos_usuarios() {
@@ -166,6 +166,34 @@ class Configuracion extends MY_Controller {
         $usuario->delete();
 
         redirect('backend/configuracion/usuarios');
+    }
+    
+    public function misitio(){
+        $data['cuenta']=Doctrine::getTable('Cuenta')->find(UsuarioBackendSesion::usuario()->cuenta_id);
+        
+        $data['title'] = 'Configuración de Usuarios';
+        $data['content'] = 'backend/configuracion/misitio';
+        $this->load->view('backend/template', $data);
+    }
+    
+    public function misitio_form() {      
+        $this->form_validation->set_rules('nombre_largo', 'Nombre largo', 'required');
+        
+        if ($this->form_validation->run() == TRUE) {
+            $cuenta=Doctrine::getTable('Cuenta')->find(UsuarioBackendSesion::usuario()->cuenta_id);
+
+            $cuenta->nombre_largo=$this->input->post('nombre_largo');
+            $cuenta->logo=$this->input->post('logo');
+            $cuenta->save();
+
+            $respuesta->validacion = TRUE;
+            $respuesta->redirect = site_url('backend/configuracion/misitio');
+        }else {
+            $respuesta->validacion = FALSE;
+            $respuesta->errores = validation_errors();
+        }
+
+        echo json_encode($respuesta);
     }
 
 

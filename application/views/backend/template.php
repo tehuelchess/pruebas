@@ -67,6 +67,7 @@
         <div class="container-fluid">
 
             <header class="row-fluid">
+                <div class="span12">
                 <h1><a href="<?=site_url('backend/portada')?>"><img src="<?= base_url() ?>assets/img/logo.png" alt="Tramitador" /></a></h1>
                 <ul id="userMenu" class="nav nav-pills">
                     <li class="dropdown">
@@ -82,10 +83,17 @@
                     <li <?= $this->uri->segment(2) == 'seguimiento' ? 'class="active"' : '' ?>><a href="<?= site_url('backend/seguimiento') ?>">Seguimiento</a></li>
                     <li <?= $this->uri->segment(2) == 'configuracion' ? 'class="active"' : '' ?>><a href="<?= site_url('backend/configuracion') ?>">Configuración</a></li>
                 </ul>
+                </div>
             </header>
 
 
             <?php $this->load->view($content) ?>
+            
+            <footer class="row">
+                <div class="span12">
+                    <p style="text-align: center;"><a class="label label-info" href="http://instituciones.chilesinpapeleo.cl/page/view/simple">Powered by SIMPLE</a></p>
+                </div>
+            </footer>
         </div>
 
     </body>

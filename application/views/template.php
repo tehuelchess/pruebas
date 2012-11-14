@@ -8,7 +8,8 @@
 
         <div class="container">
             <header class="row">
-                <h1><a href="<?=site_url()?>"><img src="<?= base_url() ?>assets/img/logo.png" alt="Tramitador" /></a></h1>
+                <div class="span12">
+                <h1><a href="<?=site_url()?>"><img src="<?=Cuenta::cuentaSegunDominio()?base_url('uploads/logos/'.Cuenta::cuentaSegunDominio()->logo):base_url('assets/img/logo.png') ?>" alt="<?=Cuenta::cuentaSegunDominio()?Cuenta::cuentaSegunDominio()->nombre_largo:'Simple'?>" /></a></h1>
                 <ul id="userMenu" class="nav nav-pills">
                     <?php if (!UsuarioSesion::usuario()->registrado): ?>
                         <li class="dropdown">
@@ -41,6 +42,7 @@
                         </li>
                     <?php endif; ?>
                 </ul>
+                </div>
             </header>
 
             <div class="row">
@@ -59,6 +61,12 @@
                     <?php $this->load->view($content) ?>
                 </div>
             </div>
+            
+            <footer class="row">
+                <div class="span12">
+                    <p style="text-align: center;"><a class="label label-info" href="http://instituciones.chilesinpapeleo.cl/page/view/simple">Powered by SIMPLE</a></p>
+                </div>
+            </footer>
 
 
         </div> <!-- /container -->

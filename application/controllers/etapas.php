@@ -12,7 +12,7 @@ class Etapas extends MY_Controller {
     }
     
     public function inbox() {
-        $data['etapas']=Doctrine::getTable('Etapa')->findPendientes(UsuarioSesion::usuario()->id, subdomain());
+        $data['etapas']=Doctrine::getTable('Etapa')->findPendientes(UsuarioSesion::usuario()->id, Cuenta::cuentaSegunDominio());
                 
         $data['content'] = 'etapas/inbox';
         $data['title'] = 'Bandeja de Entrada';
@@ -20,7 +20,7 @@ class Etapas extends MY_Controller {
     }
     
     public function sinasignar() {
-        $data['etapas']=Doctrine::getTable('Etapa')->findSinAsignar(UsuarioSesion::usuario()->id,  subdomain());
+        $data['etapas']=Doctrine::getTable('Etapa')->findSinAsignar(UsuarioSesion::usuario()->id, Cuenta::cuentaSegunDominio());
         
         $data['content'] = 'etapas/sinasignar';
         $data['title'] = 'Sin Asignar';
