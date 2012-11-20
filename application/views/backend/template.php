@@ -67,8 +67,12 @@
         <div class="container-fluid">
 
             <header class="row-fluid">
-                <div class="span12">
+                <div class="span4">
                 <h1><a href="<?=site_url('backend/portada')?>"><img src="<?= base_url() ?>assets/img/logo.png" alt="Tramitador" /></a></h1>
+                </div>
+                <div class="span8">
+                    <div class="row-fluid">
+                        <div class="span12">
                 <ul id="userMenu" class="nav nav-pills">
                     <li class="dropdown">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#">Bienvenido <?= UsuarioBackendSesion::usuario()->usuario ?><b class="caret"></b></a>
@@ -77,12 +81,18 @@
                         </ul>
                     </li>
                 </ul>
+                        </div>
+                    </div>
+                    <div class="row-fluid">
+                        <div class="span12">
                 <ul id="menu" class="nav nav-pills">
                     <li <?= $this->uri->segment(2) == 'portada' || !$this->uri->segment(2) ? 'class="active"' : '' ?>><a href="<?= site_url('backend/portada') ?>">Inicio</a></li>
                     <li <?= $this->uri->segment(2) == 'procesos' || $this->uri->segment(2) == 'formularios' ? 'class="active"' : '' ?>><a href="<?= site_url('backend/procesos') ?>">Modelador de Procesos</a></li>
                     <li <?= $this->uri->segment(2) == 'seguimiento' ? 'class="active"' : '' ?>><a href="<?= site_url('backend/seguimiento') ?>">Seguimiento</a></li>
                     <li <?= $this->uri->segment(2) == 'configuracion' ? 'class="active"' : '' ?>><a href="<?= site_url('backend/configuracion') ?>">Configuración</a></li>
                 </ul>
+                        </div>
+                    </div>
                 </div>
             </header>
 
