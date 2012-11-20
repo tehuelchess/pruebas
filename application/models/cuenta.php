@@ -69,5 +69,12 @@ class Cuenta extends Doctrine_Record {
 
         return $cuentaSegunDominio;
     }
+    
+    public function getLogoADesplegar(){
+        if($this->logo)
+            return base_url('uploads/logos/'.$this->logo);
+        else
+            return base_url('assets/img/logo.png');
+    }
 
 }

@@ -9,7 +9,7 @@
         <div class="container">
             <header class="row">
                 <div class="span12">
-                <h1><a href="<?=site_url()?>"><img src="<?=Cuenta::cuentaSegunDominio()?base_url('uploads/logos/'.Cuenta::cuentaSegunDominio()->logo):base_url('assets/img/logo.png') ?>" alt="<?=Cuenta::cuentaSegunDominio()?Cuenta::cuentaSegunDominio()->nombre_largo:'Simple'?>" /></a></h1>
+                <h1><a href="<?=site_url()?>"><img src="<?=Cuenta::cuentaSegunDominio()?Cuenta::cuentaSegunDominio()->logoADesplegar:base_url('assets/img/logo.png') ?>" alt="<?=Cuenta::cuentaSegunDominio()?Cuenta::cuentaSegunDominio()->nombre_largo:'Simple'?>" /></a></h1>
                 <ul id="userMenu" class="nav nav-pills">
                     <?php if (!UsuarioSesion::usuario()->registrado): ?>
                         <li class="dropdown">
