@@ -2,7 +2,7 @@
 
 class ProcesoTable extends Doctrine_Table {
 
-    public function findProcesosDisponiblesParaIniciar($usuario_id,$cuenta_nombre=null){
+    public function findProcesosDisponiblesParaIniciar($usuario_id,$cuenta=null){
         $usuario=Doctrine::getTable('Usuario')->find($usuario_id);
         
         $query=Doctrine_Query::create()
@@ -11,8 +11,8 @@ class ProcesoTable extends Doctrine_Table {
                 ->andWhere('(t.acceso_modo="grupos_usuarios" AND u.id = ?) OR (t.acceso_modo = "registrados" AND 1 = ?) OR (t.acceso_modo="publico")',array($usuario->id,$usuario->registrado))
                 ->orderBy('p.id desc');
         
-        if($cuenta_nombre)
-            $query->andWhere('c.nombre = ?',$cuenta_nombre);
+        if($cuenta)
+            $query->andWhere('c.nombre = ?',$cuenta->nombre);
         
         return $query->execute();
     }
