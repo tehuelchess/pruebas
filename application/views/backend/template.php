@@ -3,8 +3,6 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="description" content="">
-        <meta name="author" content="">
         <title>Tramitador</title>
 
         <!-- Le styles -->
@@ -56,8 +54,6 @@
         </script>
         <script src="<?= base_url() ?>assets/js/common.js" type="text/javascript"></script>
 
-
-        <link rel="shortcut icon" href="<?= base_url() ?>assets/ico/favicon.ico">
 
     </head>
     <body>
