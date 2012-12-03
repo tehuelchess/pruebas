@@ -10,7 +10,7 @@ function drawSeguimiento(actuales, completadas){
         $("#areaDibujo #"+el.identificador).addClass("completado");
     });
     
-    $('#areaDibujo .box.actual,#areaDibujo .box.completado').hover(
+    $('#areaDibujo .box.actual,#areaDibujo .box.completado').each(
         function(){
             var el=this;
             $.get(site_url+"backend/seguimiento/ajax_ver_etapas/"+tramiteId+"/"+el.id,function(d){
@@ -18,7 +18,7 @@ function drawSeguimiento(actuales, completadas){
                     delay: {hide: 5000},
                     title: "Etapas ejecutadas",
                     content: d
-                }).popover('show');
+                });
             });
         });
 
