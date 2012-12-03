@@ -73,6 +73,25 @@ class Seguimiento extends MY_Controller {
         $data['content']='backend/seguimiento/ver_etapa';
         $this->load->view('backend/template',$data);
     }
+    
+    public function reasignar_form($etapa_id){
+        $this->form_validation->set_rules('usuario_id','Usuario','required');
+        
+        if($this->form_validation->run()==TRUE){
+            $etapa=Doctrine::getTable('Etapa')->find($etapa_id);
+            $etapa->usuario_id=$this->input->post('usuario_id');
+            $etapa->save();
+            
+            $respuesta->validacion=TRUE;
+            $respuesta->redirect=site_url('backend/seguimiento/ver_etapa/'.$etapa->id);
+        }else{
+            $respuesta->validacion=FALSE;
+            $respuesta->errores=validation_errors();
+            
+        }
+        
+        echo json_encode($respuesta);
+    }
 
 }
 

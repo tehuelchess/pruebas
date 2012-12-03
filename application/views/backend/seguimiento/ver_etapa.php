@@ -11,7 +11,25 @@
             <p>Estado: <?= $etapa->pendiente == 0 ? 'Completado' : 'Pendiente' ?></p>
             <p><?= $etapa->created_at ? 'Inicio: ' . strftime('%c', mysql_to_unix($etapa->created_at)) : '' ?></p>
             <p><?= $etapa->ended_at ? 'Término: ' . strftime('%c', mysql_to_unix($etapa->ended_at)) : '' ?></p>
-            <p>Asignado a: <?=!$etapa->usuario_id?'Ninguno':!$etapa->Usuario->registrado?'No registrado':$etapa->Usuario->usuario?></p>
+            <script>
+                $(document).ready(function(){
+                    $("#reasignarLink").click(function(){
+                        $("#reasignarForm").show();
+                        return false;
+                    });
+                });
+            </script>
+            <p>Asignado a: <?=!$etapa->usuario_id?'Ninguno':!$etapa->Usuario->registrado?'No registrado':$etapa->Usuario->usuario?> <?php if($etapa->pendiente):?>(<a id="reasignarLink" href="<?=site_url('seguimiento/reasignar')?>">Reasignar</a>)<?php endif?></p>
+            <form id="reasignarForm" method="POST" action="<?=site_url('backend/seguimiento/reasignar_form/'.$etapa->id)?>" class="ajaxForm hide">
+                <div class="validacion"></div>
+                <label>¿A quien deseas asignarle esta etapa?</label>
+                <select name="usuario_id">
+                    <?php foreach($etapa->Tarea->getUsuarios() as $u):?>
+                    <option value="<?=$u->id?>" <?=$u->id==$etapa->usuario_id?'selected':''?>><?=$u->usuario?></option>
+                    <?php endforeach?>
+                </select>
+                <button class="btn btn-primary" type="submit">Reasignar</button>
+            </form>
         </div>
     </div>
     <div class="span9">
