@@ -30,6 +30,7 @@
                 <input type="text" name="apellidos" value="<?=isset($usuario)?$usuario->apellidos:''?>"/>
                 <label>Correo electrónico</label>
                 <input type="text" name="email" value="<?=isset($usuario)?$usuario->email:''?>"/>
+                <label class="checkbox"><input type="checkbox" name="vacaciones" value="1" <?=isset($usuario) && $usuario->vacaciones?'checked':''?> /> ¿En vacaciones?</label>    
                 <label>Grupos de Usuarios</label>
                 <select class="chosen" name="grupos_usuarios[]" data-placeholder="Seleccione los grupos de usuarios" multiple>
                     <?php foreach($grupos_usuarios as $g): ?>

@@ -71,17 +71,17 @@ class Tarea extends Doctrine_Record {
         return false;
     }
 
-    //Obtiene el listado de usuarios que tienen acceso a esta tarea.
+    //Obtiene el listado de usuarios que tienen acceso a esta tarea y que esten disponibles (no en vacaciones).
     public function getUsuarios() {
         if ($this->acceso_modo == 'publico')
-            return Doctrine::getTable('Usuario')->findAll();
+            return Doctrine::getTable('Usuario')->findByVacaciones(0);
         else if ($this->acceso_modo == 'registrados')
-            return Doctrine::getTable('Usuario')->findByRegistrado(1);
+            return Doctrine::getTable('Usuario')->findByRegistradoAndVacaciones(1,0);
 
 
         return Doctrine_Query::create()
                         ->from('Usuario u, u.GruposUsuarios g, g.Tareas t')
-                        ->where('t.id = ?', $this->id)
+                        ->where('t.id = ? AND u.vacaciones = 0', $this->id)
                         ->execute();
     }
 
