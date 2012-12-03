@@ -171,6 +171,7 @@ class Configuracion extends MY_Controller {
             $usuario->nombre = $this->input->post('nombre');
             $usuario->apellidos = $this->input->post('apellidos');
             $usuario->email = $this->input->post('email');
+            $usuario->vacaciones = $this->input->post('vacaciones');
             $usuario->setGruposUsuariosFromArray($this->input->post('grupos_usuarios'));
             $usuario->cuenta_id = UsuarioBackendSesion::usuario()->cuenta_id;
             $usuario->save();

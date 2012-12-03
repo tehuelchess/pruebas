@@ -128,6 +128,7 @@ CREATE  TABLE IF NOT EXISTS `tramitador`.`usuario` (
   `apellidos` VARCHAR(128) NULL ,
   `email` VARCHAR(255) NULL ,
   `registrado` TINYINT(1) NOT NULL DEFAULT 1 ,
+  `vacaciones` TINYINT(1) NOT NULL DEFAULT 0 ,
   `cuenta_id` INT UNSIGNED NULL ,
   `salt` VARCHAR(32) NOT NULL ,
   `open_id` TINYINT(1) NOT NULL DEFAULT 0 ,
