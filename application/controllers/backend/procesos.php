@@ -157,6 +157,9 @@ class Procesos extends MY_Controller {
             $tarea->almacenar_usuario=$this->input->post('almacenar_usuario');
             $tarea->almacenar_usuario_variable=$this->input->post('almacenar_usuario_variable');
             $tarea->acceso_modo=$this->input->post('acceso_modo');
+            $tarea->activacion=$this->input->post('activacion');
+            $tarea->activacion_inicio=strtotime($this->input->post('activacion_inicio'));
+            $tarea->activacion_fin=strtotime($this->input->post('activacion_fin'));
             $tarea->save();
             
             //$socket_id_emisor=$this->input->post('socket_id_emisor');

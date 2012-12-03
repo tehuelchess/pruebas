@@ -8,7 +8,10 @@ class ProcesoTable extends Doctrine_Table {
         $query=Doctrine_Query::create()
                 ->from('Proceso p, p.Cuenta c, p.Tareas t, t.GruposUsuarios g, g.Usuarios u')
                 ->where('t.inicial = 1')
+                //Si el usuario tiene permisos de acceso
                 ->andWhere('(t.acceso_modo="grupos_usuarios" AND u.id = ?) OR (t.acceso_modo = "registrados" AND 1 = ?) OR (t.acceso_modo="publico")',array($usuario->id,$usuario->registrado))
+                //Si la tarea se encuentra activa
+                ->andWhere('1!=(t.activacion="no" OR ( t.activacion="entre_fechas" AND ((t.activacion_inicio IS NOT NULL AND t.activacion_inicio>NOW()) OR (t.activacion_fin IS NOT NULL AND NOW()>t.activacion_fin) )))')
                 ->orderBy('p.id desc');
         
         if($cuenta)

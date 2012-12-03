@@ -17,6 +17,9 @@ class Tarea extends Doctrine_Record {
         $this->hasColumn('almacenar_usuario');              //Se almacena el usuario o no
         $this->hasColumn('almacenar_usuario_variable');     //Nombre de la variable con que se debe almacenar
         $this->hasColumn('acceso_modo');                    //Quienes pueden acceder: grupos_usuarios, publico o registrados
+        $this->hasColumn('activacion');                         //'si','no','entre_fechas'
+        $this->hasColumn('activacion_inicio');
+        $this->hasColumn('activacion_fin');
     }
 
     function setUp() {
@@ -198,6 +201,49 @@ class Tarea extends Doctrine_Record {
             return true;
 
         return false;
+    }
+    
+    //Indica si esta tarea se encuentra activa. Es decir, se puede ejecutar.
+    public function activa(){
+        if($this->activacion=='no')
+            return FALSE;
+        
+        if($this->activacion=='entre_fechas'){
+            if($this->activacion_inicio && $this->activacion_inicio>now())
+                return FALSE;
+            if($this->activacion_fin && now()>$this->activacion_fin)
+                return FALSE;
+        }
+        
+        return TRUE;
+    }
+    
+    public function getActivacionInicio(){
+        if($this->_get('activacion_inicio'))
+            return mysql_to_unix($this->_get('activacion_inicio'));
+        else
+            return NULL;
+    }
+    
+    public function getActivacionFin(){
+        if($this->_get('activacion_fin'))
+            return mysql_to_unix($this->_get('activacion_fin'));
+        else
+            return NULL;
+    }
+    
+    public function setActivacionInicio($date){
+        if($date)
+            $this->_set('activacion_inicio', date('Y-m-d', $date));
+        else
+            $this->_set('activacion_inicio', NULL);
+    }
+    
+    public function setActivacionFin($date){
+        if($date)
+            $this->_set('activacion_fin', date('Y-m-d', $date));
+        else
+            $this->_set('activacion_fin', NULL);
     }
 
 }
