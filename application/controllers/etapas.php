@@ -39,6 +39,10 @@ class Etapas extends MY_Controller {
             echo 'Esta etapa ya fue completada';
             exit;
         }
+        if(!$etapa->Tarea->activa()){
+            echo 'Esta etapa no se encuentra activa';
+            exit;
+        }
         
         $paso = $etapa->getPasoEjecutable($secuencia);
         if(!$paso){
@@ -67,6 +71,10 @@ class Etapas extends MY_Controller {
         }
         if (!$etapa->pendiente) {
             echo 'Esta etapa ya fue completada';
+            exit;
+        }
+        if(!$etapa->Tarea->activa()){
+            echo 'Esta etapa no se encuentra activa';
             exit;
         }
 
@@ -159,6 +167,10 @@ class Etapas extends MY_Controller {
             echo 'Esta etapa ya fue completada';
             exit;
         }
+        if(!$etapa->Tarea->activa()){
+            echo 'Esta etapa no se encuentra activa';
+            exit;
+        }
 
         //if($etapa->Tarea->asignacion!='manual'){
         //    $etapa->Tramite->avanzarEtapa();
@@ -186,6 +198,10 @@ class Etapas extends MY_Controller {
         }
         if (!$etapa->pendiente) {
             echo 'Esta etapa ya fue completada';
+            exit;
+        }
+        if(!$etapa->Tarea->activa()){
+            echo 'Esta etapa no se encuentra activa';
             exit;
         }
 
