@@ -70,6 +70,7 @@
                     <li class="dropdown">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#">Bienvenido <?= UsuarioBackendSesion::usuario()->usuario ?><b class="caret"></b></a>
                         <ul class="dropdown-menu">
+                            <li><a href="<?= site_url('backend/configuracion/cuenta') ?>">Mi Cuenta</a></li>
                             <li><a href="<?= site_url('backend/autenticacion/logout') ?>">Cerrar sesión</a></li>
                         </ul>
                     </li>

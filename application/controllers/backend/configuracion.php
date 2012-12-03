@@ -14,6 +14,36 @@ class Configuracion extends MY_Controller {
     public function index() {
         redirect('backend/configuracion/misitio');
     }
+    
+    public function cuenta(){
+        $data['usuario']= UsuarioBackendSesion::usuario();
+        
+        $data['title'] = 'Configuración de Cuenta';
+        $data['content'] = 'backend/configuracion/cuenta';
+
+        $this->load->view('backend/template', $data);
+    }
+    
+    public function cuenta_form(){
+        $this->form_validation->set_rules('password', 'Contraseña', 'matches[password_confirm]');
+        $this->form_validation->set_rules('password_confirm', 'Confirmar contraseña');
+
+        if ($this->form_validation->run() == TRUE) {
+            $usuario=UsuarioBackendSesion::usuario();
+            $usuario->password=$this->input->post('password');
+            $usuario->save();
+            
+            $this->session->set_flashdata('message','Cuenta actualizada con éxito.');
+
+            $respuesta->validacion = TRUE;
+            $respuesta->redirect = site_url('backend/configuracion/cuenta');
+        }else {
+            $respuesta->validacion = FALSE;
+            $respuesta->errores = validation_errors();
+        }
+
+        echo json_encode($respuesta);
+    }
 
     public function grupos_usuarios() {
         $data['grupos_usuarios'] = Doctrine::getTable('GrupoUsuarios')->findByCuentaId(UsuarioBackendSesion::usuario()->cuenta_id);
