@@ -6,7 +6,7 @@ class Autenticacion extends MY_Controller {
     }
     
     public function login_openid(){
-        $this->load->library('lightopenid');
+        $this->load->library('LightOpenID');
         $this->lightopenid->returnUrl=$this->input->server('HTTP_REFERER');
         $this->lightopenid->required = array('person/guid');
         redirect($this->lightopenid->authUrl());
