@@ -1,3 +1,6 @@
+<?php if($etapa->Tarea->vencimiento):?>
+<div class="alert alert-warning">Atención. Esta etapa se vencera en <?=$etapa->getFechaVencimientoAsString()?>.</div>
+<?php endif ?>
 <form method="POST" class="ajaxForm dynaForm" action="<?=site_url('etapas/ejecutar_form/'.$etapa->id.'/'.$secuencia.($qs?'?'.$qs:''))?>">  
     <input type="hidden" name="csrf" />
     <fieldset>

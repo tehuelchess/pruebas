@@ -143,6 +143,11 @@ class Procesos extends MY_Controller {
         }
         
         $this->form_validation->set_rules('nombre', 'Nombre', 'required');
+        if($this->input->post('vencimiento')){
+            $this->form_validation->set_rules('vencimiento_valor','Valor de Vencimiento','required|is_natural_no_zero');
+            if($this->input->post('vencimiento_notificar'))
+                $this->form_validation->set_rules('vencimiento_notificar_email','Correo electronico para notificar vencimiento','required|valid_email');
+        }
 
         if ($this->form_validation->run() == TRUE) {
             $tarea->nombre=$this->input->post('nombre');
@@ -160,6 +165,11 @@ class Procesos extends MY_Controller {
             $tarea->activacion=$this->input->post('activacion');
             $tarea->activacion_inicio=strtotime($this->input->post('activacion_inicio'));
             $tarea->activacion_fin=strtotime($this->input->post('activacion_fin'));
+            $tarea->vencimiento=$this->input->post('vencimiento');
+            $tarea->vencimiento_valor=$this->input->post('vencimiento_valor');
+            $tarea->vencimiento_unidad=$this->input->post('vencimiento_unidad');
+            $tarea->vencimiento_notificar=$this->input->post('vencimiento_notificar');
+            $tarea->vencimiento_notificar_email=$this->input->post('vencimiento_notificar_email');
             $tarea->save();
             
             //$socket_id_emisor=$this->input->post('socket_id_emisor');
