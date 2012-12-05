@@ -43,6 +43,10 @@ class Etapas extends MY_Controller {
             echo 'Esta etapa no se encuentra activa';
             exit;
         }
+        if($etapa->vencida()){
+            echo 'Esta etapa se encuentra vencida';
+            exit;
+        }
         
         $paso = $etapa->getPasoEjecutable($secuencia);
         if(!$paso){
@@ -75,6 +79,10 @@ class Etapas extends MY_Controller {
         }
         if(!$etapa->Tarea->activa()){
             echo 'Esta etapa no se encuentra activa';
+            exit;
+        }
+        if($etapa->vencida()){
+            echo 'Esta etapa se encuentra vencida';
             exit;
         }
 

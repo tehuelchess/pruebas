@@ -17,9 +17,15 @@ class Tarea extends Doctrine_Record {
         $this->hasColumn('almacenar_usuario');              //Se almacena el usuario o no
         $this->hasColumn('almacenar_usuario_variable');     //Nombre de la variable con que se debe almacenar
         $this->hasColumn('acceso_modo');                    //Quienes pueden acceder: grupos_usuarios, publico o registrados
-        $this->hasColumn('activacion');                         //'si','no','entre_fechas'
-        $this->hasColumn('activacion_inicio');
-        $this->hasColumn('activacion_fin');
+        $this->hasColumn('activacion');                     //'si','no','entre_fechas'
+        $this->hasColumn('activacion_inicio');              //Si es que la activacion es entre_fechas, esta seria la fecha de inicio
+        $this->hasColumn('activacion_fin');                 //Si es que la activacion es entre_fechas, esta seria la fecha de fin
+        $this->hasColumn('vencimiento');                    //Indica si tiene o no vencimiento.
+        $this->hasColumn('vencimiento_valor');              //Entero que indica el valor del vencimiento.
+        $this->hasColumn('vencimiento_unidad');             //String que indica la unidad del vencimiento. Ej: days, weeks, months, etc.
+        $this->hasColumn('vencimiento_notificar');          //Indica si se debe notificar en caso de que se acerque la fecha de vencimiento
+        $this->hasColumn('vencimiento_notificar_email');    //Cual es el email donde se debe notificar
+        
     }
 
     function setUp() {
@@ -245,5 +251,5 @@ class Tarea extends Doctrine_Record {
         else
             $this->_set('activacion_fin', NULL);
     }
-
+    
 }

@@ -258,5 +258,33 @@ class Etapa extends Doctrine_Record {
         
         return $pasos;
     }
+    
+    public function getFechaVencimiento(){
+        if(!($this->Tarea->vencimiento && $this->Tarea->vencimiento_valor))
+            return NULL;
+        
+        //return strtotime($this->Tarea->vencimiento_valor.' '.$this->Tarea->vencimiento_unidad, mysql_to_unix($this->created_at));
+        $creacion=new DateTime($this->created_at);
+        //$creacion->setTime(0, 0, 0);
+        return $creacion->add(new DateInterval('P'.$this->Tarea->vencimiento_valor.$this->Tarea->vencimiento_unidad));
+    }
+    
+    public function getFechaVencimientoAsString(){
+        //return floor(($this->getFechaVencimiento()-now())/60/60/24).' días';
+        $now=new DateTime();
+        
+        $interval=$now->diff($this->getFechaVencimiento());
+        echo $interval->d.' días';
+    }
+    
+    public function vencida(){
+        if(!$this->getFechaVencimiento())
+            return FALSE;
+        
+        $vencimiento=$this->getFechaVencimiento();
+        $now=new DateTime();
+        
+        return $vencimiento<$now;
+    }
 
 }

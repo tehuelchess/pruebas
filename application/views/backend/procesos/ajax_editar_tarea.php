@@ -63,42 +63,42 @@
         });
         
         
-    //Permite borrar eventos
-    $(".tab-eventos").on("click",".delete",function(){
-        $(this).closest("tr").remove();
-        return false;
-    });
-    //Permite agregar nuevos eventos
-    $(".tab-eventos .form-agregar-evento button").click(function(){
-        var $form=$(".tab-eventos .form-agregar-evento");
+        //Permite borrar eventos
+        $(".tab-eventos").on("click",".delete",function(){
+            $(this).closest("tr").remove();
+            return false;
+        });
+        //Permite agregar nuevos eventos
+        $(".tab-eventos .form-agregar-evento button").click(function(){
+            var $form=$(".tab-eventos .form-agregar-evento");
             
-        var pos=1+$(".tab-eventos table tbody tr").size();
-        var accionId=$form.find(".eventoAccion option:selected").val();
-        var accionNombre=$form.find(".eventoAccion option:selected").text();
-        var regla=$form.find(".eventoRegla").val();
-        var instante=$form.find(".eventoInstante option:selected").val()
+            var pos=1+$(".tab-eventos table tbody tr").size();
+            var accionId=$form.find(".eventoAccion option:selected").val();
+            var accionNombre=$form.find(".eventoAccion option:selected").text();
+            var regla=$form.find(".eventoRegla").val();
+            var instante=$form.find(".eventoInstante option:selected").val()
             
-        var html="<tr>";
-        html+="<td>"+pos+"</td>";
-        html+='<td><a title="Editar" target="_blank" href="'+site_url+'backend/acciones/editar/'+accionId+'">'+accionNombre+'</td>';
-        html+="<td>"+regla+"</td>";
-        html+="<td>"+instante+"</td>";
-        html+='<td>';
-        html+='<input type="hidden" name="eventos['+pos+'][accion_id]" value="'+accionId+'" />';
-        html+='<input type="hidden" name="eventos['+pos+'][regla]" value="'+regla+'" />';
-        html+='<input type="hidden" name="eventos['+pos+'][instante]" value="'+instante+'" />';
-        html+='<a class="delete" title="Eliminar" href="#"><i class="icon-remove"></i></a>';
-        html+='</td>';
-        html+="</tr>";
+            var html="<tr>";
+            html+="<td>"+pos+"</td>";
+            html+='<td><a title="Editar" target="_blank" href="'+site_url+'backend/acciones/editar/'+accionId+'">'+accionNombre+'</td>';
+            html+="<td>"+regla+"</td>";
+            html+="<td>"+instante+"</td>";
+            html+='<td>';
+            html+='<input type="hidden" name="eventos['+pos+'][accion_id]" value="'+accionId+'" />';
+            html+='<input type="hidden" name="eventos['+pos+'][regla]" value="'+regla+'" />';
+            html+='<input type="hidden" name="eventos['+pos+'][instante]" value="'+instante+'" />';
+            html+='<a class="delete" title="Eliminar" href="#"><i class="icon-remove"></i></a>';
+            html+='</td>';
+            html+="</tr>";
             
-        $(".tab-eventos table tbody").append(html);
+            $(".tab-eventos table tbody").append(html);
             
-        return false;
-    });
+            return false;
+        });
         
-    //$("#modalEditarTarea form input[name=socket_id_emisor]").val(socketId);
-    //$("#modalEditarTarea .botonEliminar").attr("href",function(i,href){return href+"?socket_id_emisor="+socketId;})
-});
+        //$("#modalEditarTarea form input[name=socket_id_emisor]").val(socketId);
+        //$("#modalEditarTarea .botonEliminar").attr("href",function(i,href){return href+"?socket_id_emisor="+socketId;})
+    });
 </script>
 
 
@@ -117,7 +117,8 @@
                 <li><a href="#tab3">Usuarios</a></li>
                 <li><a href="#tab4">Pasos</a></li>
                 <li><a href="#tab5">Eventos</a></li>
-                <li><a href="#tab6">Otros</a></li>
+                <li><a href="#tab6">Vencimiento</a></li>
+                <li><a href="#tab7">Otros</a></li>
             </ul>
             <div class="tab-content">
                 <div class="tab-pane active" id="tab1">
@@ -130,15 +131,15 @@
                         </div>
                         <div class="span6">
                             <script>
-                            $(document).ready(function(){
-                                $("input[name=activacion]").change(function(){
-                                    if($("input[name=activacion]:checked").val()=='entre_fechas')
-                                        $("#activacionEntreFechas").show();
-                                    else
-                                        $("#activacionEntreFechas").hide();  
-                                }).change();
-                                    
-                            });
+                                $(document).ready(function(){
+                                    $("input[name=activacion]").change(function(){
+                                        if($("input[name=activacion]:checked").val()=='entre_fechas')
+                                            $("#activacionEntreFechas").show();
+                                        else
+                                            $("#activacionEntreFechas").hide();  
+                                    }).change();
+                                
+                                });
                             </script>
                             <label class="radio"><input name="activacion" value="si" type="radio" <?= $tarea->activacion == 'si' ? 'checked' : '' ?>>Tarea activada</label>
                             <label class="radio"><input name="activacion" value="entre_fechas" type="radio" <?= $tarea->activacion == 'entre_fechas' ? 'checked' : '' ?>>Tarea activa entre fechas</label>
@@ -157,14 +158,14 @@
                 </div>
                 <div class="tab-pane" id="tab2">
                     <script type="text/javascript">
-                    $(document).ready(function(){
-                        $("input[name=asignacion]").click(function(){
-                            if(this.value=="usuario")
-                                $("#optionalAsignacionUsuario").removeClass("hide");
-                            else
-                                $("#optionalAsignacionUsuario").addClass("hide");
+                        $(document).ready(function(){
+                            $("input[name=asignacion]").click(function(){
+                                if(this.value=="usuario")
+                                    $("#optionalAsignacionUsuario").removeClass("hide");
+                                else
+                                    $("#optionalAsignacionUsuario").addClass("hide");
+                            });
                         });
-                    });
                     </script>
                     <label>Regla de asignación</label>
                     <label class="radio" rel="tooltip" title="Los usuarios se asignan en forma ciclica. Se van turnando dentro del grupo de usuarios en forma circular."><input type="radio" name="asignacion" value="ciclica" <?= $tarea->asignacion == 'ciclica' ? 'checked' : '' ?> /> Cíclica</label>
@@ -179,14 +180,14 @@
                 </div>
                 <div class="tab-pane" id="tab3">
                     <script type="text/javascript">
-                    $(document).ready(function(){
-                        $("input[name=acceso_modo]").change(function(){
-                            if(this.value=="grupos_usuarios")
-                                $("#optionalGruposUsuarios").removeClass("hide");
-                            else
-                                $("#optionalGruposUsuarios").addClass("hide");
+                        $(document).ready(function(){
+                            $("input[name=acceso_modo]").change(function(){
+                                if(this.value=="grupos_usuarios")
+                                    $("#optionalGruposUsuarios").removeClass("hide");
+                                else
+                                    $("#optionalGruposUsuarios").addClass("hide");
+                            });
                         });
-                    });
                     </script>
                     <label><input type="radio" name="acceso_modo" value="publico" <?= $tarea->acceso_modo == 'publico' ? 'checked' : '' ?> /> Cualquier persona puede acceder.</label>
                     <label><input type="radio" name="acceso_modo" value="registrados" <?= $tarea->acceso_modo == 'registrados' ? 'checked' : '' ?> /> Sólo los usuarios registrados.</label>
@@ -303,15 +304,41 @@
                     </table>
                 </div>
                 <div class="tab-pane" id="tab6">
-                    <script type="text/javascript">
-                    $(document).ready(function(){
-                        $("input[name=almacenar_usuario]").click(function(){
-                            if(this.checked)
-                                $("#optionalAlmacenarUsuario").removeClass("hide");
-                            else
-                                $("#optionalAlmacenarUsuario").addClass("hide");
+                    <script>
+                        $(document).ready(function(){
+                            $("input[name=vencimiento]").change(function(){
+                                if(this.checked)
+                                    $("#vencimientoConfig").show();
+                                else
+                                    $("#vencimientoConfig").hide();
+                            }).change();
                         });
-                    });
+                    </script>
+                    <label class="checkbox"><input type="checkbox" name="vencimiento" value="1" <?=$tarea->vencimiento?'checked':''?> /> ¿La etapa tiene vencimiento?</label>
+                    <div id="vencimientoConfig" class="hide" style="margin-left: 20px;">
+                        La etapa se vencera
+                        <input type="text" name="vencimiento_valor" class="input-mini" value="<?= $tarea->vencimiento_valor?$tarea->vencimiento_valor:5 ?>" />
+                        <select name="vencimiento_unidad" class="input-small">
+                            <option value="D" <?= $tarea->vencimiento_unidad == 'D' ? 'selected' : '' ?>>días</option>
+                            <option value="W" <?= $tarea->vencimiento_unidad == 'W' ? 'selected' : '' ?>>meses</option>
+                            <option value="M" <?= $tarea->vencimiento_unidad == 'M' ? 'selected' : '' ?>>años</option>
+                        </select>
+                        despues de completada la etapa anterior.
+                        <br />
+                        <label class="checkbox"><input type="checkbox" name="vencimiento_notificar" value="1" <?=$tarea->vencimiento_notificar?'checked':''?> /> Notificar cuando quede 1 día al siguiente correo:</label>
+                         <input style="margin-left: 20px;" type="text" name="vencimiento_notificar_email" placeholder="ejemplo@mail.com" value="<?=$tarea->vencimiento_notificar_email?>" />
+                    </div>
+                </div>
+                <div class="tab-pane" id="tab7">
+                    <script type="text/javascript">
+                        $(document).ready(function(){
+                            $("input[name=almacenar_usuario]").click(function(){
+                                if(this.checked)
+                                    $("#optionalAlmacenarUsuario").removeClass("hide");
+                                else
+                                    $("#optionalAlmacenarUsuario").addClass("hide");
+                            });
+                        });
                     </script>
                     <label><input type="checkbox" name="almacenar_usuario" value="1" <?= $tarea->almacenar_usuario ? 'checked' : '' ?> /> ¿Almacenar el identificador del usuario que lleva a cabo esta tarea?</label>
                     <div id="optionalAlmacenarUsuario" class="<?= $tarea->almacenar_usuario ? '' : 'hide' ?>">
