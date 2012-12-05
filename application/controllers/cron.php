@@ -22,9 +22,7 @@ class Cron extends CI_Controller {
                 ->where('t.vencimiento = 1 AND e.pendiente = 1 AND t.vencimiento_notificar = 1')      
                 ->having('DATEDIFF(fecha_vencimiento,NOW()) = 1')
                 ->execute();
-                
-        print_r($etapas->toArray());
-        
+                        
         foreach($etapas as $e){
             echo 'Enviando correo de notificacion para etapa '.$e->id."\n";
             $this->email->from('simple@chilesinpapeleo.cl');
