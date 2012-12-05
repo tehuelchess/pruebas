@@ -31,7 +31,7 @@ class UsuarioSesion {
     public static function force_login() {
         $CI = & get_instance();
 
-        $CI->load->library('lightopenid');
+        $CI->load->library('LightOpenID');
         if ($CI->lightopenid->mode == 'id_res') {
             self::login_open_id();
         }
