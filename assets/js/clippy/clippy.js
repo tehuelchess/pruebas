@@ -211,7 +211,7 @@ clippy.Agent.prototype = {
         // clear the queue
         this._queue.clear();
         this._animator.exitAnimation();
-        this._balloon.hide();
+        this._balloon.hide(true);
     },
 
     /***
@@ -665,7 +665,7 @@ clippy.Balloon = function (targetEl) {
 clippy.Balloon.prototype = {
 
     WORD_SPEAK_TIME:320,
-    CLOSE_BALLOON_DELAY:2000,
+    CLOSE_BALLOON_DELAY:60000,
 
     _setup:function () {
 
@@ -810,7 +810,7 @@ clippy.Balloon.prototype = {
                     this.hide();
                 }
             } else {
-                el.text(words.slice(0, idx).join(' '));
+                el.html(words.slice(0, idx).join(' '));
                 idx++;
                 this._loop = window.setTimeout($.proxy(this._addWord, this), time);
             }
