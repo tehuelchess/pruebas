@@ -140,8 +140,8 @@ CREATE  TABLE IF NOT EXISTS `tramitador`.`usuario` (
   `created_at` DATETIME NULL ,
   `updated_at` DATETIME NULL ,
   PRIMARY KEY (`id`) ,
-  UNIQUE INDEX `usuario_UNIQUE` (`usuario` ASC, `open_id` ASC) ,
   INDEX `fk_usuario_cuenta1` (`cuenta_id` ASC) ,
+  UNIQUE INDEX `usuario_unique` (`usuario` ASC, `open_id` ASC, `cuenta_id` ASC) ,
   CONSTRAINT `fk_usuario_cuenta1`
     FOREIGN KEY (`cuenta_id` )
     REFERENCES `tramitador`.`cuenta` (`id` )

@@ -60,9 +60,11 @@ class Cuenta extends Doctrine_Record {
             $CI = &get_instance();
             preg_match('/(.+)\.chilesinpapeleo\.cl/', $CI->input->server('HTTP_HOST'), $matches);
             $dominio = null;
-            if (isset($matches[1]) && $matches[1] != 'simple'){
+            if (isset($matches[1])){
                 $dominio = $matches[1];
                 $cuentaSegunDominio = Doctrine::getTable('Cuenta')->findOneByNombre($dominio);
+            }else{  //Si no estamos en ningun dominio, entregamos la primera cuenta como default
+                $cuentaSegunDominio = Doctrine_Query::create()->from('Cuenta')->fetchOne();
             }
                 
         }
