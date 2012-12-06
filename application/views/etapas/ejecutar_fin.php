@@ -9,7 +9,7 @@
                     <label>Asignar próxima etapa a</label>
                     <select name="usuarios_a_asignar[<?= $t->id ?>]">
                         <?php foreach ($t->getUsuarios() as $u): ?>
-                            <option value="<?= $u->id ?>"><?= $u->usuario ?></option>
+                            <option value="<?= $u->id ?>"><?= $u->usuario ?> <?=$u->nombre?'('.$u->nombre.' '.$u->apellidos.')':''?></option>
                         <?php endforeach; ?>
                     </select>
                 <?php endif; ?>
