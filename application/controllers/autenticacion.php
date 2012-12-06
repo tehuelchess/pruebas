@@ -18,7 +18,7 @@ class Autenticacion extends MY_Controller {
         $this->form_validation->set_rules('password', 'Contraseña', 'required|callback_check_password');
 
         if ($this->form_validation->run() == TRUE) {
-            UsuarioSesion::login($this->input->post('usuario'),$this->input->post('password'));
+            UsuarioSesion::login($this->input->post('usuario'),$this->input->post('password'),Cuenta::cuentaSegunDominio()->id);
             $respuesta->validacion=TRUE;
             $respuesta->redirect=$this->input->post('redirect')?$this->input->post('redirect'):site_url();
             
