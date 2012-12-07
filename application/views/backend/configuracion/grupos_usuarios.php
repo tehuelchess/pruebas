@@ -16,11 +16,20 @@
         <table class="table">
             <tr>
                 <th>Nombre</th>
+                <th>Usuarios</th>
                 <th>Acciones</th>
             </tr>
             <?php foreach($grupos_usuarios as $u): ?>
             <tr>
                 <td><?=$u->nombre?></td>
+                <td>
+                    <?php
+                    $tmp=array();
+                    foreach($u->Usuarios as $g)
+                        $tmp[]=$g->usuario;
+                    echo implode(', ', $tmp);
+                    ?>
+                </td>
                 <td>
                     <a class="btn" href="<?=site_url('backend/configuracion/grupo_usuarios_editar/'.$u->id)?>"><i class="icon-edit"></i> Editar</a>
                     <a class="btn" href="<?=site_url('backend/configuracion/grupo_usuarios_eliminar/'.$u->id)?>" onclick="return confirm('¿Está seguro que desea eliminar?')"><i class="icon-remove"></i> Eliminar</a>
