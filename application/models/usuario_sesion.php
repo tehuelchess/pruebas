@@ -52,13 +52,13 @@ class UsuarioSesion {
         }
     }
 
-    public static function login($usuario, $password, $cuenta_id) {
+    public static function login($usuario, $password) {
         $CI = & get_instance();
 
         $autorizacion = self::validar_acceso($usuario, $password);
 
         if ($autorizacion) {
-            $u = Doctrine::getTable('Usuario')->findOneByUsuarioAndCuentaIdAndOpenId($usuario,$cuenta_id,0);
+            $u = Doctrine::getTable('Usuario')->findOneByUsuarioAndOpenId($usuario,0);
 
             //Logueamos al usuario
             $CI->session->set_userdata('usuario_id', $u->id);
