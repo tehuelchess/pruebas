@@ -66,6 +66,8 @@ class Configuracion extends MY_Controller {
             $data['grupo_usuarios'] = $grupo_usuarios;
         }
 
+        $data['usuarios']=Doctrine::getTable('Usuario')->findByRegistradoAndOpenId(1,0);
+        
         $data['title'] = 'Configuración de Grupo de Usuarios';
         $data['content'] = 'backend/configuracion/grupo_usuarios_editar';
 
@@ -91,6 +93,7 @@ class Configuracion extends MY_Controller {
 
             $grupo_usuarios->nombre = $this->input->post('nombre');
             $grupo_usuarios->cuenta_id = UsuarioBackendSesion::usuario()->cuenta_id;
+            $grupo_usuarios->setUsuariosFromArray($this->input->post('usuarios'));
             $grupo_usuarios->save();
 
             $respuesta->validacion = TRUE;

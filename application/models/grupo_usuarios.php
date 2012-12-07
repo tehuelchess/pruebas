@@ -29,5 +29,18 @@ class GrupoUsuarios extends Doctrine_Record {
             'refClass' => 'GrupoUsuariosHasUsuario'
         ));
     }
+    
+    public function hasUsuario($usuario_id){
+        return Doctrine_Query::create()->from('Usuario u, u.GruposUsuarios g')->where('g.id=? AND u.id=?',array($this->id,$usuario_id))->count();
+    }
+    
+    public function setUsuariosFromArray($usuarios_id){
+        foreach($this->Usuarios as $key=>$val)
+            unset($this->Usuarios[$key]);
+        
+        if($usuarios_id)
+            foreach($usuarios_id as $g)
+                $this->Usuarios[]=Doctrine::getTable('Usuario')->find($g);
+    }
 
 }

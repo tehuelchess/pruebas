@@ -31,7 +31,7 @@
                     $tmp=array();
                     foreach($u->GruposUsuarios as $g)
                         $tmp[]=$g->nombre;
-                    echo implode(',', $tmp);
+                    echo implode(', ', $tmp);
                     ?>
                 </td>
                 <td>
