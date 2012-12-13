@@ -44,15 +44,8 @@ class Reporte extends Doctrine_Record {
         foreach($tramites as $t){
             $row=array($t->id);
             foreach($this->campos as $c){
-                $campo=null;
-                $dato=Doctrine::getTable('dato')->findOneByTramiteIdAndNombre($t->id,$c);
-                if($dato){
-                    if(is_array($dato->valor))
-                        $campo=implode(',', $dato->valor);
-                    else
-                        $campo=$dato->valor;
-                }
-                $row[]=$campo;
+                $regla=new Regla('@@'.$c);
+                $row[]=$regla->getExpresionParaOutput($t->id);
             }
             $excel[]=$row;
         }

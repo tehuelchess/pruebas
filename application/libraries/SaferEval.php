@@ -160,7 +160,12 @@ class SaferEval {
             'ucwords', // Uppercase the first character of each word in a string
             'wordwrap', // Wraps a string to a given number of characters
             //Date functions
-            'date_create'
+            'date_create',
+            //JSON
+            'json_encode',
+            'json_decode',
+            //Funciones custom para el evaluador
+            'get'       //Obtiene el elemento dentro de un array u object.
         );
         $this->allowedTokens = array(
             'T_AND_EQUAL', // assignment operators
