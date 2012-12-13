@@ -2,7 +2,7 @@
 <html lang="es">
     <head>
         <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="viewport" content="widpth=device-width, initial-scale=1.0">
         <title>Tramitador</title>
 
         <!-- Le styles -->
@@ -37,14 +37,6 @@
         <script src="<?= base_url() ?>assets/js/jquery.ui.livedraggable/jquery.ui.livedraggable.js" type="text/javascript"></script> <?php //JS para que evento draggable sea live    ?>
         <script src="<?= base_url() ?>assets/js/jquery.doubletap/jquery.doubletap.js" type="text/javascript"></script> <?php //JS para soportar dobleclick en iPad    ?>      
         <script src="http://js.pusher.com/1.11/pusher.min.js" type="text/javascript"></script> <?php //JS para recibir eventos push via websockets    ?>
-        <script type="text/javascript">
-            var pusher = new Pusher('<?= $this->config->item('pusher_api_key') ?>');
-            var channel = pusher.subscribe('modelador');
-            var socketId;
-            pusher.connection.bind('connected', function() {
-                socketId = pusher.connection.socket_id;
-            });
-        </script>
         <script src="<?= base_url() ?>assets/js/json-js/json2.js" type="text/javascript"></script> <?php //JS para convertir objetos a notacion JSON en multiples browsers    ?>
         <script src="<?= base_url() ?>assets/js/jquery.jsplumb/jquery.jsPlumb-1.3.10-all-min.js" type="text/javascript"></script> <?php //JS para conectar elementos como diagramas de flujos    ?>
         <script src="<?= base_url() ?>assets/js/highcharts/highcharts.js" type="text/javascript"></script> <?php //JS para hacer graficos    ?>
