@@ -10,7 +10,7 @@ class CampoInstitucionesGob extends Campo{
         $display.='<option></option>';
         $display.='</select>';
         $display.='<br />';
-        $display.='<select class="instituciones" data-id="'.$this->id.'" name="' . $this->nombre . '[institucion]" ' . ($modo == 'visualizacion' ? 'disabled' : '') . '>';
+        $display.='<select class="instituciones" data-id="'.$this->id.'" name="' . $this->nombre . '[servicio]" ' . ($modo == 'visualizacion' ? 'disabled' : '') . '>';
         $display.='<option></option>';
         $display.='</select>';
 
@@ -20,7 +20,7 @@ class CampoInstitucionesGob extends Campo{
                     var justLoadedEntidad=true;
                     var justLoadedInstitucion=true;
                     var defaultEntidad="'.($dato && $dato->valor?$dato->valor->entidad:'').'";
-                    var defaultInstitucion="'.($dato && $dato->valor?$dato->valor->institucion:'').'";
+                    var defaultInstitucion="'.($dato && $dato->valor?$dato->valor->servicio:'').'";
                         
                     updateEntidades();
                     
@@ -73,7 +73,7 @@ class CampoInstitucionesGob extends Campo{
     public function formValidate() {
         $CI=& get_instance();
         $CI->form_validation->set_rules($this->nombre.'[entidad]', $this->etiqueta.' - Entidad', implode('|', $this->validacion));
-        $CI->form_validation->set_rules($this->nombre.'[institucion]', $this->etiqueta.' - Institución', implode('|', $this->validacion));
+        $CI->form_validation->set_rules($this->nombre.'[servicio]', $this->etiqueta.' - Servicio', implode('|', $this->validacion));
     }
     
 }
