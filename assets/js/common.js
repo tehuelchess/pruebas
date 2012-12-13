@@ -67,7 +67,7 @@ $(document).ready(function(){
     
     //Para manejar los input dependientes en dynaforms
     function prepareDynaForm(form){
-        $(form).find(".campo[data-dependiente-campo]").each(function(i,el){
+        $(form).find(".campo[data-dependiente-campo]").each(function(i,el){          
             var tipo=$(el).data("dependiente-tipo");
             var campo=$(el).data("dependiente-campo");
             var valor=$(el).data("dependiente-valor");
@@ -97,7 +97,10 @@ $(document).ready(function(){
                 $(el).find(":input").prop("disabled",false);
             }
             else{
-                $(el).hide();
+                if($(form).hasClass("debugForm"))
+                    $(el).css("opacity","0.5");
+                else
+                    $(el).hide();
                 $(el).find(":input").prop("disabled",true);
             }
         });
