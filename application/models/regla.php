@@ -17,13 +17,12 @@ class Regla {
 
         $new_regla = $this->getExpresionParaEvaluar($tramite_id);         
         $new_regla = 'return ' . $new_regla . ';';
-        
         $CI = & get_instance();
         $CI->load->library('SaferEval');
         $resultado = FALSE;
         if (!$errores = $CI->safereval->checkScript($new_regla, FALSE))
             $resultado = eval($new_regla);
-
+        
         return $resultado;
     }
     
@@ -35,12 +34,7 @@ class Regla {
                     $nombre_dato = $match[1];
                     $dato = Doctrine::getTable('Dato')->findOneByTramiteIdAndNombre($tramite_id, $nombre_dato);
                     if ($dato) {
-                        $dato_almacenado = $dato->valor;
-                        if (is_array($dato_almacenado)) {
-                            $valor_dato = 'array(' . implode(',', $dato_almacenado) . ')';
-                        }
-                        else
-                            $valor_dato = "'" . $dato_almacenado . "'";
+                        $valor_dato = 'json_decode(\'' .json_encode($dato->valor). '\')';
                     }
                     else {
                         //No reemplazamos el dato
@@ -79,8 +73,8 @@ class Regla {
                     $dato = Doctrine::getTable('Dato')->findOneByTramiteIdAndNombre($tramite_id, $nombre_dato);
                     if ($dato) {
                         $dato_almacenado = $dato->valor;
-                        if (is_array($dato_almacenado)) {
-                            $valor_dato = implode(',', $dato_almacenado);
+                        if (is_array($dato_almacenado) || is_object($dato_almacenado)) {
+                            $valor_dato=  json_encode($dato_almacenado);
                         }
                         else
                             $valor_dato = $dato_almacenado;
