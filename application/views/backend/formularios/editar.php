@@ -42,7 +42,7 @@
         </div>
     </div>
 
-    <form id="formEditarFormulario" class="dynaForm" onsubmit="return false">
+    <form id="formEditarFormulario" class="dynaForm debugForm" onsubmit="return false">
         <div class="row-fluid">
             <div class="span3">&nbsp;</div>
             <div class="span6">
