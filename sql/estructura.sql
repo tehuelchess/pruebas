@@ -107,47 +107,53 @@ COLLATE = utf8_general_ci;
 -- Table `tramitador`.`grupo_usuarios`
 -- -----------------------------------------------------
 CREATE  TABLE IF NOT EXISTS `tramitador`.`grupo_usuarios` (
-  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
+  `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT ,
   `nombre` VARCHAR(128) NOT NULL ,
-  `cuenta_id` INT UNSIGNED NOT NULL ,
+  `cuenta_id` INT(10) UNSIGNED NOT NULL ,
   PRIMARY KEY (`id`) ,
-  INDEX `fk_grupo_usuarios_cuenta1` (`cuenta_id` ASC) ,
   UNIQUE INDEX `grupo_usuarios_UNIQUE` (`cuenta_id` ASC, `nombre` ASC) ,
+  INDEX `fk_grupo_usuarios_cuenta1` (`cuenta_id` ASC) ,
   CONSTRAINT `fk_grupo_usuarios_cuenta1`
     FOREIGN KEY (`cuenta_id` )
     REFERENCES `tramitador`.`cuenta` (`id` )
     ON DELETE CASCADE
     ON UPDATE CASCADE)
-ENGINE = InnoDB;
+ENGINE = InnoDB
+AUTO_INCREMENT = 11
+DEFAULT CHARACTER SET = utf8
+COLLATE = utf8_general_ci;
 
 
 -- -----------------------------------------------------
 -- Table `tramitador`.`usuario`
 -- -----------------------------------------------------
 CREATE  TABLE IF NOT EXISTS `tramitador`.`usuario` (
-  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
+  `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT ,
   `usuario` VARCHAR(128) NOT NULL ,
-  `password` VARCHAR(256) NULL ,
-  `rut` VARCHAR(16) NULL ,
-  `nombre` VARCHAR(128) NULL ,
-  `apellidos` VARCHAR(128) NULL ,
-  `email` VARCHAR(255) NULL ,
-  `registrado` TINYINT(1) NOT NULL DEFAULT 1 ,
-  `vacaciones` TINYINT(1) NOT NULL DEFAULT 0 ,
-  `cuenta_id` INT UNSIGNED NULL ,
+  `password` VARCHAR(256) NULL DEFAULT NULL ,
+  `rut` VARCHAR(16) NULL DEFAULT NULL ,
+  `nombre` VARCHAR(128) NULL DEFAULT NULL ,
+  `apellidos` VARCHAR(128) NULL DEFAULT NULL ,
+  `email` VARCHAR(255) NULL DEFAULT NULL ,
+  `registrado` TINYINT(1) NOT NULL DEFAULT '1' ,
+  `vacaciones` TINYINT(1) NOT NULL DEFAULT '0' ,
+  `cuenta_id` INT(10) UNSIGNED NULL DEFAULT NULL ,
   `salt` VARCHAR(32) NOT NULL ,
-  `open_id` TINYINT(1) NOT NULL DEFAULT 0 ,
-  `created_at` DATETIME NULL ,
-  `updated_at` DATETIME NULL ,
+  `open_id` TINYINT(1) NOT NULL DEFAULT '0' ,
+  `created_at` DATETIME NULL DEFAULT NULL ,
+  `updated_at` DATETIME NULL DEFAULT NULL ,
   PRIMARY KEY (`id`) ,
-  UNIQUE INDEX `usuario_UNIQUE` (`usuario` ASC, `open_id` ASC) ,
+  UNIQUE INDEX `usuario_unique` (`usuario` ASC, `open_id` ASC) ,
   INDEX `fk_usuario_cuenta1` (`cuenta_id` ASC) ,
   CONSTRAINT `fk_usuario_cuenta1`
     FOREIGN KEY (`cuenta_id` )
     REFERENCES `tramitador`.`cuenta` (`id` )
     ON DELETE CASCADE
     ON UPDATE CASCADE)
-ENGINE = InnoDB;
+ENGINE = InnoDB
+AUTO_INCREMENT = 307
+DEFAULT CHARACTER SET = utf8
+COLLATE = utf8_general_ci;
 
 
 -- -----------------------------------------------------
@@ -300,7 +306,7 @@ CREATE  TABLE IF NOT EXISTS `tramitador`.`campo` (
   `posicion` INT(10) UNSIGNED NOT NULL ,
   `tipo` VARCHAR(32) NOT NULL ,
   `formulario_id` INT(10) UNSIGNED NOT NULL ,
-  `etiqueta` VARCHAR(128) NOT NULL ,
+  `etiqueta` TEXT NOT NULL ,
   `validacion` VARCHAR(128) NOT NULL ,
   `dependiente_tipo` ENUM('string','regex') NULL DEFAULT 'string' ,
   `dependiente_campo` VARCHAR(64) NULL ,
