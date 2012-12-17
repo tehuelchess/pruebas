@@ -93,7 +93,10 @@ $(document).ready(function(){
                 }     
             }
             if(existe){
-                $(el).show();
+                if($(form).hasClass("debugForm"))
+                    $(el).css("opacity","1.0");
+                else
+                    $(el).show();
                 $(el).find(":input").prop("disabled",false);
             }
             else{
