@@ -80,7 +80,7 @@
             <input type="hidden" name="tipo" value="<?= $campo->tipo ?>" />
         <?php endif; ?>
         <label>Etiqueta</label>
-        <input type="text" name="etiqueta" value="<?= $campo->etiqueta ?>" />
+        <input type="text" name="etiqueta" value="<?= htmlspecialchars($campo->etiqueta) ?>" />
         <?php if(!$campo->estatico):?>
         <label>Nombre</label>
         <input type="text" name="nombre" value="<?= $campo->nombre ?>" />
