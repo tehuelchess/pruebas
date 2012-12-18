@@ -90,18 +90,20 @@ class Etapas extends MY_Controller {
         $modo = $paso->modo;
 
         if ($modo == 'edicion') {
+            $validar_formulario=FALSE;
             foreach ($formulario->Campos as $c){
                 //Validamos los campos que no sean readonly y que esten disponibles (que su campo dependiente se cumpla)
-                if($c->isEditableWithCurrentPOST())
+                if($c->isEditableWithCurrentPOST()){
                     $c->formValidate();
+                    $validar_formulario=TRUE;
+                }
                 
                 
                 //if((!$c->readonly) && 
                 //   (!$c->dependiente_campo || $this->input->post($c->dependiente_campo)==$c->dependiente_valor))
                 //    $c->formValidate();
             }
-
-            if ($this->form_validation->run() == TRUE) {
+            if (!$validar_formulario || $this->form_validation->run() == TRUE) {
                 foreach ($formulario->Campos as $c) {
                     //Almacenamos los campos que no sean readonly y que esten disponibles (que su campo dependiente se cumpla)
                     if($c->isEditableWithCurrentPOST()){
