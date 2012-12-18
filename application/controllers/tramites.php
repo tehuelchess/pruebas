@@ -8,7 +8,6 @@ class Tramites extends MY_Controller {
     public function __construct() {
         parent::__construct();
 
-        UsuarioSesion::force_login();
     }
 
     public function index() {

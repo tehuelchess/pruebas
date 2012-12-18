@@ -1,6 +1,6 @@
 <form method="POST" class="ajaxForm" action="<?=site_url('cuentas/editar_form')?>">
     <fieldset>
-        <legend>Edita la información de tu cuenta</legend>
+        <legend>Completa la información de tu cuenta</legend>
         <div class="validacion"></div>
         <label>RUT</label>
         <input type="text" name="rut" value="<?=$usuario->rut?>" />

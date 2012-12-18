@@ -4,7 +4,6 @@ class Documentos extends MY_Controller {
     function __construct() {
         parent::__construct();
 
-        UsuarioSesion::force_login();
     }
     
     function get($filename){

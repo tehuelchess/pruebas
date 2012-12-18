@@ -8,7 +8,7 @@ class Cuentas extends MY_Controller {
     public function __construct() {
         parent::__construct();
 
-        UsuarioSesion::force_login();
+        
         
         if(!UsuarioSesion::usuario()->registrado){
             echo 'Usuario no registrado en el sistema.';
@@ -25,7 +25,10 @@ class Cuentas extends MY_Controller {
     }
     
     public function editar_form(){
-        $this->form_validation->set_rules('rut','RUT','rut');
+        $this->form_validation->set_rules('rut','RUT','required|rut');
+        $this->form_validation->set_rules('nombre','Nombre','required');
+        $this->form_validation->set_rules('apellidos','Apellidos','required');
+        $this->form_validation->set_rules('email','Correo electrónico','required|valid_email');
         
         if($this->form_validation->run()==TRUE){
             $usuario=UsuarioSesion::usuario();
@@ -36,7 +39,10 @@ class Cuentas extends MY_Controller {
             $usuario->save();
             
             $respuesta->validacion=TRUE;
-            $respuesta->redirect=$this->input->post('redirect');
+            if(site_url('cuentas/editar')==$this->input->post('redirect'))
+                $respuesta->redirect=site_url();
+            else
+                $respuesta->redirect=$this->input->post('redirect');
             
         }else{
             $respuesta->validacion=FALSE;
