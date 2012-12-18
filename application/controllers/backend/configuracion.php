@@ -157,8 +157,9 @@ class Configuracion extends MY_Controller {
                 exit;
             }
         }
-
-        $this->form_validation->set_rules('usuario', 'Nombre de Usuario', 'required');
+        
+        if(!$usuario)
+            $this->form_validation->set_rules('usuario', 'Nombre de Usuario', 'required|callback_check_existe_usuario');
         $this->form_validation->set_rules('password', 'Contraseña', 'matches[password_confirm]');
         $this->form_validation->set_rules('password_confirm', 'Confirmar contraseña');
         $this->form_validation->set_rules('nombre', 'Nombre', 'required');
@@ -166,10 +167,12 @@ class Configuracion extends MY_Controller {
         $this->form_validation->set_rules('email', 'Correo electrónico', 'valid_email');
 
         if ($this->form_validation->run() == TRUE) {
-            if (!$usuario)
+            if (!$usuario){
                 $usuario = new Usuario();
+                $usuario->usuario = $this->input->post('usuario');
+            }
 
-            $usuario->usuario = $this->input->post('usuario');
+            
             if($this->input->post('password')) $usuario->password=$this->input->post('password');
             $usuario->nombre = $this->input->post('nombre');
             $usuario->apellidos = $this->input->post('apellidos');
@@ -228,6 +231,16 @@ class Configuracion extends MY_Controller {
         }
 
         echo json_encode($respuesta);
+    }
+    
+    function check_existe_usuario($usuario){
+        $u=Doctrine::getTable('Usuario')->findOneByUsuario($usuario);
+        if(!$u)
+            return TRUE;
+        
+        $this->form_validation->set_message('check_existe_usuario','%s ya existe');
+        return FALSE;
+             
     }
 
 
