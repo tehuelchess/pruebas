@@ -84,11 +84,11 @@ $(document).ready(function(){
                 if(items[i].name==campo){
                     if(tipo=="regex"){
                         var regex=new RegExp(valor);
-                        existe=regex.test(items[i].value);  
+                        if(regex.test(items[i].value))
+                            existe=true;  
                     }else{
-                        if(items[i].value==valor){
-                            existe=true;
-                        }
+                        if(items[i].value==valor)
+                            existe=true;                       
                     }          
                 }     
             }
