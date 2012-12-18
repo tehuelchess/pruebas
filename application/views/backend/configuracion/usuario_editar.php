@@ -19,7 +19,7 @@
                 <legend>Editar usuario</legend>
                 <div class="validacion"></div>
                 <label>Nombre de Usuario</label>
-                <input type="text" name="usuario" value="<?=isset($usuario)?$usuario->usuario:''?>"/>
+                <input type="text" name="usuario" value="<?=isset($usuario)?$usuario->usuario:''?>" <?=  isset($usuario)?'disabled':''?>/>
                 <label>Contraseña</label>
                 <input type="password" name="password" value=""/>
                 <label>Confirmar contraseña</label>
