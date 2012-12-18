@@ -39,7 +39,7 @@ class Autenticacion extends MY_Controller {
         $this->form_validation->set_rules('usuario', 'Usuario', 'required|callback_check_usuario');
         $this->form_validation->set_rules('password', 'Contraseña', 'required|matches[password_confirm]');
         $this->form_validation->set_rules('password_confirm', 'Confirmar contraseña');
-        $this->form_validation->set_rules('email', 'Correo electrónico','valid_email');
+        $this->form_validation->set_rules('email', 'Correo electrónico','required|valid_email');
 
         if ($this->form_validation->run() == TRUE) {
             $usuario=new Usuario();
