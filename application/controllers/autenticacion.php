@@ -31,8 +31,9 @@ class Autenticacion extends MY_Controller {
 
     }
     
-    public function registrar(){        
-        $this->load->view('autenticacion/registrar');
+    public function registrar(){
+        $data['title']='Registro';
+        $this->load->view('autenticacion/registrar',$data);
     }
     
     public function registrar_form() {
