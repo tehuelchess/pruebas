@@ -17,8 +17,16 @@ class CampoSubtitle extends Campo{
         $this->setTableName("campo");
     }
     
-    protected function display($modo, $dato) {      
-        $display='<h4>'.$this->etiqueta.'</h4>';
+    protected function display($modo, $dato,$etapa_id) {
+        if($etapa_id){
+            $etapa=Doctrine::getTable('Etapa')->find($etapa_id);
+            $regla=new Regla($this->etiqueta);
+            $etiqueta=$regla->getExpresionParaOutput($etapa->tramite_id);
+        }else{
+            $etiqueta=$this->etiqueta;
+        }
+        
+        $display='<h4>'.$etiqueta.'</h4>';
         
         return $display;
     }

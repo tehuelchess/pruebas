@@ -24,8 +24,16 @@ class CampoTitle extends Campo{
         $this->_set('readonly', 1);
     }
     
-    protected function display($modo, $dato) {      
-        $display='<h3>'.$this->etiqueta.'</h3>';
+    protected function display($modo, $dato,$etapa_id) {
+        if($etapa_id){
+            $etapa=Doctrine::getTable('Etapa')->find($etapa_id);
+            $regla=new Regla($this->etiqueta);
+            $etiqueta=$regla->getExpresionParaOutput($etapa->tramite_id);
+        }else{
+            $etiqueta=$this->etiqueta;
+        }
+        
+        $display='<h3>'.$etiqueta.'</h3>';
         
         return $display;
     }

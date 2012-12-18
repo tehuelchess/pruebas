@@ -44,7 +44,7 @@ class Regla {
                     return $valor_dato;
                 }, $new_regla);
                 
-         $new_regla=preg_replace_callback('/@!(\w+)/', function($match) {
+         $new_regla=preg_replace_callback('/@!(\w+)/', function($match) use ($tramite_id) {
                     $nombre_dato = $match[1];
                     $usuario=UsuarioSesion::usuario();
                     if($nombre_dato=='rut')
@@ -55,6 +55,10 @@ class Regla {
                         return "'".$usuario->apellidos."'";
                     else if($nombre_dato=='email')
                         return "'".$usuario->email."'";
+                    else if($nombre_dato=='proceso_id'){
+                        $tramite=Doctrine::getTable('Tramite')->find($tramite_id);
+                        return "'".$tramite->Proceso->id."'";
+                    }
                 }, $new_regla);
                 
          //Si quedaron variables sin reemplazar, la evaluacion deberia ser siempre falsa.
@@ -87,7 +91,7 @@ class Regla {
                     return $valor_dato;
                 }, $new_regla);
          
-         $new_regla=preg_replace_callback('/@!(\w+)/', function($match) {
+         $new_regla=preg_replace_callback('/@!(\w+)/', function($match) use ($tramite_id) {
                     $nombre_dato = $match[1];
                     $usuario=UsuarioSesion::usuario();
                     if($nombre_dato=='rut')
@@ -98,6 +102,10 @@ class Regla {
                         return $usuario->apellidos;
                     else if($nombre_dato=='email')
                         return $usuario->email;
+                    else if($nombre_dato=='proceso_id'){
+                        $tramite=Doctrine::getTable('Tramite')->find($tramite_id);
+                        return $tramite->Proceso->id;
+                    }
                 }, $new_regla);
           
          return $new_regla;
