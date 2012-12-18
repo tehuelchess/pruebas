@@ -7,7 +7,6 @@ class Uploader extends MY_Controller {
     function __construct() {
         parent::__construct();
 
-        UsuarioSesion::force_login();
     }
 
     function datos($campo_id,$etapa_id) {
