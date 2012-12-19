@@ -22,7 +22,7 @@
         <input type="hidden" name="proceso_id" value="<?=$proceso->id?>" />
         <input type="hidden" name="tipo" value="<?=$tipo?>" />
         <?php endif; ?>
-        <label>Nombre</label>
+        <label>Nombre de la acción</label>
         <input type="text" name="nombre" value="<?=$edit?$accion->nombre:''?>" />
         <label>Tipo</label>
         <input type="text" readonly value="<?=$edit?$accion->tipo:$tipo?>" />

@@ -73,6 +73,8 @@ class Acciones extends CI_Controller {
             $accion=new AccionEnviarCorreo();
         else if($tipo=='webservice')
             $accion=new AccionWebservice();
+        else if($tipo=='variable')
+            $accion=new AccionVariable();
         
         $data['edit']=FALSE;
         $data['proceso']=$proceso;
@@ -111,6 +113,8 @@ class Acciones extends CI_Controller {
                 $accion=new AccionEnviarCorreo();
             else if($this->input->post('tipo')=='webservice')
                 $accion=new AccionWebservice();
+            else if($this->input->post('tipo')=='variable')
+                $accion=new AccionVariable();
             $accion->proceso_id=$this->input->post('proceso_id');
             $accion->tipo=$this->input->post('tipo');
         }
