@@ -208,6 +208,15 @@ class Etapa extends Doctrine_Record {
             $dato->tramite_id = $this->Tramite->id;
             $dato->save();
         }
+        
+        //Ejecutamos los eventos
+        foreach ($this->Tarea->Eventos as $e){
+            if ($e->instante == 'despues'){
+                $r=new Regla($e->regla);
+                if($r->evaluar($this->tramite_id))
+                    $e->Accion->ejecutar($this->tramite_id);
+            }
+        }
 
         //Le generamos los datos para el seguimiento
         foreach ($this->Tramite->Datos as $d) {
@@ -225,14 +234,7 @@ class Etapa extends Doctrine_Record {
         $this->ended_at = date('Y-m-d H:i:s');
         $this->save();
 
-        //Ejecutamos los eventos
-        foreach ($this->Tarea->Eventos as $e){
-            if ($e->instante == 'despues'){
-                $r=new Regla($e->regla);
-                if($r->evaluar($this->tramite_id))
-                    $e->Accion->ejecutar($this->tramite_id);
-            }
-        }
+        
     }
     
     //Retorna el paso correspondiente a la secuencia, dado los datos ingresados en el tramite hasta el momento.
