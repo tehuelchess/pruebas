@@ -83,8 +83,8 @@ class Regla {
                             $valor_dato = $dato_almacenado;
                     }
                     else {
-                        //No reemplazamos el dato
-                        $valor_dato = $match[0];
+                        //Entregamos vacio
+                        $valor_dato = '';
                     }
 
                     return $valor_dato;
