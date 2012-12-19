@@ -38,7 +38,7 @@
         <script src="<?= base_url() ?>assets/js/jquery.doubletap/jquery.doubletap.js" type="text/javascript"></script> <?php //JS para soportar dobleclick en iPad    ?>      
         <script src="http://js.pusher.com/1.11/pusher.min.js" type="text/javascript"></script> <?php //JS para recibir eventos push via websockets    ?>
         <script src="<?= base_url() ?>assets/js/json-js/json2.js" type="text/javascript"></script> <?php //JS para convertir objetos a notacion JSON en multiples browsers    ?>
-        <script src="<?= base_url() ?>assets/js/jquery.jsplumb/jquery.jsPlumb-1.3.10-all-min.js" type="text/javascript"></script> <?php //JS para conectar elementos como diagramas de flujos    ?>
+        <script src="<?= base_url() ?>assets/js/jquery.jsplumb/jquery.jsPlumb-1.3.16-all-min.js" type="text/javascript"></script> <?php //JS para conectar elementos como diagramas de flujos    ?>
         <script src="<?= base_url() ?>assets/js/highcharts/highcharts.js" type="text/javascript"></script> <?php //JS para hacer graficos    ?>
         <script type="text/javascript">
             var site_url="<?= site_url() ?>";
