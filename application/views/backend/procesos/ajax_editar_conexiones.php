@@ -39,7 +39,9 @@
         
         <br /><br />
         
+        <?php if($conexiones[0]->tipo!='secuencial'):?>
         <div><button class="btn botonNuevaConexion" type="button"><i class="icon-plus"></i> Nueva</button></div>
+        <?php endif ?>
 
         <table class="table">  
             <thead>

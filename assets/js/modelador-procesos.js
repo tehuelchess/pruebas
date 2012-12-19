@@ -53,46 +53,17 @@ $(document).ready(function(){
                 c.tipo=tipo;
                 c.source=elements[0];
                 c.target=elements[1];
+                
+                //Validaciones
+                if(tipo=="secuencial" && jsPlumb.getConnections({source:c.source}).length){
+                    alert("Las conexiones secuenciales no pueden ir hacia mas de una tarea");
+                    return;
+                }
+                
+                
                 drawConnection(c);
                 
-                /*
-                var endpoint1,endpoint2;
-                if(tipo=='evaluacion')
-                    endpoint1=evaluacionEndpoint;
-                else if(tipo=='paralelo')
-                    endpoint1=paraleloEndpoint;
-                else if(tipo=='paralelo_evaluacion')
-                    endpoint1=paraleloEvaluacionEndpoint;
-                else if(tipo=='union')
-                    endpoint2=unionEndpoint;
-                */
-                
-                /*/Buscamos un id para asignarle
-                var i=0;
-                while(true){
-                    i++;
-                    id="conn_"+i;
-                    var connections=jsPlumb.getConnections();
-                    var existe=false;
-                    for (var j in connections){
-                        if(connections[j].getParameter("id")==id){
-                            existe=true;
-                            break;
-                        }
-                    }
-                    if(!existe)
-                        break;
-                }
-                */
-                /*
-                var conn=jsPlumb.connect({
-                    source: elements[0],
-                    target: elements[1],
-                    anchors: ["BottomCenter", "TopCenter"],
-                    endpoints: [endpoint1,endpoint2]
-                    //parameters: {"id": id}
-                });
-                */
+ 
                 
                 modo=null;
                 elements.length=0;
