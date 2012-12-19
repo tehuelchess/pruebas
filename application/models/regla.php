@@ -55,9 +55,8 @@ class Regla {
                         return "'".$usuario->apellidos."'";
                     else if($nombre_dato=='email')
                         return "'".$usuario->email."'";
-                    else if($nombre_dato=='proceso_id'){
-                        $tramite=Doctrine::getTable('Tramite')->find($tramite_id);
-                        return "'".$tramite->Proceso->id."'";
+                    else if($nombre_dato=='tramite_id'){
+                        return "'".$tramite_id."'";
                     }
                 }, $new_regla);
                 
@@ -102,9 +101,8 @@ class Regla {
                         return $usuario->apellidos;
                     else if($nombre_dato=='email')
                         return $usuario->email;
-                    else if($nombre_dato=='proceso_id'){
-                        $tramite=Doctrine::getTable('Tramite')->find($tramite_id);
-                        return $tramite->Proceso->id;
+                    else if($nombre_dato=='tramite_id'){
+                        return $tramite_id;
                     }
                 }, $new_regla);
           
