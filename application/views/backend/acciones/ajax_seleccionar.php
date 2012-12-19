@@ -9,6 +9,7 @@
         <select name="tipo">
             <option value="enviar_correo">Enviar correo</option>
             <option value="webservice">Consultar Webservice</option>
+            <option value="variable">Generar Variable</option>
         </select>
     </form>
 </div>
