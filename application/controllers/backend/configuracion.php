@@ -87,6 +87,7 @@ class Configuracion extends CI_Controller {
 
         $this->form_validation->set_rules('nombre', 'Nombre', 'required');
 
+        $respuesta=new stdClass();
         if ($this->form_validation->run() == TRUE) {
             if (!$grupo_usuarios)
                 $grupo_usuarios = new GrupoUsuarios();

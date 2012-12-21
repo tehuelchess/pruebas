@@ -106,6 +106,7 @@ class Etapa extends Doctrine_Record {
     //          -pendiente: Hay etapas a continuacion
     //          -standby: Hay etapas a continuacion pero no se puede avanzar todavia hasta que que se completen etapas paralelas. 
     public function getTareasProximas() {
+        $resultado=new stdClass();
         $resultado->tareas = null;
         $resultado->estado = 'sincontinuacion';
 
