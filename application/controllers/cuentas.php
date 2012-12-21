@@ -25,7 +25,6 @@ class Cuentas extends MY_Controller {
     }
     
     public function editar_form(){
-        $this->form_validation->set_rules('rut','RUT','required|rut');
         $this->form_validation->set_rules('nombre','Nombre','required');
         $this->form_validation->set_rules('apellidos','Apellidos','required');
         $this->form_validation->set_rules('email','Correo electrónico','required|valid_email');
@@ -33,7 +32,6 @@ class Cuentas extends MY_Controller {
         $respuesta=new stdClass();
         if($this->form_validation->run()==TRUE){
             $usuario=UsuarioSesion::usuario();
-            $usuario->rut=$this->input->post('rut');
             $usuario->nombre=$this->input->post('nombre');
             $usuario->apellidos=$this->input->post('apellidos');
             $usuario->email=$this->input->post('email');
