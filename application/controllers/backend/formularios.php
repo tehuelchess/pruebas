@@ -99,6 +99,7 @@ class Formularios extends CI_Controller {
         
         $this->form_validation->set_rules('nombre','Nombre','required');
         
+        $respuesta=new stdClass();
         if($this->form_validation->run()==TRUE){
             $formulario->nombre=$this->input->post('nombre');
             $formulario->save();
@@ -157,6 +158,7 @@ class Formularios extends CI_Controller {
         }
         $campo->backendExtraValidate();
         
+        $respuesta=new stdClass();
         if($this->form_validation->run()==TRUE){
             if(!$campo){
                 
