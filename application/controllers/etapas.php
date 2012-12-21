@@ -89,6 +89,8 @@ class Etapas extends MY_Controller {
         $formulario = $paso->Formulario;
         $modo = $paso->modo;
 
+        $respuesta=new stdClass();
+        
         if ($modo == 'edicion') {
             $validar_formulario=FALSE;
             foreach ($formulario->Campos as $c){
