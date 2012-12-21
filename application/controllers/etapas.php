@@ -29,8 +29,12 @@ class Etapas extends MY_Controller {
     public function ejecutar($etapa_id, $secuencia = 0) {
         $iframe=$this->input->get('iframe');
         
-        $etapa = Doctrine::getTable('Etapa')->find($etapa_id);
+        $etapa = Doctrine::getTable('Etapa')->find($etapa_id);        
         if ($etapa->usuario_id != UsuarioSesion::usuario()->id) {
+            if(!UsuarioSesion::usuario()->registrado){
+                $this->session->set_flashdata('redirect',current_url());
+                redirect('autenticacion/login');
+            }
             echo 'Usuario no tiene permisos para ejecutar esta etapa.';
             exit;
         }
