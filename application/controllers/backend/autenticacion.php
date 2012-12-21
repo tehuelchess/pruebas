@@ -16,6 +16,7 @@ class Autenticacion extends CI_Controller {
         $this->form_validation->set_rules('usuario', 'Usuario', 'required');
         $this->form_validation->set_rules('password', 'Contraseña', 'required|callback_check_password');
 
+        $respuesta=new stdClass();
         if ($this->form_validation->run() == TRUE) {
             UsuarioBackendSesion::login($this->input->post('usuario'),$this->input->post('password'));
             $respuesta->validacion=TRUE;
