@@ -25,7 +25,7 @@
                                             <label>Contraseña</label>
                                             <input name="password" type="password" class="input-xlarge">
                                             <p>¿No esta registrado? <a href="<?= site_url('autenticacion/registrar') ?>">Regístrese acá</a></p>
-                                            <p>O utilice <a href="<?=site_url('autenticacion/login_openid')?>"><img src="<?= base_url() ?>assets/img/openid_clave_unica.png" alt="OpenID"/></a></p>
+                                            <p>O utilice <a href="<?=site_url('autenticacion/login_openid?redirect='.current_url())?>"><img src="<?= base_url() ?>assets/img/openid_clave_unica.png" alt="OpenID"/></a></p>
                                             <button class="btn btn-primary pull-right" type="submit">Ingresar</button>
                                         </fieldset>
                                     </form>

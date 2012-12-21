@@ -7,7 +7,7 @@ class Autenticacion extends MY_Controller {
     
     public function login_openid(){
         $this->load->library('LightOpenID');
-        $this->lightopenid->returnUrl=$this->input->server('HTTP_REFERER');
+        $this->lightopenid->returnUrl=$this->input->get('redirect');
         $this->lightopenid->required = array('person/guid');
         redirect($this->lightopenid->authUrl());
     }
@@ -30,6 +30,13 @@ class Autenticacion extends MY_Controller {
         
         echo json_encode($respuesta);
 
+    }
+    
+    public function login(){
+        $data['redirect']=$this->session->flashdata('redirect');
+        
+        $data['title']='Login';
+        $this->load->view('autenticacion/login',$data);
     }
     
     public function registrar(){
