@@ -17,7 +17,7 @@ class Cuentas extends MY_Controller {
 
     public function editar() {
         $data['usuario']=UsuarioSesion::usuario();
-        $data['redirect']=$this->input->server('HTTP_REFERER');
+        $data['redirect']=$this->session->flashdata('redirect');
         
         $data['content'] = 'cuenta/editar';
         $data['title'] = 'Edita tu información';
@@ -38,10 +38,11 @@ class Cuentas extends MY_Controller {
             $usuario->save();
             
             $respuesta->validacion=TRUE;
-            if(site_url('cuentas/editar')==$this->input->post('redirect'))
+            $redirect=$this->input->post('redirect');
+            if(!$redirect)
                 $respuesta->redirect=site_url();
             else
-                $respuesta->redirect=$this->input->post('redirect');
+                $respuesta->redirect=$redirect;
             
         }else{
             $respuesta->validacion=FALSE;
