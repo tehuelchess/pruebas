@@ -32,7 +32,7 @@ class AccionEnviarCorreo extends Accion {
         $message=$regla->getExpresionParaOutput($tramite_id);
         
         $CI = & get_instance();
-        $CI->email->from($CI->config->item('email_from'), 'Tramitador');
+        $CI->email->from('simple@chilesinpapeleo.cl', 'Simple');
         $CI->email->to($to);
         $CI->email->subject($subject);
         $CI->email->message($message);
