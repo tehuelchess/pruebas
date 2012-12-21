@@ -2,8 +2,6 @@
     <fieldset>
         <legend>Completa la información de tu cuenta</legend>
         <div class="validacion"></div>
-        <label>RUT</label>
-        <input type="text" name="rut" value="<?=$usuario->rut?>" />
         <label>Nombre</label>
         <input type="text" name="nombre" value="<?=$usuario->nombre?>" />
         <label>Apellidos</label>
