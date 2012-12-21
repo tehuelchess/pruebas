@@ -64,13 +64,13 @@ class Etapa extends Doctrine_Record {
                     foreach ($tareas_proximas as $tarea_proxima) {
                         $usuario_asignado_id = NULL;
                         if ($tarea_proxima->asignacion == 'ciclica') {
-                            $usuarios_asignables = $tarea_proxima->getUsuarios();
+                            $usuarios_asignables = $tarea_proxima->getUsuarios();                
                             $usuario_asignado_id = $usuarios_asignables[0]->id;
-                            $ultimo_usuario = $tarea_proxima->getUltimoUsuarioAsignado($this->Tramite->Proceso->id);
+                            $ultimo_usuario = $tarea_proxima->getUltimoUsuarioAsignado($this->Tramite->Proceso->id);                      
                             if ($ultimo_usuario) {
                                 foreach ($usuarios_asignables as $key => $u) {
                                     if ($u->id == $ultimo_usuario->id) {
-                                        $usuario_asignado_id = $usuarios_asignables[$key + 1 % $usuarios_asignables->count()]->id;
+                                        $usuario_asignado_id = $usuarios_asignables[($key + 1) % $usuarios_asignables->count()]->id;
                                         break;
                                     }
                                 }
