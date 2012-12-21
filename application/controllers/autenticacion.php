@@ -17,6 +17,7 @@ class Autenticacion extends MY_Controller {
         $this->form_validation->set_rules('usuario', 'Usuario', 'required');
         $this->form_validation->set_rules('password', 'Contraseña', 'required|callback_check_password');
 
+        $respuesta=new stdClass();
         if ($this->form_validation->run() == TRUE) {
             UsuarioSesion::login($this->input->post('usuario'),$this->input->post('password'));
             $respuesta->validacion=TRUE;

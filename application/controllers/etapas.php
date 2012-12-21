@@ -217,6 +217,7 @@ class Etapas extends MY_Controller {
 
         $etapa->avanzar($this->input->post('usuarios_a_asignar'));
 
+        $respuesta=new stdClass();
         $respuesta->validacion = TRUE;
         
         if($this->input->get('iframe'))

@@ -80,6 +80,7 @@ class Procesos extends CI_Controller {
         
         $this->form_validation->set_rules('nombre', 'Nombre', 'required');
 
+        $respuesta=new stdClass();
         if ($this->form_validation->run() == TRUE) {
             $proceso->nombre=$this->input->post('nombre');
             $proceso->save();
@@ -149,6 +150,7 @@ class Procesos extends CI_Controller {
                 $this->form_validation->set_rules('vencimiento_notificar_email','Correo electronico para notificar vencimiento','required|valid_email');
         }
 
+        $respuesta=new stdClass();
         if ($this->form_validation->run() == TRUE) {
             $tarea->nombre=$this->input->post('nombre');
             $tarea->inicial=$this->input->post('inicial');
