@@ -30,6 +30,7 @@ class Cuentas extends MY_Controller {
         $this->form_validation->set_rules('apellidos','Apellidos','required');
         $this->form_validation->set_rules('email','Correo electrónico','required|valid_email');
         
+        $respuesta=new stdClass();
         if($this->form_validation->run()==TRUE){
             $usuario=UsuarioSesion::usuario();
             $usuario->rut=$this->input->post('rut');
