@@ -66,12 +66,14 @@ class Proceso extends Doctrine_Record {
     public function getJSONFromModel(){
         Doctrine_Manager::connection()->beginTransaction();
         
+        $modelo=new stdClass();
         $modelo->nombre=$this->nombre;
         $modelo->elements=array();
         $modelo->connections=array();
         
         $tareas=Doctrine::getTable('Tarea')->findByProcesoId($this->id);
         foreach($tareas as $t){
+            $element=new stdClass();
             $element->id=$t->identificador;
             $element->name=$t->nombre;
             $element->left=$t->posx;
@@ -87,6 +89,7 @@ class Proceso extends Doctrine_Record {
                 ->execute();
         foreach($conexiones as $c){
             //$conexion->id=$c->identificador;
+            $conexion=new stdClass();
             $conexion->source=$c->TareaOrigen->identificador;
             $conexion->target=$c->TareaDestino->identificador;
             $conexion->tipo=$c->tipo;
