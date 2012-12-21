@@ -23,7 +23,9 @@ class MY_Controller extends CI_Controller {
     
     //Obliga a los usuarios a registrar su email, para hacer tramites en simple
     private function force_email(){
-        if(uri_string()!='cuentas/editar' && uri_string()!='cuentas/editar_form' && uri_string()!='autenticacion/logout' && UsuarioSesion::usuario() && UsuarioSesion::usuario()->registrado && !UsuarioSesion::usuario()->email)
+        if(uri_string()!='cuentas/editar' && uri_string()!='cuentas/editar_form' && uri_string()!='autenticacion/logout' && UsuarioSesion::usuario() && UsuarioSesion::usuario()->registrado && !UsuarioSesion::usuario()->email){
+            $this->session->set_flashdata('redirect',  current_url());
             redirect('cuentas/editar');
+        }
     }
 }
