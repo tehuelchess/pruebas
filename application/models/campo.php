@@ -177,7 +177,10 @@ class Campo extends Doctrine_Record {
     }
     
     public function getValidacion(){
-        return explode('|',$this->_get('validacion'));
+        if($this->_get('validacion'))
+            return explode('|',$this->_get('validacion'));
+        else
+            return array();
     }
 
     public function setDatos($datos_array) {
