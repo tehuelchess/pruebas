@@ -13,7 +13,7 @@ class WidgetTramiteEtapas extends Widget {
     $proceso=Doctrine::getTable('Proceso')->find($this->config->proceso_id);
     
     $tmp=  Doctrine_Query::create()
-            ->select('tar.id, tar.nombre, COUNT(tar.id)*100/13 as porcentaje')
+            ->select('tar.id, tar.nombre, COUNT(tar.id) as cantidad')
             ->from('Tarea tar, tar.Etapas e, e.Tramite t, t.Proceso p, p.Cuenta c')
             ->where('p.id = ? and c.id = ?',array($proceso->id,$this->cuenta_id))
             ->andWhere('e.pendiente = 1')
@@ -22,8 +22,8 @@ class WidgetTramiteEtapas extends Widget {
     
     $datos=array();
     foreach($tmp as $t)
-        $datos[]=array($t->nombre,(float)$t->porcentaje);
-    
+        $datos[]=array($t->nombre,(float)$t->cantidad);
+        
     $datos=json_encode($datos);
 
     $display='<div class="grafico"></div>';
