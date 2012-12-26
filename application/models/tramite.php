@@ -122,6 +122,14 @@ class Tramite extends Doctrine_Record {
     }
      */
 
+    public function getEtapasParticipadas($usuario_id) {
+        return Doctrine_Query::create()
+                        ->from('Etapa e, e.Tramite t')
+                        ->where('t.id = ? AND e.usuario_id=?', array($this->id,$usuario_id))
+                        ->andWhere('e.pendiente=0')
+                        ->execute();
+    }
+    
     public function getEtapasActuales() {
         return Doctrine_Query::create()
                         ->from('Etapa e, e.Tramite t')

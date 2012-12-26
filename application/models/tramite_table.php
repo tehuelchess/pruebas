@@ -8,6 +8,7 @@ class TramiteTable extends Doctrine_Table {
         $query=Doctrine_Query::create()
                 ->from('Tramite t, t.Proceso.Cuenta c, t.Etapas e, e.Usuario u')
                 ->where('u.id = ?',$usuario_id)
+                ->andWhere('e.pendiente=0')
                 ->orderBy('t.updated_at desc');
         
         if($cuenta)
