@@ -51,7 +51,7 @@ class CampoDocumento extends Campo {
             Doctrine_Manager::connection()->commit();
         }
 
-        $display = '<p><a href="' . site_url('documentos/get/' . $dato->valor) . '">' . $this->etiqueta . '</a></p>';
+        $display = '<p><a target="_blank" href="' . site_url('documentos/get/' . $dato->valor) . '">' . $this->etiqueta . '</a></p>';
         //$display='<p><a href="'.site_url('documentos/ver/'.$this->documento_id.'/'.$etapa_id).'">'.$this->etiqueta.'</a></p>';
 
         return $display;
