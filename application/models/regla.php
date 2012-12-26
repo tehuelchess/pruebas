@@ -15,7 +15,7 @@ class Regla {
         if (!$this->regla)
             return TRUE;
 
-        $new_regla = $this->getExpresionParaEvaluar($tramite_id);         
+        $new_regla = $this->getExpresionParaEvaluar($tramite_id);   
         $new_regla = 'return ' . $new_regla . ';';
         $CI = & get_instance();
         $CI->load->library('SaferEval');
@@ -30,11 +30,19 @@ class Regla {
     //Esta expresion es la que se evalua finalmente en la regla
     public function getExpresionParaEvaluar($tramite_id){
         $new_regla=$this->regla;
-        $new_regla=preg_replace_callback('/@@(\w+)/', function($match) use ($tramite_id) {
+        $new_regla=preg_replace_callback('/@@(\w+)((->(\w+))|(\[(\w+)\]))?/', function($match) use ($tramite_id) {
                     $nombre_dato = $match[1];
+                    $obj_accesor=isset($match[4])?$match[4]:'';
+                    $arr_accesor=isset($match[6])?$match[6]:'';
+                    
                     $dato = Doctrine::getTable('Dato')->findOneByTramiteIdAndNombre($tramite_id, $nombre_dato);
                     if ($dato) {
-                        $valor_dato = 'json_decode(\'' .json_encode($dato->valor). '\')';
+                        if($obj_accesor)
+                            $valor_dato = 'json_decode(\'' .json_encode($dato->valor->{$obj_accesor}). '\')';
+                        else if($arr_accesor)
+                            $valor_dato = 'json_decode(\'' .json_encode($dato->valor[$arr_accesor]). '\')';
+                        else
+                            $valor_dato = 'json_decode(\'' .json_encode($dato->valor). '\')';
                     }
                     else {
                         //No reemplazamos el dato
@@ -70,17 +78,32 @@ class Regla {
     //Obtiene la expresion con los reemplazos de variables ya hechos de acuerdo a los datos capturados en el tramite tramite_id.
     //Esta es una representacion con las variables reemplazadas. No es una expresion evaluable. (Los arrays y strings no estan definidos como tal)
     public function getExpresionParaOutput($tramite_id){
-        $new_regla=$this->regla;
-        $new_regla=preg_replace_callback('/@@(\w+)/', function($match) use ($tramite_id) {
+        $new_regla=$this->regla;     
+        $new_regla=preg_replace_callback('/@@(\w+)((->(\w+))|(\[(\w+)\]))?/', function($match) use ($tramite_id) {
                     $nombre_dato = $match[1];
+                    $obj_accesor=isset($match[4])?$match[4]:'';
+                    $arr_accesor=isset($match[6])?$match[6]:'';
+                    //echo $arr_accesor;
                     $dato = Doctrine::getTable('Dato')->findOneByTramiteIdAndNombre($tramite_id, $nombre_dato);
                     if ($dato) {
                         $dato_almacenado = $dato->valor;
+                        if($obj_accesor!='')
+                            $valor_dato=  json_encode ($dato_almacenado->{$obj_accesor});
+                        else if($arr_accesor!='')
+                            $valor_dato=  json_encode ($dato_almacenado[$arr_accesor]);
+                        else
+                            $valor_dato=  json_encode($dato_almacenado);
+                            
+                        /*
                         if (is_array($dato_almacenado) || is_object($dato_almacenado)) {
                             $valor_dato=  json_encode($dato_almacenado);
+                            if($obj_accesor)
+                                $valor_dato=  json_encode ($dato_almacenado->{$obj_accesor});
                         }
                         else
                             $valor_dato = $dato_almacenado;
+                         * 
+                         */
                     }
                     else {
                         //Entregamos vacio
