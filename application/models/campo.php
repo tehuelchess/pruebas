@@ -21,6 +21,8 @@ class Campo extends Doctrine_Record {
             $campo=new CampoDate();
         else if($tipo=='instituciones_gob')
             $campo=new CampoInstitucionesGob();
+        else if($tipo=='comunas')
+            $campo=new CampoComunas();
         else if($tipo=='title')
             $campo=new CampoTitle();
         else if($tipo=='subtitle')
@@ -61,6 +63,7 @@ class Campo extends Doctrine_Record {
                 'CampoFile'  => array('tipo' => 'file'),
                 'CampoDate'  => array('tipo' => 'date'),
                 'CampoInstitucionesGob'  => array('tipo' => 'instituciones_gob'),
+                'CampoComunas'  => array('tipo' => 'comunas'),
                 'CampoTitle'  => array('tipo' => 'title'),
                 'CampoSubtitle'  => array('tipo' => 'subtitle'),
                 'CampoParagraph'  => array('tipo' => 'paragraph'),
