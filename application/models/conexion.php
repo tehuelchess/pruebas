@@ -28,7 +28,6 @@ class Conexion extends Doctrine_Record {
     public function evaluarRegla($tramite_id){
         if($this->tipo=='secuencial' || $this->tipo=='paralelo' || $this->tipo=='union')
             return true;
-        
         $regla=new Regla($this->regla);
         return $regla->evaluar($tramite_id);
     }
