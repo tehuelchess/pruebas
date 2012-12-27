@@ -28,10 +28,11 @@ class CampoInstitucionesGob extends Campo{
                         $.getJSON("https://apis.modernizacion.cl/instituciones/api/entidades?callback=?",function(data){
                             var html="<option></option>";
                             $(data.items).each(function(i,el){
-                                html+="<option value="+el.codigo+">"+el.nombre+"</option>";
+                                html+="<option value=\""+el.nombre+"\" data-id=\""+el.codigo+"\">"+el.nombre+"</option>";
                             });
                             $("select.entidades[data-id='.$this->id.']").html(html).change(function(event){
-                                updateInstituciones(this.value);
+                                var selectedId=$(this).find("option:selected").data("id");
+                                updateInstituciones(selectedId);
                             });
                             
                             if(justLoadedEntidad){
@@ -46,12 +47,9 @@ class CampoInstitucionesGob extends Campo{
                         $.getJSON("https://apis.modernizacion.cl/instituciones/api/entidades/"+entidadId+"/instituciones?callback=?",function(data){
                             var html="<option></option>";
                             if(data){
-                                //$("select.instituciones[data-id='.$this->id.']").removeClass("hide");
                                 $(data.items).each(function(i,el){
-                                    html+="<option value="+el.codigo+">"+el.nombre+"</option>";
+                                    html+="<option value=\""+el.nombre+"\">"+el.nombre+"</option>";
                                 });
-                            }else{
-                                //$("select.instituciones[data-id='.$this->id.']").addClass("hide");
                             }
                             $("select.instituciones[data-id='.$this->id.']").html(html);
 
