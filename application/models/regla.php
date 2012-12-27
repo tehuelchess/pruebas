@@ -93,17 +93,10 @@ class Regla {
                             $valor_dato=  json_encode ($dato_almacenado[$arr_accesor]);
                         else
                             $valor_dato=  json_encode($dato_almacenado);
-                            
-                        /*
-                        if (is_array($dato_almacenado) || is_object($dato_almacenado)) {
-                            $valor_dato=  json_encode($dato_almacenado);
-                            if($obj_accesor)
-                                $valor_dato=  json_encode ($dato_almacenado->{$obj_accesor});
-                        }
-                        else
-                            $valor_dato = $dato_almacenado;
-                         * 
-                         */
+                        
+                        //Si es un string lo representamos directamente.
+                        if(is_string(json_decode($valor_dato)))
+                            $valor_dato=json_decode($valor_dato);
                     }
                     else {
                         //Entregamos vacio
