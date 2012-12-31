@@ -67,7 +67,7 @@ class Uploader extends MY_Controller {
             exit;
         }
   
-        header('Content-Type: '.  mime_content_type($path));
+        header('Content-Disposition: attachment; filename="'.$filename.'"');
         header('Content-Length: ' . filesize($path));
         readfile($path);
     }
