@@ -39,8 +39,9 @@ class Documento extends Doctrine_Record {
         $filename=sha1(uniqid()).'.pdf';
         $uploadDirectory='uploads/documentos/';
 
-        
+        ob_start();        
         $CI->tcpdf->Output($uploadDirectory.$filename,'F');
+        ob_end_clean();
         
         return $filename;
     }
