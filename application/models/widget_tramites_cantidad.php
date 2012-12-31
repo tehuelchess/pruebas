@@ -9,6 +9,8 @@ class WidgetTramitesCantidad extends Widget {
             return $display;
         }
 
+        $datos = array();
+
         $tmp = Doctrine_Query::create()
                 ->select('p.id, p.nombre, COUNT(p.id) as cantidad')
                 ->from('Proceso p, p.Tramites t, p.Cuenta c')
@@ -17,6 +19,10 @@ class WidgetTramitesCantidad extends Widget {
                 ->andWhere('t.pendiente=1')
                 ->groupBy('p.id')
                 ->execute();
+               
+        foreach ($tmp as $p)
+            $datos[$p->nombre]['pendientes'] = $p->cantidad;
+
         $tmp2 = Doctrine_Query::create()
                 ->select('p.id, p.nombre, COUNT(p.id) as cantidad')
                 ->from('Proceso p, p.Tramites t, p.Cuenta c')
@@ -26,11 +32,10 @@ class WidgetTramitesCantidad extends Widget {
                 ->groupBy('p.id')
                 ->execute();
 
-        $datos = array();
-        foreach ($tmp as $p)
-            $datos[$p->nombre]['pendientes'] = $p->cantidad;
         foreach ($tmp2 as $p)
             $datos[$p->nombre]['completados'] = $p->cantidad;
+        
+        
         foreach ($datos as $key => $val) {
             $categories[] = $key;
             $pendientes[] = isset($val['pendientes']) ? (int)$val['pendientes'] : 0;
