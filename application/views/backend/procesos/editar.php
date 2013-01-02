@@ -97,8 +97,8 @@
     });
 </script>
 
-<script type="text/javascript" src="<?= base_url() ?>assets/js/diagrama-procesos.js"></script>
-<script type="text/javascript" src="<?= base_url() ?>assets/js/modelador-procesos.js"></script>
+<script type="text/javascript" src="<?= base_url() ?>assets/js/diagrama-procesos2.js"></script>
+<script type="text/javascript" src="<?= base_url() ?>assets/js/modelador-procesos2.js"></script>
 
 <script type="text/javascript">
     $(document).ready(function(){
@@ -138,6 +138,7 @@
             <button class="btn createConnection" data-tipo="union" title="Crear conexión de unión" ><img src="<?= base_url() ?>assets/img/union.gif" /></button>
         </div>
     </div>
+    <div id="draw"></div>
 </div>
 <div class="modal hide fade" id="modal">
 
