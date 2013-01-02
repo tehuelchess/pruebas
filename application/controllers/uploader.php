@@ -45,6 +45,8 @@ class Uploader extends MY_Controller {
     }
 
     function datos_get($filename) {
+        $filename=urldecode($filename);
+        
         $file=  Doctrine_Query::create()
                 ->from('File f, f.Tramite t, t.Etapas e, e.Usuario u')
                 ->where('f.filename = ? AND f.tipo = ? AND u.id = ?',array($filename,'dato',UsuarioSesion::usuario()->id))
