@@ -161,6 +161,7 @@ class SaferEval {
             'wordwrap', // Wraps a string to a given number of characters
             //Date functions
             'date_create',
+            'strftime',
             //JSON
             'json_encode',
             'json_decode',
