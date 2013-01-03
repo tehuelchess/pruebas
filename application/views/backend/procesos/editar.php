@@ -138,8 +138,9 @@
             <button class="btn createConnection" data-tipo="union" title="Crear conexión de unión" ><img src="<?= base_url() ?>assets/img/union.gif" /></button>
         </div>
     </div>
-    <div id="draw"></div>
+    
 </div>
+<div id="draw"></div>
 <div class="modal hide fade" id="modal">
 
 </div>
