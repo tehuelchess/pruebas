@@ -162,6 +162,7 @@ class SaferEval {
             //Date functions
             'date_create',
             'strftime',
+            'strtotime',
             //JSON
             'json_encode',
             'json_decode',
