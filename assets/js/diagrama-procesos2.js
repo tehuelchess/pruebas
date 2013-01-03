@@ -1,10 +1,18 @@
 
+$(document).ready(function(){
+    diagram = new go.Diagram("draw");
+    diagram.allowVerticalScroll = false;
+   diagram.allowHorizontalScroll = false;
+    $$ = go.GraphObject.make;
+    
+});
+
+
+
 function drawFromModel(model){
     console.log(model);
     
-    var diagram = new go.Diagram("draw");
     
-    var $$ = go.GraphObject.make;
 
 /*
   diagram.layout =
@@ -25,7 +33,7 @@ function drawFromModel(model){
       diagram.linkTemplate = $$(go.Link,
       { routing: go.Link.AvoidsNodes, corner: 10 },  // link route should avoid nodes
       $$(go.Shape),
-      $$(go.Picture, { source: base_url+"assets/img/evaluacion.gif", segmentIndex: 1 },new go.Binding("source", "type", function(v){return base_url+"assets/img/"+v+".gif";})),
+      $$(go.Picture, { segmentIndex: 0, segmentOffset: new go.Point(12, 0)  },new go.Binding("source", "type", function(v){return base_url+"assets/img/"+v+".gif";})),
       $$(go.Shape, { toArrow: "Standard" }));
   
   var nodeDataArray=new Array();
@@ -66,6 +74,6 @@ function drawFromModel(model){
   });
   
   diagram.model = new go.GraphLinksModel(nodeDataArray, linkDataArray);
-    
+      
 }
 
