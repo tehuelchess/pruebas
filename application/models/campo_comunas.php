@@ -28,10 +28,11 @@ class CampoComunas extends Campo{
                         $.getJSON("https://apis.modernizacion.cl/dpa/regiones?callback=?",function(data){
                             var html="<option value=\'\'>Seleccione region</option>";
                             $(data).each(function(i,el){
-                                html+="<option value="+el.codigo+">"+el.nombre+"</option>";
+                                html+="<option data-id=\""+el.codigo+"\" value=\""+el.nombre+"\">"+el.nombre+"</option>";
                             });
                             $("select.regiones[data-id='.$this->id.']").html(html).change(function(event){
-                                updateComunas(this.value);
+                                var selectedId=$(this).find("option:selected").attr("data-id");
+                                updateComunas(selectedId);
                             });
                             
                             if(justLoadedRegion){
@@ -49,7 +50,7 @@ class CampoComunas extends Campo{
                             var html="<option value=\'\'>Seleccione comuna</option>";
                             if(data){
                                 $(data).each(function(i,el){
-                                    html+="<option value="+el.codigo+">"+el.nombre+"</option>";
+                                    html+="<option value=\""+el.nombre+"\">"+el.nombre+"</option>";
                                 });
                             }
                             $("select.comunas[data-id='.$this->id.']").html(html);
