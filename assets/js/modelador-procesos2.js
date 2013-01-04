@@ -31,15 +31,15 @@ $(document).ready(function(){
             
             var id=1;
             for (var i in diagram.model.nodeDataArray){
-                if(diagram.model.nodeDataArray[i].key>id)
-                    id=1+diagram.model.nodeDataArray[i].key;
+                if(id<=parseInt(diagram.model.nodeDataArray[i].key))
+                    id=1+parseInt(diagram.model.nodeDataArray[i].key);
             }
             
             
             diagram.model.addNodeData({
                 key: id,
                 name: "Tarea",
-                loc: left+" "+top
+                loc: new go.Point(parseInt(left),parseInt(top))
             });
             modo=null;
             $("#areaDibujo .botonera .createBox").removeClass("disabled");
@@ -48,9 +48,11 @@ $(document).ready(function(){
     });
     
     
-    diagram.addDiagramListener("ObjectSingleClicked", function(event) {
+    diagram.addDiagramListener("ObjectSingleClicked", function(e) {
+        var part = e.subject.part;
+        
         if(modo=="createConnection"){
-            elements.push(this.id);
+            elements.push(part.data.key);
             if(elements.length==2){
                 var c=new Object();
                 c.tipo=tipo;
@@ -65,10 +67,11 @@ $(document).ready(function(){
                 
                 
                 diagram.model.addLinkData({
-                    from:c.tipo,
-                    to:c.source,
-                    type:c.target
-                })
+                    from:c.source,
+                    to:c.target,
+                    type:c.tipo
+                });
+                
                 
  
                 
@@ -77,11 +80,87 @@ $(document).ready(function(){
                 $("#areaDibujo .botonera .createConnection").removeClass("disabled");
                 $.post(site_url+"backend/procesos/ajax_crear_conexion/"+procesoId,"tarea_id_origen="+c.source+"&tarea_id_destino="+c.target+"&tipo="+c.tipo);
                 
-            }else{
-                $(this).addClass("selected");
             }
         }
+    });
+    
+    
+    diagram.addDiagramListener("ObjectDoubleClicked", function(e) {
+      var part = e.subject.part;
+      var id;
+      if (!(part instanceof go.Link)){
+          id= part.data.key;
+          $('#modal').load(site_url+"backend/procesos/ajax_editar_tarea/"+procesoId+"/"+id);
+        $('#modal').modal('show')
+      }else{
+          id=part.data.from;
+          $('#modal').load(site_url+"backend/procesos/ajax_editar_conexiones/"+procesoId+"/"+id);
+          $('#modal').modal('show')
+          
+      }
+      
+      
+        
+      
+  });
+  
+  //Asigno el evento para editar el proceso al hacerle click al titulo
+    $(document).on("dblclick doubletap","#areaDibujo h1",function(event){
+        $('#modal').load(site_url+"backend/procesos/ajax_editar/"+procesoId);
+        $('#modal').modal('show')
+    });
+    
+    diagram.addDiagramListener("SelectionMoved",updateModel);
+    
+    channel.bind('updateModel', function(data) {
+        drawFromModel(JSON.parse(data.modelo));
     });
  
  
 });
+
+function updateModel(){
+    var model=new Object();
+    //model.nombre=$("#areaDibujo h1").text();
+    model.elements=new Array();
+    //model.connections=new Array();
+    
+    
+     var it = diagram.nodes;
+ while (it.next()) {
+     var node=it.value;
+     var tmp=new Object();
+        tmp.id=node.sm.key;
+        tmp.left=node.position.x;
+        tmp.top=node.position.y;
+        model.elements.push(tmp);
+ }
+
+/*
+    $(diagram.model.nodeDataArray).each(function(i,e){
+        
+        //console.log(diagram.model.findNodeDataForKey(e.key))
+        var tmp=new Object();
+        tmp.id=e.key;
+        tmp.left=$(e).position().left;
+        tmp.top=$(e).position().top;
+        model.elements.push(tmp);
+    });
+    */
+    
+    /*
+    var connections=jsPlumb.getConnections();
+    for(var i in connections){
+        var tmp=new Object();
+        tmp.id=connections[i].id;
+        tmp.source=connections[i].sourceId;
+        tmp.target=connections[i].targetId;
+        model.connections.push(tmp);
+    }
+    */
+    
+    json=JSON.stringify(model);
+    
+    
+    $.post(site_url+"backend/procesos/ajax_editar_modelo/"+procesoId,"modelo="+json+"&socket_id_emisor="+socketId);
+}
