@@ -19,7 +19,9 @@ class CampoFile extends Campo {
             $display.='<div class="file-uploader" data-action="'.site_url('uploader/datos/'.$this->id.'/'.$etapa->id).'"></div>';
         $display.='<input type="hidden" name="' . $this->nombre . '" value="' . ($dato ? htmlspecialchars($dato->valor) : '') . '" />';
         if ($dato)
-            $display.='<p><a href="' . site_url('uploader/datos_get/' . htmlspecialchars ($dato->valor)) . '" target="_blank">' . htmlspecialchars ($dato->valor) . '</a></p>';
+            $display.='<p class="link"><a href="' . site_url('uploader/datos_get/' . htmlspecialchars ($dato->valor)) . '" target="_blank">' . htmlspecialchars ($dato->valor) . '</a> (<a class="remove" href="#">X</a>)</p>';
+        else
+            $display.='<p class="link"></p>';
         $display.='</div>';
 
         return $display;
