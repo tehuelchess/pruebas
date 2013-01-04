@@ -20,10 +20,16 @@ $(document).ready(function(){
             action: $(el).data("action"),
             onComplete: function(id,filename,respuesta){
                 $parentDiv.find("input[type=hidden]").val(respuesta.file_name);
-                $parentDiv.find("a").text(respuesta.file_name).attr("href",site_url+"uploader/datos_get/"+respuesta.file_name);
+                $parentDiv.find(".link").html("<a href='"+site_url+"uploader/datos_get/"+respuesta.file_name+"'>"+respuesta.file_name+"</a> (<a href='#' class='remove'>X</a>)")
             }
         }); 
     });
+    $(".file-uploader").parent().on("click","a.remove",function(){
+        var $parentDiv=$(this).closest("div");
+        $parentDiv.find("input[type=hidden]").val("");
+        $parentDiv.find(".link").empty();
+    });
+    
     
     $(document).on("submit",".ajaxForm",function(){
         var form=this;
