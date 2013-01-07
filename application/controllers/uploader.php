@@ -44,7 +44,9 @@ class Uploader extends MY_Controller {
         echo htmlspecialchars(json_encode($result), ENT_NOQUOTES);
     }
 
-    function datos_get($filename) {
+    function datos_get() {
+        $filename=$this->input->get('filename');
+        
         $filename=urldecode($filename);
         
         $file=  Doctrine_Query::create()
