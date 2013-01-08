@@ -28,6 +28,7 @@ $(document).ready(function(){
         var $parentDiv=$(this).closest("div");
         $parentDiv.find("input[type=hidden]").val("");
         $parentDiv.find(".link").empty();
+        $parentDiv.find(".qq-upload-list").empty();
     });
     
     
