@@ -3,11 +3,12 @@ $(document).ready(function(){
 });
 
 function drawSeguimiento(actuales, completadas){
-    $(actuales).each(function(i,el){
-        $("#areaDibujo #"+el.identificador).addClass("actual");
-    });
     $(completadas).each(function(i,el){
         $("#areaDibujo #"+el.identificador).addClass("completado");
+    });
+    $(actuales).each(function(i,el){
+        $("#areaDibujo #"+el.identificador).removeClass("completado");
+        $("#areaDibujo #"+el.identificador).addClass("actual");
     });
     
     $('#areaDibujo .box.actual,#areaDibujo .box.completado').each(
