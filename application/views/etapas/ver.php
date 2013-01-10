@@ -1,4 +1,4 @@
-<form onsubmit="return false;">    
+<form class="dynaForm" onsubmit="return false;">    
     <fieldset>
         <div class="validacion"></div>
         <legend><?= $etapa->Tarea->Pasos[$paso]->Formulario->nombre ?></legend>
