@@ -32,16 +32,18 @@ class Documento extends Doctrine_Record {
         $contenido=$regla->getExpresionParaOutput($tramite_id);
         
         $CI->load->library('tcpdf');
+
+        $obj=new $CI->tcpdf;
         
-        $CI->tcpdf->AddPage();
-        $CI->tcpdf->writeHTML($contenido);
+        $obj->AddPage();
+        $obj->writeHTML($contenido);
         
         $filename=sha1(uniqid()).'.pdf';
         $uploadDirectory='uploads/documentos/';
 
-        ob_start();        
-        $CI->tcpdf->Output($uploadDirectory.$filename,'F');
-        ob_end_clean();
+        //ob_start();        
+        $obj->Output($uploadDirectory.$filename,'F');
+        //ob_end_clean();
         
         return $filename;
     }
