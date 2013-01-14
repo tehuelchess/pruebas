@@ -48,5 +48,16 @@ class Documento extends Doctrine_Record {
         return $filename;
     }
     
+    public function previsualizar(){
+        $CI=& get_instance();
+        
+        $CI->load->library('tcpdf');
+        
+        $CI->tcpdf->AddPage();
+        $CI->tcpdf->writeHTML($this->contenido);
+        
+        $CI->tcpdf->Output('preview.pdf');
+    }
+    
 
 }

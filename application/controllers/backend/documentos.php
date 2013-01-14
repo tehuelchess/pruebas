@@ -92,6 +92,18 @@ class Documentos extends CI_Controller {
         echo json_encode($respuesta);
     }
     
+    public function previsualizar($documento_id){
+        $documento=Doctrine::getTable('Documento')->find($documento_id);
+        
+        if($documento->Proceso->cuenta_id != UsuarioBackendSesion::usuario()->cuenta_id){
+            echo 'Usuario no tiene permisos';
+            exit;
+        }
+        
+        $documento->previsualizar();
+    }
+
+
     public function eliminar($documento_id){
         $documento=Doctrine::getTable('Documento')->find($documento_id);
         

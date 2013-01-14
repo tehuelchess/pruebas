@@ -29,8 +29,9 @@
         <tr>
             <td><?=$p->nombre?></td>
             <td>
-                <a href="<?=site_url('backend/documentos/editar/'.$p->id)?>" class="btn"><i class="icon-edit"></i> Editar</a>
-                <a href="<?=site_url('backend/documentos/eliminar/'.$p->id)?>" class="btn" onclick="return confirm('¿Esta seguro que desea eliminar?')"><i class="icon-remove"></i> Eliminar</a>
+                <a href="<?=site_url('backend/documentos/editar/'.$p->id)?>" class="btn btn-primary"><i class="icon-white icon-edit"></i> Editar</a>
+                <a href="<?=site_url('backend/documentos/previsualizar/'.$p->id)?>" class="btn btn-info"><i class="icon-white icon-zoom-in"></i> Previsualizar</a>
+                <a href="<?=site_url('backend/documentos/eliminar/'.$p->id)?>" class="btn btn-danger" onclick="return confirm('¿Esta seguro que desea eliminar?')"><i class="icon-white icon-trash"></i> Eliminar</a>
             </td>
         </tr>
         <?php endforeach; ?>
