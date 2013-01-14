@@ -364,6 +364,16 @@ $config['proxy_ips'] = '';
 $config['https'] = false;
 
 /*
+ * Configuracion de backups
+ */
+$config['mysqldump_location']='/usr/bin/mysqldump';
+$config['backupserver_ip']='';
+$config['backupserver_username']='';
+$config['backupserver_password']='';
+$config['backupserver_path']='';
+
+
+/*
  * Configuracion del servidor Pusher (pusher.com) para poder modelar procesos
  * en forma colaborativa.
  */
