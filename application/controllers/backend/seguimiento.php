@@ -93,6 +93,18 @@ class Seguimiento extends CI_Controller {
         echo json_encode($respuesta);
     }
 
+    public function borrar($tramite_id){
+        $tramite=Doctrine::getTable('Tramite')->find($tramite_id);
+        
+        if(UsuarioBackendSesion::usuario()->cuenta_id!=$tramite->Proceso->cuenta_id){
+            echo 'No tiene permisos para hacer seguimiento a este tramite.';
+            exit;
+        }
+        
+        $tramite->delete();
+        
+        redirect($this->input->server('HTTP_REFERER'));
+    }
 }
 
 /* End of file welcome.php */
