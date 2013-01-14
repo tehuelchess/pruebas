@@ -27,6 +27,9 @@ class Uploader extends MY_Controller {
         
         // list of valid extensions, ex. array("jpeg", "xml", "bmp")
         $allowedExtensions = array('gif', 'jpg', 'png', 'pdf', 'doc', 'docx','zip','rar');
+        if(isset($campo->extra->filetypes))
+            $allowedExtensions=$campo->extra->filetypes;
+            
         // max file size in bytes
         $sizeLimit = 20 * 1024 * 1024;
 
