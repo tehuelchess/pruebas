@@ -313,6 +313,7 @@ CREATE  TABLE IF NOT EXISTS `tramitador`.`campo` (
   `dependiente_valor` VARCHAR(128) NULL ,
   `datos` TEXT NULL ,
   `documento_id` INT UNSIGNED NULL ,
+  `extra` TEXT NULL ,
   PRIMARY KEY (`id`) ,
   INDEX `fk_campo_formulario1` (`formulario_id` ASC) ,
   INDEX `fk_campo_documento1` (`documento_id` ASC) ,
@@ -324,8 +325,8 @@ CREATE  TABLE IF NOT EXISTS `tramitador`.`campo` (
   CONSTRAINT `fk_campo_documento1`
     FOREIGN KEY (`documento_id` )
     REFERENCES `tramitador`.`documento` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB
 AUTO_INCREMENT = 8
 DEFAULT CHARACTER SET = utf8

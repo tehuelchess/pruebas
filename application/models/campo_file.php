@@ -30,4 +30,23 @@ class CampoFile extends Campo {
         return $display;
     }
 
+    
+    public function extraForm() {
+        $filetypes=array();
+        if(isset($this->extra->filetypes))
+            $filetypes=$this->extra->filetypes;
+        
+        $output= '<select name="extra[filetypes][]" multiple>';
+        $output.='<option name="jpg" '.(in_array('jpg', $filetypes)?'selected':'').'>jpg</option>';
+        $output.='<option name="png" '.(in_array('png', $filetypes)?'selected':'').'>png</option>';
+        $output.='<option name="gif" '.(in_array('gif', $filetypes)?'selected':'').'>gif</option>';
+        $output.='<option name="pdf" '.(in_array('pdf', $filetypes)?'selected':'').'>pdf</option>';
+        $output.='<option name="doc" '.(in_array('doc', $filetypes)?'selected':'').'>doc</option>';
+        $output.='<option name="docx" '.(in_array('docx', $filetypes)?'selected':'').'>docx</option>';
+        $output.='<option name="zip" '.(in_array('zip', $filetypes)?'selected':'').'>zip</option>';
+        $output.='<option name="rar" '.(in_array('rar', $filetypes)?'selected':'').'>rar</option>';
+        $output.='</select>';
+        
+        return $output;
+    }
 }

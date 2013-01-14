@@ -53,6 +53,7 @@ class Campo extends Doctrine_Record {
         $this->hasColumn('estatico');           //Indica si es un campo estatico, es decir que no es un input con informacion. Ej: Parrafos, titulos, etc.
         $this->hasColumn('valor_default');
         $this->hasColumn('documento_id');
+        $this->hasColumn('extra');
         
         $this->setSubclasses(array(
                 'CampoText'  => array('tipo' => 'text'),
@@ -202,6 +203,21 @@ class Campo extends Doctrine_Record {
             $documento_id=null;
         
         $this->_set('documento_id',$documento_id);
+    }
+    
+    public function extraForm(){
+        return false;
+    }
+    
+    public function setExtra($datos_array) {
+        if ($datos_array) 
+            $this->_set('extra' , json_encode($datos_array));
+        else 
+            $this->_set('extra' , NULL);
+    }
+    
+    public function getExtra(){
+        return json_decode($this->_get('extra'));
     }
 
 }

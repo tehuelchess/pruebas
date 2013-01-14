@@ -124,6 +124,9 @@
                 </span>
                 <input type="hidden" name="dependiente_tipo" value="<?=isset($campo) && $campo->dependiente_tipo? $campo->dependiente_tipo:'string' ?>" />
             </div>
+            
+            <?=$campo->extraForm()?$campo->extraForm():''?>
+            
         <?php if ($campo->requiere_datos): ?>
             <div class="datos">
                 <script type="text/javascript">
