@@ -24,6 +24,8 @@ ENGINE = InnoDB;
 CREATE  TABLE IF NOT EXISTS `tramitador`.`proceso` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
   `nombre` VARCHAR(128) NOT NULL ,
+  `width` VARCHAR(8) NOT NULL DEFAULT '100%' ,
+  `height` VARCHAR(8) NOT NULL DEFAULT '800px' ,
   `cuenta_id` INT UNSIGNED NOT NULL ,
   PRIMARY KEY (`id`) ,
   INDEX `fk_proceso_cuenta1` (`cuenta_id` ASC) ,

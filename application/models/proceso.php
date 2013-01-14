@@ -5,6 +5,8 @@ class Proceso extends Doctrine_Record {
     function setTableDefinition() {
         $this->hasColumn('id');
         $this->hasColumn('nombre');
+        $this->hasColumn('width');      //ancho de la grilla
+        $this->hasColumn('height');     //alto de la grilla
         $this->hasColumn('cuenta_id');
     }
 

@@ -7,6 +7,8 @@
         <div class="validacion"></div>
         <label>Nombre</label>
         <input type="text" name="nombre" value="<?=$proceso->nombre?>" />
+        <label>Tamaño de la Grilla</label>
+        <input type="text" name="width" value="<?=$proceso->width?>" class="input-small" /> X <input type="text" name="height" value="<?=$proceso->height?>" class="input-small" />
     </form>
 </div>
 <div class="modal-footer">
