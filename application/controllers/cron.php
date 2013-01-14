@@ -37,7 +37,7 @@ class Cron extends CI_Controller {
         $backupName = $this->db->database . '_' . date("Ymd-His") . '.gz';
         $command = $this->config->item('mysqldump_location') . ' -h '.$this->db->hostname.' -u '.$this->db->username.' -p'.$this->db->password.' '.$this->db->database.' | gzip > '.$backupName;
         system($command);
-        system('sshpass -p '.$this->config->item('backupserver_password').' scp ' . $backupName . ' '.$this->config->item('backupserver_username').'@'.$this->config->item('backupserver_password').':'.$this->config->item('backupserver_path'));
+        system('sshpass -p '.$this->config->item('backupserver_password').' scp ' . $backupName . ' '.$this->config->item('backupserver_username').'@'.$this->config->item('backupserver_ip').':'.$this->config->item('backupserver_path'));
         system('rm ' . $backupName);
     }
 
