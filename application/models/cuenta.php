@@ -6,6 +6,7 @@ class Cuenta extends Doctrine_Record {
         $this->hasColumn('id');
         $this->hasColumn('nombre');
         $this->hasColumn('nombre_largo');
+        $this->hasColumn('mensaje');
         $this->hasColumn('logo');
     }
 

@@ -44,6 +44,7 @@
                     <?php endif; ?>
                 </ul>
                 </div>
+                <?=  Cuenta::cuentaSegunDominio()?Cuenta::cuentaSegunDominio()->mensaje:''?>
             </header>
 
             <div class="row">

@@ -221,6 +221,7 @@ class Configuracion extends CI_Controller {
             $cuenta=Doctrine::getTable('Cuenta')->find(UsuarioBackendSesion::usuario()->cuenta_id);
 
             $cuenta->nombre_largo=$this->input->post('nombre_largo');
+            $cuenta->mensaje=$this->input->post('mensaje');
             $cuenta->logo=$this->input->post('logo');
             $cuenta->save();
 
