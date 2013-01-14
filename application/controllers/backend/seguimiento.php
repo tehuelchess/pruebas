@@ -10,16 +10,32 @@ class Seguimiento extends CI_Controller {
 
         UsuarioBackendSesion::force_login();
     }
+    
+    public function index(){
+        $data['procesos'] = Doctrine::getTable('Proceso')->findByCuentaId(UsuarioBackendSesion::usuario()->cuenta_id);
 
-    public function index() {
+        $data['title'] = 'Listado de Procesos';
+        $data['content'] = 'backend/seguimiento/index';
+        $this->load->view('backend/template', $data);
+    }
+
+    public function index_proceso($proceso_id) {
+        $proceso=Doctrine::getTable('Proceso')->find($proceso_id);
+        
+        if(UsuarioBackendSesion::usuario()->cuenta_id != $proceso->cuenta_id){
+            echo 'Usuario no tiene permisos';
+            exit;
+        } 
+        
+        $data['proceso']=$proceso;
         $data['tramites']=  Doctrine_Query::create()
                 ->from('Tramite t, t.Proceso p')
-                ->where('p.cuenta_id = ?',  UsuarioBackendSesion::usuario()->cuenta_id)
+                ->where('p.id = ?', $proceso_id)
                 ->orderBy('t.updated_at desc')
                 ->execute();
         
-        $data['title']='Seguimiento de Trámites';
-        $data['content']='backend/seguimiento/index';
+        $data['title']='Seguimiento de '.$proceso->nombre;
+        $data['content']='backend/seguimiento/index_proceso';
         $this->load->view('backend/template',$data);
     }
 
@@ -93,7 +109,7 @@ class Seguimiento extends CI_Controller {
         echo json_encode($respuesta);
     }
 
-    public function borrar($tramite_id){
+    public function borrar_tramite($tramite_id){
         $tramite=Doctrine::getTable('Tramite')->find($tramite_id);
         
         if(UsuarioBackendSesion::usuario()->cuenta_id!=$tramite->Proceso->cuenta_id){
@@ -102,6 +118,19 @@ class Seguimiento extends CI_Controller {
         }
         
         $tramite->delete();
+        
+        redirect($this->input->server('HTTP_REFERER'));
+    }
+    
+    public function borrar_proceso($proceso_id){
+        $proceso=Doctrine::getTable('Proceso')->find($proceso_id);
+        
+        if(UsuarioBackendSesion::usuario()->cuenta_id!=$proceso->cuenta_id){
+            echo 'No tiene permisos para hacer seguimiento a este tramite.';
+            exit;
+        }
+        
+        $proceso->Tramites->delete();
         
         redirect($this->input->server('HTTP_REFERER'));
     }
