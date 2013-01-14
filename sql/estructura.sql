@@ -12,6 +12,7 @@ CREATE  TABLE IF NOT EXISTS `tramitador`.`cuenta` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
   `nombre` VARCHAR(128) NOT NULL ,
   `nombre_largo` VARCHAR(256) NOT NULL ,
+  `mensaje` TEXT NOT NULL ,
   `logo` VARCHAR(128) NULL ,
   PRIMARY KEY (`id`) ,
   UNIQUE INDEX `nombre` (`nombre` ASC) )
