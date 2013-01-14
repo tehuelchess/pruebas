@@ -107,6 +107,12 @@
     });
     
 </script>
+<style>
+    #areaDibujo{
+        width: <?=$proceso->width?>;
+        height: <?=$proceso->height?>;
+    }
+</style>
 
 <ul class="breadcrumb">
     <li>

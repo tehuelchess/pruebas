@@ -83,6 +83,8 @@ class Procesos extends CI_Controller {
         $respuesta=new stdClass();
         if ($this->form_validation->run() == TRUE) {
             $proceso->nombre=$this->input->post('nombre');
+            $proceso->width=$this->input->post('width');
+            $proceso->height=$this->input->post('height');
             $proceso->save();
             
             //$socket_id_emisor=$this->input->post('socket_id_emisor');
