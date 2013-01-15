@@ -23,7 +23,7 @@
                             <input type="text" name="email" class="input-xlarge" />
                             <p class="help-block">En este correo recibiras notificaciones del estado de sus trámites.</p>
                             <div class="form-actions">
-                                <a class="btn" href="#" onclick="javascript:history.back();">Volver</a>
+                                <button class="btn" onclick="history.back()">Volver</button>
                                 <button class="btn btn-primary" type="submit">Ingresar</button>
                             </div>
                         </fieldset>
