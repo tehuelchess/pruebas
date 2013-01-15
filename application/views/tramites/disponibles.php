@@ -13,7 +13,13 @@
             <tr>
                 <td><?= $p->nombre ?></td>
                 <td><?=$p->Cuenta->nombre?></td>
-                <td><a href="<?=site_url('tramites/iniciar/'.$p->id)?>" class="btn btn-primary"><i class="icon-file icon-white"></i> Iniciar</a></td>
+                <td>
+                    <?php if($p->getTareaInicial()->acceso_modo=='publico'):?>
+                    <a href="<?=site_url('tramites/iniciar/'.$p->id)?>" class="btn btn-primary"><i class="icon-file icon-white"></i> Iniciar</a>
+                    <?php else: ?>
+                    <a href="<?=site_url('autenticacion/login')?>" class="btn btn-info"><i class="icon-white icon-off"></i> Autenticarse</a>
+                    <?php endif ?>
+                </td>
             </tr>
         <?php endforeach; ?>
     </tbody>
