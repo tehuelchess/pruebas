@@ -14,7 +14,7 @@
                 <td><?= $p->nombre ?></td>
                 <td><?=$p->Cuenta->nombre?></td>
                 <td>
-                    <?php if($p->getTareaInicial()->acceso_modo=='publico'):?>
+                    <?php if($p->canUsuarioIniciarlo(UsuarioSesion::usuario()->id)):?>
                     <a href="<?=site_url('tramites/iniciar/'.$p->id)?>" class="btn btn-primary"><i class="icon-file icon-white"></i> Iniciar</a>
                     <?php else: ?>
                     <a href="<?=site_url('autenticacion/login')?>" class="btn btn-info"><i class="icon-white icon-off"></i> Autenticarse</a>
