@@ -19,7 +19,10 @@ class WidgetTramitesCantidad extends Widget {
                 ->andWhere('t.pendiente=1')
                 ->groupBy('p.id')
                 ->execute();
-               
+        
+        if(!$tmp->count())
+            return;
+        
         foreach ($tmp as $p)
             $datos[$p->nombre]['pendientes'] = $p->cantidad;
 
