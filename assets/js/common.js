@@ -22,7 +22,7 @@ $(document).ready(function(){
                 if(!respuesta.error){
                     $parentDiv.find("input[type=hidden]").val(respuesta.file_name);
                     $parentDiv.find(".qq-upload-list").empty();
-                    $parentDiv.find(".link").html("<a href='"+site_url+"uploader/datos_get/"+respuesta.file_name+"'>"+respuesta.file_name+"</a> (<a href='#' class='remove'>X</a>)")
+                    $parentDiv.find(".link").html("<a href='"+site_url+"uploader/datos_get?filename="+respuesta.file_name+"'>"+respuesta.file_name+"</a> (<a href='#' class='remove'>X</a>)")
                 }
             }
         }); 
