@@ -34,7 +34,7 @@
                     <?php
                     $etapas_array = array();
                     foreach ($t->getEtapasActuales() as $e)
-                        $etapas_array[] = $e->Tarea->nombre;
+                        $etapas_array[] = $e->Tarea->nombre.($e->getFechaVencimiento()?' (Vence en'.$e->getFechaVencimientoAsString().')':'');
                     echo implode(', ', $etapas_array);
                     ?>
                 </td>
