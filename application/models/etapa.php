@@ -277,7 +277,7 @@ class Etapa extends Doctrine_Record {
         $now=new DateTime();
         
         $interval=$now->diff($this->getFechaVencimiento());
-        echo $interval->d.' días';
+        return $interval->d.' días';
     }
     
     public function vencida(){
