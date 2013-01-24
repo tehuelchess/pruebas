@@ -54,7 +54,7 @@ CREATE  TABLE IF NOT EXISTS `tramitador`.`tarea` (
   `proceso_id` INT(10) UNSIGNED NOT NULL ,
   `almacenar_usuario` TINYINT(1) NOT NULL DEFAULT 0 ,
   `almacenar_usuario_variable` VARCHAR(128) NULL ,
-  `acceso_modo` ENUM('grupos_usuarios','publico','registrados') NOT NULL DEFAULT 'grupos_usuarios' ,
+  `acceso_modo` ENUM('grupos_usuarios','publico','registrados','claveunica') NOT NULL DEFAULT 'grupos_usuarios' ,
   `activacion` ENUM('si','entre_fechas','no') NOT NULL DEFAULT 'si' ,
   `activacion_inicio` DATE NULL ,
   `activacion_fin` DATE NULL ,
