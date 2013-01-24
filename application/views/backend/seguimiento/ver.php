@@ -23,7 +23,7 @@
     <li class="active"><?= $tramite->Proceso->nombre ?></li>
 </ul>
 
-<div class="well" style="position:fixed; top: 200px; right: 20px; width: 300px; height: 500px; z-index: 1000;">
+<div class="well" style="position:fixed; top: 200px; right: 20px; width: 300px; height: 500px; z-index: 1000; overflow-y: scroll">
     <h3>Registro de eventos</h3>
     <hr />
     <ul>
