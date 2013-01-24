@@ -11,7 +11,7 @@ class EtapaTable extends Doctrine_Table {
                 //Si la etapa no se encuentra asignada
                 ->where('e.usuario_id IS NULL')
                 //Si el usuario tiene permisos de acceso
-                ->andWhere('(tar.acceso_modo="grupos_usuarios" AND g.id IN (SELECT gru.id FROM GrupoUsuarios gru, gru.Usuarios usr WHERE usr.id = ?)) OR (tar.acceso_modo = "registrados" AND 1 = ?) OR (tar.acceso_modo="publico")',array($usuario->id,$usuario->registrado))
+                ->andWhere('(tar.acceso_modo="grupos_usuarios" AND g.id IN (SELECT gru.id FROM GrupoUsuarios gru, gru.Usuarios usr WHERE usr.id = ?)) OR (tar.acceso_modo = "registrados" AND 1 = ?) OR (tar.acceso_modo = "claveunica" AND 1 = ?) OR (tar.acceso_modo="publico")',array($usuario->id,$usuario->registrado,$usuario->open_id))
                 ->orderBy('e.updated_at desc');
         
         if($cuenta)
