@@ -4,7 +4,6 @@
     <thead>
         <tr>
             <th>Nombre</th>
-            <th>Cuenta</th>
             <th>Acciones</th>
         </tr>
     </thead>
@@ -12,7 +11,6 @@
         <?php foreach ($procesos as $p): ?>
             <tr>
                 <td><?= $p->nombre ?></td>
-                <td><?=$p->Cuenta->nombre?></td>
                 <td>
                     <?php if($p->canUsuarioIniciarlo(UsuarioSesion::usuario()->id)):?>
                     <a href="<?=site_url('tramites/iniciar/'.$p->id)?>" class="btn btn-primary"><i class="icon-file icon-white"></i> Iniciar</a>
