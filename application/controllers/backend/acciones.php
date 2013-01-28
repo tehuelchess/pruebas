@@ -137,7 +137,7 @@ class Acciones extends CI_Controller {
             }
             
             $accion->nombre=$this->input->post('nombre');
-            $accion->extra=$this->input->post('extra');
+            $accion->extra=$this->input->post('extra',false);
             $accion->save();
             
             $respuesta->validacion=TRUE;
