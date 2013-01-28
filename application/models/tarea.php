@@ -83,6 +83,8 @@ class Tarea extends Doctrine_Record {
             return Doctrine::getTable('Usuario')->findByVacaciones(0);
         else if ($this->acceso_modo == 'registrados')
             return Doctrine::getTable('Usuario')->findByRegistradoAndVacaciones(1,0);
+        else if ($this->acceso_modo == 'claveunica')
+            return Doctrine::getTable('Usuario')->findByOpenIdAndVacaciones(1,0);
 
 
         return Doctrine_Query::create()
@@ -97,6 +99,8 @@ class Tarea extends Doctrine_Record {
             return Doctrine::getTable('Usuario')->findById($usuario_id)->count() ? true : false;
         else if ($this->acceso_modo == 'registrados')
             return Doctrine::getTable('Usuario')->findByIdAndRegistrado($usuario_id, 1) ? true : false;
+        else if ($this->acceso_modo == 'claveunica')
+            return Doctrine::getTable('Usuario')->findByIdAndOpenId($usuario_id, 1) ? true : false;
 
         return Doctrine_Query::create()
                         ->from('Usuario u, u.GruposUsuarios g, g.Tareas t')
