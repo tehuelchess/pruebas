@@ -36,7 +36,7 @@ class AccionWebservice extends Accion {
         $json=json_decode($result);
         
         foreach($json as $key=>$value){
-            $dato=Doctrine::getTable('Dato')->findOneByNombreAndTramiteId('derecho_a_dignidad',$tramite_id);
+            $dato=Doctrine::getTable('Dato')->findOneByNombreAndTramiteId($key,$tramite_id);
             if(!$dato)
                 $dato=new Dato();
             $dato->nombre=$key;
