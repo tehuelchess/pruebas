@@ -98,6 +98,7 @@ class Campo extends Doctrine_Record {
         $dato = NULL;
         $etapa=Doctrine::getTable('Etapa')->find($etapa_id);
         $dato =Doctrine::getTable('Dato')->findOneByTramiteIdAndNombre($etapa->Tramite->id, $this->nombre);
+        if($this->readonly)$modo='visualizacion';
         
         return $this->display($modo,$dato,$etapa_id);
     }
@@ -108,11 +109,13 @@ class Campo extends Doctrine_Record {
     public function displayConDatoSeguimiento($etapa_id, $modo = 'edicion'){
         $dato = NULL;
         $dato =  Doctrine::getTable('DatoSeguimiento')->findOneByEtapaIdAndNombre($etapa_id, $this->nombre);
+        if($this->readonly)$modo='visualizacion';
         
         return $this->display($modo,$dato,$etapa_id);
     }
     
-    public function displaySinDato($modo = 'edicion'){     
+    public function displaySinDato($modo = 'edicion'){   
+        if($this->readonly)$modo='visualizacion';
         return $this->display($modo,NULL,NULL);
     }
 

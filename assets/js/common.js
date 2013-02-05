@@ -107,14 +107,18 @@ $(document).ready(function(){
                     $(el).css("opacity","1.0");
                 else
                     $(el).show();
-                //$(el).find(":input").prop("disabled",false);
+                
+                if(!$(el).data("readonly"))
+                    $(el).find(":input").prop("disabled",false);
+                
             }
             else{
                 if($(form).hasClass("debugForm"))
                     $(el).css("opacity","0.5");
                 else
                     $(el).hide();
-                //$(el).find(":input").prop("disabled",true);
+                
+                $(el).find(":input").prop("disabled",true);
             }
         });
     }

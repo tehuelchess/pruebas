@@ -4,7 +4,7 @@ class CampoSelect extends Campo {
     
     protected function display($modo, $dato) {
         $display = '<label>' . $this->etiqueta . (in_array('required', $this->validacion) ? '' : ' (Opcional)') . '</label>';
-        $display.='<select name="' . $this->nombre . '" ' . ($modo == 'visualizacion' ? 'disabled' : '') . '>';
+        $display.='<select name="' . $this->nombre . '" ' . ($modo == 'visualizacion' ? 'disabled' : '') . ' data-modo="'.$modo.'">';
         $display.='<option value="">Seleccionar</option>';
         foreach ($this->datos as $d) {
             $display.='<option value="' . $d->valor . '" ' . ($dato && $d->valor == $dato->valor ? 'selected' : '') . '>' . $d->etiqueta . '</option>';
