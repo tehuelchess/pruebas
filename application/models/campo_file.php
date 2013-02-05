@@ -20,7 +20,7 @@ class CampoFile extends Campo {
         $display.='<input type="hidden" name="' . $this->nombre . '" value="' . ($dato ? htmlspecialchars($dato->valor) : '') . '" />';
         if ($dato){
             $display.='<p class="link"><a href="' . site_url('uploader/datos_get?filename=' . urlencode ($dato->valor)) . '" target="_blank">' . htmlspecialchars ($dato->valor) . '</a>';
-            if(!($this->readonly || $modo=='visualizacion'))
+            if(!($modo=='visualizacion'))
                 $display.='(<a class="remove" href="#">X</a>)</p>';
         }
         else
