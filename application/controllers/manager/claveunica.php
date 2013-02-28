@@ -29,6 +29,7 @@ class Claveunica extends CI_Controller {
                     ->from('Cuenta c, c.Procesos.Tramites t, t.Etapas e, e.Usuario u')
                     ->select('c.*, COUNT(t.id) as ntramites')
                     ->where('u.open_id = 1')
+                    ->groupBy('c.id')
                     ->execute();
 
             $data['cuentas'] = $cuentas;
