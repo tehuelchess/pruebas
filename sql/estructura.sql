@@ -541,6 +541,20 @@ CREATE  TABLE IF NOT EXISTS `tramitador`.`reporte` (
 ENGINE = InnoDB;
 
 
+-- -----------------------------------------------------
+-- Table `tramitador`.`usuario_manager`
+-- -----------------------------------------------------
+CREATE  TABLE IF NOT EXISTS `tramitador`.`usuario_manager` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
+  `usuario` VARCHAR(128) NOT NULL ,
+  `password` VARCHAR(255) NOT NULL ,
+  `nombre` VARCHAR(128) NOT NULL ,
+  `apellidos` VARCHAR(128) NOT NULL ,
+  `salt` VARCHAR(32) NOT NULL ,
+  PRIMARY KEY (`id`) )
+ENGINE = InnoDB;
+
+
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
