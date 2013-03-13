@@ -75,11 +75,35 @@ class Documentos extends CI_Controller {
             }
         
         $this->form_validation->set_rules('nombre','Nombre','required');
+        $this->form_validation->set_rules('tipo','Tipo','required');
         $this->form_validation->set_rules('contenido','Contenido','required');
+        
+        if($this->input->post('tipo')=='certificado'){
+            $this->form_validation->set_rules('servicio','Servicio','required');
+            $this->form_validation->set_rules('servicio_url','URL del Servicio','required|prep_url');
+            $this->form_validation->set_rules('firmador_nombre','Nombre del firmador','required');
+            $this->form_validation->set_rules('firmador_cargo','Cargo del firmador','required');
+            $this->form_validation->set_rules('firmador_servicio','Servicio del firmador','required');
+            $this->form_validation->set_rules('firmador_imagen','Imagen de la firmas');
+            $this->form_validation->set_rules('validez','Dias de validez','is_natural_no_zero');
+        }
+        
         
         if($this->form_validation->run()==TRUE){         
             $documento->nombre=$this->input->post('nombre');
+            $documento->tipo=$this->input->post('tipo');
             $documento->contenido=$this->input->post('contenido');
+            
+            if($documento->tipo=='certificado'){
+                $documento->servicio=$this->input->post('servicio');
+                $documento->servicio_url=$this->input->post('servicio_url');
+                $documento->firmador_nombre=$this->input->post('firmador_nombre');
+                $documento->firmador_cargo=$this->input->post('firmador_cargo');
+                $documento->firmador_servicio=$this->input->post('firmador_servicio');
+                $documento->firmador_imagen=$this->input->post('firmador_imagen');
+                $documento->validez=$this->input->post('validez');
+            }
+            
             $documento->save();
             
             $respuesta->validacion=TRUE;

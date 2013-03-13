@@ -13,22 +13,71 @@
     <li><a href="<?= site_url('backend/reportes/listar/' . $proceso->id) ?>">Reportes</a></li>
 </ul>
 
+<script>
+    $(document).ready(function() {
+        handleRadio();
+        $("input[name=tipo]").change(handleRadio);
+        
+        function handleRadio() {
+            var value=$("input[name=tipo]:checked").val();
+            if (value == "blanco") {
+                $("#certificadoArea").hide();
+            } else {
+                $("#certificadoArea").show();
+            }
+        }
+    });
+</script>
 
-<form class="ajaxForm" method="POST" action="<?=site_url('backend/documentos/editar_form/'.($edit?$documento->id:''))?>">
+<form class="ajaxForm" method="POST" action="<?= site_url('backend/documentos/editar_form/' . ($edit ? $documento->id : '')) ?>">
     <fieldset>
         <legend>Crear Documento</legend>
         <div class="validacion"></div>
-        <?php if(!$edit):?>
-        <input type="hidden" name="proceso_id" value="<?=$proceso->id?>" />
+        <?php if (!$edit): ?>
+            <input type="hidden" name="proceso_id" value="<?= $proceso->id ?>" />
         <?php endif; ?>
         <label>Nombre</label>
-        <input type="text" name="nombre" value="<?=$edit?$documento->nombre:''?>" />
+        <input type="text" name="nombre" value="<?= $edit ? $documento->nombre : '' ?>" />
+
+        <label>Tipo de documento</label>
+        <label class="radio"><input type="radio" name="tipo" value="blanco" <?= $documento->tipo == 'blanco' ? 'checked' : '' ?> /> En blanco</label>
+        <label class="radio"><input type="radio" name="tipo" value="certificado" <?= $documento->tipo == 'certificado' ? 'checked' : '' ?> /> Certificado</label>
+
+        <div id="certificadoArea">
+            <label>Servicio que emite el documento</label>
+            <input class="input-xxlarge" type="text" name="servicio" value="<?= $edit ? $documento->servicio : '' ?>" placeholder="Ej: Ministerio Secretaría General de la Presidencia" />
+            <label>URL al sitio web del servicio</label>
+            <input class="input-xxlarge" type="text" name="servicio_url" value="<?= $edit ? $documento->servicio_url : '' ?>" placeholder="Ej: http://www.minsegpres.gob.cl" />
+            <label>Nombre de la persona que firma</label>
+            <input class="input-xxlarge" type="text" name="firmador_nombre" value="<?= $edit ? $documento->firmador_nombre : '' ?>" placeholder="Ej: Juan Perez" />
+            <label>Cargo de la persona que firma</label>
+            <input class="input-xxlarge" type="text" name="firmador_cargo" value="<?= $edit ? $documento->firmador_cargo : '' ?>" placeholder="Ej: Jefe de Servicio" />
+            <label>Servicio al que pertenece la persona que firma</label>
+            <input class="input-xxlarge" type="text" name="firmador_servicio" value="<?= $edit ? $documento->firmador_servicio : '' ?>" placeholder="Ej: Ministerio Secretaría General de la Presidencia" />
+            <label>Imagen de la firma</label>
+            <div id="file-uploader"></div>
+            <input type="hidden" name="firmador_imagen" value="<?= $documento->firmador_imagen ?>" />
+            <img class="logo" src="<?= $documento->firmador_imagen ? site_url('backend/uploader/firma_get/' . $documento->firmador_imagen) : base_url('assets/img/certificados/firma.png') ?>" alt="firma" width="300" />
+            <script>
+                var uploader = new qq.FileUploader({
+                    element: document.getElementById('file-uploader'),
+                    action: site_url + 'backend/uploader/firma',
+                    onComplete: function(id, filename, respuesta) {
+                        $("input[name=firmador_imagen]").val(respuesta.file_name);
+                        $("img.logo").attr("src", site_url + "backend/uploader/firma_get/" + respuesta.file_name);
+                    }
+                });
+            </script>
+            <label>Numero de dias de validez (Dejar en blanco para periodo ilimitado)</label>
+            <input class="input-mini" type="text" name="validez" value="<?= $edit ? $documento->validez : '' ?>" placeholder="Ej: 90" />
+        </div>
+
         <label>Contenido</label>
-        <textarea name="contenido" class="input-xxlarge" rows="20"><?=$edit?$documento->contenido:''?></textarea>
-        
-        
+        <textarea name="contenido" class="input-xxlarge" rows="20"><?= $edit ? $documento->contenido : '' ?></textarea>
+
+
         <div class="form-actions">
-            <a class="btn" href="<?=site_url('backend/documentos/listar/'.$proceso->id)?>">Cancelar</a>
+            <a class="btn" href="<?= site_url('backend/documentos/listar/' . $proceso->id) ?>">Cancelar</a>
             <input class="btn btn-primary" type="submit" value="Guardar" />
         </div>
     </fieldset>

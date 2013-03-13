@@ -33,21 +33,25 @@ class CampoDocumento extends Campo {
         if (!$dato) {   //Generamos el documento, ya que no se ha generado
             Doctrine_Manager::connection()->beginTransaction();
             $etapa = Doctrine::getTable('Etapa')->find($etapa_id);
-            $filename = $this->Documento->generar($etapa->Tramite->id);
             
             $file=new File();
+            $file->llave=strtolower(random_string('alnum', 12));
             $file->tramite_id=$etapa->Tramite->id;
-            $file->filename=$filename;
             $file->tipo='documento';
+            $file->save();
+            
+            $file->filename = $this->Documento->generar($file->id,$file->llave,$file->tramite_id);
             $file->save();
             
             $dato = Doctrine::getTable('Dato')->findOneByTramiteIdAndNombre($etapa->Tramite->id, $this->nombre);
             if (!$dato)
                 $dato = new Dato();
             $dato->nombre = $this->nombre;
-            $dato->valor = $filename;
+            $dato->valor = $file->filename;
             $dato->tramite_id = $etapa->Tramite->id;
             $dato->save();
+            
+            
             Doctrine_Manager::connection()->commit();
         }
 
