@@ -4,3 +4,4 @@ database.php
 nbproject
 uploads
 email.php
+application/libraries/tcpdf/cache
