@@ -7,6 +7,7 @@ class File extends Doctrine_Record {
         $this->hasColumn('filename');
         $this->hasColumn('tipo');
         $this->hasColumn('llave');
+        $this->hasColumn('validez');
         $this->hasColumn('tramite_id');
     }
 

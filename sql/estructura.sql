@@ -520,6 +520,7 @@ CREATE  TABLE IF NOT EXISTS `tramitador`.`file` (
   `filename` VARCHAR(255) NOT NULL ,
   `tipo` ENUM('dato','documento') NOT NULL ,
   `llave` VARCHAR(12) NULL ,
+  `validez` INT UNSIGNED NULL ,
   `tramite_id` INT UNSIGNED NOT NULL ,
   `created_at` DATETIME NULL ,
   `updated_at` DATETIME NULL ,

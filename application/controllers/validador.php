@@ -72,6 +72,11 @@ class Validador extends MY_Controller {
             return FALSE;
         }
         
+        if($file->validez!==null && now()>strtotime($file->created_at.' + '.$file->validez.' days')){
+            $this->form_validation->set_message('check_documento','Documento expiró su periodo de validez.');
+            return FALSE;
+        }
+        
         return TRUE;
     }
 }
