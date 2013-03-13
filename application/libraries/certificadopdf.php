@@ -101,7 +101,7 @@ class CertificadoPDF extends TCPDF {
         $this->MultiCell(4*CELL_WIDTH+3*GRID_WIDTH, '', implode(' ',str_split($this->key,4)), 0, 'L', false, 1, PAGE_MARGIN);
         $this->SetFont('helvetica', '', 10);
         $this->MultiCell(4*CELL_WIDTH+3*GRID_WIDTH, '', 'Verifique la validez de este documento en:', 0, 'L', false, 1, PAGE_MARGIN);
-        $this->MultiCell(4*CELL_WIDTH+3*GRID_WIDTH, '', 'http://validador.chilesinpapeleo.cl o llamando al 101 para teléfonos fijos y celulares.', 0, 'L', false, 1, PAGE_MARGIN);
+        $this->MultiCell(4*CELL_WIDTH+3*GRID_WIDTH, '', 'http://'.Cuenta::cuentaSegunDominio().'.chilesinpapeleo.cl/validador o llamando al 101 para teléfonos fijos y celulares.', 0, 'L', false, 1, PAGE_MARGIN);
         
         if($this->firma_electronica){
             $this->Image('assets/img/certificados/candado.png', PAGE_MARGIN+4*CELL_WIDTH+4*GRID_WIDTH, $y+55, 5, '', '', '', 'T',true);
