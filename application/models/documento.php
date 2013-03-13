@@ -4,8 +4,16 @@ class Documento extends Doctrine_Record {
 
     function setTableDefinition() {
         $this->hasColumn('id');
+        $this->hasColumn('tipo');
         $this->hasColumn('nombre');
         $this->hasColumn('contenido');
+        $this->hasColumn('servicio');
+        $this->hasColumn('servicio_url');
+        $this->hasColumn('validez');
+        $this->hasColumn('firmador_nombre');
+        $this->hasColumn('firmador_cargo');
+        $this->hasColumn('firmador_servicio');
+        $this->hasColumn('firmador_imagen');
         $this->hasColumn('proceso_id');
     }
 
@@ -23,66 +31,70 @@ class Documento extends Doctrine_Record {
         ));
     }
 
-    public function generar($tramite_id, $firmar = true) {
-        
-      
+    public function setValidez($validez) {
+        if (!$validez)
+            $validez = null;
+
+        $this->_set('validez', $validez);
+    }
+
+    public function generar($file_id, $key, $tramite_id, $firmar = false) {
+
+
 
         $regla = new Regla($this->contenido);
         $contenido = $regla->getExpresionParaOutput($tramite_id);
-        
-        $resultado=$this->render($contenido,null,true, false, $firmar);
-        $this->render($contenido,$resultado->identifier, true, true, $firmar);
-        
 
-        
-        
+        $filename_uniqid = uniqid();
+
+        $filename = $filename_uniqid . '.pdf';
+        $resultado = $this->render($contenido, $file_id, $key, $filename, false, $firmar);
+        $filename = $filename_uniqid . '.copia.pdf';
+        $this->render($contenido, $file_id, $key, $filename, true, $firmar);
+
+
+
+
         return $resultado->filename;
     }
 
     public function previsualizar() {
-        $this->render($this->contenido,'preview');
+        $this->render($this->contenido, '123456789', 'abcdefghijkl');
     }
 
-    private function render($contenido,$identifier,$saveToDisk=false,$copia=false, $firmar=false){
-        $resultado=new stdClass();
-        
-        $identifier=$identifier?$identifier:sha1(uniqid(mt_rand()));
-        $filename =  $copia?$identifier. '.copia.pdf':$identifier. '.pdf';
+    private function render($contenido, $identifier, $key, $filename = false, $copia = false, $firmar = false) {
+        $resultado = new stdClass();
+
+
         $uploadDirectory = 'uploads/documentos/';
-        
-        $CI=&get_instance();
-        $CI->load->library('simplepdf');
 
-        $obj = new $CI->simplepdf;
-        
+        $CI = &get_instance();
 
-        $obj->AddPage();
-        
-        if($copia){
-            //$obj->writeHTML('<img src="'.base_url('assets/img/copia.png').'" />');
-            $img_file =base_url('assets/img/copia.png');
-            $obj->Image($img_file, 5, 50);
+        if ($this->tipo == 'certificado') {
+            $CI->load->library('certificadopdf');
+            $obj = new $CI->certificadopdf;
+
+            $obj->content = $contenido;
+            $obj->id = $identifier;
+            $obj->key = $key;
+            $obj->servicio = $this->servicio;
+            $obj->servicio_url = $this->servicio_url;
+            $obj->titulo = $this->nombre;
+            $obj->validez = $this->validez;
+            $obj->firmador_nombre = $this->firmador_nombre;
+            $obj->firmado_cargo = $this->firmador_cargo;
+            $obj->firmador_servicio = $this->firmador_servicio;
+            if ($this->firmador_imagen)
+                $obj->firmador_imagen = 'uploads/firmas/' . $this->firmador_imagen;
+            $obj->firma_electronica = $firmar;
+            $obj->copia = $copia;
+        }else {
+            $CI->load->library('blancopdf');
+            $obj = new $CI->blancopdf;
+            $obj->content=$contenido;
         }
-        
-        $style = array(
-            'border' => 2,
-            'vpadding' => 'auto',
-            'hpadding' => 'auto',
-            'fgcolor' => array(0, 0, 0),
-            'bgcolor' => false, //array(255,255,255)
-            'module_width' => 1, // width of a single module in points
-            'module_height' => 1 // height of a single module in points
-        );
 
-        $params=$obj->serializeTCPDFtagParameters(array(site_url('validador/documento/'.$identifier), 'QRCODE,H', 170, 5, 30, 30, $style, 'N'));
-        $obj->writeHTML('<tcpdf style="text-align: left;" method="write2DBarcode" params="'.$params.'" />');
-        $obj->writeHTML('<p style="text-align: right; font-size: 14px;">'.$identifier.'</p>');
-  
-        $obj->writeHTML($contenido);
-        
-        
-        
-        if($saveToDisk){
+        if ($filename) {
             if (!$firmar) {
                 $obj->Output($uploadDirectory . $filename, 'F');
             } else {
@@ -104,16 +116,15 @@ class Documento extends Doctrine_Record {
 
                 file_put_contents($uploadDirectory . $filename, base64_decode($result->IntercambiaDocResult->Documento));
             }
-            $resultado->filename=$filename;
-        }else{
+            $resultado->filename = $filename;
+        } else {
             $obj->Output($filename);
         }
-        
-        $resultado->identifier=$identifier;
-        
-        
+
+        $resultado->filename_uniqid = $filename;
+
+
         return $resultado;
-        
-        
     }
+
 }

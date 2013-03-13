@@ -15,8 +15,10 @@
                         <form method="POST" action="<?=site_url('validador/documento')?>" autocomplete="off">
                             <legend>Valide su documento</legend>
                             <div class="validacion"><?=  validation_errors()?></div>
-                            <label>Identificador de documento</label>
-                            <input class="span3" type="text" name="codigo" value="<?=set_value('codigo')?>" />
+                            <label>Folio</label>
+                            <input class="span3" type="text" name="id" value="<?=set_value('id')?>" />
+                            <label>Código de verificación</label>
+                            <input class="span3" type="text" name="key" value="<?=set_value('key')?>" />
                             <div>
                                 <button type="submit" class="btn btn-primary pull-right">Validar</button>
                             </div>

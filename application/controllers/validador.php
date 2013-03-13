@@ -11,15 +11,18 @@ class Validador extends MY_Controller {
         redirect('validador/documento');
     }
 
-    public function documento($codigo=null){
-        if($codigo)
-            $_POST['codigo']=$codigo;
+    public function documento(){
+        if($this->input->get('id'))
+            $_POST['id']=$this->input->get('id');
+        if($this->input->get('key'))
+            $_POST['key']=$this->input->get('key');
         
-        $this->form_validation->set_rules('codigo','Identificador','required|callback_check_documento');
+        $this->form_validation->set_rules('id','Folio','required|callback_check_documento');
+        $this->form_validation->set_rules('key','Código de verificación','required');
         
         if($this->form_validation->run()==TRUE){
-            $codigo=$this->input->post('codigo');
-            $filename_copia=$codigo.'.copia.pdf';
+            $file=Doctrine::getTable('File')->find($this->input->post('id'));
+            $filename_copia=  str_replace('.pdf', '.copia.pdf', $file->filename);
             $path='uploads/documentos/'.$filename_copia;
             header('Content-Type: '.  mime_content_type($path));
             header('Content-Length: ' . filesize($path));
@@ -55,16 +58,17 @@ class Validador extends MY_Controller {
      * 
      */
     
-    public function check_documento($codigo){
-        $filename=$codigo.'.pdf';
-        
+    public function check_documento($id){  
+        $key=$this->input->post('key');
+        $key=  preg_replace('/\W/', '', $key);
+                
         $file=Doctrine_Query::create()
                 ->from('File f')
-                ->where('f.filename = ? AND f.tipo = ?',array($filename,'documento'))
+                ->where('f.id = ? AND f.llave = ?',array($id,$key))
                 ->fetchOne();
         
         if(!$file){
-            $this->form_validation->set_message('check_documento','Documento no existe.');
+            $this->form_validation->set_message('check_documento','Folio y/o código no válido.');
             return FALSE;
         }
         
