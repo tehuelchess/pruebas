@@ -35,12 +35,14 @@ class CampoDocumento extends Campo {
             $etapa = Doctrine::getTable('Etapa')->find($etapa_id);
             
             $file=new File();
-            $file->llave=strtolower(random_string('alnum', 12));
             $file->tramite_id=$etapa->Tramite->id;
             $file->tipo='documento';
             $file->save();
             
-            $file->filename = $this->Documento->generar($file->id,$file->llave,$file->tramite_id);
+            $res=$this->Documento->generar($file->id,$file->tramite_id);
+            
+            $file->llave=$res->key;
+            $file->filename = $res->filename;
             $file->save();
             
             $dato = Doctrine::getTable('Dato')->findOneByTramiteIdAndNombre($etapa->Tramite->id, $this->nombre);
