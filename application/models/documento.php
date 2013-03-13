@@ -38,24 +38,19 @@ class Documento extends Doctrine_Record {
         $this->_set('validez', $validez);
     }
 
-    public function generar($file_id, $key, $tramite_id, $firmar = false) {
-
-
-
+    public function generar($file_id, $tramite_id, $firmar = false) {
         $regla = new Regla($this->contenido);
         $contenido = $regla->getExpresionParaOutput($tramite_id);
 
         $filename_uniqid = uniqid();
+        $resultado->key=$this->tipo=='certificado'?strtolower(random_string('alnum', 12)):null;
 
-        $filename = $filename_uniqid . '.pdf';
-        $resultado = $this->render($contenido, $file_id, $key, $filename, false, $firmar);
-        $filename = $filename_uniqid . '.copia.pdf';
-        $this->render($contenido, $file_id, $key, $filename, true, $firmar);
+        $resultado->filename = $filename_uniqid . '.pdf';
+        $this->render($contenido, $file_id, $resultado->key, $resultado->filename, false, $firmar);
+        $filename_copia = $filename_uniqid . '.copia.pdf';
+        $this->render($contenido, $file_id, $resultado->key, $filename_copia, true, $firmar);
 
-
-
-
-        return $resultado->filename;
+        return $resultado;
     }
 
     public function previsualizar() {
@@ -63,7 +58,6 @@ class Documento extends Doctrine_Record {
     }
 
     private function render($contenido, $identifier, $key, $filename = false, $copia = false, $firmar = false) {
-        $resultado = new stdClass();
 
 
         $uploadDirectory = 'uploads/documentos/';
@@ -116,15 +110,13 @@ class Documento extends Doctrine_Record {
 
                 file_put_contents($uploadDirectory . $filename, base64_decode($result->IntercambiaDocResult->Documento));
             }
-            $resultado->filename = $filename;
         } else {
             $obj->Output($filename);
         }
 
-        $resultado->filename_uniqid = $filename;
 
 
-        return $resultado;
+        return;
     }
 
 }
