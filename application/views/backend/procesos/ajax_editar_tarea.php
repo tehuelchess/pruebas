@@ -150,7 +150,7 @@
                                 <label>Fecha final</label>
                                 <input class="datepicker" rel="tooltip" title="Deje el campo en blanco para no considerar una fecha final" type="text" name="activacion_fin" value="<?= $tarea->activacion_fin ? date('d-m-Y', $tarea->activacion_fin) : '' ?>" placeholder="DD-MM-AAAA" />
                             </div>
-                            <label class="radio"><input name="activacion" value="no" type="radio" <?= $tarea->activacion == 'no' ? 'no' : '' ?>>Tarea desactivada</label>
+                            <label class="radio"><input name="activacion" value="no" type="radio" <?= $tarea->activacion == 'no' ? 'checked' : '' ?>>Tarea desactivada</label>
                         </div>
                     </div>
 
