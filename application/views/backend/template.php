@@ -72,10 +72,18 @@
                     <div class="row-fluid">
                         <div class="span12">
                 <ul id="menu" class="nav nav-pills">
-                    <li <?= $this->uri->segment(2) == 'portada' || !$this->uri->segment(2) ? 'class="active"' : '' ?>><a href="<?= site_url('backend/portada') ?>">Inicio</a></li>
+                    <?php if(UsuarioBackendSesion::usuario()->rol=='super' || UsuarioBackendSesion::usuario()->rol=='gestion'):?>
+                    <li <?= $this->uri->segment(2) == 'gestion' || !$this->uri->segment(2) ? 'class="active"' : '' ?>><a href="<?= site_url('backend/gestion') ?>">Inicio</a></li>
+                    <?php endif ?>
+                    <?php if(UsuarioBackendSesion::usuario()->rol=='super' || UsuarioBackendSesion::usuario()->rol=='modelamiento'):?>
                     <li <?= $this->uri->segment(2) == 'procesos' || $this->uri->segment(2) == 'formularios' ? 'class="active"' : '' ?>><a href="<?= site_url('backend/procesos') ?>">Modelador de Procesos</a></li>
+                    <?php endif ?>
+                    <?php if(UsuarioBackendSesion::usuario()->rol=='super' || UsuarioBackendSesion::usuario()->rol=='operacion'):?>
                     <li <?= $this->uri->segment(2) == 'seguimiento' ? 'class="active"' : '' ?>><a href="<?= site_url('backend/seguimiento') ?>">Seguimiento</a></li>
+                    <?php endif ?>
+                    <?php if(UsuarioBackendSesion::usuario()->rol=='super'):?>
                     <li <?= $this->uri->segment(2) == 'configuracion' ? 'class="active"' : '' ?>><a href="<?= site_url('backend/configuracion') ?>">Configuración</a></li>
+                    <?php endif ?>
                     <li><a href="http://ayuda.chilesinpapeleo.cl/simple" target="_blank">Ayuda</a></li>
                 </ul>
                         </div>
