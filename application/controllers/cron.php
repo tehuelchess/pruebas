@@ -13,6 +13,11 @@ class Cron extends CI_Controller {
             exit;
         }
     }
+    
+    public function hourly(){
+        //Indexamos las busquedas en Sphinx
+        system('cd sphinx; searchd; indexer --rotate --all');
+    }
 
     public function daily() {
         //Buscamos las etapas que estan por vencer, pendientes y que requieren ser notificadas
