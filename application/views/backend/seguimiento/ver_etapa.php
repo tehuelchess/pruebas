@@ -19,13 +19,13 @@
                     });
                 });
             </script>
-            <p>Asignado a: <?=!$etapa->usuario_id?'Ninguno':!$etapa->Usuario->registrado?'No registrado':$etapa->Usuario->usuario?> <?php if($etapa->pendiente):?>(<a id="reasignarLink" href="<?=site_url('seguimiento/reasignar')?>">Reasignar</a>)<?php endif?></p>
+            <p>Asignado a: <?=!$etapa->usuario_id?'Ninguno':!$etapa->Usuario->registrado?'No registrado':$etapa->Usuario->open_id?$etapa->Usuario->nombre.' '.$etapa->Usuario->apellidos:$etapa->Usuario->usuario?> <?php if($etapa->pendiente):?>(<a id="reasignarLink" href="<?=site_url('seguimiento/reasignar')?>">Reasignar</a>)<?php endif?></p>
             <form id="reasignarForm" method="POST" action="<?=site_url('backend/seguimiento/reasignar_form/'.$etapa->id)?>" class="ajaxForm hide">
                 <div class="validacion"></div>
                 <label>¿A quien deseas asignarle esta etapa?</label>
                 <select name="usuario_id">
                     <?php foreach($etapa->Tarea->getUsuarios() as $u):?>
-                    <option value="<?=$u->id?>" <?=$u->id==$etapa->usuario_id?'selected':''?>><?=$u->usuario?></option>
+                    <option value="<?=$u->id?>" <?=$u->id==$etapa->usuario_id?'selected':''?>><?=$u->open_id?$u->nombre.' '.$u->apellidos:$u->usuario?></option>
                     <?php endforeach?>
                 </select>
                 <button class="btn btn-primary" type="submit">Reasignar</button>
