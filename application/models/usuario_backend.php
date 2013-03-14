@@ -8,6 +8,7 @@ class UsuarioBackend extends Doctrine_Record {
         $this->hasColumn('password');
         $this->hasColumn('nombre');
         $this->hasColumn('apellidos');
+        $this->hasColumn('rol');
         $this->hasColumn('salt');
         $this->hasColumn('cuenta_id');
     }

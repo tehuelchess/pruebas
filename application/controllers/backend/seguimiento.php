@@ -9,6 +9,11 @@ class Seguimiento extends CI_Controller {
         parent::__construct();
 
         UsuarioBackendSesion::force_login();
+        
+        if(UsuarioBackendSesion::usuario()->rol!='super' && UsuarioBackendSesion::usuario()->rol!='operacion'){
+            echo 'No tiene permisos para acceder a esta seccion.';
+            exit;
+        }
     }
 
     public function index() {

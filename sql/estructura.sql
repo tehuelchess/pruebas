@@ -401,6 +401,7 @@ CREATE  TABLE IF NOT EXISTS `tramitador`.`usuario_backend` (
   `password` VARCHAR(255) NOT NULL ,
   `nombre` VARCHAR(128) NOT NULL ,
   `apellidos` VARCHAR(128) NOT NULL ,
+  `rol` ENUM('super','modelamiento','operacion','gestion') NOT NULL DEFAULT 'super' ,
   `salt` VARCHAR(32) NOT NULL ,
   `cuenta_id` INT UNSIGNED NOT NULL ,
   PRIMARY KEY (`id`) ,
