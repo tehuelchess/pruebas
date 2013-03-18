@@ -321,7 +321,7 @@ CREATE  TABLE IF NOT EXISTS `tramitador`.`campo` (
   `validacion` VARCHAR(128) NOT NULL ,
   `dependiente_tipo` ENUM('string','regex') NULL DEFAULT 'string' ,
   `dependiente_campo` VARCHAR(64) NULL ,
-  `dependiente_valor` VARCHAR(128) NULL ,
+  `dependiente_valor` VARCHAR(256) NULL ,
   `datos` TEXT NULL ,
   `documento_id` INT UNSIGNED NULL ,
   `extra` TEXT NULL ,
