@@ -87,7 +87,7 @@ class CertificadoPDF extends TCPDF {
         
         $this->Line(PAGE_MARGIN+CELL_WIDTH,$y+10,PAGE_MARGIN+CELL_WIDTH,$y+48);
         
-        $this->Image($this->firmador_imagen, PAGE_MARGIN+3*CELL_WIDTH+2*GRID_WIDTH, $y+10, '', 20, '', '', 'T',true);
+        $this->Image($this->firmador_imagen, PAGE_MARGIN+3*CELL_WIDTH+2*GRID_WIDTH, $y+10, 2*CELL_WIDTH+GRID_WIDTH, 20, '', '', 'T',true,300,'',false,false,0,true);
         $this->SetFont('helvetica', 'B', 11);
         $this->MultiCell(2*CELL_WIDTH+GRID_WIDTH, 10, $this->firmador_nombre."\n".$this->firmado_cargo, 0, 'L', false, 1, PAGE_MARGIN+3*CELL_WIDTH+2*GRID_WIDTH, $y+30);
         $this->SetFont('helvetica', '', 11);
