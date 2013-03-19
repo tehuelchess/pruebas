@@ -40,8 +40,8 @@
         <input type="text" name="nombre" value="<?= $edit ? $documento->nombre : '' ?>" />
 
         <label>Tipo de documento</label>
-        <label class="radio"><input type="radio" name="tipo" value="blanco" <?= $documento->tipo == 'blanco' ? 'checked' : '' ?> /> En blanco</label>
-        <label class="radio"><input type="radio" name="tipo" value="certificado" <?= $documento->tipo == 'certificado' ? 'checked' : '' ?> /> Certificado</label>
+        <label class="radio"><input type="radio" name="tipo" value="blanco" <?= $edit && $documento->tipo == 'blanco' ? 'checked' : '' ?> /> En blanco</label>
+        <label class="radio"><input type="radio" name="tipo" value="certificado" <?= $edit && $documento->tipo == 'certificado' ? 'checked' : '' ?> /> Certificado</label>
 
         <div id="certificadoArea">
             <label>Servicio que emite el documento</label>
@@ -56,8 +56,8 @@
             <input class="input-xxlarge" type="text" name="firmador_servicio" value="<?= $edit ? $documento->firmador_servicio : '' ?>" placeholder="Ej: Ministerio Secretaría General de la Presidencia" />
             <label>Imagen de la firma</label>
             <div id="file-uploader"></div>
-            <input type="hidden" name="firmador_imagen" value="<?= $documento->firmador_imagen ?>" />
-            <img class="logo" src="<?= $documento->firmador_imagen ? site_url('backend/uploader/firma_get/' . $documento->firmador_imagen) : base_url('assets/img/certificados/firma.png') ?>" alt="firma" width="300" />
+            <input type="hidden" name="firmador_imagen" value="<?=$edit?$documento->firmador_imagen:'' ?>" />
+            <img class="logo" src="<?= $edit && $documento->firmador_imagen ? site_url('backend/uploader/firma_get/' . $documento->firmador_imagen) : base_url('assets/img/certificados/firma.png') ?>" alt="firma" width="300" />
             <script>
                 var uploader = new qq.FileUploader({
                     element: document.getElementById('file-uploader'),
