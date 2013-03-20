@@ -40,7 +40,7 @@
         <input type="text" name="nombre" value="<?= $edit ? $documento->nombre : '' ?>" />
 
         <label>Tipo de documento</label>
-        <label class="radio"><input type="radio" name="tipo" value="blanco" <?= $edit && $documento->tipo == 'blanco' ? 'checked' : '' ?> /> En blanco</label>
+        <label class="radio"><input type="radio" name="tipo" value="blanco" <?= !$edit || ($edit && $documento->tipo) == 'blanco' ? 'checked' : '' ?> /> En blanco</label>
         <label class="radio"><input type="radio" name="tipo" value="certificado" <?= $edit && $documento->tipo == 'certificado' ? 'checked' : '' ?> /> Certificado</label>
 
         <div id="certificadoArea">
