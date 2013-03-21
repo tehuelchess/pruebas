@@ -183,7 +183,7 @@
                         <input type="text" name="asignacion_usuario" value="<?= $tarea->asignacion_usuario ?>" />
                     </div>
                     <br />
-                    <label><input type="checkbox" name="asignacion_notificar" value="1" <?= $tarea->asignacion_notificar ? 'checked' : '' ?> /> Notificar vía correo electrónico al usuario asignado.</label>
+                    <label class="checkbox"><input type="checkbox" name="asignacion_notificar" value="1" <?= $tarea->asignacion_notificar ? 'checked' : '' ?> /> Notificar vía correo electrónico al usuario asignado.</label>
                 </div>
                 <div class="tab-pane" id="tab3">
                     <script type="text/javascript">
