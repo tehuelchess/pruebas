@@ -36,7 +36,7 @@
         <script src="<?= base_url() ?>assets/js/jquery.ui.touch-punch/jquery.ui.touch-punch.min.js" type="text/javascript"></script> <?php //JS para soportar drag & drop en iPad    ?>
         <script src="<?= base_url() ?>assets/js/jquery.ui.livedraggable/jquery.ui.livedraggable.js" type="text/javascript"></script> <?php //JS para que evento draggable sea live    ?>
         <script src="<?= base_url() ?>assets/js/jquery.doubletap/jquery.doubletap.js" type="text/javascript"></script> <?php //JS para soportar dobleclick en iPad    ?>      
-        <script src="http://js.pusher.com/1.11/pusher.min.js" type="text/javascript"></script> <?php //JS para recibir eventos push via websockets    ?>
+        <script src="//d3dy5gmtp8yhk7.cloudfront.net/1.11/pusher.min.js" type="text/javascript"></script> <?php //JS para recibir eventos push via websockets    ?>
         <script src="<?= base_url() ?>assets/js/json-js/json2.js" type="text/javascript"></script> <?php //JS para convertir objetos a notacion JSON en multiples browsers    ?>
         <script src="<?= base_url() ?>assets/js/jquery.jsplumb/jquery.jsPlumb-1.3.16-all-min.js" type="text/javascript"></script> <?php //JS para conectar elementos como diagramas de flujos    ?>
         <script src="<?= base_url() ?>assets/js/highcharts/highcharts.js" type="text/javascript"></script> <?php //JS para hacer graficos    ?>
