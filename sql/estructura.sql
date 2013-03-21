@@ -478,9 +478,11 @@ CREATE  TABLE IF NOT EXISTS `tramitador`.`evento` (
   `instante` ENUM('antes','despues') NOT NULL ,
   `tarea_id` INT(10) UNSIGNED NOT NULL ,
   `accion_id` INT UNSIGNED NOT NULL ,
+  `paso_id` INT UNSIGNED NULL ,
   PRIMARY KEY (`id`) ,
   INDEX `fk_evento_tarea1` (`tarea_id` ASC) ,
   INDEX `fk_evento_accion1` (`accion_id` ASC) ,
+  INDEX `fk_evento_paso1` (`paso_id` ASC) ,
   CONSTRAINT `fk_evento_tarea1`
     FOREIGN KEY (`tarea_id` )
     REFERENCES `tramitador`.`tarea` (`id` )
@@ -489,6 +491,11 @@ CREATE  TABLE IF NOT EXISTS `tramitador`.`evento` (
   CONSTRAINT `fk_evento_accion1`
     FOREIGN KEY (`accion_id` )
     REFERENCES `tramitador`.`accion` (`id` )
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT `fk_evento_paso1`
+    FOREIGN KEY (`paso_id` )
+    REFERENCES `tramitador`.`paso` (`id` )
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB;

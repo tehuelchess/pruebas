@@ -7,32 +7,31 @@ class Etapas extends MY_Controller {
 
     public function __construct() {
         parent::__construct();
-
     }
-    
+
     public function inbox() {
-        $data['etapas']=Doctrine::getTable('Etapa')->findPendientes(UsuarioSesion::usuario()->id, Cuenta::cuentaSegunDominio());
-                
+        $data['etapas'] = Doctrine::getTable('Etapa')->findPendientes(UsuarioSesion::usuario()->id, Cuenta::cuentaSegunDominio());
+
         $data['content'] = 'etapas/inbox';
         $data['title'] = 'Bandeja de Entrada';
         $this->load->view('template', $data);
     }
-    
+
     public function sinasignar() {
-        $data['etapas']=Doctrine::getTable('Etapa')->findSinAsignar(UsuarioSesion::usuario()->id, Cuenta::cuentaSegunDominio());
-        
+        $data['etapas'] = Doctrine::getTable('Etapa')->findSinAsignar(UsuarioSesion::usuario()->id, Cuenta::cuentaSegunDominio());
+
         $data['content'] = 'etapas/sinasignar';
         $data['title'] = 'Sin Asignar';
         $this->load->view('template', $data);
     }
 
     public function ejecutar($etapa_id, $secuencia = 0) {
-        $iframe=$this->input->get('iframe');
-        
-        $etapa = Doctrine::getTable('Etapa')->find($etapa_id);        
+        $iframe = $this->input->get('iframe');
+
+        $etapa = Doctrine::getTable('Etapa')->find($etapa_id);
         if ($etapa->usuario_id != UsuarioSesion::usuario()->id) {
-            if(!UsuarioSesion::usuario()->registrado){
-                $this->session->set_flashdata('redirect',current_url());
+            if (!UsuarioSesion::usuario()->registrado) {
+                $this->session->set_flashdata('redirect', current_url());
                 redirect('autenticacion/login');
             }
             echo 'Usuario no tiene permisos para ejecutar esta etapa.';
@@ -42,29 +41,29 @@ class Etapas extends MY_Controller {
             echo 'Esta etapa ya fue completada';
             exit;
         }
-        if(!$etapa->Tarea->activa()){
+        if (!$etapa->Tarea->activa()) {
             echo 'Esta etapa no se encuentra activa';
             exit;
         }
-        if($etapa->vencida()){
+        if ($etapa->vencida()) {
             echo 'Esta etapa se encuentra vencida';
             exit;
         }
-        
+
         $paso = $etapa->getPasoEjecutable($secuencia);
-        if(!$paso){
-            $qs=$this->input->server('QUERY_STRING');
-            redirect('etapas/ejecutar_fin/'.$etapa->id.($qs?'?'.$qs:''));
+        if (!$paso) {
+            $qs = $this->input->server('QUERY_STRING');
+            redirect('etapas/ejecutar_fin/' . $etapa->id . ($qs ? '?' . $qs : ''));
         }
 
-        $data['secuencia']=$secuencia;
+        $data['secuencia'] = $secuencia;
         $data['etapa'] = $etapa;
         $data['paso'] = $paso;
-        $data['qs']=$this->input->server('QUERY_STRING');
+        $data['qs'] = $this->input->server('QUERY_STRING');
 
         $data['content'] = 'etapas/ejecutar';
         $data['title'] = $etapa->Tarea->nombre;
-        $template=$this->input->get('iframe')?'template_iframe':'template';
+        $template = $this->input->get('iframe') ? 'template_iframe' : 'template';
 
         $this->load->view($template, $data);
     }
@@ -80,41 +79,51 @@ class Etapas extends MY_Controller {
             echo 'Esta etapa ya fue completada';
             exit;
         }
-        if(!$etapa->Tarea->activa()){
+        if (!$etapa->Tarea->activa()) {
             echo 'Esta etapa no se encuentra activa';
             exit;
         }
-        if($etapa->vencida()){
+        if ($etapa->vencida()) {
             echo 'Esta etapa se encuentra vencida';
             exit;
         }
 
-        $paso=$etapa->getPasoEjecutable($secuencia);
+        $paso = $etapa->getPasoEjecutable($secuencia);
         $formulario = $paso->Formulario;
         $modo = $paso->modo;
 
-        $respuesta=new stdClass();
-        
+        $respuesta = new stdClass();
+
         if ($modo == 'edicion') {
-            $validar_formulario=FALSE;
-            foreach ($formulario->Campos as $c){
+            $validar_formulario = FALSE;
+            foreach ($formulario->Campos as $c) {
                 //Validamos los campos que no sean readonly y que esten disponibles (que su campo dependiente se cumpla)
-                if($c->isEditableWithCurrentPOST()){
+                if ($c->isEditableWithCurrentPOST()) {
                     $c->formValidate();
-                    $validar_formulario=TRUE;
+                    $validar_formulario = TRUE;
                 }
-                
-                
+
+
                 //if((!$c->readonly) && 
                 //   (!$c->dependiente_campo || $this->input->post($c->dependiente_campo)==$c->dependiente_valor))
                 //    $c->formValidate();
             }
             if (!$validar_formulario || $this->form_validation->run() == TRUE) {
+                //Ejecutamos los eventos iniciales
+                foreach ($paso->Eventos as $e) {
+                    if ($e->instante == 'antes') {
+                        $r = new Regla($e->regla);
+                        if ($r->evaluar($etapa->tramite_id))
+                            $e->Accion->ejecutar($etapa->tramite_id);
+                    }
+                }
+
+                //Almacenamos los campos
                 foreach ($formulario->Campos as $c) {
                     //Almacenamos los campos que no sean readonly y que esten disponibles (que su campo dependiente se cumpla)
-                    if($c->isEditableWithCurrentPOST()){
-                    //if((!$c->readonly) && 
-                    //   (!$c->dependiente_campo || $this->input->post($c->dependiente_campo)==$c->dependiente_valor)){
+                    if ($c->isEditableWithCurrentPOST()) {
+                        //if((!$c->readonly) && 
+                        //   (!$c->dependiente_campo || $this->input->post($c->dependiente_campo)==$c->dependiente_valor)){
                         $dato = Doctrine::getTable('Dato')->findOneByTramiteIdAndNombre($etapa->Tramite->id, $c->nombre);
                         if (!$dato)
                             $dato = new Dato();
@@ -126,15 +135,22 @@ class Etapas extends MY_Controller {
                 }
                 $etapa->save();
 
+                //Ejecutamos los eventos finales
+                foreach ($paso->Eventos as $e) {
+                    if ($e->instante == 'despues') {
+                        $r = new Regla($e->regla);
+                        if ($r->evaluar($etapa->tramite_id))
+                            $e->Accion->ejecutar($etapa->tramite_id);
+                    }
+                }
+
                 $respuesta->validacion = TRUE;
 
-                $qs=$this->input->server('QUERY_STRING');
-                if ($etapa->Tarea->Pasos->count() - 1 == $secuencia) 
-                    $respuesta->redirect = site_url('etapas/ejecutar_fin/' . $etapa_id).($qs?'?'.$qs:'');
-                else 
-                    $respuesta->redirect = site_url('etapas/ejecutar/' . $etapa_id . '/' . ($secuencia + 1)).($qs?'?'.$qs:'');
-                
-                
+                $qs = $this->input->server('QUERY_STRING');
+                if ($etapa->Tarea->Pasos->count() - 1 == $secuencia)
+                    $respuesta->redirect = site_url('etapas/ejecutar_fin/' . $etapa_id) . ($qs ? '?' . $qs : '');
+                else
+                    $respuesta->redirect = site_url('etapas/ejecutar/' . $etapa_id . '/' . ($secuencia + 1)) . ($qs ? '?' . $qs : '');
             } else {
                 $respuesta->validacion = FALSE;
                 $respuesta->errores = validation_errors();
@@ -142,12 +158,11 @@ class Etapas extends MY_Controller {
         } else if ($modo == 'visualizacion') {
             $respuesta->validacion = TRUE;
 
-            $qs=$this->input->server('QUERY_STRING');
-            if ($etapa->Tarea->Pasos->count() - 1 == $secuencia) 
-                $respuesta->redirect = site_url('etapas/ejecutar_fin/' . $etapa_id).($qs?'?'.$qs:'');
-            else 
-                $respuesta->redirect = site_url('etapas/ejecutar/' . $etapa_id . '/' . ($secuencia + 1)).($qs?'?'.$qs:'');
-            
+            $qs = $this->input->server('QUERY_STRING');
+            if ($etapa->Tarea->Pasos->count() - 1 == $secuencia)
+                $respuesta->redirect = site_url('etapas/ejecutar_fin/' . $etapa_id) . ($qs ? '?' . $qs : '');
+            else
+                $respuesta->redirect = site_url('etapas/ejecutar/' . $etapa_id . '/' . ($secuencia + 1)) . ($qs ? '?' . $qs : '');
         }
 
         echo json_encode($respuesta);
@@ -182,7 +197,7 @@ class Etapas extends MY_Controller {
             echo 'Esta etapa ya fue completada';
             exit;
         }
-        if(!$etapa->Tarea->activa()){
+        if (!$etapa->Tarea->activa()) {
             echo 'Esta etapa no se encuentra activa';
             exit;
         }
@@ -194,13 +209,13 @@ class Etapas extends MY_Controller {
         //}
 
         $data['etapa'] = $etapa;
-        $data['tareas_proximas']=$etapa->getTareasProximas();
-        $data['qs']=$this->input->server('QUERY_STRING');
-        
+        $data['tareas_proximas'] = $etapa->getTareasProximas();
+        $data['qs'] = $this->input->server('QUERY_STRING');
+
         $data['content'] = 'etapas/ejecutar_fin';
         $data['title'] = $etapa->Tarea->nombre;
-        $template=$this->input->get('iframe')?'template_iframe':'template';
-        
+        $template = $this->input->get('iframe') ? 'template_iframe' : 'template';
+
         $this->load->view($template, $data);
     }
 
@@ -215,7 +230,7 @@ class Etapas extends MY_Controller {
             echo 'Esta etapa ya fue completada';
             exit;
         }
-        if(!$etapa->Tarea->activa()){
+        if (!$etapa->Tarea->activa()) {
             echo 'Esta etapa no se encuentra activa';
             exit;
         }
@@ -223,39 +238,39 @@ class Etapas extends MY_Controller {
 
         $etapa->avanzar($this->input->post('usuarios_a_asignar'));
 
-        $respuesta=new stdClass();
+        $respuesta = new stdClass();
         $respuesta->validacion = TRUE;
-        
-        if($this->input->get('iframe'))
-            $respuesta->redirect=site_url('etapas/ejecutar_exito');
-        else    
+
+        if ($this->input->get('iframe'))
+            $respuesta->redirect = site_url('etapas/ejecutar_exito');
+        else
             $respuesta->redirect = site_url();
 
         echo json_encode($respuesta);
     }
 
     //Pagina que indica que la etapa se completo con exito. Solamente la ven los que acceden mediante iframe.
-    public function ejecutar_exito(){
-        $data['content']='etapas/ejecutar_exito';
-        $data['title']='Etapa completada con éxito';
-        
-        $this->load->view('template_iframe',$data);
+    public function ejecutar_exito() {
+        $data['content'] = 'etapas/ejecutar_exito';
+        $data['title'] = 'Etapa completada con éxito';
+
+        $this->load->view('template_iframe', $data);
     }
-    
-    public function ver($etapa_id,$paso=0){
-        $etapa=Doctrine::getTable('Etapa')->find($etapa_id);
-        
-        if(UsuarioSesion::usuario()->id!=$etapa->usuario_id){
+
+    public function ver($etapa_id, $paso = 0) {
+        $etapa = Doctrine::getTable('Etapa')->find($etapa_id);
+
+        if (UsuarioSesion::usuario()->id != $etapa->usuario_id) {
             echo 'No tiene permisos para hacer seguimiento a este tramite.';
             exit;
         }
-        
-        $data['etapa']=$etapa;
-        $data['paso']=$paso;
-        
-        $data['title']='Historial - '.$etapa->Tarea->nombre;
-        $data['content']='etapas/ver';
-        $this->load->view('template',$data);
+
+        $data['etapa'] = $etapa;
+        $data['paso'] = $paso;
+
+        $data['title'] = 'Historial - ' . $etapa->Tarea->nombre;
+        $data['content'] = 'etapas/ver';
+        $this->load->view('template', $data);
     }
-    
+
 }

@@ -158,6 +158,7 @@ class Tarea extends Doctrine_Record {
         if (is_array($pasos_array)) {
             foreach ($pasos_array as $key => $p) {
                 $paso = new Paso();
+                $paso->id=$p['id'];
                 $paso->orden = $key;
                 $paso->regla = $p['regla'];
                 $paso->modo = $p['modo'];
@@ -179,6 +180,7 @@ class Tarea extends Doctrine_Record {
                 $evento->regla=$p['regla'];
                 $evento->instante = $p['instante'];
                 $evento->accion_id = $p['accion_id'];
+                $evento->paso_id = $p['paso_id'];
                 $this->Eventos[] = $evento;
             }
         }
