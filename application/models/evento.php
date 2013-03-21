@@ -8,6 +8,7 @@ class Evento extends Doctrine_Record {
         $this->hasColumn('instante');
         $this->hasColumn('accion_id');
         $this->hasColumn('tarea_id');
+        $this->hasColumn('paso_id');
     }
 
     function setUp() {
@@ -20,6 +21,11 @@ class Evento extends Doctrine_Record {
         
         $this->hasOne('Tarea',array(
             'local'=>'tarea_id',
+            'foreign'=>'id'
+        ));
+        
+        $this->hasOne('Paso',array(
+            'local'=>'paso_id',
             'foreign'=>'id'
         ));
     }

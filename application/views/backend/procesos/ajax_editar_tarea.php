@@ -38,6 +38,7 @@
             html+="<td>"+regla+"</td>";
             html+="<td>"+modo+"</td>";
             html+='<td>';
+            html+='<input type="hidden" name="pasos['+pos+'][id]" value="" />';
             html+='<input type="hidden" name="pasos['+pos+'][formulario_id]" value="'+formularioId+'" />';
             html+='<input type="hidden" name="pasos['+pos+'][regla]" value="'+regla+'" />';
             html+='<input type="hidden" name="pasos['+pos+'][modo]" value="'+modo+'" />';
@@ -77,17 +78,22 @@
             var accionId=$form.find(".eventoAccion option:selected").val();
             var accionNombre=$form.find(".eventoAccion option:selected").text();
             var regla=$form.find(".eventoRegla").val();
-            var instante=$form.find(".eventoInstante option:selected").val()
+            var instante=$form.find(".eventoInstante option:selected").val();
+            var pasoId=$form.find(".eventoPasoId option:selected").val();
+            var pasoNombre=$form.find(".eventoPasoId option:selected").text();
+            var pasoTitle=$form.find(".eventoPasoId option:selected").attr("title");
             
             var html="<tr>";
             html+="<td>"+pos+"</td>";
             html+='<td><a title="Editar" target="_blank" href="'+site_url+'backend/acciones/editar/'+accionId+'">'+accionNombre+'</td>';
             html+="<td>"+regla+"</td>";
             html+="<td>"+instante+"</td>";
+            html+="<td><abbr title='"+pasoTitle+"'>"+pasoNombre+"</abbr></td>";
             html+='<td>';
             html+='<input type="hidden" name="eventos['+pos+'][accion_id]" value="'+accionId+'" />';
             html+='<input type="hidden" name="eventos['+pos+'][regla]" value="'+regla+'" />';
             html+='<input type="hidden" name="eventos['+pos+'][instante]" value="'+instante+'" />';
+            html+='<input type="hidden" name="eventos['+pos+'][paso_id]" value="'+pasoId+'" />';
             html+='<a class="delete" title="Eliminar" href="#"><i class="icon-remove"></i></a>';
             html+='</td>';
             html+="</tr>";
@@ -244,6 +250,7 @@
                                     <td><?= $p->regla ?></td>
                                     <td><?= $p->modo ?></td>
                                     <td>
+                                        <input type="hidden" name="pasos[<?= $key + 1 ?>][id]" value="<?= $p->id ?>" />
                                         <input type="hidden" name="pasos[<?= $key + 1 ?>][formulario_id]" value="<?= $p->formulario_id ?>" />
                                         <input type="hidden" name="pasos[<?= $key + 1 ?>][regla]" value="<?= $p->regla ?>" />
                                         <input type="hidden" name="pasos[<?= $key + 1 ?>][modo]" value="<?= $p->modo ?>" />
@@ -267,12 +274,20 @@
                                     </select>
                                 </td>
                                 <td>
-                                    <input class="eventoRegla" type="text" placeholder="Escribir regla condición aquí" />
+                                    <input class="eventoRegla input-medium" type="text" placeholder="Escribir regla condición" />
                                 </td>
                                 <td>
-                                    <select class="eventoInstante input-medium">
-                                        <option value="antes">Antes de ejecutar tarea</option>
-                                        <option value="despues">Después de finalizar tarea</option>
+                                    <select class="eventoInstante input-small">
+                                        <option value="antes">Antes</option>
+                                        <option value="despues">Después</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select class="eventoPasoId input-medium">
+                                        <option value="">Ejecutar Tarea</option>
+                                        <?php foreach ($tarea->Pasos as $p): ?>
+                                        <option value="<?=$p->id?>" title="<?=$p->Formulario->nombre?>">Ejecutar Paso <?=$p->orden?></option>
+                                        <?php endforeach ?>
                                     </select>
                                 </td>
                                 <td>
@@ -284,6 +299,7 @@
                                 <th>Accion</th>
                                 <th>Condición</th>
                                 <th>Instante</th>
+                                <th>Momento</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -294,10 +310,12 @@
                                     <td><a title="Editar" target="_blank" href="<?= site_url('backend/acciones/editar/' . $p->Accion->id) ?>"><?= $p->Accion->nombre ?></a></td>
                                     <td><?= $p->regla ?></td>
                                     <td><?= $p->instante ?></td>
+                                    <td><?=$p->paso_id?'<abbr title="'.$p->Paso->Formulario->nombre.'">Ejecutar Paso '.$p->Paso->orden.'</abbr>':'Ejecutar Tarea'?></td>
                                     <td>
                                         <input type="hidden" name="eventos[<?= $key + 1 ?>][accion_id]" value="<?= $p->accion_id ?>" />
                                         <input type="hidden" name="eventos[<?= $key + 1 ?>][regla]" value="<?= $p->regla ?>" />
                                         <input type="hidden" name="eventos[<?= $key + 1 ?>][instante]" value="<?= $p->instante ?>" />
+                                        <input type="hidden" name="eventos[<?= $key + 1 ?>][paso_id]" value="<?= $p->paso_id ?>" />
                                         <a class="delete" title="Eliminar" href="#"><i class="icon-remove"></i></a>
                                     </td>
                                 </tr>

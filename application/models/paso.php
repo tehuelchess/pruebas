@@ -23,6 +23,11 @@ class Paso extends Doctrine_Record {
             'local'=>'tarea_id',
             'foreign'=>'id'
         ));
+        
+        $this->hasMany('Evento as Eventos',array(
+            'local'=>'id',
+            'foreign'=>'paso_id'
+        ));
     }
-
-}
+    
+            }
