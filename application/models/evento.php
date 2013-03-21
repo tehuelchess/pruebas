@@ -29,5 +29,12 @@ class Evento extends Doctrine_Record {
             'foreign'=>'id'
         ));
     }
+    
+    public function setPasoId($paso_id){
+        if($paso_id!='')
+            $this->_set ('paso_id', $paso_id);
+        else
+            $this->_set ('paso_id', null);
+    }
 
 }
