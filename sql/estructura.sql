@@ -295,6 +295,8 @@ CREATE  TABLE IF NOT EXISTS `tramitador`.`documento` (
   `firmador_imagen` VARCHAR(256) NOT NULL ,
   `validez` INT UNSIGNED NULL ,
   `proceso_id` INT UNSIGNED NOT NULL ,
+  `logo` VARCHAR(256) NOT NULL ,
+  `timbre` VARCHAR(256) NOT NULL ,
   PRIMARY KEY (`id`) ,
   INDEX `fk_documento_proceso1` (`proceso_id` ASC) ,
   CONSTRAINT `fk_documento_proceso1`

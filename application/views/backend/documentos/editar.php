@@ -48,6 +48,34 @@
             <input class="input-xxlarge" type="text" name="servicio" value="<?= $edit ? $documento->servicio : '' ?>" placeholder="Ej: Ministerio Secretaría General de la Presidencia" />
             <label>URL al sitio web del servicio</label>
             <input class="input-xxlarge" type="text" name="servicio_url" value="<?= $edit ? $documento->servicio_url : '' ?>" placeholder="Ej: http://www.minsegpres.gob.cl" />
+            <label>Logo del Servicio (Opcional)</label>
+            <div id="file-uploader-logo"></div>
+            <input type="hidden" name="logo" value="<?=$edit?$documento->logo:'' ?>" />
+            <img class="logo" src="<?= $edit && $documento->logo ? site_url('backend/uploader/logo_certificado_get/' . $documento->logo) : '#' ?>" alt="" width="200" />
+            <script>
+                var uploader = new qq.FileUploader({
+                    element: document.getElementById('file-uploader-logo'),
+                    action: site_url + 'backend/uploader/logo_certificado',
+                    onComplete: function(id, filename, respuesta) {
+                        $("input[name=logo]").val(respuesta.file_name);
+                        $("img.logo").attr("src", site_url + "backend/uploader/logo_certificado_get/" + respuesta.file_name);
+                    }
+                });
+            </script>
+            <label>Imagen del timbre (Opcional)</label>
+            <div id="file-uploader-timbre"></div>
+            <input type="hidden" name="timbre" value="<?=$edit?$documento->timbre:'' ?>" />
+            <img class="timbre" src="<?= $edit && $documento->timbre ? site_url('backend/uploader/timbre_get/' . $documento->timbre) : '#' ?>" alt="" width="200" />
+            <script>
+                var uploader = new qq.FileUploader({
+                    element: document.getElementById('file-uploader-timbre'),
+                    action: site_url + 'backend/uploader/timbre',
+                    onComplete: function(id, filename, respuesta) {
+                        $("input[name=timbre]").val(respuesta.file_name);
+                        $("img.timbre").attr("src", site_url + "backend/uploader/timbre_get/" + respuesta.file_name);
+                    }
+                });
+            </script>
             <label>Nombre de la persona que firma</label>
             <input class="input-xxlarge" type="text" name="firmador_nombre" value="<?= $edit ? $documento->firmador_nombre : '' ?>" placeholder="Ej: Juan Perez" />
             <label>Cargo de la persona que firma</label>
@@ -57,14 +85,14 @@
             <label>Imagen de la firma</label>
             <div id="file-uploader"></div>
             <input type="hidden" name="firmador_imagen" value="<?=$edit?$documento->firmador_imagen:'' ?>" />
-            <img class="logo" src="<?= $edit && $documento->firmador_imagen ? site_url('backend/uploader/firma_get/' . $documento->firmador_imagen) : base_url('assets/img/certificados/firma.png') ?>" alt="firma" width="300" />
+            <img class="firma" src="<?= $edit && $documento->firmador_imagen ? site_url('backend/uploader/firma_get/' . $documento->firmador_imagen) : base_url('assets/img/certificados/firma.png') ?>" alt="firma" width="200" />
             <script>
                 var uploader = new qq.FileUploader({
                     element: document.getElementById('file-uploader'),
                     action: site_url + 'backend/uploader/firma',
                     onComplete: function(id, filename, respuesta) {
                         $("input[name=firmador_imagen]").val(respuesta.file_name);
-                        $("img.logo").attr("src", site_url + "backend/uploader/firma_get/" + respuesta.file_name);
+                        $("img.firma").attr("src", site_url + "backend/uploader/firma_get/" + respuesta.file_name);
                     }
                 });
             </script>
