@@ -15,6 +15,8 @@ class Documento extends Doctrine_Record {
         $this->hasColumn('firmador_servicio');
         $this->hasColumn('firmador_imagen');
         $this->hasColumn('proceso_id');
+        $this->hasColumn('timbre');
+        $this->hasColumn('logo');
     }
 
     function setUp() {
@@ -74,8 +76,12 @@ class Documento extends Doctrine_Record {
             $obj->key = $key;
             $obj->servicio = $this->servicio;
             $obj->servicio_url = $this->servicio_url;
+            if($this->logo)
+                $obj->logo = 'uploads/logos_certificados/'.$this->logo;
             $obj->titulo = $this->nombre;
             $obj->validez = $this->validez;
+            if($this->timbre)
+                $obj->timbre = 'uploads/timbres/'.$this->timbre;
             $obj->firmador_nombre = $this->firmador_nombre;
             $obj->firmado_cargo = $this->firmador_cargo;
             $obj->firmador_servicio = $this->firmador_servicio;

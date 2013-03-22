@@ -102,6 +102,8 @@ class Documentos extends CI_Controller {
             if($documento->tipo=='certificado'){
                 $documento->servicio=$this->input->post('servicio');
                 $documento->servicio_url=$this->input->post('servicio_url');
+                $documento->logo=$this->input->post('logo');
+                $documento->timbre=$this->input->post('timbre');
                 $documento->firmador_nombre=$this->input->post('firmador_nombre');
                 $documento->firmador_cargo=$this->input->post('firmador_cargo');
                 $documento->firmador_servicio=$this->input->post('firmador_servicio');

@@ -13,9 +13,11 @@ class CertificadoPDF extends TCPDF {
     public $key='abcdefghijkl';
     public $servicio='Servicio';
     public $servicio_url='http://www.ejemplo.com';
+    public $logo='';
     public $titulo='Certificado';
     public $gratuito=true;
     public $validez=null;
+    public $timbre='';
     public $firmador_nombre='Juan Perez';
     public $firmado_cargo='Director';
     public $firmador_servicio='Gobierno de Chile';
@@ -41,6 +43,9 @@ class CertificadoPDF extends TCPDF {
 
         $this->SetFont('helvetica', '', 10);
         $this->MultiCell(2 * CELL_WIDTH + GRID_WIDTH, 6, $this->servicio_url, 0, 'L', false, 1, PAGE_MARGIN + CELL_WIDTH + GRID_WIDTH, PAGE_MARGIN + 26);
+        
+        if($this->logo)
+            $this->Image($this->logo, PAGE_MARGIN+3*CELL_WIDTH+3*GRID_WIDTH, PAGE_MARGIN, 2*CELL_WIDTH+GRID_WIDTH, 30, '', '', 'T',true,300,'',false,false,0,true);
 
         $this->Line(PAGE_MARGIN + 4 * CELL_WIDTH + 4 * GRID_WIDTH,PAGE_MARGIN,PAGE_MARGIN + 5 * CELL_WIDTH + 4 * GRID_WIDTH,PAGE_MARGIN,array('width'=>1));
         $this->SetFont('helvetica', '', 10);
@@ -86,6 +91,9 @@ class CertificadoPDF extends TCPDF {
         $this->write2DBarcode(site_url('validador/documento?id='.$this->id.'&key='.$this->key), 'QRCODE,H','','',30,'');
         
         $this->Line(PAGE_MARGIN+CELL_WIDTH,$y+10,PAGE_MARGIN+CELL_WIDTH,$y+48);
+        
+        if($this->timbre)
+            $this->Image($this->timbre, PAGE_MARGIN+1*CELL_WIDTH+1*GRID_WIDTH, $y+10, 2*CELL_WIDTH+GRID_WIDTH, 40, '', '', 'T',true,300,'',false,false,0,true);
         
         $this->Image($this->firmador_imagen, PAGE_MARGIN+3*CELL_WIDTH+2*GRID_WIDTH, $y+10, 2*CELL_WIDTH+GRID_WIDTH, 20, '', '', 'T',true,300,'',false,false,0,true);
         $this->SetFont('helvetica', 'B', 11);
