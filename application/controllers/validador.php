@@ -64,10 +64,17 @@ class Validador extends MY_Controller {
                 
         $file=Doctrine_Query::create()
                 ->from('File f')
-                ->where('f.id = ? AND f.llave = ?',array($id,$key))
+                ->where('f.id = ?',$id)
                 ->fetchOne();
         
         if(!$file){
+            $this->form_validation->set_message('check_documento','Folio y/o código no válido.');
+            return FALSE;
+        }
+        
+        $f=new File();
+        $f->llave=$key;
+        if($file->llave!=$f->llave){
             $this->form_validation->set_message('check_documento','Folio y/o código no válido.');
             return FALSE;
         }

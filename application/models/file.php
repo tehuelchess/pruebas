@@ -25,5 +25,12 @@ class File extends Doctrine_Record {
         
 
     }
+    
+    public function setLlave($llave){
+        if($llave)
+            $this->_set('llave',sha1($llave));
+        else
+            $this->_set('llave',null);
+    }
 
 }
