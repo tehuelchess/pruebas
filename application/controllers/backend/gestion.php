@@ -20,7 +20,7 @@ class Gestion extends CI_Controller {
         $data['widgets']=UsuarioBackendSesion::usuario()->Cuenta->Widgets;
         
         $data['title']='Portada';
-        $data['content']='backend/portada/index';
+        $data['content']='backend/gestion/index';
         $this->load->view('backend/template',$data);
     }
     
@@ -52,7 +52,7 @@ class Gestion extends CI_Controller {
         }
         
         $data['widget']=$widget;
-        $this->load->view('backend/portada/widget_load',$data);
+        $this->load->view('backend/gestion/widget_load',$data);
     }
     
     public function widget_config_form($widget_id){
