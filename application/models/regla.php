@@ -38,11 +38,11 @@ class Regla {
                     $dato = Doctrine::getTable('Dato')->findOneByTramiteIdAndNombre($tramite_id, $nombre_dato);                    
                     if ($dato) {
                         if($obj_accesor!=null)
-                            $valor_dato = 'json_decode(\'' .json_encode($dato->valor->{$obj_accesor}). '\')';
+                            $valor_dato = var_export($dato->valor->{$obj_accesor},true);
                         else if($arr_accesor!=null)
-                            $valor_dato = 'json_decode(\'' .json_encode($dato->valor[$arr_accesor]). '\')';
+                            $valor_dato = var_export($dato->valor[$arr_accesor],true);
                         else
-                            $valor_dato = 'json_decode(\'' .json_encode($dato->valor). '\')';
+                            $valor_dato = var_export($dato->valor,true);
                     }
                     else {
                         //No reemplazamos el dato
