@@ -32,14 +32,14 @@ class Regla {
         $new_regla=$this->regla;
         $new_regla=preg_replace_callback('/@@(\w+)((->(\w+))|(\[(\w+)\]))?/', function($match) use ($tramite_id) {
                     $nombre_dato = $match[1];
-                    $obj_accesor=isset($match[4])?$match[4]:'';
-                    $arr_accesor=isset($match[6])?$match[6]:'';
+                    $obj_accesor=isset($match[4])?$match[4]:null;
+                    $arr_accesor=isset($match[6])?$match[6]:null;
                     
-                    $dato = Doctrine::getTable('Dato')->findOneByTramiteIdAndNombre($tramite_id, $nombre_dato);
+                    $dato = Doctrine::getTable('Dato')->findOneByTramiteIdAndNombre($tramite_id, $nombre_dato);                    
                     if ($dato) {
-                        if($obj_accesor)
+                        if($obj_accesor!=null)
                             $valor_dato = 'json_decode(\'' .json_encode($dato->valor->{$obj_accesor}). '\')';
-                        else if($arr_accesor)
+                        else if($arr_accesor!=null)
                             $valor_dato = 'json_decode(\'' .json_encode($dato->valor[$arr_accesor]). '\')';
                         else
                             $valor_dato = 'json_decode(\'' .json_encode($dato->valor). '\')';
@@ -71,7 +71,7 @@ class Regla {
          //Si quedaron variables sin reemplazar, la evaluacion deberia ser siempre falsa.
          if(preg_match('/@@\w+/', $new_regla))
             return false;
-          
+                   
          return $new_regla;
     }
     
@@ -81,15 +81,15 @@ class Regla {
         $new_regla=$this->regla;     
         $new_regla=preg_replace_callback('/@@(\w+)((->(\w+))|(\[(\w+)\]))?/', function($match) use ($tramite_id) {
                     $nombre_dato = $match[1];
-                    $obj_accesor=isset($match[4])?$match[4]:'';
-                    $arr_accesor=isset($match[6])?$match[6]:'';
+                    $obj_accesor=isset($match[4])?$match[4]:null;
+                    $arr_accesor=isset($match[6])?$match[6]:null;
                     //echo $arr_accesor;
                     $dato = Doctrine::getTable('Dato')->findOneByTramiteIdAndNombre($tramite_id, $nombre_dato);
                     if ($dato) {
                         $dato_almacenado = $dato->valor;
-                        if($obj_accesor!='')
+                        if($obj_accesor!=null)
                             $valor_dato=  json_encode ($dato_almacenado->{$obj_accesor});
-                        else if($arr_accesor!='')
+                        else if($arr_accesor!=null)
                             $valor_dato=  json_encode ($dato_almacenado[$arr_accesor]);
                         else
                             $valor_dato=  json_encode($dato_almacenado);
