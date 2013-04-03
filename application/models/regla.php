@@ -46,7 +46,7 @@ class Regla {
                     }
                     else {
                         //No reemplazamos el dato
-                        $valor_dato = 'json_decode(\'' .json_encode(null). '\')';
+                        $valor_dato = var_export(null);
                     }
 
                     return $valor_dato;
