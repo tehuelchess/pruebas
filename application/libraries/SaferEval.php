@@ -166,8 +166,9 @@ class SaferEval {
             //JSON
             'json_encode',
             'json_decode',
-            //Funciones custom para el evaluador
-            'get'       //Obtiene el elemento dentro de un array u object.
+            //Booleanos
+            'true',
+            'false'
         );
         $this->allowedTokens = array(
             'T_AND_EQUAL', // assignment operators
