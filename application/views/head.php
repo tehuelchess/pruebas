@@ -6,11 +6,12 @@
 
         <!-- Le styles -->
         <link href="<?= base_url() ?>assets/css/bootstrap.css" rel="stylesheet">
-        <link href="<?= base_url() ?>assets/css/bootstrap-responsive.css" rel="stylesheet">
-        <link href="<?= base_url() ?>assets/css/common.css" rel="stylesheet">
+        <link href="<?= base_url() ?>assets/css/responsive.css" rel="stylesheet">
         <link href="<?= base_url() ?>assets/js/bootstrap-datepicker/css/datepicker.css" rel="stylesheet">
         <link href="<?= base_url() ?>assets/js/jquery.chosen/chosen.css" rel="stylesheet">
         <link href="<?= base_url() ?>assets/js/file-uploader/fileuploader.css" rel="stylesheet">
+        <link href="<?= base_url() ?>assets/css/common.css" rel="stylesheet">
+        <link href="<?= base_url() ?>assets/css/frontend.css" rel="stylesheet">
 
         <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
         <!--[if lt IE 9]>

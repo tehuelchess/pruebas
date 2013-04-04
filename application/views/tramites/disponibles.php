@@ -1,6 +1,8 @@
-<h1>Trámites disponibles a iniciar</h1>
+<h2>Trámites disponibles a iniciar</h2>
 
-<table class="table">
+<?php if (count($procesos) > 0): ?>
+
+<table id="mainTable" class="table">
     <thead>
         <tr>
             <th>Nombre</th>
@@ -10,8 +12,8 @@
     <tbody>
         <?php foreach ($procesos as $p): ?>
             <tr>
-                <td><?= $p->nombre ?></td>
-                <td>
+                <td class="name"><?= $p->nombre ?></td>
+                <td class="actions">
                     <?php if($p->canUsuarioIniciarlo(UsuarioSesion::usuario()->id)):?>
                     <a href="<?=site_url('tramites/iniciar/'.$p->id)?>" class="btn btn-primary"><i class="icon-file icon-white"></i> Iniciar</a>
                     <?php else: ?>
@@ -26,3 +28,7 @@
         <?php endforeach; ?>
     </tbody>
 </table>
+
+<?php else: ?>
+<p>No hay trámites disponibles para ser iniciados.</p>
+<?php endif; ?>
