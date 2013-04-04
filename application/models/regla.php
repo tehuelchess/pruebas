@@ -46,7 +46,7 @@ class Regla {
                     }
                     else {
                         //No reemplazamos el dato
-                        $valor_dato = var_export(null);
+                        $valor_dato = var_export(null,true);
                     }
 
                     return $valor_dato;
