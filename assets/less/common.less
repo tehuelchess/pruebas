@@ -1,15 +1,63 @@
+@import "bootstrap/variables.less";
 @import "bootstrap/mixins.less";
 
 header{
-    margin-bottom: 20px;
+    margin-top: 10px;
+    .container,.container-fluid{
+        border-bottom: 1px solid #ddd;
+    }
     h1{
-        float: left;
+        color: #666;
+        font-size: 18px;
+        &#logo{
+            border-right: 1px solid #ddd;
+        }
     }
     #userMenu{
-        float: right;
+         background: #ddd;
+         .border-radius(5px);
     }
-    #menu{
-        float: right;
+}
+
+#main{
+    min-height: 480px;
+}
+
+footer{ 
+    color: #6699cc;
+    margin-bottom: 40px;
+    a{
+        color: #6699cc;
+        &:hover{
+            color: #fff;
+        }
+    }
+    ul{
+        color: red;
+    }
+    h3{
+        font-size: 16px;
+        font-weight: normal;
+        margin: 0;
+    }
+    address{
+        margin: 0;
+    }
+    .area1{
+        background: #222;
+        padding: 20px 0 10px 0;
+    }
+    .area2{
+        background: #000;
+        padding: 10px 0;
+        .container,.container-fluid{
+            position: relative;
+            .footerGob{
+                position:absolute;
+                bottom: -20px;
+                right: 0;
+            }
+        }
     }
 }
 

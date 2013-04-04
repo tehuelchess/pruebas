@@ -26,16 +26,66 @@
   box-sizing: border-box;
 }
 header {
-  margin-bottom: 20px;
+  margin-top: 10px;
+}
+header .container,
+header .container-fluid {
+  border-bottom: 1px solid #ddd;
 }
 header h1 {
-  float: left;
+  color: #666;
+  font-size: 18px;
+}
+header h1#logo {
+  border-right: 1px solid #ddd;
 }
 header #userMenu {
-  float: right;
+  background: #ddd;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
 }
-header #menu {
-  float: right;
+#main {
+  min-height: 480px;
+}
+footer {
+  color: #6699cc;
+  margin-bottom: 40px;
+}
+footer a {
+  color: #6699cc;
+}
+footer a:hover {
+  color: #fff;
+}
+footer ul {
+  color: red;
+}
+footer h3 {
+  font-size: 16px;
+  font-weight: normal;
+  margin: 0;
+}
+footer address {
+  margin: 0;
+}
+footer .area1 {
+  background: #222;
+  padding: 20px 0 10px 0;
+}
+footer .area2 {
+  background: #000;
+  padding: 10px 0;
+}
+footer .area2 .container,
+footer .area2 .container-fluid {
+  position: relative;
+}
+footer .area2 .container .footerGob,
+footer .area2 .container-fluid .footerGob {
+  position: absolute;
+  bottom: -20px;
+  right: 0;
 }
 .ajaxForm {
   position: relative;
