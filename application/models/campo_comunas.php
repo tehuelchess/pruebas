@@ -5,7 +5,8 @@ class CampoComunas extends Campo{
     public $requiere_datos=false;
     
     protected function display($modo, $dato) {
-        $display = '<label>' . $this->etiqueta . (in_array('required', $this->validacion) ? '' : ' (Opcional)') . '</label>';
+        $display = '<label class="control-label">' . $this->etiqueta . (in_array('required', $this->validacion) ? '' : ' (Opcional)') . '</label>';
+        $display.='<div class="controls">';
         $display.='<select class="regiones" data-id="'.$this->id.'" name="' . $this->nombre . '[region]" ' . ($modo == 'visualizacion' ? 'disabled' : '') . '>';
         $display.='<option value="">Seleccione región</option>';
         $display.='</select>';
@@ -13,6 +14,7 @@ class CampoComunas extends Campo{
         $display.='<select class="comunas" data-id="'.$this->id.'" name="' . $this->nombre . '[comuna]" ' . ($modo == 'visualizacion' ? 'disabled' : '') . '>';
         $display.='<option value="">Seleccione comuna</option>';
         $display.='</select>';
+        $display.='</div>';
 
         $display.='
             <script>

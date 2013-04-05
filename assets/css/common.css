@@ -102,3 +102,17 @@ footer .area2 .container-fluid .footerGob {
   text-align: center;
   padding-top: 56px;
 }
+.dynaForm legend {
+  border: none;
+  margin: 0;
+  color: #005181;
+  font-weight: bold;
+}
+.dynaForm label {
+  color: #999;
+}
+.dynaForm .form-actions {
+  text-align: right;
+  background: none;
+  border: none;
+}

@@ -5,7 +5,8 @@ class CampoInstitucionesGob extends Campo{
     public $requiere_datos=false;
     
     protected function display($modo, $dato) {
-        $display = '<label>' . $this->etiqueta . (in_array('required', $this->validacion) ? '' : ' (Opcional)') . '</label>';
+        $display = '<label class="control-label">' . $this->etiqueta . (in_array('required', $this->validacion) ? '' : ' (Opcional)') . '</label>';
+        $display.='<div class="controls">';
         $display.='<select class="entidades" data-id="'.$this->id.'" name="' . $this->nombre . '[entidad]" ' . ($modo == 'visualizacion' ? 'disabled' : '') . '>';
         $display.='<option></option>';
         $display.='</select>';
@@ -13,6 +14,7 @@ class CampoInstitucionesGob extends Campo{
         $display.='<select class="instituciones" data-id="'.$this->id.'" name="' . $this->nombre . '[servicio]" ' . ($modo == 'visualizacion' ? 'disabled' : '') . '>';
         $display.='<option></option>';
         $display.='</select>';
+        $display.='</div>';
 
         $display.='
             <script>

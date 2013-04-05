@@ -27,7 +27,7 @@ class CampoDocumento extends Campo {
     
     protected function display($modo, $dato, $etapa_id) {
         if (!$etapa_id) {
-            return '<a href="#">' . $this->etiqueta . '</a>';
+            return '<p><a href="#">' . $this->etiqueta . '</a></p>';
         }
 
         if (!$dato) {   //Generamos el documento, ya que no se ha generado
