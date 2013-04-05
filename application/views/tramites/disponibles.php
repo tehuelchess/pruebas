@@ -12,7 +12,7 @@
     <tbody>
         <?php foreach ($procesos as $p): ?>
             <tr>
-                <td class="name"><?= $p->nombre ?></td>
+                <td class="name"><a href="<?=site_url('tramites/iniciar/'.$p->id)?>"><?= $p->nombre ?></a></td>
                 <td class="actions">
                     <?php if($p->canUsuarioIniciarlo(UsuarioSesion::usuario()->id)):?>
                     <a href="<?=site_url('tramites/iniciar/'.$p->id)?>" class="btn btn-primary"><i class="icon-file icon-white"></i> Iniciar</a>

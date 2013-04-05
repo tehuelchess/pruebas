@@ -54,6 +54,9 @@ h2 {
   font-size: 14px;
   color: #333;
 }
+#mainTable td.name a {
+  color: inherit;
+}
 #mainTable td.actions {
   width: 1px;
   white-space: nowrap;
