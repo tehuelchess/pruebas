@@ -1,4 +1,4 @@
-<form method="POST" class="ajaxForm" action="<?= site_url('etapas/ejecutar_fin_form/' . $etapa->id.($qs?'?'.$qs:'')) ?>">
+<form method="POST" class="ajaxForm dynaForm" action="<?= site_url('etapas/ejecutar_fin_form/' . $etapa->id.($qs?'?'.$qs:'')) ?>">
     <fieldset>
         <div class="validacion"></div>
         <legend>Finalizar</legend>

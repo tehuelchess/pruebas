@@ -1,13 +1,13 @@
 <?php if($etapa->Tarea->vencimiento):?>
 <div class="alert alert-warning">Atención. Esta etapa se vencera en <?=$etapa->getFechaVencimientoAsString()?>.</div>
 <?php endif ?>
-<form method="POST" class="ajaxForm dynaForm" action="<?=site_url('etapas/ejecutar_form/'.$etapa->id.'/'.$secuencia.($qs?'?'.$qs:''))?>">  
+<form method="POST" class="ajaxForm dynaForm form-horizontal" action="<?=site_url('etapas/ejecutar_form/'.$etapa->id.'/'.$secuencia.($qs?'?'.$qs:''))?>">  
     <input type="hidden" name="csrf" />
     <fieldset>
         <div class="validacion"></div>
         <legend><?=$paso->Formulario->nombre?></legend>
         <?php foreach($paso->Formulario->Campos as $c):?>
-            <div class="campo" data-id="<?=$c->id?>" <?= $c->dependiente_campo ? 'data-dependiente-campo="' . $c->dependiente_campo.'" data-dependiente-valor="' . $c->dependiente_valor .'" data-dependiente-tipo="' . $c->dependiente_tipo.'"' : '' ?> data-readonly="<?=$paso->modo=='visualizacion' || $c->readonly?>" >
+            <div class="campo control-group" data-id="<?=$c->id?>" <?= $c->dependiente_campo ? 'data-dependiente-campo="' . $c->dependiente_campo.'" data-dependiente-valor="' . $c->dependiente_valor .'" data-dependiente-tipo="' . $c->dependiente_tipo.'"' : '' ?> data-readonly="<?=$paso->modo=='visualizacion' || $c->readonly?>" >
             <?=$c->displayConDato($etapa->id,$paso->modo)?>
             </div>
         <?php endforeach ?>

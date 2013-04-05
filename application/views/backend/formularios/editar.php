@@ -43,10 +43,10 @@
         </div>
     </div>
 
-    <form id="formEditarFormulario" class="dynaForm debugForm" onsubmit="return false">
+    <form id="formEditarFormulario" class="form-horizontal dynaForm debugForm" onsubmit="return false">
         <div class="row-fluid">
-            <div class="span3">&nbsp;</div>
-            <div class="span6">
+            <div class="span2">&nbsp;</div>
+            <div class="span7">
                 <legend><?= $formulario->nombre ?></legend>
             </div>
             <div class="span3">
@@ -56,11 +56,11 @@
         <div class="edicionFormulario">
             <?php foreach ($formulario->Campos as $c): ?>
                 <div class="row-fluid">
-                    <div class="campo" data-id="<?= $c->id ?>" <?= $c->dependiente_campo ? 'data-dependiente-campo="' . $c->dependiente_campo.'" data-dependiente-valor="' . $c->dependiente_valor .'" data-dependiente-tipo="' . $c->dependiente_tipo.'"' : '' ?> >
-                        <div class="span3">
+                    <div class="control-group campo" data-id="<?= $c->id ?>" <?= $c->dependiente_campo ? 'data-dependiente-campo="' . $c->dependiente_campo.'" data-dependiente-valor="' . $c->dependiente_valor .'" data-dependiente-tipo="' . $c->dependiente_tipo.'"' : '' ?> >
+                        <div class="span2">
                             <div class="handler pull-right"></div>
                         </div>
-                        <div class="span6"><?= $c->displaySinDato() ?></div>
+                        <div class="span7"><?= $c->displaySinDato() ?></div>
                         <div class="span3">
                             <a href="#" class="btn" onclick="return editarCampo(<?= $c->id ?>)">Editar</a>
                             <a href="<?= site_url('backend/formularios/eliminar_campo/' . $c->id) ?>" class="btn" onclick="return confirm('¿Esta seguro que desea eliminar?')">Eliminar</a>

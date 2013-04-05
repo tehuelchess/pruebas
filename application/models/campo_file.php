@@ -13,8 +13,8 @@ class CampoFile extends Campo {
         
         $etapa = Doctrine::getTable('Etapa')->find($etapa_id);
         
-        $display='<label>' . $this->etiqueta . (in_array('required', $this->validacion) ? '' : ' (Opcional)') . '</label>';
-        $display.='<div>';
+        $display='<label class="control-label">' . $this->etiqueta . (in_array('required', $this->validacion) ? '' : ' (Opcional)') . '</label>';
+        $display.='<div class="controls">';
         if($modo!='visualizacion')
             $display.='<div class="file-uploader" data-action="'.site_url('uploader/datos/'.$this->id.'/'.$etapa->id).'"></div>';
         $display.='<input type="hidden" name="' . $this->nombre . '" value="' . ($dato ? htmlspecialchars($dato->valor) : '') . '" />';
