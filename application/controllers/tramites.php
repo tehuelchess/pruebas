@@ -18,6 +18,7 @@ class Tramites extends MY_Controller {
     public function participados() {
         $data['tramites']=Doctrine::getTable('Tramite')->findParticipados(UsuarioSesion::usuario()->id, Cuenta::cuentaSegunDominio());
         
+        $data['sidebar']='participados';
         $data['content'] = 'tramites/participados';
         $data['title'] = 'Bienvenido';
         $this->load->view('template', $data);
@@ -26,6 +27,7 @@ class Tramites extends MY_Controller {
     public function disponibles() {
         $data['procesos']=Doctrine::getTable('Proceso')->findProcesosDisponiblesParaIniciar(UsuarioSesion::usuario()->id, Cuenta::cuentaSegunDominio());
         
+        $data['sidebar']='disponibles';
         $data['content'] = 'tramites/disponibles';
         $data['title'] = 'Trámites disponibles a iniciar';
         $this->load->view('template', $data);

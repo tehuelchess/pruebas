@@ -12,6 +12,7 @@ class Etapas extends MY_Controller {
     public function inbox() {
         $data['etapas'] = Doctrine::getTable('Etapa')->findPendientes(UsuarioSesion::usuario()->id, Cuenta::cuentaSegunDominio());
 
+        $data['sidebar']='inbox';
         $data['content'] = 'etapas/inbox';
         $data['title'] = 'Bandeja de Entrada';
         $this->load->view('template', $data);
@@ -20,6 +21,7 @@ class Etapas extends MY_Controller {
     public function sinasignar() {
         $data['etapas'] = Doctrine::getTable('Etapa')->findSinAsignar(UsuarioSesion::usuario()->id, Cuenta::cuentaSegunDominio());
 
+        $data['sidebar']='sinasignar';
         $data['content'] = 'etapas/sinasignar';
         $data['title'] = 'Sin Asignar';
         $this->load->view('template', $data);
@@ -61,6 +63,7 @@ class Etapas extends MY_Controller {
         $data['paso'] = $paso;
         $data['qs'] = $this->input->server('QUERY_STRING');
 
+        $data['sidebar']=  UsuarioSesion::usuario()->registrado?'inbox':'disponibles';
         $data['content'] = 'etapas/ejecutar';
         $data['title'] = $etapa->Tarea->nombre;
         $template = $this->input->get('iframe') ? 'template_iframe' : 'template';
@@ -268,6 +271,7 @@ class Etapas extends MY_Controller {
         $data['etapa'] = $etapa;
         $data['paso'] = $paso;
 
+        $data['sidebar']='participados';
         $data['title'] = 'Historial - ' . $etapa->Tarea->nombre;
         $data['content'] = 'etapas/ver';
         $this->load->view('template', $data);
