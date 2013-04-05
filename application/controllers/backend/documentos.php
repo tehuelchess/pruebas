@@ -97,7 +97,7 @@ class Documentos extends CI_Controller {
         if($this->form_validation->run()==TRUE){         
             $documento->nombre=$this->input->post('nombre');
             $documento->tipo=$this->input->post('tipo');
-            $documento->contenido=$this->input->post('contenido');
+            $documento->contenido=$this->input->post('contenido',false);
             
             if($documento->tipo=='certificado'){
                 $documento->servicio=$this->input->post('servicio');
