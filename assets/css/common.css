@@ -40,6 +40,7 @@ header h1 {
 header h1#logo {
   border-right: 1px solid #ddd;
   padding-right: 20px;
+  margin: 0 0 20px 0;
 }
 header #userMenu {
   background: #ddd;
