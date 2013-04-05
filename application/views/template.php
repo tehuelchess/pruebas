@@ -61,11 +61,11 @@
                 <div class="row">
                     <div class="span3">
                         <ul id="sideMenu" class="nav nav-list">    
-                            <li class="iniciar <?= $this->uri->segment(2) == 'disponibles' ? 'active' : '' ?>"><a href="<?= site_url('tramites/disponibles') ?>">Iniciar trámite</a></li>
+                            <li class="iniciar <?= isset($sidebar) && $sidebar=='disponibles'?'active':'' ?>"><a href="<?= site_url('tramites/disponibles') ?>">Iniciar trámite</a></li>
                             <?php if (UsuarioSesion::usuario()->registrado): ?>
-                                <li class="<?= $this->uri->segment(2) == 'inbox' ? 'active' : '' ?>"><a href="<?= site_url('etapas/inbox') ?>">Bandeja de Entrada (<?= Doctrine::getTable('Etapa')->findPendientes(UsuarioSesion::usuario()->id, Cuenta::cuentaSegunDominio())->count() ?>)</a></li>
-                                <li class="<?= $this->uri->segment(2) == 'sinasignar' ? 'active' : '' ?>"><a href="<?= site_url('etapas/sinasignar') ?>">Sin asignar  (<?= Doctrine::getTable('Etapa')->findSinAsignar(UsuarioSesion::usuario()->id, Cuenta::cuentaSegunDominio())->count() ?>)</a></li>
-                                <li class="<?= $this->uri->segment(2) == 'participados' ? 'active' : '' ?>"><a href="<?= site_url('tramites/participados') ?>">Participados  (<?= Doctrine::getTable('Tramite')->findParticipados(UsuarioSesion::usuario()->id, Cuenta::cuentaSegunDominio())->count() ?>)</a></li>
+                                <li class="<?= isset($sidebar) && $sidebar=='inbox'?'active':'' ?>"><a href="<?= site_url('etapas/inbox') ?>">Bandeja de Entrada (<?= Doctrine::getTable('Etapa')->findPendientes(UsuarioSesion::usuario()->id, Cuenta::cuentaSegunDominio())->count() ?>)</a></li>
+                                <li class="<?= isset($sidebar) && $sidebar=='sinasignar'?'active':'' ?>"><a href="<?= site_url('etapas/sinasignar') ?>">Sin asignar  (<?= Doctrine::getTable('Etapa')->findSinAsignar(UsuarioSesion::usuario()->id, Cuenta::cuentaSegunDominio())->count() ?>)</a></li>
+                                <li class="<?= isset($sidebar) && $sidebar=='participados'?'active':'' ?>"><a href="<?= site_url('tramites/participados') ?>">Participados  (<?= Doctrine::getTable('Tramite')->findParticipados(UsuarioSesion::usuario()->id, Cuenta::cuentaSegunDominio())->count() ?>)</a></li>
                             <?php endif; ?>
                         </ul>
                     </div>
