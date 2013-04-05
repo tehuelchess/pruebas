@@ -72,13 +72,16 @@ footer h3 {
 footer address {
   margin: 0;
 }
+footer .col {
+  padding: 10px;
+}
 footer .area1 {
   background: #222;
-  padding: 20px 0 10px 0;
+  padding: 0;
 }
 footer .area2 {
   background: #000;
-  padding: 10px 0;
+  padding: 0;
 }
 footer .area2 .container,
 footer .area2 .container-fluid {

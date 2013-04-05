@@ -145,7 +145,10 @@
                             </div>
                         </div>
                         <div class="span4">
-                            <p style="text-align: center;"><a href="http://instituciones.chilesinpapeleo.cl/page/view/simple">Powered by SIMPLE</a></p>
+                            <div class="col"><p style="text-align: center;"><a href="http://instituciones.chilesinpapeleo.cl/page/view/simple">Powered by SIMPLE</a></p></div>
+                        </div>
+                        <div class="span4">
+                            &nbsp;
                         </div>
                     </div>
                     <img class="footerGob" src="<?= base_url() ?>assets/img/gobierno_chile.png" />
