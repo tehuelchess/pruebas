@@ -17,7 +17,7 @@
         <?php foreach ($etapas as $e): ?>
             <tr>
                 <td><?=$e->Tramite->id?></td>
-                <td class="name"><?= $e->Tramite->Proceso->nombre ?></td>
+                <td class="name"><a href="<?=site_url('etapas/ejecutar/'.$e->id)?>"><?= $e->Tramite->Proceso->nombre ?></a></td>
                 <td><?=$e->Tarea->nombre?></td>
                 <td class="time"><?= strftime('%d.%b.%Y',mysql_to_unix($e->updated_at))?><br /><?= strftime('%T',mysql_to_unix($e->updated_at))?></td>
                 <td><?=$e->getFechaVencimiento()?strftime('%c',$e->getFechaVencimiento()->getTimestamp()):'N/A'?></td>
