@@ -16,7 +16,7 @@
                         <h1><?= Cuenta::cuentaSegunDominio() ? Cuenta::cuentaSegunDominio()->nombre_largo : '' ?></h1>
                         <p><?= Cuenta::cuentaSegunDominio() ? Cuenta::cuentaSegunDominio()->mensaje : '' ?></p>
                     </div>
-                    <div class="offset5 span2">
+                    <div class="offset4 span3">
                         <ul id="userMenu" class="nav nav-pills pull-right">
                             <?php if (!UsuarioSesion::usuario()->registrado): ?>
                                 <li class="dropdown">
