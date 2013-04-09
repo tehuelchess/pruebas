@@ -96,7 +96,7 @@ footer .area2 .container .footerGob,
 footer .area2 .container-fluid .footerGob {
   position: absolute;
   bottom: -20px;
-  right: 0;
+  right: 10px;
 }
 .ajaxForm {
   position: relative;
