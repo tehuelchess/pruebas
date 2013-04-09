@@ -24,10 +24,12 @@
                 <input type="password" name="password" value=""/>
                 <label>Confirmar contraseña</label>
                 <input type="password" name="password_confirm" value=""/>
-                <label>Nombre</label>
-                <input type="text" name="nombre" value="<?=isset($usuario)?$usuario->nombre:''?>"/>
-                <label>Apellidos</label>
-                <input type="text" name="apellidos" value="<?=isset($usuario)?$usuario->apellidos:''?>"/>
+                <label>Nombres</label>
+                <input type="text" name="nombres" value="<?=isset($usuario)?$usuario->nombres:''?>"/>
+                <label>Apellido Paterno</label>
+                <input type="text" name="apellido_paterno" value="<?=isset($usuario)?$usuario->apellido_paterno:''?>"/>
+                <label>Apellido Materno</label>
+                <input type="text" name="apellido_materno" value="<?=isset($usuario)?$usuario->apellido_materno:''?>"/>
                 <label>Correo electrónico</label>
                 <input type="text" name="email" value="<?=isset($usuario)?$usuario->email:''?>"/>
                 <label class="checkbox"><input type="checkbox" name="vacaciones" value="1" <?=isset($usuario) && $usuario->vacaciones?'checked':''?> /> ¿Fuera de oficina?</label>    

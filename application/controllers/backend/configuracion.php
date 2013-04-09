@@ -168,8 +168,9 @@ class Configuracion extends CI_Controller {
             $this->form_validation->set_rules('usuario', 'Nombre de Usuario', 'required|callback_check_existe_usuario');
         $this->form_validation->set_rules('password', 'Contraseña', 'matches[password_confirm]');
         $this->form_validation->set_rules('password_confirm', 'Confirmar contraseña');
-        $this->form_validation->set_rules('nombre', 'Nombre', 'required');
-        $this->form_validation->set_rules('apellidos', 'Apellidos', 'required');
+        $this->form_validation->set_rules('nombres', 'Nombres', 'required');
+        $this->form_validation->set_rules('apellido_paterno', 'Apellido Paterno', 'required');
+        $this->form_validation->set_rules('apellido_materno', 'Apellido Materno', 'required');
         $this->form_validation->set_rules('email', 'Correo electrónico', 'valid_email');
 
         if ($this->form_validation->run() == TRUE) {
@@ -180,8 +181,9 @@ class Configuracion extends CI_Controller {
 
             
             if($this->input->post('password')) $usuario->password=$this->input->post('password');
-            $usuario->nombre = $this->input->post('nombre');
-            $usuario->apellidos = $this->input->post('apellidos');
+            $usuario->nombres = $this->input->post('nombres');
+            $usuario->apellido_paterno = $this->input->post('apellido_paterno');
+            $usuario->apellido_materno = $this->input->post('apellido_materno');
             $usuario->email = $this->input->post('email');
             $usuario->vacaciones = $this->input->post('vacaciones');
             $usuario->setGruposUsuariosFromArray($this->input->post('grupos_usuarios'));

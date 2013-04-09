@@ -16,16 +16,18 @@
         <table class="table">
             <tr>
                 <th>Usuario</th>
-                <th>Nombre</th>
-                <th>Apellidos</th>
+                <th>Nombres</th>
+                <th>Apellido Paterno</th>
+                <th>Apellido Materno</th>
                 <th>Pertenece a</th>
                 <th>Acciones</th>
             </tr>
             <?php foreach($usuarios as $u): ?>
             <tr>
                 <td><?=$u->usuario?></td>
-                <td><?=$u->nombre?></td>
-                <td><?=$u->apellidos?></td>
+                <td><?=$u->nombres?></td>
+                <td><?=$u->apellido_paterno?></td>
+                <td><?=$u->apellido_materno?></td>
                 <td>
                     <?php
                     $tmp=array();

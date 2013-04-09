@@ -57,10 +57,16 @@ class Regla {
                     $usuario=UsuarioSesion::usuario();
                     if($nombre_dato=='rut')
                         return "'".$usuario->rut."'";
-                    else if($nombre_dato=='nombre')
-                        return "'".$usuario->nombre."'";
-                    else if($nombre_dato=='apellidos')
-                        return "'".$usuario->apellidos."'";
+                    else if($nombre_dato=='nombre')         //Deprecated
+                        return "'".$usuario->nombres."'";
+                    else if($nombre_dato=='apellidos')      //Deprecated
+                        return "'".$usuario->apellido_paterno.' '.$usuario->apellido_materno."'";
+                    else if($nombre_dato=='nombres')
+                        return "'".$usuario->nombres."'";
+                    else if($nombre_dato=='apellido_paterno')
+                        return "'".$usuario->apellido_paterno."'";
+                    else if($nombre_dato=='apellido_materno')
+                        return "'".$usuario->apellido_materno."'";
                     else if($nombre_dato=='email')
                         return "'".$usuario->email."'";
                     else if($nombre_dato=='tramite_id'){
@@ -111,10 +117,16 @@ class Regla {
                     $usuario=UsuarioSesion::usuario();
                     if($nombre_dato=='rut')
                         return $usuario->rut;
-                    else if($nombre_dato=='nombre')
-                        return $usuario->nombre;
-                    else if($nombre_dato=='apellidos')
-                        return $usuario->apellidos;
+                    else if($nombre_dato=='nombre')         //Deprecated
+                        return $usuario->nombres;
+                    else if($nombre_dato=='apellidos')      //Deprecated
+                        return $usuario->apellido_paterno.' '.$usuario->apellido_materno;
+                    else if($nombre_dato=='nombres')
+                        return $usuario->nombres;
+                    else if($nombre_dato=='apellido_paterno')
+                        return $usuario->apellido_paterno;
+                    else if($nombre_dato=='apellido_materno')
+                        return $usuario->apellido_materno;
                     else if($nombre_dato=='email')
                         return $usuario->email;
                     else if($nombre_dato=='tramite_id'){
