@@ -52,23 +52,23 @@ header #userMenu {
   min-height: 480px;
 }
 footer {
-  color: #6699cc;
   margin-bottom: 40px;
 }
 footer a {
-  color: #6699cc;
+  color: #59758D;
 }
 footer a:hover {
   color: #fff;
 }
 footer ul {
-  color: red;
+  color: white;
 }
 footer h3 {
   font-size: 16px;
   font-weight: normal;
   margin: 0 0 10px 0;
   line-height: 1.2;
+  color: #ddd;
 }
 footer address {
   margin: 0;
@@ -76,14 +76,17 @@ footer address {
 footer .col {
   padding: 10px;
 }
+footer .ministerio {
+  color: #ddd;
+}
 footer .area1 {
-  background: #222;
+  background: #232A30;
   padding: 0;
-  padding-top: 10px;
+  padding: 10px 0;
 }
 footer .area2 {
   background: #000;
-  padding: 0;
+  padding: 10px 0;
 }
 footer .area2 .container,
 footer .area2 .container-fluid {
@@ -92,7 +95,7 @@ footer .area2 .container-fluid {
 footer .area2 .container .footerGob,
 footer .area2 .container-fluid .footerGob {
   position: absolute;
-  bottom: -10px;
+  bottom: -20px;
   right: 0;
 }
 .ajaxForm {

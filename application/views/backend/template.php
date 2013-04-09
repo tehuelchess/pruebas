@@ -102,73 +102,57 @@
 
         <footer>
             <div class="area1">
-                <div class="container-fluid">
-                    <div class="row-fluid">
+                <div class="container">
+                    <div class="row">
                         <div class="span2">
                             <div class="col">
-                                <h3>Nuestros proyectos</h3>
-                                <ul>
-                                    <li><a href="http://www.chileatiende.cl" target="_blank">ChileAtiende</a></li>
-                                    <li><a href="http://www.chilesinpapeleo.cl" target="_blank">Chile sin papeleo</a></li>
-                                    <li><a href="http://www.gobiernoabierto.cl" target="_blank">GobiernoAbierto</a></li>
-                                    <li><a href="http://www.comunidadtecnologica.gob.cl" target="_blank">CTG</a></li>
-                                    <li><a href="http://www.softwarepublico.gob.cl" target="_blank">Software Público</a></li>
-                                    <li><a href="http://www.guiadigital.gob.cl" target="_blank">Guía Digital</a></li>
-                                </ul>
+                                <h3>Otros proyectos</h3>
                             </div>
                         </div>
                         <div class="offset6 span4">
-                            <div class="col">
-                                <p>
-                                    <a href="https://twitter.com/Modernizacioncl" target="_blank"><img src="<?= base_url() ?>assets/img/ico_twitter.png" alt="Twitter" /></a>&nbsp;
-                                    <a href="http://www.facebook.com/ModernizacionyGobiernoDigital" target="_blank"><img src="<?= base_url() ?>assets/img/ico_facebook.png" alt="Facebook"/></a>&nbsp;
-                                    <a href="https://vimeo.com/modernizacioncl" target="_blank"><img src="<?= base_url() ?>assets/img/ico_vimeo.png" alt="Vimeo" /></a>&nbsp;
-                                    <a href="http://www.flickr.com/photos/modernizacioncl" target="_blank"><img src="<?= base_url() ?>assets/img/ico_flickr.png" alt="Flickr" /></a>&nbsp;
-                                    <a href="http://www.slideshare.net/modernizacioncl" target="_blank"><img src="<?= base_url() ?>assets/img/ico_slideshare.png" alt="Slideshare" /></a>&nbsp;
-                                </p>
 
-                                <div class="media">
-                                    <div class="pull-left">
-                                        <img class="media-object" src="<?= base_url() ?>assets/img/ico_map.png" alt="Dirección" />
-                                    </div>
-                                    <div class="media-body">
-                                        <address>Teatinos 333 Piso 4<br />Santiago de Chile</address>
-                                    </div>
-                                </div>
-                                <div class="media">
-                                    <div class="pull-left">
-                                        <img class="media-object" src="<?= base_url() ?>assets/img/ico_telefono.png" alt="Teléfono" />
-                                    </div>
-                                    <div class="media-body">
-                                        <address>+ 56 2 2688 77 01</address>
-                                    </div>
-                                </div>
-                                <br />
-                                <p><a href="http://www.modernizacion.gob.cl" target="_blank">www.modernizacion.gob.cl</a></p>
-                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="span4">
+                            <ul>
+                                <li><a href="http://www.chileatiende.cl" target="_blank">ChileAtiende</a></li>
+                            </ul>
+                        </div>
+                        <div class="span4">
+                            <ul>
+                                <li><a href="http://www.chilesinpapeleo.cl" target="_blank">Chile sin papeleo</a></li>
+                            </ul>
+                        </div>
+                        <div class="span4">
+                            <ul>
+                                <li><a href="http://www.gobiernoabierto.cl" target="_blank">Gobierno Abierto</a></li>
+                            </ul>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="area2">
-                <div class="container-fluid">
-                    <div class="row-fluid">
-                        <div class="span4">
+                <div class="container">
+                    <div class="row">
+                        <div class="span5">
                             <div class="col">
                                 <div class="media">
                                     <div class="pull-left">
                                         <img class="media-object" src="<?= base_url() ?>assets/img/ico_cc.png" alt="CC" />
                                     </div>
                                     <div class="media-body">
-                                        <p class="modernizacion">Modernización y Gobierno Digital<br/>
-                                            <span class="ministerio">Ministerio Secretaría General de la Presidencia</span></p>
+                                        <p class="modernizacion"><a href="http://www.modernizacion.gob.cl" target="_blank">Iniciativa de la Unidad de Modernización y Gobierno Digital</a><br/>
+                                            <a class="ministerio" href="http://www.minsegpres.gob.cl" target="_blank">Ministerio Secretaría General de la Presidencia</a></p>
+                                        <br />
+                                        <p><a href="http://instituciones.chilesinpapeleo.cl/page/view/simple" target="_blank">Powered by SIMPLE</a></p>
                                     </div>
                                 </div>
 
                             </div>
                         </div>
-                        <div class="span4">
-                            <div class="col"><p style="text-align: center;"><a href="http://instituciones.chilesinpapeleo.cl/page/view/simple">Powered by SIMPLE</a></p></div>
+                        <div class="span3">
+                            <div class="col"></div>
                         </div>
                         <div class="span4">
                             &nbsp;
