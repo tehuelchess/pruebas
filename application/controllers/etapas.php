@@ -266,16 +266,19 @@ class Etapas extends MY_Controller {
         $this->load->view('template_iframe', $data);
     }
 
-    public function ver($etapa_id, $paso = 0) {
+    public function ver($etapa_id, $secuencia = 0) {
         $etapa = Doctrine::getTable('Etapa')->find($etapa_id);
 
         if (UsuarioSesion::usuario()->id != $etapa->usuario_id) {
             echo 'No tiene permisos para hacer seguimiento a este tramite.';
             exit;
         }
+        
+        $paso=$etapa->getPasoEjecutable($secuencia);
 
         $data['etapa'] = $etapa;
         $data['paso'] = $paso;
+        $data['secuencia']=$secuencia;
 
         $data['sidebar']='participados';
         $data['title'] = 'Historial - ' . $etapa->Tarea->nombre;
