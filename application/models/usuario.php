@@ -7,8 +7,9 @@ class Usuario extends Doctrine_Record {
         $this->hasColumn('usuario');
         $this->hasColumn('password');
         $this->hasColumn('rut');
-        $this->hasColumn('nombre');
-        $this->hasColumn('apellidos');
+        $this->hasColumn('nombres');
+        $this->hasColumn('apellido_paterno');
+        $this->hasColumn('apellido_materno');
         $this->hasColumn('email');
         $this->hasColumn('vacaciones');
         $this->hasColumn('cuenta_id');
@@ -71,8 +72,8 @@ class Usuario extends Doctrine_Record {
     }
 
     public function displayName(){
-        if($this->nombre)
-            return trim($this->nombre.' '.$this->apellidos);
+        if($this->nombres)
+            return trim($this->nombres);
         else if($this->rut)
             return $this->rut;
         
