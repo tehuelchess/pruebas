@@ -102,8 +102,8 @@
 
         <footer>
             <div class="area1">
-                <div class="container">
-                    <div class="row">
+                <div class="container-fluid">
+                    <div class="row-fluid">
                         <div class="span2">
                             <div class="col">
                                 <h3>Otros proyectos</h3>
@@ -113,7 +113,7 @@
 
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row-fluid">
                         <div class="span4">
                             <ul>
                                 <li><a href="http://www.chileatiende.cl" target="_blank">ChileAtiende</a></li>
@@ -133,8 +133,8 @@
                 </div>
             </div>
             <div class="area2">
-                <div class="container">
-                    <div class="row">
+                <div class="container-fluid">
+                    <div class="row-fluid">
                         <div class="span5">
                             <div class="col">
                                 <div class="media">
