@@ -57,6 +57,12 @@ class Etapas extends MY_Controller {
             $qs = $this->input->server('QUERY_STRING');
             redirect('etapas/ejecutar_fin/' . $etapa->id . ($qs ? '?' . $qs : ''));
         }
+        
+        //Si es una etapa final, y en este paso es el ultimo y es de lectura, finalizamos el tramite.
+        if($etapa->Tarea->final && count($etapa->getPasosEjecutables())==$secuencia+1 && $paso->getReadonly()){
+            $etapa->avanzar();
+            redirect('etapas/ver/'.$etapa->id.'/'.$secuencia);
+        }
 
         $data['secuencia'] = $secuencia;
         $data['etapa'] = $etapa;
