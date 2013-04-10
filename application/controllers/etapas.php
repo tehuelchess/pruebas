@@ -60,13 +60,6 @@ class Etapas extends MY_Controller {
 
         $etapa->iniciarPaso($paso);
 
-        //Si es una etapa final, y en este paso es el ultimo y es de lectura, finalizamos el tramite.
-        //if ($etapa->Tarea->final && count($etapa->getPasosEjecutables()) == $secuencia + 1 && $paso->getReadonly()) {
-        //    $etapa->finalizarPaso($paso);
-        //    $etapa->avanzar();
-        //    redirect('etapas/ver/' . $etapa->id . '/' . $secuencia);
-        //}
-
         $data['secuencia'] = $secuencia;
         $data['etapa'] = $etapa;
         $data['paso'] = $paso;
@@ -114,19 +107,12 @@ class Etapas extends MY_Controller {
                     $c->formValidate();
                     $validar_formulario = TRUE;
                 }
-
-
-                //if((!$c->readonly) && 
-                //   (!$c->dependiente_campo || $this->input->post($c->dependiente_campo)==$c->dependiente_valor))
-                //    $c->formValidate();
             }
             if (!$validar_formulario || $this->form_validation->run() == TRUE) {
                 //Almacenamos los campos
                 foreach ($formulario->Campos as $c) {
                     //Almacenamos los campos que no sean readonly y que esten disponibles (que su campo dependiente se cumpla)
                     if ($c->isEditableWithCurrentPOST()) {
-                        //if((!$c->readonly) && 
-                        //   (!$c->dependiente_campo || $this->input->post($c->dependiente_campo)==$c->dependiente_valor)){
                         $dato = Doctrine::getTable('Dato')->findOneByTramiteIdAndNombre($etapa->Tramite->id, $c->nombre);
                         if (!$dato)
                             $dato = new Dato();
