@@ -52,25 +52,30 @@ class Etapas extends MY_Controller {
             exit;
         }
 
+        $qs = $this->input->server('QUERY_STRING');
         $paso = $etapa->getPasoEjecutable($secuencia);
         if (!$paso) {
-            $qs = $this->input->server('QUERY_STRING');
             redirect('etapas/ejecutar_fin/' . $etapa->id . ($qs ? '?' . $qs : ''));
+        } else if ($etapa->Tarea->final && $paso->getReadonly() && end($etapa->getPasosEjecutables()) == $paso) { //Cerrado automatico
+            $etapa->iniciarPaso($paso);
+            $etapa->finalizarPaso($paso);
+            $etapa->avanzar();
+            redirect('etapas/ver/' . $etapa->id . '/' . ($secuencia));
+        }else{
+            $etapa->iniciarPaso($paso);
+
+            $data['secuencia'] = $secuencia;
+            $data['etapa'] = $etapa;
+            $data['paso'] = $paso;
+            $data['qs'] = $this->input->server('QUERY_STRING');
+
+            $data['sidebar'] = UsuarioSesion::usuario()->registrado ? 'inbox' : 'disponibles';
+            $data['content'] = 'etapas/ejecutar';
+            $data['title'] = $etapa->Tarea->nombre;
+            $template = $this->input->get('iframe') ? 'template_iframe' : 'template';
+
+            $this->load->view($template, $data);
         }
-
-        $etapa->iniciarPaso($paso);
-
-        $data['secuencia'] = $secuencia;
-        $data['etapa'] = $etapa;
-        $data['paso'] = $paso;
-        $data['qs'] = $this->input->server('QUERY_STRING');
-
-        $data['sidebar'] = UsuarioSesion::usuario()->registrado ? 'inbox' : 'disponibles';
-        $data['content'] = 'etapas/ejecutar';
-        $data['title'] = $etapa->Tarea->nombre;
-        $template = $this->input->get('iframe') ? 'template_iframe' : 'template';
-
-        $this->load->view($template, $data);
     }
 
     public function ejecutar_form($etapa_id, $secuencia) {
@@ -136,7 +141,7 @@ class Etapas extends MY_Controller {
                     $etapa->iniciarPaso($prox_paso);
                     $etapa->finalizarPaso($prox_paso);
                     $etapa->avanzar();
-                    $respuesta->redirect=site_url('etapas/ver/' . $etapa->id . '/' . ($secuencia + 1));
+                    $respuesta->redirect = site_url('etapas/ver/' . $etapa->id . '/' . ($secuencia + 1));
                 } else {
                     $respuesta->redirect = site_url('etapas/ejecutar/' . $etapa_id . '/' . ($secuencia + 1)) . ($qs ? '?' . $qs : '');
                 }
@@ -152,9 +157,10 @@ class Etapas extends MY_Controller {
             if (!$prox_paso) {
                 $respuesta->redirect = site_url('etapas/ejecutar_fin/' . $etapa_id) . ($qs ? '?' . $qs : '');
             } else if ($etapa->Tarea->final && $prox_paso->getReadonly() && end($etapa->getPasosEjecutables()) == $prox_paso) { //Cerrado automatico
+                $etapa->iniciarPaso($prox_paso);
                 $etapa->finalizarPaso($prox_paso);
                 $etapa->avanzar();
-                $respuesta->redirect=site_url('etapas/ver/' . $etapa->id . '/' . ($secuencia + 1));
+                $respuesta->redirect = site_url('etapas/ver/' . $etapa->id . '/' . ($secuencia + 1));
             } else {
                 $respuesta->redirect = site_url('etapas/ejecutar/' . $etapa_id . '/' . ($secuencia + 1)) . ($qs ? '?' . $qs : '');
             }
