@@ -207,6 +207,7 @@ class Etapas extends MY_Controller {
         $data['tareas_proximas'] = $etapa->getTareasProximas();
         $data['qs'] = $this->input->server('QUERY_STRING');
 
+        $data['sidebar'] = UsuarioSesion::usuario()->registrado ? 'inbox' : 'disponibles';
         $data['content'] = 'etapas/ejecutar_fin';
         $data['title'] = $etapa->Tarea->nombre;
         $template = $this->input->get('iframe') ? 'template_iframe' : 'template';
