@@ -82,6 +82,9 @@
                                     <?php if (UsuarioBackendSesion::usuario()->rol == 'super' || UsuarioBackendSesion::usuario()->rol == 'operacion'): ?>
                                         <li <?= $this->uri->segment(2) == 'seguimiento' ? 'class="active"' : '' ?>><a href="<?= site_url('backend/seguimiento') ?>">Seguimiento</a></li>
                                     <?php endif ?>
+                                    <?php if (UsuarioBackendSesion::usuario()->rol == 'super' || UsuarioBackendSesion::usuario()->rol == 'gestion'): ?>
+                                        <li <?= $this->uri->segment(2) == 'reportes' || !$this->uri->segment(2) ? 'class="active"' : '' ?>><a href="<?= site_url('backend/reportes') ?>">Gestión</a></li>
+                                    <?php endif ?>
                                     <?php if (UsuarioBackendSesion::usuario()->rol == 'super'): ?>
                                         <li <?= $this->uri->segment(2) == 'configuracion' ? 'class="active"' : '' ?>><a href="<?= site_url('backend/configuracion') ?>">Configuración</a></li>
                                     <?php endif ?>

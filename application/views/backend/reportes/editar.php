@@ -1,16 +1,9 @@
 <ul class="breadcrumb">
     <li>
-        <a href="<?= site_url('backend/procesos') ?>">Listado de Procesos</a> <span class="divider">/</span>
+        <a href="<?= site_url('backend/reportes') ?>">Gestión</a> <span class="divider">/</span>
     </li>
-    <li class="active"><?= $proceso->nombre ?></li>
-</ul>
-
-<ul class="nav nav-tabs">
-    <li><a href="<?= site_url('backend/procesos/editar/' . $proceso->id) ?>">Diseñador</a></li>
-    <li><a href="<?= site_url('backend/formularios/listar/' . $proceso->id) ?>">Formularios</a></li>
-    <li><a href="<?= site_url('backend/documentos/listar/' . $proceso->id) ?>">Documentos</a></li>
-    <li><a href="<?= site_url('backend/acciones/listar/' . $proceso->id) ?>">Acciones</a></li>
-    <li class="active"><a href="<?= site_url('backend/reportes/listar/' . $proceso->id) ?>">Reportes</a></li>
+    <li><a href="<?=site_url('backend/reportes/listar/'.$proceso->id)?>"><?= $proceso->nombre ?></a></li> <span class="divider">/</span>
+    <li class="active"><?=$reporte->nombre?></li>
 </ul>
 
 

@@ -10,10 +10,21 @@ class Reportes extends CI_Controller {
 
         UsuarioBackendSesion::force_login();
         
-        if(UsuarioBackendSesion::usuario()->rol!='super' && UsuarioBackendSesion::usuario()->rol!='modelamiento'){
+        if(UsuarioBackendSesion::usuario()->rol!='super' && UsuarioBackendSesion::usuario()->rol!='gestion'){
             echo 'No tiene permisos para acceder a esta seccion.';
             exit;
         }
+    }
+    
+    public function index(){
+        $procesos=Doctrine::getTable('Proceso')->findAll();
+        
+        $data['procesos']=$procesos;
+        $data['title'] = 'Gestión';
+        $data['content'] = 'backend/reportes/index';
+
+        $this->load->view('backend/template', $data);
+        
     }
 
     public function listar($proceso_id) {
@@ -27,7 +38,7 @@ class Reportes extends CI_Controller {
         $data['reportes'] = $data['proceso']->Reportes;
 
         $data['title'] = 'Documentos';
-        $data['content'] = 'backend/reportes/index';
+        $data['content'] = 'backend/reportes/listar';
 
         $this->load->view('backend/template', $data);
     }
