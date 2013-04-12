@@ -31,7 +31,7 @@
                                                     <input name="usuario" type="text" class="input-xlarge">
                                                     <label>Contraseña</label>
                                                     <input name="password" type="password" class="input-xlarge">
-                                                    <p>¿No esta registrado? <a href="<?= site_url('autenticacion/registrar') ?>">Regístrese acá</a></p>
+                                                    <p style="font-size: 11px;"><a href="<?= site_url('autenticacion/olvido') ?>">¿Olvidaste tu contraseña?</a> - <a href="<?= site_url('autenticacion/registrar') ?>">¿No estas registrado?</a></p>
                                                     <p>O utilice <a href="<?= site_url('autenticacion/login_openid?redirect=' . current_url()) ?>"><img src="<?= base_url() ?>assets/img/openid_clave_unica.png" alt="OpenID"/></a></p>
                                                     <button class="btn btn-primary pull-right" type="submit">Ingresar</button>
                                                 </fieldset>
@@ -70,6 +70,12 @@
                         </ul>
                     </div>
                     <div class="offset1 span8">
+                        <?php if($this->session->flashdata('message')):?>
+                        <div class="alert alert-success">
+                            <button type="button" class="close" data-dismiss="alert">&times;</button>
+                            <?=$this->session->flashdata('message')?>
+                        </div>
+                        <?php endif ?>
                         <?php $this->load->view($content) ?>
                     </div>
                 </div>
