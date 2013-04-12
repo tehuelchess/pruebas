@@ -16,6 +16,7 @@ class Usuario extends Doctrine_Record {
         $this->hasColumn('salt');
         $this->hasColumn('open_id');
         $this->hasColumn('registrado');
+        $this->hasColumn('reset_token');
     }
 
     function setUp() {
@@ -78,5 +79,12 @@ class Usuario extends Doctrine_Record {
             return $this->rut;
         
         return $this->usuario;
+    }
+    
+    public function setResetToken($llave){
+        if($llave)
+            $this->_set('reset_token',sha1($llave));
+        else
+            $this->_set('reset_token',null);
     }
 }

@@ -144,6 +144,7 @@ CREATE  TABLE IF NOT EXISTS `tramitador`.`usuario` (
   `cuenta_id` INT(10) UNSIGNED NULL DEFAULT NULL ,
   `salt` VARCHAR(32) NOT NULL ,
   `open_id` TINYINT(1) NOT NULL DEFAULT '0' ,
+  `reset_token` VARCHAR(40) NULL ,
   `created_at` DATETIME NULL DEFAULT NULL ,
   `updated_at` DATETIME NULL DEFAULT NULL ,
   PRIMARY KEY (`id`) ,
