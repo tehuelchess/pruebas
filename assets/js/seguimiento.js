@@ -16,6 +16,7 @@ function drawSeguimiento(actuales, completadas){
             var el=this;
             $.get(site_url+"backend/seguimiento/ajax_ver_etapas/"+tramiteId+"/"+el.id,function(d){
                 $(el).unbind('hover').popover({
+                    html: true,
                     title: "Etapas ejecutadas",
                     content: d
                 });
