@@ -152,6 +152,7 @@ class Etapa extends Doctrine_Record {
     }
 
     public function hayEtapasParalelasPendientes() {
+        /*
         $netapas_paralelas_pendientes = Doctrine_Query::create()
                 ->from('Etapa e, e.Tarea t, t.ConexionesDestino c, c.TareaOrigen tarea_padre, tarea_padre.ConexionesOrigen c2, c2.TareaDestino.Etapas etapa_this')
                 ->where('c.tipo = "paralelo" OR c.tipo = "paralelo_evaluacion"') //Las conexiones hacia la etapa sean paralelas
@@ -161,8 +162,29 @@ class Etapa extends Doctrine_Record {
                 ->andWhere('e.id != ?', $this->id)   //No sean esta misma etapa. Busco a las etapas hermanas.
                 ->andWhere('etapa_this.id = ?', $this->id)
                 ->count();
+         * 
+         */
 
-        return $netapas_paralelas_pendientes ? true : false;
+        $tareas_paralelas = Doctrine_Query::create()
+                ->from('Tarea t, t.ConexionesOrigen c, c.TareaDestino tarea_hijo, tarea_hijo.ConexionesDestino c2, c2.TareaOrigen.Etapas etapa_this')
+                ->andWhere('etapa_this.id = ?', $this->id)
+                ->andWhere('c.tipo = "union" AND c2.tipo="union"')
+                ->execute();
+        
+        foreach ($tareas_paralelas as $t){
+            if($t!=$this->Tarea){           //Si no es mi misma tarea
+                if(!$t->Etapas->count()){   //Si no se han realizado las etapas de las siguientes tareas, es que hay pendientes
+                    return true;
+                }
+                foreach($t->Etapas as $e){
+                    if($e->pendiente){
+                        return true;        //Si hay etapa pendiente retorno true
+                    }
+                }
+            }
+        }
+        
+        return false;
     }
 
     public function asignar($usuario_id) {
