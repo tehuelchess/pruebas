@@ -207,8 +207,14 @@ class Configuracion extends CI_Controller {
             echo 'Usuario no tiene permisos para eliminar este usuario.';
             exit;
         }
+        
+        if($usuario->Etapas->count()){
+            $this->session->set_flashdata('message_error','No se puede eliminar usuario ya que participa en tramites existentes en el sistema.');
+        }else{
+            $usuario->delete();
+        }
 
-        $usuario->delete();
+        
 
         redirect('backend/configuracion/usuarios');
     }
