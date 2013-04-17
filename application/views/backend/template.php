@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title><?=Cuenta::cuentaSegunDominio()?Cuenta::cuentaSegunDominio()->nombre:'SIMPLE'?> - <?= $title ?></title>
+        <title><?=Cuenta::cuentaSegunDominio()?Cuenta::cuentaSegunDominio()->nombre_largo:'SIMPLE'?> - <?= $title ?></title>
 
         <!-- Le styles -->
 
