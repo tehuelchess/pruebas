@@ -20,6 +20,16 @@ class Cron extends CI_Controller {
     }
 
     public function daily() {
+        //Elimino los registros no registrados con mas de 1 dia de antiguedad y que no hayan iniciado etapas
+        $noregistrados=Doctrine_Query::create()
+                ->from('Usuario u, u.Etapas e')
+                ->where('u.registrado = 0 AND DATEDIFF(NOW(),u.updated_at) >= 1')
+                ->groupBy('u.id')
+                ->having('COUNT(e.id) = 0')
+                ->execute();     
+        $noregistrados->delete();
+        
+        
         //Buscamos las etapas que estan por vencer, pendientes y que requieren ser notificadas
         $etapas = Doctrine_Query::create()
                 ->from('Etapa e, e.Tarea t')
@@ -27,7 +37,6 @@ class Cron extends CI_Controller {
                 ->where('t.vencimiento = 1 AND e.pendiente = 1 AND t.vencimiento_notificar = 1')
                 ->having('DATEDIFF(fecha_vencimiento,NOW()) = 1')
                 ->execute();
-
         foreach ($etapas as $e) {
             echo 'Enviando correo de notificacion para etapa ' . $e->id . "\n";
             $this->email->from('simple@chilesinpapeleo.cl');
