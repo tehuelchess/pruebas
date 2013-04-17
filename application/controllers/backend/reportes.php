@@ -17,7 +17,7 @@ class Reportes extends CI_Controller {
     }
     
     public function index(){
-        $procesos=Doctrine::getTable('Proceso')->findByCuentaId(UsuarioSesion::usuario()->cuenta_id);
+        $procesos=Doctrine::getTable('Proceso')->findByCuentaId(UsuarioBackendSesion::usuario()->cuenta_id);
         
         $data['procesos']=$procesos;
         $data['title'] = 'Gestión';
