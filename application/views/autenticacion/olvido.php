@@ -12,12 +12,7 @@
                     <form method="post" class="well ajaxForm" action="<?= site_url('autenticacion/olvido_form') ?>">        
                         <fieldset>
                             <legend>¿Olvidaste tu contraseña?</legend>
-                            <?php if ($this->session->flashdata('message')): ?>
-                                <div class="alert alert-success">
-                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
-                                    <?= $this->session->flashdata('message') ?>
-                                </div>
-                            <?php endif ?>
+                            <?php $this->load->view('messages') ?>
                             <div class="validacion"></div>
 
                             <p>Al hacer click en Reestablecer se te enviara un email indicando las instrucciones para reestablecer tu contraseña.</p>

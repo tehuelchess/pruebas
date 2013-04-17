@@ -70,12 +70,7 @@
                         </ul>
                     </div>
                     <div class="offset1 span8">
-                        <?php if($this->session->flashdata('message')):?>
-                        <div class="alert alert-success">
-                            <button type="button" class="close" data-dismiss="alert">&times;</button>
-                            <?=$this->session->flashdata('message')?>
-                        </div>
-                        <?php endif ?>
+                        <?php $this->load->view('messages') ?>
                         <?php $this->load->view($content) ?>
                     </div>
                 </div>

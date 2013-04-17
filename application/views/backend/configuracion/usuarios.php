@@ -11,6 +11,8 @@
             <li class="active">Usuarios</li>
         </ul>
         
+        <?php $this->load->view('messages') ?>
+        
         <p><a class="btn" href="<?=site_url('backend/configuracion/usuario_editar')?>"><i class="icon-file"></i> Nuevo</a></p>
         
         <table class="table">
