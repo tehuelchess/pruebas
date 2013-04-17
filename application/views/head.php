@@ -1,5 +1,5 @@
 <meta charset="utf-8">
-        <title>Tramitador - <?= $title ?></title>
+        <title><?=Cuenta::cuentaSegunDominio()?Cuenta::cuentaSegunDominio()->nombre:'SIMPLE'?> - <?= $title ?></title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="description" content="">
         <meta name="author" content="">
