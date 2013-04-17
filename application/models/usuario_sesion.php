@@ -37,9 +37,6 @@ class UsuarioSesion {
         }
 
         if (!self::usuario()) {
-            //Elimino los antiguos
-            Doctrine::getTable('Usuario')->cleanNoRegistrados();
-
             //Creo un usuario no registrado
             $usuario = new Usuario();
             $usuario->usuario = random_string('unique');
