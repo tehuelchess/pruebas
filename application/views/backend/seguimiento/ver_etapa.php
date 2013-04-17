@@ -19,7 +19,7 @@
                     });
                 });
             </script>
-            <p>Asignado a: <?=!$etapa->usuario_id?'Ninguno':!$etapa->Usuario->registrado?'No registrado':$etapa->Usuario->open_id?$etapa->Usuario->nombre.' '.$etapa->Usuario->apellidos:$etapa->Usuario->usuario?> <?php if($etapa->pendiente):?>(<a id="reasignarLink" href="<?=site_url('seguimiento/reasignar')?>">Reasignar</a>)<?php endif?></p>
+            <p>Asignado a: <?=!$etapa->usuario_id?'Ninguno':!$etapa->Usuario->registrado?'No registrado':$etapa->Usuario->open_id?$etapa->Usuario->nombres.' '.$etapa->Usuario->apellido_paterno:$etapa->Usuario->usuario?> <?php if($etapa->pendiente):?>(<a id="reasignarLink" href="<?=site_url('seguimiento/reasignar')?>">Reasignar</a>)<?php endif?></p>
             <form id="reasignarForm" method="POST" action="<?=site_url('backend/seguimiento/reasignar_form/'.$etapa->id)?>" class="ajaxForm hide">
                 <div class="validacion"></div>
                 <label>¿A quien deseas asignarle esta etapa?</label>
