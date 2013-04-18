@@ -13,7 +13,7 @@ class CertificadoPDF extends TCPDF {
     public $key='abcdefghijkl';
     public $servicio='Servicio';
     public $servicio_url='http://www.ejemplo.com';
-    public $logo='';
+    public $logo='assets/img/certificados/logo_gobierno-chile.png';
     public $titulo='Certificado';
     public $gratuito=true;
     public $validez=null;
@@ -36,7 +36,7 @@ class CertificadoPDF extends TCPDF {
     }
 
     public function Header() {
-        $this->Image('assets/img/certificados/logo_gobierno-chile.png', PAGE_MARGIN, PAGE_MARGIN, CELL_WIDTH, 30, '', '', 'T',true);
+        $this->Image($this->logo, PAGE_MARGIN, PAGE_MARGIN, CELL_WIDTH, 30, '', '', 'T',true,300,'',false,false,0,true);
 
         $this->SetFont('helvetica', 'B', 16);
         $this->MultiCell(2 * CELL_WIDTH + GRID_WIDTH, 24, $this->servicio, 0, 'L', false, 1, PAGE_MARGIN + CELL_WIDTH + GRID_WIDTH, PAGE_MARGIN, true, 0, false, true, 24, 'B');
@@ -44,9 +44,6 @@ class CertificadoPDF extends TCPDF {
         $this->SetFont('helvetica', '', 10);
         $this->MultiCell(2 * CELL_WIDTH + GRID_WIDTH, 6, $this->servicio_url, 0, 'L', false, 1, PAGE_MARGIN + CELL_WIDTH + GRID_WIDTH, PAGE_MARGIN + 26);
         
-        if($this->logo)
-            $this->Image($this->logo, PAGE_MARGIN+3*CELL_WIDTH+3*GRID_WIDTH, PAGE_MARGIN, 2*CELL_WIDTH+GRID_WIDTH, 30, '', '', 'T',true,300,'',false,false,0,true);
-
         $this->Line(PAGE_MARGIN + 4 * CELL_WIDTH + 4 * GRID_WIDTH,PAGE_MARGIN,PAGE_MARGIN + 5 * CELL_WIDTH + 4 * GRID_WIDTH,PAGE_MARGIN,array('width'=>1));
         $this->SetFont('helvetica', '', 10);
         $this->MultiCell(CELL_WIDTH, 5, 'Folio:', 0, 'L', false, 1, PAGE_MARGIN + 4 * CELL_WIDTH + 4 * GRID_WIDTH, PAGE_MARGIN+1);
