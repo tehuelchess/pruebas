@@ -12,6 +12,7 @@
                     <form method="post" class="ajaxForm" action="<?= site_url('autenticacion/login_form') ?>">        
                         <fieldset>
                             <legend>Autenticación</legend>
+                            <?php $this->load->view('messages') ?>
                             <div class="validacion"></div>
                             <label>Usuario</label>
                             <input name="usuario" type="text" class="input-xlarge">

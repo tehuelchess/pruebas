@@ -97,7 +97,7 @@ class Autenticacion extends MY_Controller {
             $this->session->set_flashdata('message','Se le ha enviado un correo con instrucciones de como reestablecer su contraseña.');
             
             $respuesta->validacion = TRUE;
-            $respuesta->redirect = site_url('autenticacion/olvido');
+            $respuesta->redirect = site_url('autenticacion/login');
         } else {
             $respuesta->validacion = FALSE;
             $respuesta->errores = validation_errors();
