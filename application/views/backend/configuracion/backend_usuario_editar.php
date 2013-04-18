@@ -11,15 +11,15 @@
             <li>
                 <a href="<?= site_url('backend/configuracion/usuarios') ?>">Usuarios</a> <span class="divider">/</span>
             </li>
-            <li class="active"><?= isset($usuario) ?$usuario->usuario:'Crear' ?></li>
+            <li class="active"><?= isset($usuario) ?$usuario->email:'Crear' ?></li>
         </ul>
 
         <form class="ajaxForm" method="post" action="<?= site_url('backend/configuracion/backend_usuario_editar_form/' . (isset($usuario)?$usuario->id:'')) ?>">
             <fieldset>
                 <legend>Editar usuario</legend>
                 <div class="validacion"></div>
-                <label>Nombre de Usuario</label>
-                <input type="text" name="usuario" value="<?=isset($usuario)?$usuario->usuario:''?>" <?=  isset($usuario)?'disabled':''?>/>
+                <label>E-Mail</label>
+                <input type="text" name="email" value="<?=isset($usuario)?$usuario->email:''?>" <?=  isset($usuario)?'disabled':''?>/>
                 <label>Contraseña</label>
                 <input type="password" name="password" value=""/>
                 <label>Confirmar contraseña</label>
@@ -37,7 +37,7 @@
                 </select>
                 <div class="form-actions">
                     <button class="btn btn-primary" type="submit">Guardar</button>
-                    <a class="btn" href="<?=site_url('backend/configuracion/usuarios')?>">Cancelar</a>
+                    <a class="btn" href="<?=site_url('backend/configuracion/backend_usuarios')?>">Cancelar</a>
                 </div>
             </fieldset>
         </form>

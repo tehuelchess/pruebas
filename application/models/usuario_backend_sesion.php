@@ -37,13 +37,13 @@ class UsuarioBackendSesion {
             
     }
 
-    public static function login($usuario, $password) {
+    public static function login($email, $password) {
         $CI = & get_instance();
 
-        $autorizacion = self::validar_acceso($usuario, $password);
+        $autorizacion = self::validar_acceso($email, $password);
 
         if ($autorizacion) {
-            $u = Doctrine::getTable('UsuarioBackend')->findOneByUsuario($usuario);
+            $u = Doctrine::getTable('UsuarioBackend')->findOneByEmail($email);
 
             $CI->session->set_userdata('usuario_backend_id', $u->id);
             self::$user = $u;
@@ -54,8 +54,8 @@ class UsuarioBackendSesion {
         return FALSE;
     }
 
-    public static function validar_acceso($usuario, $password) {
-        $u = Doctrine::getTable('UsuarioBackend')->findOneByUsuario($usuario);
+    public static function validar_acceso($email, $password) {
+        $u = Doctrine::getTable('UsuarioBackend')->findOneByEmail($email);
         if ($u) {
 
             // this mutates (encrypts) the input password

@@ -401,13 +401,14 @@ COLLATE = utf8_general_ci;
 -- -----------------------------------------------------
 CREATE  TABLE IF NOT EXISTS `tramitador`.`usuario_backend` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
-  `usuario` VARCHAR(128) NOT NULL ,
+  `email` VARCHAR(128) NOT NULL ,
   `password` VARCHAR(255) NOT NULL ,
   `nombre` VARCHAR(128) NOT NULL ,
   `apellidos` VARCHAR(128) NOT NULL ,
   `rol` ENUM('super','modelamiento','operacion','gestion') NOT NULL DEFAULT 'super' ,
   `salt` VARCHAR(32) NOT NULL ,
   `cuenta_id` INT UNSIGNED NOT NULL ,
+  `reset_token` VARCHAR(40) NULL ,
   PRIMARY KEY (`id`) ,
   INDEX `fk_usuario_backend_cuenta1` (`cuenta_id` ASC) ,
   CONSTRAINT `fk_usuario_backend_cuenta1`

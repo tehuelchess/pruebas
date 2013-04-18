@@ -15,7 +15,7 @@
         
         <table class="table">
             <tr>
-                <th>Usuario</th>
+                <th>E-Mail</th>
                 <th>Nombre</th>
                 <th>Apellidos</th>
                 <th>Rol</th>
@@ -23,7 +23,7 @@
             </tr>
             <?php foreach($usuarios as $u): ?>
             <tr>
-                <td><?=$u->usuario?></td>
+                <td><?=$u->email?></td>
                 <td><?=$u->nombre?></td>
                 <td><?=$u->apellidos?></td>
                 <td><?=$u->rol?></td>
