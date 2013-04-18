@@ -3,7 +3,7 @@
         <a href="<?= site_url('backend/reportes') ?>">Gestión</a> <span class="divider">/</span>
     </li>
     <li><a href="<?=site_url('backend/reportes/listar/'.$proceso->id)?>"><?= $proceso->nombre ?></a></li> <span class="divider">/</span>
-    <li class="active"><?=$reporte->nombre?></li>
+    <li class="active"><?=$edit?$reporte->nombre:'Crear reporte'?></li>
 </ul>
 
 
