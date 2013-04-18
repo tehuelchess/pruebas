@@ -20,7 +20,7 @@
                             <input name="password" type="password" class="input-xlarge">
                             <input type="hidden" name="redirect" value="<?=$redirect?>" />
                             
-                            <p><a href="<?=site_url('autenticacion/olvido')?>">Olvidaste tu contraseña</a><a href="<?= site_url('autenticacion/registrar') ?>">¿No estas registrado?</a></p>
+                            <p><a href="<?=site_url('autenticacion/olvido')?>">¿Olvidaste tu contraseña?</a> - <a href="<?= site_url('autenticacion/registrar') ?>">¿No estas registrado?</a></p>
                             <p>O utilice <a href="<?=site_url('autenticacion/login_openid?redirect='.$redirect)?>"><img src="<?= base_url() ?>assets/img/openid_clave_unica.png" alt="OpenID"/></a></p>
 
                             <div class="form-actions">
