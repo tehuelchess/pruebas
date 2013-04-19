@@ -52,7 +52,7 @@ class CampoDocumento extends Campo {
             $dato->nombre = $this->nombre;
             $dato->valor = $file->filename;
             $dato->tramite_id = $etapa->Tramite->id;
-            $dato->save();
+            $dato->save(null,$etapa);
             
             
             Doctrine_Manager::connection()->commit();
