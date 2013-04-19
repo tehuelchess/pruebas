@@ -25,7 +25,7 @@
                 <label>¿A quien deseas asignarle esta etapa?</label>
                 <select name="usuario_id">
                     <?php foreach($etapa->Tarea->getUsuarios() as $u):?>
-                    <option value="<?=$u->id?>" <?=$u->id==$etapa->usuario_id?'selected':''?>><?=$u->open_id?$u->nombre.' '.$u->apellidos:$u->usuario?></option>
+                    <option value="<?=$u->id?>" <?=$u->id==$etapa->usuario_id?'selected':''?>><?=$u->open_id?$u->nombres.' '.$u->apellido_paterno:$u->usuario?></option>
                     <?php endforeach?>
                 </select>
                 <button class="btn btn-primary" type="submit">Reasignar</button>
