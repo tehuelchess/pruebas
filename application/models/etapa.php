@@ -212,7 +212,7 @@ class Etapa extends Doctrine_Record {
             if ($e->instante == 'antes') {
                 $r = new Regla($e->regla);
                 if ($r->evaluar($this->tramite_id))
-                    $e->Accion->ejecutar($this->tramite_id);
+                    $e->Accion->ejecutar($this);
             }
         }
     }
@@ -229,7 +229,7 @@ class Etapa extends Doctrine_Record {
             $dato->nombre = $this->Tarea->almacenar_usuario_variable;
             $dato->valor = UsuarioSesion::usuario()->id;
             $dato->tramite_id = $this->Tramite->id;
-            $dato->save();
+            $dato->save(null, $this);
         }
 
         //Ejecutamos los eventos
@@ -237,19 +237,8 @@ class Etapa extends Doctrine_Record {
             if ($e->instante == 'despues') {
                 $r = new Regla($e->regla);
                 if ($r->evaluar($this->tramite_id))
-                    $e->Accion->ejecutar($this->tramite_id);
+                    $e->Accion->ejecutar($this);
             }
-        }
-
-        //Le generamos los datos para el seguimiento
-        foreach ($this->Tramite->Datos as $d) {
-            //$dato = Doctrine::getTable('DatoSeguimiento')->findOneByEtapaIdAndNombre($this->id, $nombre);
-            //if (!$dato)
-            $dato = new DatoSeguimiento();
-            $dato->nombre = $d->nombre;
-            $dato->valor = $d->valor;
-            $dato->etapa_id = $this->id;
-            $this->DatosSeguimiento[] = $dato;
         }
 
         //Cerramos la etapa
@@ -316,7 +305,7 @@ class Etapa extends Doctrine_Record {
             if ($e->instante == 'antes') {
                 $r = new Regla($e->regla);
                 if ($r->evaluar($this->tramite_id))
-                    $e->Accion->ejecutar($this->tramite_id);
+                    $e->Accion->ejecutar($this);
             }
         }
     }
@@ -327,7 +316,7 @@ class Etapa extends Doctrine_Record {
             if ($e->instante == 'despues') {
                 $r = new Regla($e->regla);
                 if ($r->evaluar($this->tramite_id))
-                    $e->Accion->ejecutar($this->tramite_id);
+                    $e->Accion->ejecutar($this);
             }
         }
     }

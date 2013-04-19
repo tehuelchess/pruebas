@@ -124,7 +124,7 @@ class Etapas extends MY_Controller {
                         $dato->nombre = $c->nombre;
                         $dato->valor = $this->input->post($c->nombre);
                         $dato->tramite_id = $etapa->Tramite->id;
-                        $dato->save();
+                        $dato->save(null,$etapa);
                     }
                 }
                 $etapa->save();

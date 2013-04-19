@@ -24,9 +24,9 @@ class AccionWebservice extends Accion {
         $CI->form_validation->set_rules('extra[url]', 'URL', 'required');
     }
 
-    public function ejecutar($tramite_id) {
+    public function ejecutar(Etapa $etapa) {
         $r=new Regla($this->extra->url);
-        $url=$r->getExpresionParaOutput($tramite_id);
+        $url=$r->getExpresionParaOutput($etapa->tramite_id);
         
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
@@ -36,13 +36,13 @@ class AccionWebservice extends Accion {
         $json=json_decode($result);
         
         foreach($json as $key=>$value){
-            $dato=Doctrine::getTable('Dato')->findOneByNombreAndTramiteId($key,$tramite_id);
+            $dato=Doctrine::getTable('Dato')->findOneByNombreAndTramiteId($key,$etapa->tramite_id);
             if(!$dato)
                 $dato=new Dato();
             $dato->nombre=$key;
             $dato->valor=$value;
-            $dato->tramite_id=$tramite_id;
-            $dato->save();
+            $dato->tramite_id=$etapa->tramite_id;
+            $dato->save(null,$etapa);
         }        
         
     }
