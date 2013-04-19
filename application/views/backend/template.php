@@ -162,7 +162,7 @@
                             &nbsp;
                         </div>
                     </div>
-                    <img class="footerGob" src="<?= base_url() ?>assets/img/gobierno_chile.png" />
+                    <a href="http://www.gob.cl" target="_blank"><img class="footerGob" src="<?= base_url() ?>assets/img/gobierno_chile.png" alt="Gobierno de Chile" /></a>
                 </div>
             </div>
 
