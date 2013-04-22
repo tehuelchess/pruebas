@@ -17,6 +17,7 @@ class Documento extends Doctrine_Record {
         $this->hasColumn('proceso_id');
         $this->hasColumn('timbre');
         $this->hasColumn('logo');
+        $this->hasColumn('hsm_configuracion_id');
     }
 
     function setUp() {
@@ -31,6 +32,11 @@ class Documento extends Doctrine_Record {
             'local' => 'id',
             'foreign' => 'documento_id'
         ));
+        
+        $this->hasOne('HsmConfiguracion', array(
+            'local' => 'hsm_configuracion_id',
+            'foreign' => 'id'
+        ));
     }
 
     public function setValidez($validez) {
@@ -39,8 +45,15 @@ class Documento extends Doctrine_Record {
 
         $this->_set('validez', $validez);
     }
+    
+    public function setHsmConfiguracionId($hsm_configuracion_id) {
+        if (!$hsm_configuracion_id)
+            $hsm_configuracion_id = null;
 
-    public function generar($file_id, $tramite_id, $firmar = false) {
+        $this->_set('hsm_configuracion_id', $hsm_configuracion_id);
+    }
+
+    public function generar($file_id, $tramite_id) {
         $regla = new Regla($this->contenido);
         $contenido = $regla->getExpresionParaOutput($tramite_id);
 
@@ -49,9 +62,9 @@ class Documento extends Doctrine_Record {
         $filename_uniqid = uniqid();     
 
         $resultado->filename = $filename_uniqid . '.pdf';
-        $this->render($contenido, $file_id, $resultado->key, $resultado->filename, false, $firmar);
+        $this->render($contenido, $file_id, $resultado->key, $resultado->filename, false);
         $filename_copia = $filename_uniqid . '.copia.pdf';
-        $this->render($contenido, $file_id, $resultado->key, $filename_copia, true, $firmar);
+        $this->render($contenido, $file_id, $resultado->key, $filename_copia, true);
 
         return $resultado;
     }
@@ -60,7 +73,7 @@ class Documento extends Doctrine_Record {
         $this->render($this->contenido, '123456789', 'abcdefghijkl');
     }
 
-    private function render($contenido, $identifier, $key, $filename = false, $copia = false, $firmar = false) {
+    private function render($contenido, $identifier, $key, $filename = false, $copia = false) {
 
 
         $uploadDirectory = 'uploads/documentos/';
@@ -87,7 +100,7 @@ class Documento extends Doctrine_Record {
             $obj->firmador_servicio = $this->firmador_servicio;
             if ($this->firmador_imagen)
                 $obj->firmador_imagen = 'uploads/firmas/' . $this->firmador_imagen;
-            $obj->firma_electronica = $firmar;
+            $obj->firma_electronica = $this->hsm_configuracion_id?true:false;
             $obj->copia = $copia;
         }else {
             $CI->load->library('blancopdf');
@@ -96,25 +109,24 @@ class Documento extends Doctrine_Record {
         }
 
         if ($filename) {
-            if (!$firmar) {
-                $obj->Output($uploadDirectory . $filename, 'F');
-            } else {
-                $client = new SoapClient('http://200.111.181.86/wsv2/Wsintercambiadoc.asmx?wsdl');
-
+            $obj->Output($uploadDirectory . $filename, 'F');
+            if($this->hsm_configuracion_id) {
+                $client = new SoapClient($CI->config->item('hsm_url'));
+                
                 $result = $client->IntercambiaDoc(array(
                     'Encabezado' => array(
-                        'User' => 'svs',
-                        'Password' => 'svs',
+                        'User' => $CI->config->item('hsm_user'),
+                        'Password' => $CI->config->item('hsm_password'),
                         'TipoIntercambio' => 'pdf',
-                        'NombreConfiguracion' => 'test',
+                        'NombreConfiguracion' => $this->HsmConfiguracion->nombre,
                         'FormatoDocumento' => 'b64'
                     ),
                     'Parametro' => array(
-                        'Documento' => base64_encode($obj->Output($filename, 'S')),
+                        'Documento' => base64_encode(file_get_contents($uploadDirectory . $filename)),
                         'NombreDocumento' => $filename
                     )
                 ));
-
+                
                 file_put_contents($uploadDirectory . $filename, base64_decode($result->IntercambiaDocResult->Documento));
             }
         } else {

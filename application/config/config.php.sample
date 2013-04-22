@@ -381,5 +381,12 @@ $config['pusher_api_key'] = '';
 $config['pusher_secret'] = '';
 $config['pusher_app_id'] = '';
 
+/*
+ * Configuracion del servidor HSM
+ */
+$config['hsm_url']='';
+$config['hsm_user']='';
+$config['hsm_password']='';
+
 /* End of file config.php */
 /* Location: ./application/config/config.php */

@@ -282,6 +282,24 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
+-- Table `tramitador`.`hsm_configuracion`
+-- -----------------------------------------------------
+CREATE  TABLE IF NOT EXISTS `tramitador`.`hsm_configuracion` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
+  `nombre` VARCHAR(128) NOT NULL ,
+  `cuenta_id` INT UNSIGNED NOT NULL ,
+  PRIMARY KEY (`id`) ,
+  UNIQUE INDEX `nombre_UNIQUE` (`nombre` ASC) ,
+  INDEX `fk_hsm_configuracion_cuenta1` (`cuenta_id` ASC) ,
+  CONSTRAINT `fk_hsm_configuracion_cuenta1`
+    FOREIGN KEY (`cuenta_id` )
+    REFERENCES `tramitador`.`cuenta` (`id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
 -- Table `tramitador`.`documento`
 -- -----------------------------------------------------
 CREATE  TABLE IF NOT EXISTS `tramitador`.`documento` (
@@ -298,14 +316,21 @@ CREATE  TABLE IF NOT EXISTS `tramitador`.`documento` (
   `firmador_servicio` VARCHAR(128) NOT NULL ,
   `firmador_imagen` VARCHAR(256) NOT NULL ,
   `validez` INT UNSIGNED NULL ,
+  `hsm_configuracion_id` INT UNSIGNED NULL ,
   `proceso_id` INT UNSIGNED NOT NULL ,
   PRIMARY KEY (`id`) ,
   INDEX `fk_documento_proceso1` (`proceso_id` ASC) ,
+  INDEX `fk_documento_hsm_configuracion1` (`hsm_configuracion_id` ASC) ,
   CONSTRAINT `fk_documento_proceso1`
     FOREIGN KEY (`proceso_id` )
     REFERENCES `tramitador`.`proceso` (`id` )
     ON DELETE CASCADE
-    ON UPDATE CASCADE)
+    ON UPDATE CASCADE,
+  CONSTRAINT `fk_documento_hsm_configuracion1`
+    FOREIGN KEY (`hsm_configuracion_id` )
+    REFERENCES `tramitador`.`hsm_configuracion` (`id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 

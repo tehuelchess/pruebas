@@ -16,9 +16,9 @@
     $(document).ready(function() {
         handleRadio();
         $("input[name=tipo]").change(handleRadio);
-        
+
         function handleRadio() {
-            var value=$("input[name=tipo]:checked").val();
+            var value = $("input[name=tipo]:checked").val();
             if (value == "blanco") {
                 $("#certificadoArea").hide();
             } else {
@@ -49,7 +49,7 @@
             <input class="input-xxlarge" type="text" name="servicio_url" value="<?= $edit ? $documento->servicio_url : '' ?>" placeholder="Ej: http://www.minsegpres.gob.cl" />
             <label>Logo del Servicio (Opcional)</label>
             <div id="file-uploader-logo"></div>
-            <input type="hidden" name="logo" value="<?=$edit?$documento->logo:'' ?>" />
+            <input type="hidden" name="logo" value="<?= $edit ? $documento->logo : '' ?>" />
             <img class="logo" src="<?= $edit && $documento->logo ? site_url('backend/uploader/logo_certificado_get/' . $documento->logo) : '#' ?>" alt="" width="200" />
             <script>
                 var uploader = new qq.FileUploader({
@@ -63,7 +63,7 @@
             </script>
             <label>Imagen del timbre (Opcional)</label>
             <div id="file-uploader-timbre"></div>
-            <input type="hidden" name="timbre" value="<?=$edit?$documento->timbre:'' ?>" />
+            <input type="hidden" name="timbre" value="<?= $edit ? $documento->timbre : '' ?>" />
             <img class="timbre" src="<?= $edit && $documento->timbre ? site_url('backend/uploader/timbre_get/' . $documento->timbre) : '#' ?>" alt="" width="200" />
             <script>
                 var uploader = new qq.FileUploader({
@@ -83,7 +83,7 @@
             <input class="input-xxlarge" type="text" name="firmador_servicio" value="<?= $edit ? $documento->firmador_servicio : '' ?>" placeholder="Ej: Ministerio Secretaría General de la Presidencia" />
             <label>Imagen de la firma</label>
             <div id="file-uploader"></div>
-            <input type="hidden" name="firmador_imagen" value="<?=$edit?$documento->firmador_imagen:'' ?>" />
+            <input type="hidden" name="firmador_imagen" value="<?= $edit ? $documento->firmador_imagen : '' ?>" />
             <img class="firma" src="<?= $edit && $documento->firmador_imagen ? site_url('backend/uploader/firma_get/' . $documento->firmador_imagen) : base_url('assets/img/certificados/firma.png') ?>" alt="firma" width="200" />
             <script>
                 var uploader = new qq.FileUploader({
@@ -94,7 +94,7 @@
                         $("img.firma").attr("src", site_url + "backend/uploader/firma_get/" + respuesta.file_name);
                     }
                 });
-            </script>
+            </script>          
             <label>Numero de dias de validez (Dejar en blanco para periodo ilimitado)</label>
             <input class="input-mini" type="text" name="validez" value="<?= $edit ? $documento->validez : '' ?>" placeholder="Ej: 90" />
         </div>
@@ -102,6 +102,15 @@
         <label>Contenido</label>
         <textarea name="contenido" class="input-xxlarge" rows="20"><?= $edit ? $documento->contenido : '' ?></textarea>
 
+        <?php if ($proceso->Cuenta->HsmConfiguraciones->count()): ?>
+            <label>Firma Electronica Avanzada (HSM)</label>
+            <select name="hsm_configuracion_id">
+                <option value="">No firmar con HSM</option>
+                <?php foreach ($proceso->Cuenta->HsmConfiguraciones as $h): ?>
+                    <option value="<?= $h->id ?>" <?= $edit && $documento->hsm_configuracion_id == $h->id ? 'selected' : '' ?>>Firmar con <?= $h->nombre ?></option>
+                <?php endforeach ?>
+            </select>
+        <?php endif ?>
 
         <div class="form-actions">
             <a class="btn" href="<?= site_url('backend/documentos/listar/' . $proceso->id) ?>">Cancelar</a>
