@@ -21,9 +21,8 @@ class Cuenta extends Doctrine_Record {
         $this->hasMany('Usuario as Usuarios', array(
             'local' => 'id',
             'foreign' => 'cuenta_id'
-        ))
-
-        ;
+        ));
+        
         $this->hasMany('GrupoUsuarios as GruposUsuarios', array(
             'local' => 'id',
             'foreign' => 'cuenta_id'
@@ -38,6 +37,11 @@ class Cuenta extends Doctrine_Record {
             'local' => 'id',
             'foreign' => 'cuenta_id',
             'orderBy' => 'posicion'
+        ));
+        
+        $this->hasMany('HsmConfiguracion as HsmConfiguraciones', array(
+            'local' => 'id',
+            'foreign' => 'cuenta_id'
         ));
     }
 
