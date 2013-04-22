@@ -38,7 +38,7 @@ class Reporte extends Doctrine_Record {
         
         $CI->load->library('Excel_XML');
 
-        $excel[]=array_merge(array('id','estado','etapa_actual'), $this->campos);
+        $excel[]=array_merge(array('id','estado','etapa_actual','fecha_inicio','fecha_modificacion','fecha_termino'), $this->campos);
         
         $tramites=$this->Proceso->Tramites;
         foreach($tramites as $t){
@@ -46,7 +46,7 @@ class Reporte extends Doctrine_Record {
             foreach($t->getEtapasActuales() as $e)
                 $etapas_actuales[]=$e->Tarea->nombre;
             $etapas_actuales=  implode(',', $etapas_actuales);
-            $row=array($t->id,$t->pendiente?'pendiente':'completado',$etapas_actuales);
+            $row=array($t->id,$t->pendiente?'pendiente':'completado',$etapas_actuales,$t->created_at,$t->updated_at,$t->ended_at);
             foreach($this->campos as $c){
                 $regla=new Regla('@@'.$c);
                 $row[]=$regla->getExpresionParaOutput($t->id);
