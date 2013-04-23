@@ -20,15 +20,6 @@ class Cron extends CI_Controller {
     }
 
     public function daily() {
-        //Elimino los registros no registrados con mas de 1 dia de antiguedad y que no hayan iniciado etapas
-        $noregistrados=Doctrine_Query::create()
-                ->from('Usuario u, u.Etapas e')
-                ->where('u.registrado = 0 AND DATEDIFF(NOW(),u.updated_at) >= 1')
-                ->groupBy('u.id')
-                ->having('COUNT(e.id) = 0')
-                ->execute();     
-        $noregistrados->delete();
-        
         //Limpia los tramites que han sido iniciados por usuarios no registrados, y que llevan mas de 1 dia sin modificarse, y sin avanzar de etapa.
         $noregistrados=Doctrine_Query::create()
                 ->from('Tramite t, t.Etapas e, e.Usuario u')
@@ -37,6 +28,15 @@ class Cron extends CI_Controller {
                 ->having('COUNT(e.id) = 1')
                 ->execute();  
         $noregistrados->delete();
+        
+        //Elimino los registros no registrados con mas de 1 dia de antiguedad y que no hayan iniciado etapas
+        $noregistrados=Doctrine_Query::create()
+                ->from('Usuario u, u.Etapas e')
+                ->where('u.registrado = 0 AND DATEDIFF(NOW(),u.updated_at) >= 1')
+                ->groupBy('u.id')
+                ->having('COUNT(e.id) = 0')
+                ->execute();     
+        $noregistrados->delete();     
                 
         //Buscamos las etapas que estan por vencer, pendientes y que requieren ser notificadas
         $etapas = Doctrine_Query::create()
