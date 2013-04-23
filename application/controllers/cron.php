@@ -19,25 +19,7 @@ class Cron extends CI_Controller {
         system('cd sphinx; searchd; indexer --rotate --all');
     }
 
-    public function daily() {
-        //Limpia los tramites que han sido iniciados por usuarios no registrados, y que llevan mas de 1 dia sin modificarse, y sin avanzar de etapa.
-        $noregistrados=Doctrine_Query::create()
-                ->from('Tramite t, t.Etapas e, e.Usuario u')
-                ->where('u.registrado = 0 AND DATEDIFF(NOW(),t.updated_at) >= 1')
-                ->groupBy('t.id')
-                ->having('COUNT(e.id) = 1')
-                ->execute();  
-        $noregistrados->delete();
-        
-        //Elimino los registros no registrados con mas de 1 dia de antiguedad y que no hayan iniciado etapas
-        $noregistrados=Doctrine_Query::create()
-                ->from('Usuario u, u.Etapas e')
-                ->where('u.registrado = 0 AND DATEDIFF(NOW(),u.updated_at) >= 1')
-                ->groupBy('u.id')
-                ->having('COUNT(e.id) = 0')
-                ->execute();     
-        $noregistrados->delete();     
-                
+    public function daily() {             
         //Buscamos las etapas que estan por vencer, pendientes y que requieren ser notificadas
         $etapas = Doctrine_Query::create()
                 ->from('Etapa e, e.Tarea t')
@@ -61,6 +43,24 @@ class Cron extends CI_Controller {
         system($command);
         system('sshpass -p '.$this->config->item('backupserver_password').' scp ' . $backupName . ' '.$this->config->item('backupserver_username').'@'.$this->config->item('backupserver_ip').':'.$this->config->item('backupserver_path'));
         system('rm ' . $backupName);
+        
+        //Limpia los tramites que han sido iniciados por usuarios no registrados, y que llevan mas de 1 dia sin modificarse, y sin avanzar de etapa.
+        $noregistrados=Doctrine_Query::create()
+                ->from('Tramite t, t.Etapas e, e.Usuario u')
+                ->where('u.registrado = 0 AND DATEDIFF(NOW(),t.updated_at) >= 1')
+                ->groupBy('t.id')
+                ->having('COUNT(e.id) = 1')
+                ->execute();  
+        $noregistrados->delete();
+        
+        //Elimino los registros no registrados con mas de 1 dia de antiguedad y que no hayan iniciado etapas
+        $noregistrados=Doctrine_Query::create()
+                ->from('Usuario u, u.Etapas e')
+                ->where('u.registrado = 0 AND DATEDIFF(NOW(),u.updated_at) >= 1')
+                ->groupBy('u.id')
+                ->having('COUNT(e.id) = 0')
+                ->execute();     
+        $noregistrados->delete();   
     }
 
 }
