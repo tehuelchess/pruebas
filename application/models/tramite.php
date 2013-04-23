@@ -37,9 +37,7 @@ class Tramite extends Doctrine_Record {
         ));
     }
 
-    public function iniciar($proceso_id) {
-        $this->getTable()->cleanIniciadosPorNoRegistrados();
-        
+    public function iniciar($proceso_id) {        
         $proceso = Doctrine::getTable('Proceso')->find($proceso_id);
 
         $this->proceso_id = $proceso->id;
