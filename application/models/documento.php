@@ -57,14 +57,14 @@ class Documento extends Doctrine_Record {
         $regla = new Regla($this->contenido);
         $contenido = $regla->getExpresionParaOutput($tramite_id);
 
-        $resultado->key=$this->tipo=='certificado'?strtolower(random_string('alnum', 12)):null;
+        $resultado->llave_copia=$this->tipo=='certificado'?strtolower(random_string('alnum', 12)):null;
         $resultado->validez=$this->tipo=='certificado'?$this->validez:null;
         $filename_uniqid = uniqid();     
 
         $resultado->filename = $filename_uniqid . '.pdf';
-        $this->render($contenido, $file_id, $resultado->key, $resultado->filename, false);
+        $this->render($contenido, $file_id, $resultado->llave_copia, $resultado->filename, false);
         $filename_copia = $filename_uniqid . '.copia.pdf';
-        $this->render($contenido, $file_id, $resultado->key, $filename_copia, true);
+        $this->render($contenido, $file_id, $resultado->llave_copia, $filename_copia, true);
 
         return $resultado;
     }

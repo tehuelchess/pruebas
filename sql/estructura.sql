@@ -557,7 +557,7 @@ CREATE  TABLE IF NOT EXISTS `tramitador`.`file` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
   `filename` VARCHAR(255) NOT NULL ,
   `tipo` ENUM('dato','documento') NOT NULL ,
-  `llave` VARCHAR(40) NULL ,
+  `llave_copia` VARCHAR(40) NULL ,
   `validez` INT UNSIGNED NULL ,
   `tramite_id` INT UNSIGNED NOT NULL ,
   `created_at` DATETIME NULL ,

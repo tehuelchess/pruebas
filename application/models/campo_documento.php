@@ -41,7 +41,7 @@ class CampoDocumento extends Campo {
             
             $res=$this->Documento->generar($file->id,$file->tramite_id);
             
-            $file->llave=$res->key;
+            $file->llave_copia=$res->llave_copia;
             $file->validez=$res->validez;
             $file->filename = $res->filename;
             $file->save();
