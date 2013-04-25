@@ -5,6 +5,8 @@ class MY_Controller extends CI_Controller {
     function __construct(){
         parent::__construct();
         
+        $this->force_cuenta();
+        
         if($this->config->item('https'))
             $this->force_ssl();
         
@@ -12,6 +14,12 @@ class MY_Controller extends CI_Controller {
         
         $this->force_email();
         
+    }
+    
+    //Fuerza a que se este ingresando en un dominio con una cuenta valida
+    private function force_cuenta(){
+        if(!Cuenta::cuentaSegunDominio())
+            exit;
     }
     
     private function force_ssl(){
