@@ -6,7 +6,7 @@ class File extends Doctrine_Record {
         $this->hasColumn('id');
         $this->hasColumn('filename');
         $this->hasColumn('tipo');
-        $this->hasColumn('llave');
+        $this->hasColumn('llave_copia');
         $this->hasColumn('validez');
         $this->hasColumn('tramite_id');
     }
@@ -26,11 +26,11 @@ class File extends Doctrine_Record {
 
     }
     
-    public function setLlave($llave){
+    public function setLlaveCopia($llave){
         if($llave)
-            $this->_set('llave',sha1($llave));
+            $this->_set('llave_copia',sha1($llave));
         else
-            $this->_set('llave',null);
+            $this->_set('llave_copia',null);
     }
 
 }
