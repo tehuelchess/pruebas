@@ -10,11 +10,11 @@
             <div class="container">
                 <div class="row">
                     <div class="span2">
-                        <h1 id="logo"><a href="<?= site_url() ?>"><img src="<?= Cuenta::cuentaSegunDominio() ? Cuenta::cuentaSegunDominio()->logoADesplegar : base_url('assets/img/logo.png') ?>" alt="<?= Cuenta::cuentaSegunDominio() ? Cuenta::cuentaSegunDominio()->nombre_largo : 'Simple' ?>" /></a></h1>
+                        <h1 id="logo"><a href="<?= site_url() ?>"><img src="<?= Cuenta::cuentaSegunDominio()!='localhost' ? Cuenta::cuentaSegunDominio()->logoADesplegar : base_url('assets/img/logo.png') ?>" alt="<?= Cuenta::cuentaSegunDominio()!='localhost' ? Cuenta::cuentaSegunDominio()->nombre_largo : 'Simple' ?>" /></a></h1>
                     </div>
                     <div class="span3">
-                        <h1><?= Cuenta::cuentaSegunDominio() ? Cuenta::cuentaSegunDominio()->nombre_largo : '' ?></h1>
-                        <p><?= Cuenta::cuentaSegunDominio() ? Cuenta::cuentaSegunDominio()->mensaje : '' ?></p>
+                        <h1><?= Cuenta::cuentaSegunDominio()!='localhost' ? Cuenta::cuentaSegunDominio()->nombre_largo : '' ?></h1>
+                        <p><?= Cuenta::cuentaSegunDominio()!='localhost' ? Cuenta::cuentaSegunDominio()->mensaje : '' ?></p>
                     </div>
                     <div class="offset4 span3">
                         <ul id="userMenu" class="nav nav-pills pull-right">
