@@ -65,16 +65,14 @@ class Cuenta extends Doctrine_Record {
         if ($firstTime) {
             $firstTime=false;
             $CI = &get_instance();
-            preg_match('/(.+)(\.chilesinpapeleo\.cl)?/', $CI->input->server('HTTP_HOST'), $matches);
-            $dominio = null;
-            if (isset($matches[1])){
-                if($matches[1] == 'localhost' || $matches[1] == 'simple'){
+            $host=$CI->input->server('HTTP_HOST');
+            preg_match('/(.+)\.chilesinpapeleo\.cl/', $host, $matches);
+                if($host == 'localhost' || (isset($matches[1]) && $matches[1] == 'simple')){
                     $cuentaSegunDominio='localhost';
-                }else{
-                    $dominio = $matches[1];
-                    $cuentaSegunDominio = Doctrine::getTable('Cuenta')->findOneByNombre($dominio);
+                }else if (isset ($matches[1])){
+                    $cuentaSegunDominio = Doctrine::getTable('Cuenta')->findOneByNombre($matches[1]);
                 }
-            }
+            
                 
         }
 
