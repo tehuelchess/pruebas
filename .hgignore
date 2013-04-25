@@ -8,3 +8,4 @@ application/libraries/tcpdf/cache
 sphinx/index
 sphinx/run
 sphinx.conf
+searchd.log
