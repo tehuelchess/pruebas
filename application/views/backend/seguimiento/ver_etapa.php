@@ -39,7 +39,12 @@
                 <legend><?= $etapa->Tarea->Pasos[$paso]->Formulario->nombre ?></legend>
                 <?php foreach ($etapa->Tarea->Pasos[$paso]->Formulario->Campos as $c): ?>
                     <div class="control-group campo" data-id="<?= $c->id ?>" <?= $c->dependiente_campo ? 'data-dependiente-campo=' . $c->dependiente_campo : '' ?> <?= $c->dependiente_valor ? 'data-dependiente-valor=' . $c->dependiente_valor : '' ?> data-readonly="<?=$etapa->Tarea->Pasos[$paso]->modo=='visualizacion' || $c->readonly?>" >
-                        <?= $c->displayConDatoSeguimiento($etapa->id,$etapa->Tarea->Pasos[$paso]->modo) ?>
+                        <?php
+                            if($etapa->pendiente)
+                                echo $c->displayConDato($etapa->id,$etapa->Tarea->Pasos[$paso]->modo);
+                            else
+                                echo $c->displayConDatoSeguimiento($etapa->id,$etapa->Tarea->Pasos[$paso]->modo);                                
+                        ?>
                     </div>
                 <?php endforeach ?>
                 <div class="form-actions">
