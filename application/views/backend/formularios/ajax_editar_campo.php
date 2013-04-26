@@ -84,14 +84,17 @@
         <?php if(!$campo->estatico):?>
         <label>Nombre</label>
         <input type="text" name="nombre" value="<?= $campo->nombre ?>" />
+        <?php $campos_asistencia=$formulario->Proceso->getCampos($campo->tipo) ?>
+        <?php if($campos_asistencia->count()):?>
         <div class="btn-group asistencia" style="display: inline-block; vertical-align: top;">
             <a class="btn dropdown-toggle" data-toggle="dropdown" href="#"><i class="icon-th-list"></i><span class="caret"></span></a>
             <ul class="dropdown-menu">
-                <?php foreach ($formulario->Proceso->getCampos() as $c): ?>
+                <?php foreach ($campos_asistencia as $c): ?>
                     <li><a href="#"><?= $c->nombre ?></a></li>
                 <?php endforeach; ?>
             </ul>
         </div>
+        <?php endif ?>
         <?php else: ?>
         <input type="hidden" name="nombre" value="<?=$campo->nombre?$campo->nombre:uniqid();?>" />
         <?php endif; ?>

@@ -7,7 +7,7 @@ class CampoDocumento extends Campo {
     function setTableDefinition() {
         parent::setTableDefinition();
         
-        $this->hasColumn('estatico','bool',1,array('default'=>1));
+        $this->hasColumn('estatico','bool',1,array('default'=>0));
         $this->hasColumn('readonly','bool',1,array('default'=>1));
     }
     
@@ -15,9 +15,9 @@ class CampoDocumento extends Campo {
         parent::setUp();
         $this->setTableName("campo");
     }
-
+    
     public function setEstatico($estatico){
-        $this->_set('estatico', 1);
+        $this->_set('estatico', 0);
     }
 
     public function setReadonly($readonly) {
