@@ -81,7 +81,7 @@
         <?php endif; ?>
         <label>Etiqueta</label>
         <input type="text" name="etiqueta" value="<?= htmlspecialchars($campo->etiqueta) ?>" />
-        <?php if(!$campo->estatico):?>
+        <?php if($campo->requiere_nombre):?>
         <label>Nombre</label>
         <input type="text" name="nombre" value="<?= $campo->nombre ?>" />
         <?php $campos_asistencia=$formulario->Proceso->getCampos($campo->tipo) ?>

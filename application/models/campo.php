@@ -1,8 +1,10 @@
 <?php
 
 class Campo extends Doctrine_Record {
-        
-    public $requiere_datos=true;
+    
+    public $requiere_datos=true;    //Indica si requiere datos seleccionables. Como las opciones de un checkbox, select, etc.
+    public $estatico=false; //Indica si es un campo estatico, es decir que no es un input con informacion. Ej: Parrafos, titulos, etc.
+    public $requiere_nombre=true;    //Indica si requiere que se le ingrese un nombre (Es decir, no generarlo aleatoriamente)
     
     public static function factory($tipo){
         if($tipo=='text')
@@ -51,7 +53,6 @@ class Campo extends Doctrine_Record {
         $this->hasColumn('dependiente_valor');
         $this->hasColumn('datos');
         $this->hasColumn('readonly');           //Indica que en este campo solo se mostrara la informacion.
-        $this->hasColumn('estatico');           //Indica si es un campo estatico, es decir que no es un input con informacion. Ej: Parrafos, titulos, etc.
         $this->hasColumn('valor_default');
         $this->hasColumn('documento_id');
         $this->hasColumn('extra');
