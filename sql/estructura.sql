@@ -348,6 +348,7 @@ CREATE  TABLE IF NOT EXISTS `tramitador`.`campo` (
   `formulario_id` INT(10) UNSIGNED NOT NULL ,
   `etiqueta` TEXT NOT NULL ,
   `validacion` VARCHAR(128) NOT NULL ,
+  `ayuda` TEXT NOT NULL ,
   `dependiente_tipo` ENUM('string','regex') NULL DEFAULT 'string' ,
   `dependiente_campo` VARCHAR(64) NULL ,
   `dependiente_valor` VARCHAR(256) NULL ,
