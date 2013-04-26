@@ -49,17 +49,25 @@ class Uploader extends MY_Controller {
 
     function datos_get() {
         $filename=$this->input->get('filename');
-        
         $filename=urldecode($filename);
         
-        $file=  Doctrine_Query::create()
+        //Chequeamos los permisos en el frontend
+        $file=Doctrine_Query::create()
                 ->from('File f, f.Tramite t, t.Etapas e, e.Usuario u')
                 ->where('f.filename = ? AND f.tipo = ? AND u.id = ?',array($filename,'dato',UsuarioSesion::usuario()->id))
                 ->fetchOne();
         
         if(!$file){
-            echo 'Usuario no tiene permisos para ver este archivo.';
-            exit;
+            //Chequeamos permisos en el backend
+            $file=Doctrine_Query::create()
+                ->from('File f, f.Tramite.Proceso.Cuenta.UsuariosBackend u')
+                ->where('f.filename = ? AND f.tipo = ? AND u.id = ? AND (u.rol="super" OR u.rol="operacion")',array($filename,'dato',UsuarioBackendSesion::usuario()->id))
+                ->fetchOne();
+            
+            if(!$file){
+                echo 'Usuario no tiene permisos para ver este archivo.';
+                exit;
+            }
         }
         
         $path='uploads/datos/'.$filename;
