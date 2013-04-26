@@ -120,6 +120,9 @@ footer .area2 .container-fluid .footerGob {
   font-weight: bold;
 }
 .dynaForm label {
+  color: #666;
+}
+.dynaForm .help-block {
   color: #999;
 }
 .dynaForm .form-actions {

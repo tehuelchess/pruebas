@@ -14,6 +14,8 @@ class CampoComunas extends Campo{
         $display.='<select class="comunas" data-id="'.$this->id.'" name="' . $this->nombre . '[comuna]" ' . ($modo == 'visualizacion' ? 'disabled' : '') . '>';
         $display.='<option value="">Seleccione comuna</option>';
         $display.='</select>';
+        if($this->ayuda)
+            $display.='<span class="help-block">'.$this->ayuda.'</span>';
         $display.='</div>';
 
         $display.='

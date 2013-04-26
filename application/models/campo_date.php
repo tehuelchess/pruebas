@@ -9,6 +9,8 @@ class CampoDate extends Campo{
         $display.='<div class="controls">';
         $display.='<input id="'.$this->id.'" '.($modo=='visualizacion'?'disabled':'').' class="datepicker" ' . ($modo == 'visualizacion' ? 'disabled' : '') . ' type="text" value="' . ($dato && $dato->valor?date('d/m/Y',strtotime($dato->valor)):'') . '" />';
         $display.='<input type="hidden" name="'.$this->nombre.'" value="'.($dato?$dato->valor:'').'" />';
+        if($this->ayuda)
+            $display.='<span class="help-block">'.$this->ayuda.'</span>';
         $display.='</div>';
         
         return $display;

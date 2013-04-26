@@ -11,6 +11,8 @@ class CampoSelect extends Campo {
             $display.='<option value="' . $d->valor . '" ' . ($dato && $d->valor == $dato->valor ? 'selected' : '') . '>' . $d->etiqueta . '</option>';
         }
         $display.='</select>';
+        if($this->ayuda)
+            $display.='<span class="help-block">'.$this->ayuda.'</span>';
         $display.='</div>';
 
         return $display;

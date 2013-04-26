@@ -14,6 +14,8 @@ class CampoInstitucionesGob extends Campo{
         $display.='<select class="instituciones" data-id="'.$this->id.'" name="' . $this->nombre . '[servicio]" ' . ($modo == 'visualizacion' ? 'disabled' : '') . '>';
         $display.='<option></option>';
         $display.='</select>';
+        if($this->ayuda)
+            $display.='<span class="help-block">'.$this->ayuda.'</span>';
         $display.='</div>';
 
         $display.='

@@ -99,6 +99,11 @@
         <input type="hidden" name="nombre" value="<?=$campo->nombre?$campo->nombre:uniqid();?>" />
         <?php endif; ?>
 
+        <?php if(!$campo->estatico):?>
+        <label>Ayuda contextual (Opcional)</label>
+        <input type="text" class="input-xxlarge" name="ayuda" />
+        <?php endif ?>
+        
         <?php if (!$campo->estatico): ?>
             <label class="checkbox"><input type="checkbox" name="readonly" value="1" <?=$campo->readonly?'checked':''?> /> Solo lectura</label>
         <?php endif; ?>
