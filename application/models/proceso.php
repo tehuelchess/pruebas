@@ -111,20 +111,23 @@ class Proceso extends Doctrine_Record {
     }
     
     //Obtiene todos los campos asociados a este proceso
-    public function getCampos($excluir_estaticos=true){
+    public function getCampos($tipo=null,$excluir_estaticos=true){
         $query= Doctrine_Query::create()
                 ->from('Campo c, c.Formulario f, f.Proceso p')
                 ->where('p.id = ?',$this->id);
         
+        if($tipo)
+            $query->andWhere('c.tipo = ?',$tipo);
+        
         if($excluir_estaticos)
             $query->andWhere('c.estatico = 0');
-       
+        
         return $query->execute();
     }
     
     //Retorna una arreglo con todos los nombres usados en los campos de este proceso.
-    public function getNombresDeCampos($excluir_estaticos=true){
-        $campos=$this->getCampos($excluir_estaticos);
+    public function getNombresDeCampos($tipo=null, $excluir_estaticos=true){
+        $campos=$this->getCampos($tipo, $excluir_estaticos);
         
         //Los insertamos a un arreglo.
         $nombres_de_campos=array();
