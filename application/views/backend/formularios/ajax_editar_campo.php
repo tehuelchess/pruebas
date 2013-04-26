@@ -102,7 +102,7 @@
         <?php if (!$campo->estatico): ?>
             <label class="checkbox"><input type="checkbox" name="readonly" value="1" <?=$campo->readonly?'checked':''?> /> Solo lectura</label>
         <?php endif; ?>
-        <?php if (!$campo->readonly): ?>
+        <?php if (!$campo->estatico): ?>
             <label>Reglas de validación</label>
             <input type="text"
                    name="validacion"
