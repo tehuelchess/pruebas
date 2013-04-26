@@ -100,7 +100,7 @@
         <?php endif; ?>
 
         <?php if (!$campo->estatico): ?>
-            <label><input type="checkbox" name="readonly" value="1" <?=$campo->readonly?'checked':''?> /> Solo lectura</label>
+            <label class="checkbox"><input type="checkbox" name="readonly" value="1" <?=$campo->readonly?'checked':''?> /> Solo lectura</label>
         <?php endif; ?>
         <?php if (!$campo->readonly): ?>
             <label>Reglas de validación</label>
