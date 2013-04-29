@@ -1,6 +1,7 @@
 <ul class="breadcrumb">
-    <li><a href="<?=site_url('backend/seguimiento')?>">Listado de Trámites</a> <span class="divider">/</span></li>
-    <li><a href="<?=site_url('backend/seguimiento/ver/'.$etapa->tramite_id)?>"><?=$etapa->Tramite->Proceso->nombre?></a> <span class="divider">/</span></li>
+    <li><a href="<?=site_url('backend/seguimiento')?>">Seguimiento de Procesos</a> <span class="divider">/</span></li>
+    <li><a href="<?=site_url('backend/seguimiento/index_proceso/'.$etapa->Tramite->proceso_id)?>"><?=$etapa->Tramite->Proceso->nombre?></a> <span class="divider">/</span></li>
+    <li class="active"><a href="<?=site_url('backend/seguimiento/ver/'.$etapa->tramite_id)?>">Trámite # <?= $etapa->tramite_id ?></a> <span class="divider">/</span></li></li>
     <li><a href="<?=site_url('backend/seguimiento/ver_etapa/'.$etapa->id)?>"><?=$etapa->Tarea->nombre?></a> <span class="divider">/</span></li>
     <li class="active">Paso <?=$paso+1?></li>
 </ul>
