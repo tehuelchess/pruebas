@@ -1,6 +1,6 @@
 $(document).ready(function(){
     
-});
+    });
 
 function drawSeguimiento(actuales, completadas){
     $(completadas).each(function(i,el){

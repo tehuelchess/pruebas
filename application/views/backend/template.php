@@ -46,6 +46,7 @@
             var base_url = "<?= base_url() ?>";
         </script>
         <script src="<?= base_url() ?>assets/js/common.js" type="text/javascript"></script>
+        <script src="<?= base_url() ?>assets/js/backend.js" type="text/javascript"></script>
 
 
     </head>
