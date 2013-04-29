@@ -43,13 +43,13 @@ class CampoDocumento extends Campo {
             $file->filename = $res->filename;
             $file->save();
             
-            $dato = Doctrine::getTable('Dato')->findOneByTramiteIdAndNombre($etapa->Tramite->id, $this->nombre);
+            $dato = Doctrine::getTable('DatoSeguimiento')->findOneByNombreAndEtapaId($this->nombre,$etapa->id);
             if (!$dato)
-                $dato = new Dato();
+                $dato = new DatoSeguimiento();
             $dato->nombre = $this->nombre;
             $dato->valor = $file->filename;
-            $dato->tramite_id = $etapa->Tramite->id;
-            $dato->save(null,$etapa);
+            $dato->etapa_id = $etapa->id;
+            $dato->save();
             
             
             Doctrine_Manager::connection()->commit();

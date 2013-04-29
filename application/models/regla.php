@@ -35,7 +35,7 @@ class Regla {
                     $obj_accesor=isset($match[4])?$match[4]:null;
                     $arr_accesor=isset($match[6])?$match[6]:null;
                     
-                    $dato = Doctrine::getTable('Dato')->findOneByTramiteIdAndNombre($tramite_id, $nombre_dato);                    
+                    $dato = Doctrine::getTable('DatoSeguimiento')->findByNombrePorTramite($nombre_dato,$tramite_id);                    
                     if ($dato) {
                         if($obj_accesor!=null)
                             $valor_dato = var_export($dato->valor->{$obj_accesor},true);
@@ -90,7 +90,7 @@ class Regla {
                     $obj_accesor=isset($match[4])?$match[4]:null;
                     $arr_accesor=isset($match[6])?$match[6]:null;
                     //echo $arr_accesor;
-                    $dato = Doctrine::getTable('Dato')->findOneByTramiteIdAndNombre($tramite_id, $nombre_dato);
+                    $dato = Doctrine::getTable('DatoSeguimiento')->findByNombrePorTramite($nombre_dato,$tramite_id);
                     if ($dato) {
                         $dato_almacenado = $dato->valor;
                         if($obj_accesor!=null)

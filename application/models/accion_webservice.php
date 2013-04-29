@@ -37,13 +37,13 @@ class AccionWebservice extends Accion {
         $json=json_decode($result);
         
         foreach($json as $key=>$value){
-            $dato=Doctrine::getTable('Dato')->findOneByNombreAndTramiteId($key,$etapa->tramite_id);
+            $dato=Doctrine::getTable('DatoSeguimiento')->findOneByNombreAndEtapaId($key,$etapa->id);
             if(!$dato)
-                $dato=new Dato();
+                $dato=new DatoSeguimiento();
             $dato->nombre=$key;
             $dato->valor=$value;
-            $dato->tramite_id=$etapa->tramite_id;
-            $dato->save(null,$etapa);
+            $dato->etapa_id=$etapa->id;
+            $dato->save();
         }        
         
     }

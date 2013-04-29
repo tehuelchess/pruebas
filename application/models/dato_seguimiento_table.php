@@ -15,4 +15,14 @@ class DatoSeguimientoTable extends Doctrine_Table{
                 ->fetchOne();
     }
     
+    //Busca el valor del dato en el tramite $tramite_id
+    public function findByNombrePorTramite($nombre,$tramite_id){        
+        return Doctrine_Query::create()
+                ->from('DatoSeguimiento d, d.Etapa.Tramite t')
+                ->where('d.nombre = ?',$nombre)
+                ->andWhere('t.id = ?',$tramite_id)
+                ->orderBy('d.id DESC')
+                ->fetchOne();
+    }
+    
 }

@@ -27,13 +27,13 @@ class AccionVariable extends Accion {
         $regla=new Regla($this->extra->expresion);
         $valor=$regla->evaluar($etapa->tramite_id);
         
-        $dato = Doctrine::getTable('Dato')->findOneByTramiteIdAndNombre($etapa->tramite_id, $this->extra->variable);
+        $dato = Doctrine::getTable('DatoSeguimiento')->findOneByNombreAndEtapaId($this->extra->variable,$etapa->id);
         if (!$dato)
-            $dato = new Dato();
+            $dato = new DatoSeguimiento();
         $dato->nombre = $this->extra->variable;
         $dato->valor = $valor;
-        $dato->tramite_id = $etapa->tramite_id;
-        $dato->save(null,$etapa);
+        $dato->etapa_id = $etapa->id;
+        $dato->save();
     }
 
 }
