@@ -69,6 +69,14 @@ class Tramite extends Doctrine_Record {
                         ->execute();
     }
     
+    public function getUltimaEtapa() {
+        return Doctrine_Query::create()
+                        ->from('Etapa e, e.Tramite t')
+                        ->where('t.id = ?', $this->id)
+                        ->orderBy('e.id DESC')
+                        ->fetchOne();
+    }
+    
     public function getTareasActuales() {
         return Doctrine_Query::create()
                         ->from('Tarea tar, tar.Etapas e, e.Tramite t')

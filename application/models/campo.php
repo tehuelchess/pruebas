@@ -93,18 +93,6 @@ class Campo extends Doctrine_Record {
         ));
     }
     
-    //Despliega la vista de un campo del formulario utilizando el dato real del tramite en este momento
-    //etapa_id indica a la etapa que pertenece este campo
-    //modo es visualizacion o edicion
-    public function displayConDato($etapa_id, $modo = 'edicion'){
-        $dato = NULL;
-        $etapa=Doctrine::getTable('Etapa')->find($etapa_id);
-        $dato =Doctrine::getTable('DatoSeguimiento')->findByNombrePorTramite($this->nombre,$etapa->tramite_id);
-        if($this->readonly)$modo='visualizacion';
-        
-        return $this->display($modo,$dato,$etapa_id);
-    }
-    
     //Despliega la vista de un campo del formulario utilizando los datos de seguimiento (El dato que contenia el tramite al momento de cerrar la etapa)
     //etapa_id indica a la etapa que pertenece este campo
     //modo es visualizacion o edicion

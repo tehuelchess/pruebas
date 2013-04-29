@@ -11,11 +11,11 @@ class Regla {
     
 
     //Evalua la regla de acuerdo a los datos capturados en el tramite tramite_id
-    public function evaluar($tramite_id) {
+    public function evaluar($etapa_id) {
         if (!$this->regla)
             return TRUE;
 
-        $new_regla = $this->getExpresionParaEvaluar($tramite_id);   
+        $new_regla = $this->getExpresionParaEvaluar($etapa_id);   
         $new_regla = 'return ' . $new_regla . ';';
         $CI = & get_instance();
         $CI->load->library('SaferEval');
@@ -28,14 +28,14 @@ class Regla {
     
     //Obtiene la expresion con los reemplazos de variables ya hechos de acuerdo a los datos capturados en el tramite tramite_id.
     //Esta expresion es la que se evalua finalmente en la regla
-    public function getExpresionParaEvaluar($tramite_id){
+    public function getExpresionParaEvaluar($etapa_id){
         $new_regla=$this->regla;
-        $new_regla=preg_replace_callback('/@@(\w+)((->(\w+))|(\[(\w+)\]))?/', function($match) use ($tramite_id) {
+        $new_regla=preg_replace_callback('/@@(\w+)((->(\w+))|(\[(\w+)\]))?/', function($match) use ($etapa_id) {
                     $nombre_dato = $match[1];
                     $obj_accesor=isset($match[4])?$match[4]:null;
                     $arr_accesor=isset($match[6])?$match[6]:null;
                     
-                    $dato = Doctrine::getTable('DatoSeguimiento')->findByNombrePorTramite($nombre_dato,$tramite_id);                    
+                    $dato = Doctrine::getTable('DatoSeguimiento')->findByNombreHastaEtapa($nombre_dato,$etapa_id);                    
                     if ($dato) {
                         if($obj_accesor!=null)
                             $valor_dato = var_export($dato->valor->{$obj_accesor},true);
@@ -52,7 +52,7 @@ class Regla {
                     return $valor_dato;
                 }, $new_regla);
                 
-         $new_regla=preg_replace_callback('/@!(\w+)/', function($match) use ($tramite_id) {
+         $new_regla=preg_replace_callback('/@!(\w+)/', function($match) use ($etapa_id) {
                     $nombre_dato = $match[1];
                     $usuario=UsuarioSesion::usuario();
                     if($nombre_dato=='rut')
@@ -70,7 +70,7 @@ class Regla {
                     else if($nombre_dato=='email')
                         return "'".$usuario->email."'";
                     else if($nombre_dato=='tramite_id'){
-                        return "'".$tramite_id."'";
+                        return "'".Doctrine::getTable('Etapa')->find($etapa_id)->tramite_id."'";
                     }
                 }, $new_regla);
                 
@@ -83,14 +83,14 @@ class Regla {
     
     //Obtiene la expresion con los reemplazos de variables ya hechos de acuerdo a los datos capturados en el tramite tramite_id.
     //Esta es una representacion con las variables reemplazadas. No es una expresion evaluable. (Los arrays y strings no estan definidos como tal)
-    public function getExpresionParaOutput($tramite_id){
+    public function getExpresionParaOutput($etapa_id){
         $new_regla=$this->regla;     
-        $new_regla=preg_replace_callback('/@@(\w+)((->(\w+))|(\[(\w+)\]))?/', function($match) use ($tramite_id) {
+        $new_regla=preg_replace_callback('/@@(\w+)((->(\w+))|(\[(\w+)\]))?/', function($match) use ($etapa_id) {
                     $nombre_dato = $match[1];
                     $obj_accesor=isset($match[4])?$match[4]:null;
                     $arr_accesor=isset($match[6])?$match[6]:null;
                     //echo $arr_accesor;
-                    $dato = Doctrine::getTable('DatoSeguimiento')->findByNombrePorTramite($nombre_dato,$tramite_id);
+                    $dato = Doctrine::getTable('DatoSeguimiento')->findByNombreHastaEtapa($nombre_dato,$etapa_id);
                     if ($dato) {
                         $dato_almacenado = $dato->valor;
                         if($obj_accesor!=null)
@@ -112,7 +112,7 @@ class Regla {
                     return $valor_dato;
                 }, $new_regla);
          
-         $new_regla=preg_replace_callback('/@!(\w+)/', function($match) use ($tramite_id) {
+         $new_regla=preg_replace_callback('/@!(\w+)/', function($match) use ($etapa_id) {
                     $nombre_dato = $match[1];
                     $usuario=UsuarioSesion::usuario();
                     if($nombre_dato=='rut')
@@ -130,7 +130,7 @@ class Regla {
                     else if($nombre_dato=='email')
                         return $usuario->email;
                     else if($nombre_dato=='tramite_id'){
-                        return $tramite_id;
+                        return Doctrine::getTable('Etapa')->find($etapa_id)->tramite_id;
                     }
                 }, $new_regla);
           

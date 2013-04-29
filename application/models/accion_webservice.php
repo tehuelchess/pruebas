@@ -26,7 +26,7 @@ class AccionWebservice extends Accion {
 
     public function ejecutar(Etapa $etapa) {
         $r=new Regla($this->extra->url);
-        $url=$r->getExpresionParaOutput($etapa->tramite_id);
+        $url=$r->getExpresionParaOutput($etapa->id);
         
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);

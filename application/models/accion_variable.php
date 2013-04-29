@@ -25,7 +25,7 @@ class AccionVariable extends Accion {
 
     public function ejecutar(Etapa $etapa) {
         $regla=new Regla($this->extra->expresion);
-        $valor=$regla->evaluar($etapa->tramite_id);
+        $valor=$regla->evaluar($etapa->id);
         
         $dato = Doctrine::getTable('DatoSeguimiento')->findOneByNombreAndEtapaId($this->extra->variable,$etapa->id);
         if (!$dato)

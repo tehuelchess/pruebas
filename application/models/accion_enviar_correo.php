@@ -25,11 +25,11 @@ class AccionEnviarCorreo extends Accion {
 
     public function ejecutar(Etapa $etapa) {
         $regla=new Regla($this->extra->para);
-        $to=$regla->getExpresionParaOutput($etapa->tramite_id);
+        $to=$regla->getExpresionParaOutput($etapa->id);
         $regla=new Regla($this->extra->tema);
-        $subject=$regla->getExpresionParaOutput($etapa->tramite_id);
+        $subject=$regla->getExpresionParaOutput($etapa->id);
         $regla=new Regla($this->extra->contenido);
-        $message=$regla->getExpresionParaOutput($etapa->tramite_id);
+        $message=$regla->getExpresionParaOutput($etapa->id);
         
         $CI = & get_instance();
         $CI->email->from('simple@chilesinpapeleo.cl', 'Simple');

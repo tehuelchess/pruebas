@@ -79,7 +79,7 @@ class Etapa extends Doctrine_Record {
                             $usuario_asignado_id = $usuarios_a_asignar[$tarea_proxima->id];
                         } else if ($tarea_proxima->asignacion == 'usuario') {
                             $regla = new Regla($tarea_proxima->asignacion_usuario);
-                            $u = $regla->evaluar($this->Tramite->id);
+                            $u = $regla->evaluar($this->id);
                             $usuario_asignado_id = $u;
                         }
 
@@ -116,7 +116,7 @@ class Etapa extends Doctrine_Record {
 
         //$tareas = null;
         foreach ($conexiones as $c) {
-            if ($c->evaluarRegla($this->Tramite->id)) {
+            if ($c->evaluarRegla($this->id)) {
                 //Si no hay destino es el fin del tramite.
                 if (!$c->tarea_id_destino) {
                     $resultado->tareas = null;
@@ -211,7 +211,7 @@ class Etapa extends Doctrine_Record {
         foreach ($this->Tarea->Eventos as $e) {
             if ($e->instante == 'antes') {
                 $r = new Regla($e->regla);
-                if ($r->evaluar($this->tramite_id))
+                if ($r->evaluar($this->id))
                     $e->Accion->ejecutar($this);
             }
         }
@@ -236,7 +236,7 @@ class Etapa extends Doctrine_Record {
         foreach ($this->Tarea->Eventos as $e) {
             if ($e->instante == 'despues') {
                 $r = new Regla($e->regla);
-                if ($r->evaluar($this->tramite_id))
+                if ($r->evaluar($this->id))
                     $e->Accion->ejecutar($this);
             }
         }
@@ -264,7 +264,7 @@ class Etapa extends Doctrine_Record {
         $pasos = array();
         foreach ($this->Tarea->Pasos as $p) {
             $r = new Regla($p->regla);
-            if ($r->evaluar($this->tramite_id))
+            if ($r->evaluar($this->id))
                 $pasos[] = $p;
         }
 
@@ -304,7 +304,7 @@ class Etapa extends Doctrine_Record {
         foreach ($paso->Eventos as $e) {
             if ($e->instante == 'antes') {
                 $r = new Regla($e->regla);
-                if ($r->evaluar($this->tramite_id))
+                if ($r->evaluar($this->id))
                     $e->Accion->ejecutar($this);
             }
         }
@@ -315,7 +315,7 @@ class Etapa extends Doctrine_Record {
         foreach ($paso->Eventos as $e) {
             if ($e->instante == 'despues') {
                 $r = new Regla($e->regla);
-                if ($r->evaluar($this->tramite_id))
+                if ($r->evaluar($this->id))
                     $e->Accion->ejecutar($this);
             }
         }
