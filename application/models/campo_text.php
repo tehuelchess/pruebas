@@ -8,7 +8,7 @@ class CampoText extends Campo{
         if($etapa_id){
             $etapa=Doctrine::getTable('Etapa')->find($etapa_id);
             $regla=new Regla($this->valor_default);
-            $valor_default=$regla->getExpresionParaOutput($etapa->tramite_id);
+            $valor_default=$regla->getExpresionParaOutput($etapa->id);
         }else{
             $valor_default=$this->valor_default;
         }

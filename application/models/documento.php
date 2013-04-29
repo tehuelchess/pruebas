@@ -53,9 +53,9 @@ class Documento extends Doctrine_Record {
         $this->_set('hsm_configuracion_id', $hsm_configuracion_id);
     }
 
-    public function generar($file_id, $tramite_id) {
+    public function generar($file_id, $etapa_id) {
         $regla = new Regla($this->contenido);
-        $contenido = $regla->getExpresionParaOutput($tramite_id);
+        $contenido = $regla->getExpresionParaOutput($etapa_id);
 
         $resultado->llave_copia=$this->tipo=='certificado'?strtolower(random_string('alnum', 12)):null;
         $resultado->validez=$this->tipo=='certificado'?$this->validez:null;

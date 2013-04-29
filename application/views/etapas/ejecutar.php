@@ -7,7 +7,7 @@
         <legend><?=$paso->Formulario->nombre?></legend>
         <?php foreach($paso->Formulario->Campos as $c):?>
             <div class="campo control-group" data-id="<?=$c->id?>" <?= $c->dependiente_campo ? 'data-dependiente-campo="' . $c->dependiente_campo.'" data-dependiente-valor="' . $c->dependiente_valor .'" data-dependiente-tipo="' . $c->dependiente_tipo.'"' : '' ?> data-readonly="<?=$paso->modo=='visualizacion' || $c->readonly?>" >
-            <?=$c->displayConDato($etapa->id,$paso->modo)?>
+            <?=$c->displayConDatoSeguimiento($etapa->id,$paso->modo)?>
             </div>
         <?php endforeach ?>
         <div class="form-actions">

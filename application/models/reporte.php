@@ -49,7 +49,7 @@ class Reporte extends Doctrine_Record {
             $row=array($t->id,$t->pendiente?'pendiente':'completado',$etapas_actuales,$t->created_at,$t->updated_at,$t->ended_at);
             foreach($this->campos as $c){
                 $regla=new Regla('@@'.$c);
-                $row[]=$regla->getExpresionParaOutput($t->id);
+                $row[]=$regla->getExpresionParaOutput($t->getUltimaEtapa()->id);
             }
             $excel[]=$row;
         }

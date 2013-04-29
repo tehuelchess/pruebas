@@ -22,7 +22,7 @@ class CampoSubtitle extends Campo{
         if($etapa_id){
             $etapa=Doctrine::getTable('Etapa')->find($etapa_id);
             $regla=new Regla($this->etiqueta);
-            $etiqueta=$regla->getExpresionParaOutput($etapa->tramite_id);
+            $etiqueta=$regla->getExpresionParaOutput($etapa->id);
         }else{
             $etiqueta=$this->etiqueta;
         }
