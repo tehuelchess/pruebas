@@ -110,7 +110,7 @@ class Campo extends Doctrine_Record {
     //modo es visualizacion o edicion
     public function displayConDatoSeguimiento($etapa_id, $modo = 'edicion'){
         $dato = NULL;
-        $dato =  Doctrine::getTable('DatoSeguimiento')->findOneByEtapaIdAndNombre($etapa_id, $this->nombre);
+        $dato =  Doctrine::getTable('DatoSeguimiento')->findByNombreHastaEtapa($this->nombre,$etapa_id);
         if($this->readonly)$modo='visualizacion';
         
         return $this->display($modo,$dato,$etapa_id);
