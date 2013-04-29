@@ -81,6 +81,26 @@ class Usuario extends Doctrine_Record {
         return $this->usuario;
     }
     
+    public function displayUsername(){
+        if($this->open_id)
+            return $this->rut;
+        
+        return $this->usuario;
+    }
+    
+    public function displayInfo(){
+        $html='
+            <ul style=\'text-align: left;\'>
+                <li>Nombres: '.$this->nombres.'</li>
+                <li>Apellido Paterno: '.$this->apellido_paterno.'</li>
+                <li>Apellido Materno: '.$this->apellido_materno.'</li>
+                <li>E-Mail: '.$this->email.'</li>
+            </ul>
+        ';
+                
+         return $html;
+    }
+    
     public function setResetToken($llave){
         if($llave)
             $this->_set('reset_token',sha1($llave));
