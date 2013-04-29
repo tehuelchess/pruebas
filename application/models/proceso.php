@@ -127,7 +127,7 @@ class Proceso extends Doctrine_Record {
     
     //Retorna una arreglo con todos los nombres usados en los campos de este proceso.
     public function getNombresDeCampos($tipo=null, $excluir_readonly=true){
-        $campos=$this->getCampos($tipo, $excluir_estaticos);
+        $campos=$this->getCampos($tipo, $excluir_readonly);
         
         //Los insertamos a un arreglo.
         $nombres_de_campos=array();
