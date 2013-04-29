@@ -99,7 +99,7 @@ class Campo extends Doctrine_Record {
     public function displayConDato($etapa_id, $modo = 'edicion'){
         $dato = NULL;
         $etapa=Doctrine::getTable('Etapa')->find($etapa_id);
-        $dato =Doctrine::getTable('Dato')->findOneByTramiteIdAndNombre($etapa->Tramite->id, $this->nombre);
+        $dato =Doctrine::getTable('DatoSeguimiento')->findByNombrePorTramite($this->nombre,$etapa->tramite_id);
         if($this->readonly)$modo='visualizacion';
         
         return $this->display($modo,$dato,$etapa_id);

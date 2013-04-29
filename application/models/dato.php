@@ -30,17 +30,5 @@ class Dato extends Doctrine_Record {
         return json_decode($this->_get('valor'));
     }
     
-    //Al guardar se debe pasar como parametro la etapa de este dato para que se almacene en la tabla de seguimiento
-    public function save(\Doctrine_Connection $conn = null, Etapa $etapa) {
-        parent::save($conn);
-        
-        $dato_seguimiento=Doctrine::getTable('DatoSeguimiento')->findOneByEtapaIdAndNombre($etapa->id,$this->nombre);
-        if(!$dato_seguimiento)
-            $dato_seguimiento=new DatoSeguimiento();
-        $dato_seguimiento->nombre=$this->nombre;
-        $dato_seguimiento->valor=$this->valor;
-        $dato_seguimiento->Etapa=$etapa;
-        $dato_seguimiento->save();
-    }
 
 }

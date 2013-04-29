@@ -223,13 +223,13 @@ class Etapa extends Doctrine_Record {
             return;
 
         if ($this->Tarea->almacenar_usuario) {
-            $dato = Doctrine::getTable('Dato')->findOneByTramiteIdAndNombre($this->Tramite->id, $this->Tarea->almacenar_usuario_variable);
+            $dato = Doctrine::getTable('DatoSeguimiento')->findOneByNombreAndEtapaId($this->Tarea->almacenar_usuario_variable,$this->id);
             if (!$dato)
-                $dato = new Dato();
+                $dato = new DatoSeguimiento();
             $dato->nombre = $this->Tarea->almacenar_usuario_variable;
             $dato->valor = UsuarioSesion::usuario()->id;
-            $dato->tramite_id = $this->Tramite->id;
-            $dato->save(null, $this);
+            $dato->etapa_id = $this->id;
+            $dato->save();
         }
 
         //Ejecutamos los eventos

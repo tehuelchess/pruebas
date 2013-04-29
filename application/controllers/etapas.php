@@ -118,13 +118,13 @@ class Etapas extends MY_Controller {
                 foreach ($formulario->Campos as $c) {
                     //Almacenamos los campos que no sean readonly y que esten disponibles (que su campo dependiente se cumpla)
                     if ($c->isEditableWithCurrentPOST()) {
-                        $dato = Doctrine::getTable('Dato')->findOneByTramiteIdAndNombre($etapa->Tramite->id, $c->nombre);
+                        $dato = Doctrine::getTable('DatoSeguimiento')->findOneByNombreAndEtapaId($c->nombre, $etapa->id);
                         if (!$dato)
-                            $dato = new Dato();
+                            $dato = new DatoSeguimiento();
                         $dato->nombre = $c->nombre;
                         $dato->valor = $this->input->post($c->nombre);
-                        $dato->tramite_id = $etapa->Tramite->id;
-                        $dato->save(null,$etapa);
+                        $dato->etapa_id = $etapa->id;
+                        $dato->save();
                     }
                 }
                 $etapa->save();
