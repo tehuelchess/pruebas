@@ -92,11 +92,11 @@ class CertificadoPDF extends TCPDF {
         if($this->timbre)
             $this->Image($this->timbre, PAGE_MARGIN+1*CELL_WIDTH+1*GRID_WIDTH, $y+10, 2*CELL_WIDTH+GRID_WIDTH, 40, '', '', 'T',true,300,'',false,false,0,true);
         
-        $this->Image($this->firmador_imagen, PAGE_MARGIN+3*CELL_WIDTH+2*GRID_WIDTH, $y+10, 2*CELL_WIDTH+GRID_WIDTH, 20, '', '', 'T',true,300,'',false,false,0,true);
-        $this->SetFont('helvetica', 'B', 11);
-        $this->MultiCell(2*CELL_WIDTH+GRID_WIDTH, 10, $this->firmador_nombre."\n".$this->firmado_cargo, 0, 'L', false, 1, PAGE_MARGIN+3*CELL_WIDTH+2*GRID_WIDTH, $y+30);
-        $this->SetFont('helvetica', '', 11);
-        $this->MultiCell(2*CELL_WIDTH+GRID_WIDTH, 10, $this->firmador_servicio, 0, 'L', false, 1, PAGE_MARGIN+3*CELL_WIDTH+2*GRID_WIDTH);
+        $this->Image($this->firmador_imagen, PAGE_MARGIN+3*CELL_WIDTH+2*GRID_WIDTH, $y+10, 2*CELL_WIDTH+GRID_WIDTH, 30, '', '', 'T',true,300,'',false,false,0,true);
+        $this->SetFont('helvetica', 'B', 10);
+        $this->MultiCell(2*CELL_WIDTH+GRID_WIDTH, 10, $this->firmador_nombre."\n".$this->firmado_cargo, 0, 'L', false, 1, PAGE_MARGIN+3*CELL_WIDTH+2*GRID_WIDTH, $y+35);
+        $this->SetFont('helvetica', '', 10);
+        $this->MultiCell(2*CELL_WIDTH+GRID_WIDTH, 10, $this->firmador_servicio, 0, 'L', false, 1, PAGE_MARGIN+3*CELL_WIDTH+2*GRID_WIDTH,$y+44);
 
         $this->Line(PAGE_MARGIN,$y+50,PAGE_MARGIN+5*CELL_WIDTH+4*GRID_WIDTH,$y+50);
         
@@ -106,7 +106,7 @@ class CertificadoPDF extends TCPDF {
         $this->MultiCell(4*CELL_WIDTH+3*GRID_WIDTH, '', implode(' ',str_split($this->key,4)), 0, 'L', false, 1, PAGE_MARGIN);
         $this->SetFont('helvetica', '', 10);
         $this->MultiCell(4*CELL_WIDTH+3*GRID_WIDTH, '', 'Verifique la validez de este documento en:', 0, 'L', false, 1, PAGE_MARGIN);
-        $this->MultiCell(4*CELL_WIDTH+3*GRID_WIDTH, '', site_url('validador').' o llamando al 101 para teléfonos fijos y celulares.', 0, 'L', false, 1, PAGE_MARGIN);
+        $this->MultiCell(4*CELL_WIDTH+3*GRID_WIDTH, '', site_url('validador'), 0, 'L', false, 1, PAGE_MARGIN);
         
         if($this->firma_electronica){
             $this->Image('assets/img/certificados/candado.png', PAGE_MARGIN+4*CELL_WIDTH+4*GRID_WIDTH, $y+55, 5, '', '', '', 'T',true);
