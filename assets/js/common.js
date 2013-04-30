@@ -1,5 +1,10 @@
 $(document).ready(function(){
     $(".chosen").chosen();
+
+    $(".preventDoubleRequest").one("click", function() {
+        $(this).click(function () { return false; });
+        $(this).attr("disabled",true);
+    });
     
     $(".datepicker")
     .datepicker({

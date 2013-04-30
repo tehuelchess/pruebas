@@ -12,10 +12,10 @@
     <tbody>
         <?php foreach ($procesos as $p): ?>
             <tr>
-                <td class="name"><a href="<?=site_url('tramites/iniciar/'.$p->id)?>"><?= $p->nombre ?></a></td>
+                <td class="name"><a class="preventDoubleRequest" href="<?=site_url('tramites/iniciar/'.$p->id)?>"><?= $p->nombre ?></a></td>
                 <td class="actions">
                     <?php if($p->canUsuarioIniciarlo(UsuarioSesion::usuario()->id)):?>
-                    <a href="<?=site_url('tramites/iniciar/'.$p->id)?>" class="btn btn-primary"><i class="icon-file icon-white"></i> Iniciar</a>
+                    <a href="<?=site_url('tramites/iniciar/'.$p->id)?>" class="btn btn-primary preventDoubleRequest"><i class="icon-file icon-white"></i> Iniciar</a>
                     <?php else: ?>
                         <?php if($p->getTareaInicial()->acceso_modo=='claveunica'):?>
                         <a href="<?=site_url('autenticacion/login_openid')?>?redirect=<?=current_url()?>"><img src="<?=base_url('assets/img/claveunica-medium.png')?>" alt="ClaveUnica" /></a>
