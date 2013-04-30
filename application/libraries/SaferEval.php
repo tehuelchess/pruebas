@@ -168,7 +168,8 @@ class SaferEval {
             'json_decode',
             //Booleanos
             'true',
-            'false'
+            'false',
+            'NULL'
         );
         $this->allowedTokens = array(
             'T_AND_EQUAL', // assignment operators
