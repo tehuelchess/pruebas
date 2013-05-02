@@ -44,6 +44,15 @@ class Cron extends CI_Controller {
         system('sshpass -p '.$this->config->item('backupserver_password').' scp ' . $backupName . ' '.$this->config->item('backupserver_username').'@'.$this->config->item('backupserver_ip').':'.$this->config->item('backupserver_path'));
         system('rm ' . $backupName);
         
+        //Limpia los tramites que que llevan mas de 1 dia sin modificarse, sin avanzar de etapa y sin datos ingresados (En blanco).
+        $tramites_en_blanco=Doctrine_Query::create()
+                ->from('Tramite t, t.Etapas e, e.Usuario u, e.DatosSeguimiento d')
+                ->where('DATEDIFF(NOW(),t.updated_at) >= 1 AND t.pendiente = 1')
+                ->groupBy('t.id')
+                ->having('COUNT(e.id) = 1 AND COUNT(d.id) = 0')
+                ->execute();
+        $tramites_en_blanco->delete();
+        
         //Limpia los tramites que han sido iniciados por usuarios no registrados, y que llevan mas de 1 dia sin modificarse, y sin avanzar de etapa.
         $tramites_en_primera_etapa=Doctrine_Query::create()
                 ->from('Tramite t, t.Etapas e, e.Usuario u')
