@@ -152,39 +152,16 @@ class Etapa extends Doctrine_Record {
     }
 
     public function hayEtapasParalelasPendientes() {
-        /*
-        $netapas_paralelas_pendientes = Doctrine_Query::create()
-                ->from('Etapa e, e.Tarea t, t.ConexionesDestino c, c.TareaOrigen tarea_padre, tarea_padre.ConexionesOrigen c2, c2.TareaDestino.Etapas etapa_this')
-                ->where('c.tipo = "paralelo" OR c.tipo = "paralelo_evaluacion"') //Las conexiones hacia la etapa sean paralelas
-                ->andWhere('c2.tipo = "paralelo" OR c2.tipo = "paralelo_evaluacion"') //Las conexiones hacia la etapa sean paralelas
-                ->andWhere('e.pendiente = 1')   //Esten pendientes
-                ->andWhere('e.tramite_id = ?', $this->tramite_id)    //Pertenezcan a este tramite
-                ->andWhere('e.id != ?', $this->id)   //No sean esta misma etapa. Busco a las etapas hermanas.
-                ->andWhere('etapa_this.id = ?', $this->id)
-                ->count();
-         * 
-         */
-
-        $tareas_paralelas = Doctrine_Query::create()
-                ->from('Tarea t, t.ConexionesOrigen c, c.TareaDestino tarea_hijo, tarea_hijo.ConexionesDestino c2, c2.TareaOrigen.Etapas etapa_this')
+        $etapas_paralelas = Doctrine_Query::create()
+                ->from('Etapa e, e.Tarea t, t.ConexionesOrigen c, c.TareaDestino tarea_hijo, tarea_hijo.ConexionesDestino c2, c2.TareaOrigen.Etapas etapa_this')
                 ->andWhere('etapa_this.id = ?', $this->id)
                 ->andWhere('c.tipo = "union" AND c2.tipo="union"')
+                ->andWhere('e.tramite_id = ?',$this->tramite_id)
+                ->andWhere('e.pendiente = 1')
+                ->andWhere('e.id != ?',$this->id)
                 ->execute();
         
-        foreach ($tareas_paralelas as $t){
-            if($t!=$this->Tarea){           //Si no es mi misma tarea
-                if(!$t->Etapas->count()){   //Si no se han realizado las etapas de las siguientes tareas, es que hay pendientes
-                    return true;
-                }
-                foreach($t->Etapas as $e){
-                    if($e->pendiente){
-                        return true;        //Si hay etapa pendiente retorno true
-                    }
-                }
-            }
-        }
-        
-        return false;
+        return $etapas_paralelas->count()?true:false;
     }
 
     public function asignar($usuario_id) {
