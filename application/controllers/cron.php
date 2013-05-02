@@ -47,7 +47,7 @@ class Cron extends CI_Controller {
         //Limpia los tramites que han sido iniciados por usuarios no registrados, y que llevan mas de 1 dia sin modificarse, y sin avanzar de etapa.
         $tramites_en_primera_etapa=Doctrine_Query::create()
                 ->from('Tramite t, t.Etapas e, e.Usuario u')
-                ->where('DATEDIFF(NOW(),t.updated_at) >= 1')
+                ->where('DATEDIFF(NOW(),t.updated_at) >= 1 AND t.pendiente = 1')
                 ->groupBy('t.id')
                 ->having('COUNT(e.id) = 1')
                 ->execute();
