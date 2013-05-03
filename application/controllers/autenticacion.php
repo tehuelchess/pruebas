@@ -48,7 +48,10 @@ class Autenticacion extends MY_Controller {
     }
 
     public function registrar_form() {
-        $this->form_validation->set_rules('usuario', 'Usuario', 'required|callback_check_usuario');
+        $this->form_validation->set_rules('usuario', 'Nombre de Usuario', 'required|callback_check_usuario');
+        $this->form_validation->set_rules('nombres', 'Nombres', 'required');
+        $this->form_validation->set_rules('apellido_paterno', 'Apellido Paterno', 'required');
+        $this->form_validation->set_rules('apellido_materno', 'Apellido Materno', 'required');
         $this->form_validation->set_rules('password', 'Contraseña', 'required|matches[password_confirm]');
         $this->form_validation->set_rules('password_confirm', 'Confirmar contraseña');
         $this->form_validation->set_rules('email', 'Correo electrónico', 'required|valid_email');
