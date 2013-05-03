@@ -12,7 +12,17 @@
     <tbody>
         <?php foreach ($procesos as $p): ?>
             <tr>
-                <td class="name"><a class="preventDoubleRequest" href="<?=site_url('tramites/iniciar/'.$p->id)?>"><?= $p->nombre ?></a></td>
+                <td class="name">
+                    <?php if($p->canUsuarioIniciarlo(UsuarioSesion::usuario()->id)):?>
+                    <a class="preventDoubleRequest" href="<?=site_url('tramites/iniciar/'.$p->id)?>"><?= $p->nombre ?></a>
+                    <?php else: ?>
+                        <?php if($p->getTareaInicial()->acceso_modo=='claveunica'):?>
+                        <a href="<?=site_url('autenticacion/login_openid')?>?redirect=<?=current_url()?>"><?= $p->nombre ?></a>
+                        <?php else:?>
+                        <a href="<?=site_url('autenticacion/login')?>" class="btn btn-primary"><i class="icon-white icon-off"></i><?= $p->nombre ?></a>
+                        <?php endif ?>
+                    <?php endif ?>
+                </td>
                 <td class="actions">
                     <?php if($p->canUsuarioIniciarlo(UsuarioSesion::usuario()->id)):?>
                     <a href="<?=site_url('tramites/iniciar/'.$p->id)?>" class="btn btn-primary preventDoubleRequest"><i class="icon-file icon-white"></i> Iniciar</a>
