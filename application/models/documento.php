@@ -110,7 +110,7 @@ class Documento extends Doctrine_Record {
 
         if ($filename) {
             $obj->Output($uploadDirectory . $filename, 'F');
-            if($this->hsm_configuracion_id) {
+            if(!$copia && $this->hsm_configuracion_id) {
                 $client = new SoapClient($CI->config->item('hsm_url'));
                 
                 $result = $client->IntercambiaDoc(array(
@@ -126,6 +126,8 @@ class Documento extends Doctrine_Record {
                         'NombreDocumento' => $filename
                     )
                 ));
+                
+                print_r($result);
                 
                 file_put_contents($uploadDirectory . $filename, base64_decode($result->IntercambiaDocResult->Documento));
             }
