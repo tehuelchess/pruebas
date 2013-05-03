@@ -126,9 +126,7 @@ class Documento extends Doctrine_Record {
                         'NombreDocumento' => $filename
                     )
                 ));
-                
-                print_r($result);
-                
+                                
                 file_put_contents($uploadDirectory . $filename, base64_decode($result->IntercambiaDocResult->Documento));
             }
         } else {
