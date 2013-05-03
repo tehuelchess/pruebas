@@ -13,8 +13,14 @@
                         <fieldset>
                             <legend>Registrarse en el sistema</legend>
                             <div class="validacion"></div>
-                            <label>Usuario</label>
+                            <label>Nombre de Usuario</label>
                             <input name="usuario" type="text" class="input-xlarge">
+                            <label>Nombres</label>
+                            <input name="nombres" type="text" class="input-xlarge">
+                            <label>Apellido Paterno</label>
+                            <input name="apellido_paterno" type="text" class="input-xlarge">
+                            <label>Apellido Materno</label>
+                            <input name="apellido_materno" type="text" class="input-xlarge">
                             <label>Contraseña</label>
                             <input name="password" type="password" class="input-xlarge">
                             <label>Confirmar contraseña</label>
