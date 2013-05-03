@@ -101,7 +101,7 @@
 
         <?php if(!$campo->estatico):?>
         <label>Ayuda contextual (Opcional)</label>
-        <input type="text" class="input-xxlarge" name="ayuda" />
+        <input type="text" class="input-xxlarge" name="ayuda" value="<?=$campo->ayuda?>" />
         <?php endif ?>
         
         <?php if (!$campo->estatico): ?>
