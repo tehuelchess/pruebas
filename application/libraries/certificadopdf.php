@@ -21,7 +21,7 @@ class CertificadoPDF extends TCPDF {
     public $firmador_nombre='Juan Perez';
     public $firmado_cargo='Director';
     public $firmador_servicio='Gobierno de Chile';
-    public $firmador_imagen='assets/img/certificados/firma.png';
+    public $firmador_imagen=null;
     public $firma_electronica=false;
     public $copia=false;
     public $content='';
@@ -92,7 +92,8 @@ class CertificadoPDF extends TCPDF {
         if($this->timbre)
             $this->Image($this->timbre, PAGE_MARGIN+1*CELL_WIDTH+1*GRID_WIDTH, $y+10, 2*CELL_WIDTH+GRID_WIDTH, 40, '', '', 'T',true,300,'',false,false,0,true);
         
-        $this->Image($this->firmador_imagen, PAGE_MARGIN+3*CELL_WIDTH+2*GRID_WIDTH, $y+10, 2*CELL_WIDTH+GRID_WIDTH, 25, '', '', 'T',true,300,'',false,false,0,true);
+        if($this->firmador_imagen)
+            $this->Image($this->firmador_imagen, PAGE_MARGIN+3*CELL_WIDTH+2*GRID_WIDTH, $y+10, 2*CELL_WIDTH+GRID_WIDTH, 25, '', '', 'T',true,300,'',false,false,0,true);
         $this->SetFont('helvetica', 'B', 10);
         $this->MultiCell(2*CELL_WIDTH+GRID_WIDTH, 10, $this->firmador_nombre."\n".$this->firmado_cargo, 0, 'L', false, 1, PAGE_MARGIN+3*CELL_WIDTH+2*GRID_WIDTH, $y+35);
         $this->SetFont('helvetica', '', 10);
