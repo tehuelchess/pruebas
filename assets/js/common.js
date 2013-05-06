@@ -44,6 +44,7 @@ $(document).ready(function(){
         var form=this;
         if(!form.submitting){
             form.submitting=true;
+            $("form :submit").attr("disabled",true);
             $(form).append("<div class='ajaxLoader'>Cargando</div>");
             var ajaxLoader=$(form).find(".ajaxLoader");
             $(ajaxLoader).css({
@@ -65,15 +66,20 @@ $(document).ready(function(){
                         }
                     }
                     else{
+                        form.submitting=false;
+                        $(ajaxLoader).remove();
+                        $("form :submit").attr("disabled",false);
+                        
                         $(".validacion").html(response.errores);
                         $('html, body').animate({
                             scrollTop: $(".validacion").offset().top-10
                         });
                     }
                 },
-                complete: function(){
-                    $(ajaxLoader).remove();
+                error: function(){
                     form.submitting=false;
+                    $(ajaxLoader).remove();                
+                    $("form :submit").attr("disabled",false);
                 }
             });
         }
