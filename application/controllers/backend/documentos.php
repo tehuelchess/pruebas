@@ -86,9 +86,9 @@ class Documentos extends CI_Controller {
         if($this->input->post('tipo')=='certificado'){
             $this->form_validation->set_rules('servicio','Servicio','required');
             $this->form_validation->set_rules('servicio_url','URL del Servicio','required|prep_url');
-            $this->form_validation->set_rules('firmador_nombre','Nombre del firmador','required');
-            $this->form_validation->set_rules('firmador_cargo','Cargo del firmador','required');
-            $this->form_validation->set_rules('firmador_servicio','Servicio del firmador','required');
+            $this->form_validation->set_rules('firmador_nombre','Nombre del firmador');
+            $this->form_validation->set_rules('firmador_cargo','Cargo del firmador');
+            $this->form_validation->set_rules('firmador_servicio','Servicio del firmador');
             $this->form_validation->set_rules('firmador_imagen','Imagen de la firmas');
             $this->form_validation->set_rules('validez','Dias de validez','is_natural_no_zero');
         }

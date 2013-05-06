@@ -75,16 +75,16 @@
                     }
                 });
             </script>
-            <label>Nombre de la persona que firma</label>
+            <label>Nombre de la persona que firma (Opcional)</label>
             <input class="input-xxlarge" type="text" name="firmador_nombre" value="<?= $edit ? $documento->firmador_nombre : '' ?>" placeholder="Ej: Juan Perez" />
-            <label>Cargo de la persona que firma</label>
+            <label>Cargo de la persona que firma (Opcional)</label>
             <input class="input-xxlarge" type="text" name="firmador_cargo" value="<?= $edit ? $documento->firmador_cargo : '' ?>" placeholder="Ej: Jefe de Servicio" />
-            <label>Servicio al que pertenece la persona que firma</label>
+            <label>Servicio al que pertenece la persona que firma (Opcional)</label>
             <input class="input-xxlarge" type="text" name="firmador_servicio" value="<?= $edit ? $documento->firmador_servicio : '' ?>" placeholder="Ej: Ministerio Secretaría General de la Presidencia" />
             <label>Imagen de la firma</label>
             <div id="file-uploader"></div>
             <input type="hidden" name="firmador_imagen" value="<?= $edit ? $documento->firmador_imagen : '' ?>" />
-            <img class="firma" src="<?= $edit && $documento->firmador_imagen ? site_url('backend/uploader/firma_get/' . $documento->firmador_imagen) : base_url('assets/img/certificados/firma.png') ?>" alt="firma" width="200" />
+            <img class="firma" src="<?= $edit && $documento->firmador_imagen ? site_url('backend/uploader/firma_get/' . $documento->firmador_imagen) : '#' ?>" alt="firma" width="200" />
             <script>
                 var uploader = new qq.FileUploader({
                     element: document.getElementById('file-uploader'),
