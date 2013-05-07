@@ -21,7 +21,7 @@ class Regla {
         $CI->load->library('SaferEval');
         $resultado = FALSE;
         if (!$errores = $CI->safereval->checkScript($new_regla, FALSE))
-            $resultado = eval($new_regla);
+            $resultado = @eval($new_regla);
         
         return $resultado;
     }
