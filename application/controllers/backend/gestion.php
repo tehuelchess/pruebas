@@ -66,6 +66,7 @@ class Gestion extends CI_Controller {
         $this->form_validation->set_rules('nombre','Nombre','required');
         $widget->validateForm();
         
+        $respuesta=new stdClass();
         if($this->form_validation->run()==TRUE){
             $widget->nombre=$this->input->post('nombre');
             $widget->config=$this->input->post('config');
