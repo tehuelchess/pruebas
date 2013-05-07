@@ -3,6 +3,7 @@ $(document).ready(function(){
 
     $(".preventDoubleRequest").one("click", function() {
         $(this).click(function () { return false; });
+        $(this).attr("autocomplete","off"); //Fix para firefox
         $(this).attr("disabled",true);
     });
     
@@ -44,6 +45,7 @@ $(document).ready(function(){
         var form=this;
         if(!form.submitting){
             form.submitting=true;
+            $(form).find(":submit").attr("autocomplete","off"); //Fix para firefox
             $(form).find(":submit").attr("disabled",true);
             $(form).append("<div class='ajaxLoader'>Cargando</div>");
             var ajaxLoader=$(form).find(".ajaxLoader");
