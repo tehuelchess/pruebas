@@ -52,6 +52,17 @@ class Regla {
                     return $valor_dato;
                 }, $new_regla);
                 
+         //Variables globales
+         $new_regla=preg_replace_callback('/@#(\w+)/', function($match) use ($etapa_id) {
+                    $nombre_dato = $match[1];
+                    
+                    $etapa=Doctrine::getTable('Etapa')->find($etapa_id);
+                    $dato = Doctrine::getTable('DatoSeguimiento')->findGlobalByNombreAndProceso($nombre_dato,$etapa->Tramite->proceso_id);
+                    $valor_dato=var_export($dato,true);
+
+                    return $valor_dato;
+                }, $new_regla);
+                
          $new_regla=preg_replace_callback('/@!(\w+)/', function($match) use ($etapa_id) {
                     $nombre_dato = $match[1];
                     $usuario=UsuarioSesion::usuario();
@@ -108,6 +119,17 @@ class Regla {
                         //Entregamos vacio
                         $valor_dato = '';
                     }
+
+                    return $valor_dato;
+                }, $new_regla);
+         
+         //Variables globales
+         $new_regla=preg_replace_callback('/@#(\w+)/', function($match) use ($etapa_id) {
+                    $nombre_dato = $match[1];
+                    
+                    $etapa=Doctrine::getTable('Etapa')->find($etapa_id);
+                    $dato = Doctrine::getTable('DatoSeguimiento')->findGlobalByNombreAndProceso($nombre_dato,$etapa->Tramite->proceso_id);
+                    $valor_dato=json_encode($dato);
 
                     return $valor_dato;
                 }, $new_regla);

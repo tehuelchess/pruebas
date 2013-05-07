@@ -15,5 +15,22 @@ class DatoSeguimientoTable extends Doctrine_Table{
                 ->fetchOne();
     }
     
+    //Devuelve un arreglo con los valores del dato recopilados durante todo el proceso
+    public function findGlobalByNombreAndProceso($nombre,$proceso_id){        
+        $datos= Doctrine_Query::create()
+                ->from('DatoSeguimiento d, d.Etapa.Tramite t,t.Proceso p')
+                ->where('d.nombre = ?',$nombre)
+                ->andWhere('p.id = ?',$proceso_id)
+                ->having('d.id = MAX(d.id)')
+                ->groupBy('t.id')
+                ->execute();
+        
+        $result=array();
+        foreach($datos as $d)
+            $result[]=$d->valor;
+        
+        return $result;
+    }
+    
     
 }
