@@ -163,13 +163,9 @@ class SaferEval {
             'date_create',
             'strftime',
             'strtotime',
-            //JSON
+            //Serializacion
             'json_encode',
-            'json_decode',
-            //Booleanos
-            'true',
-            'false',
-            'NULL'
+            'json_decode'
         );
         $this->allowedTokens = array(
             'T_AND_EQUAL', // assignment operators

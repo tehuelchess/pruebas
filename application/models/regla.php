@@ -30,23 +30,18 @@ class Regla {
     //Esta expresion es la que se evalua finalmente en la regla
     public function getExpresionParaEvaluar($etapa_id){
         $new_regla=$this->regla;
-        $new_regla=preg_replace_callback('/@@(\w+)((->(\w+))|(\[(\w+)\]))?/', function($match) use ($etapa_id) {
+        $new_regla=preg_replace_callback('/@@(\w+)(->\w+|\[\w+\])*/', function($match) use ($etapa_id) {
                     $nombre_dato = $match[1];
-                    $obj_accesor=isset($match[4])?$match[4]:null;
-                    $arr_accesor=isset($match[6])?$match[6]:null;
+                    $accesor=isset($match[2])?$match[2]:'';
                     
                     $dato = Doctrine::getTable('DatoSeguimiento')->findByNombreHastaEtapa($nombre_dato,$etapa_id);                    
                     if ($dato) {
-                        if($obj_accesor!=null)
-                            $valor_dato = var_export($dato->valor->{$obj_accesor},true);
-                        else if($arr_accesor!=null)
-                            $valor_dato = var_export($dato->valor[$arr_accesor],true);
-                        else
-                            $valor_dato = var_export($dato->valor,true);
+                        $dato_almacenado=eval('$x=json_decode(\''.json_encode($dato->valor).'\'); return $x'.$accesor.';');
+                        $valor_dato='json_decode(\''.json_encode($dato_almacenado).'\')';                        
                     }
                     else {
                         //No reemplazamos el dato
-                        $valor_dato = var_export(null,true);
+                        $valor_dato = 'json_decode(\''.json_encode(null).'\')';
                     }
 
                     return $valor_dato;
@@ -95,25 +90,21 @@ class Regla {
     //Obtiene la expresion con los reemplazos de variables ya hechos de acuerdo a los datos capturados en el tramite tramite_id.
     //Esta es una representacion con las variables reemplazadas. No es una expresion evaluable. (Los arrays y strings no estan definidos como tal)
     public function getExpresionParaOutput($etapa_id){
+        //print_r( stdClass::__set_state(array( 'region' => 'Antofagasta', 'comuna' => 'San Pedro de Atacama' )));
+        //exit;
         $new_regla=$this->regla;     
-        $new_regla=preg_replace_callback('/@@(\w+)((->(\w+))|(\[(\w+)\]))?/', function($match) use ($etapa_id) {
+        $new_regla=preg_replace_callback('/@@(\w+)(->\w+|\[\w+\])*/', function($match) use ($etapa_id) {
                     $nombre_dato = $match[1];
-                    $obj_accesor=isset($match[4])?$match[4]:null;
-                    $arr_accesor=isset($match[6])?$match[6]:null;
-                    //echo $arr_accesor;
+                    $accesor=isset($match[2])?$match[2]:'';
+                    
                     $dato = Doctrine::getTable('DatoSeguimiento')->findByNombreHastaEtapa($nombre_dato,$etapa_id);
                     if ($dato) {
-                        $dato_almacenado = $dato->valor;
-                        if($obj_accesor!=null)
-                            $valor_dato=  json_encode ($dato_almacenado->{$obj_accesor});
-                        else if($arr_accesor!=null)
-                            $valor_dato=  json_encode ($dato_almacenado[$arr_accesor]);
-                        else
-                            $valor_dato=  json_encode($dato_almacenado);
+                        $dato_almacenado=eval('$x=json_decode(\''.json_encode($dato->valor).'\'); return $x'.$accesor.';');
                         
-                        //Si es un string lo representamos directamente.
-                        if(is_string(json_decode($valor_dato)))
-                            $valor_dato=json_decode($valor_dato);
+                        if(!is_string($dato_almacenado))
+                            $valor_dato= json_encode($dato_almacenado);
+                        else
+                            $valor_dato=$dato_almacenado;
                     }
                     else {
                         //Entregamos vacio
