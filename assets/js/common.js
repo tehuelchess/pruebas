@@ -44,7 +44,7 @@ $(document).ready(function(){
         var form=this;
         if(!form.submitting){
             form.submitting=true;
-            $("form :submit").attr("disabled",true);
+            $(form).find(":submit").attr("disabled",true);
             $(form).append("<div class='ajaxLoader'>Cargando</div>");
             var ajaxLoader=$(form).find(".ajaxLoader");
             $(ajaxLoader).css({
@@ -68,7 +68,7 @@ $(document).ready(function(){
                     else{
                         form.submitting=false;
                         $(ajaxLoader).remove();
-                        $("form :submit").attr("disabled",false);
+                        $(form).find(":submit").attr("disabled",false);
                         
                         $(".validacion").html(response.errores);
                         $('html, body').animate({
@@ -79,7 +79,7 @@ $(document).ready(function(){
                 error: function(){
                     form.submitting=false;
                     $(ajaxLoader).remove();                
-                    $("form :submit").attr("disabled",false);
+                    $(form).find(":submit").attr("disabled",false);
                 }
             });
         }
