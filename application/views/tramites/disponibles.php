@@ -19,7 +19,7 @@
                         <?php if($p->getTareaInicial()->acceso_modo=='claveunica'):?>
                         <a href="<?=site_url('autenticacion/login_openid')?>?redirect=<?=current_url()?>"><?= $p->nombre ?></a>
                         <?php else:?>
-                        <a href="<?=site_url('autenticacion/login')?>" class="btn btn-primary"><i class="icon-white icon-off"></i><?= $p->nombre ?></a>
+                        <a href="<?=site_url('autenticacion/login')?>"><?= $p->nombre ?></a>
                         <?php endif ?>
                     <?php endif ?>
                 </td>
