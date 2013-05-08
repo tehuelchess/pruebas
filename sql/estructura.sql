@@ -263,8 +263,8 @@ CREATE  TABLE IF NOT EXISTS `tramitador`.`etapa` (
   CONSTRAINT `fk_etapa_etapa1`
     FOREIGN KEY (`etapa_ancestro_split_id` )
     REFERENCES `tramitador`.`etapa` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE SET NULL
+    ON UPDATE CASCADE)
 ENGINE = InnoDB
 AUTO_INCREMENT = 57
 DEFAULT CHARACTER SET = utf8
