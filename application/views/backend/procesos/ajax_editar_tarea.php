@@ -332,6 +332,13 @@
                                 else
                                     $("#vencimientoConfig").hide();
                             }).change();
+                            
+                            $("select[name=vencimiento_unidad]").change(function(){
+                                if(this.value=="D")
+                                    $("#habilesConfig").show();
+                                else
+                                    $("#habilesConfig").hide();
+                            }).change();
                         });
                     </script>
                     <label class="checkbox"><input type="checkbox" name="vencimiento" value="1" <?=$tarea->vencimiento?'checked':''?> /> ¿La etapa tiene vencimiento?</label>
@@ -345,6 +352,8 @@
                         </select>
                         despues de completada la etapa anterior.
                         <br />
+                        <label id='habilesConfig' class='checkbox'><input type='checkbox' name='vencimiento_habiles' value='1' <?=$tarea->vencimiento_habiles?'checked':''?> /> Considerar solo días habiles.</label>
+                        
                         <label class="checkbox"><input type="checkbox" name="vencimiento_notificar" value="1" <?=$tarea->vencimiento_notificar?'checked':''?> /> Notificar cuando quede 1 día al siguiente correo:</label>
                          <input style="margin-left: 20px;" type="text" name="vencimiento_notificar_email" placeholder="ejemplo@mail.com" value="<?=$tarea->vencimiento_notificar_email?>" />
                     </div>

@@ -156,6 +156,31 @@ class Seguimiento extends CI_Controller {
 
         redirect($this->input->server('HTTP_REFERER'));
     }
+    
+    public function ajax_editar_vencimiento($etapa_id){
+        $etapa=Doctrine::getTable('Etapa')->find($etapa_id);
+        $data['etapa']=$etapa;
+        
+        $this->load->view('backend/seguimiento/ajax_editar_vencimiento',$data);
+    }
+    
+    public function editar_vencimiento_form($etapa_id){
+        $this->form_validation->set_rules('vencimiento_at','Fecha de vencimiento','required');
+        $respuesta=new stdClass();
+        if($this->form_validation->run()==TRUE){
+            $etapa=Doctrine::getTable('Etapa')->find($etapa_id);
+            $etapa->vencimiento_at=date('Y-m-d',strtotime($this->input->post('vencimiento_at')));
+            $etapa->save();
+            
+            $respuesta->validacion=TRUE;
+            $respuesta->redirect=  site_url('backend/seguimiento/index_proceso/'.$etapa->Tarea->proceso_id);
+        }else{
+            $respuesta->validacion=FALSE;
+            $respuesta->errores=  validation_errors();
+        }
+        
+        echo json_encode($respuesta);
+    }
 
 }
 

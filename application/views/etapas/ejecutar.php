@@ -1,5 +1,5 @@
 <?php if($etapa->Tarea->vencimiento):?>
-<div class="alert alert-warning">Atención. Esta etapa se vencera en <?=$etapa->getFechaVencimientoAsString()?>.</div>
+<div class="alert alert-warning">Atención. Esta etapa <?=$etapa->getFechaVencimientoAsString()?>.</div>
 <?php endif ?>
 <form method="POST" class="ajaxForm dynaForm form-horizontal" action="<?=site_url('etapas/ejecutar_form/'.$etapa->id.'/'.$secuencia.($qs?'?'.$qs:''))?>">  
     <fieldset>
