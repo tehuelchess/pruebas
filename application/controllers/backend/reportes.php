@@ -104,6 +104,7 @@ class Reportes extends CI_Controller {
         $this->form_validation->set_rules('nombre', 'Nombre', 'required');
         $this->form_validation->set_rules('campos', 'Campos', 'required');
 
+        $respuesta=new stdClass();
         if ($this->form_validation->run() == TRUE) {
             $reporte->nombre = $this->input->post('nombre');
             $reporte->campos = $this->input->post('campos');
