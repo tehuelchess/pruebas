@@ -8,6 +8,7 @@ class Etapa extends Doctrine_Record {
         $this->hasColumn('tramite_id');
         $this->hasColumn('usuario_id');
         $this->hasColumn('pendiente');
+        $this->hasColumn('etapa_ancestro_split_id');    //Etapa ancestro que provoco el split del flujo. (Sirve para calcular cuando se puede hacer la union del flujo)
         $this->hasColumn('created_at');
         $this->hasColumn('updated_at');
         $this->hasColumn('ended_at');
@@ -36,6 +37,16 @@ class Etapa extends Doctrine_Record {
         $this->hasMany('DatoSeguimiento as DatosSeguimiento', array(
             'local' => 'id',
             'foreign' => 'etapa_id'
+        ));
+        
+        $this->hasOne('Etapa as EtapaAncestroSplit', array(
+            'local'=>'etapa_id',
+            'foreign'=>'id'
+        ));
+        
+        $this->hasMany('Etapa as EtapasDescendientesSplit', array(
+            'local'=>'id',
+            'foreign'=>'etapa_id'
         ));
     }
 
@@ -87,6 +98,15 @@ class Etapa extends Doctrine_Record {
                         $etapa->tramite_id = $this->Tramite->id;
                         $etapa->tarea_id = $tarea_proxima->id;
                         $etapa->pendiente = 1;
+                        
+                        //Para mas adelante poder calcular como hacer las uniones
+                        if($tp->conexion=='union')
+                            $etapa->etapa_ancestro_split_id=null;
+                        else if ($tp->conexion=='paralelo' || $tp->conexion=='paralelo_evaluacion')
+                            $etapa->etapa_ancestro_split_id=$this->id;
+                        else
+                            $etapa->etapa_ancestro_split_id=$this->etapa_ancestro_split_id;
+                        
                         $etapa->save();
                         $etapa->asignar($usuario_asignado_id);
                         //$this->Tramite->Etapas[] = $etapa;     
@@ -109,6 +129,7 @@ class Etapa extends Doctrine_Record {
         $resultado = new stdClass();
         $resultado->tareas = null;
         $resultado->estado = 'sincontinuacion';
+        $resultado->conexion=null;
 
 
         $tarea_actual = $this->Tarea;
@@ -121,6 +142,7 @@ class Etapa extends Doctrine_Record {
                 if (!$c->tarea_id_destino) {
                     $resultado->tareas = null;
                     $resultado->estado = 'completado';
+                    $resultado->conexion=null;
                     break;
                 }
 
@@ -128,12 +150,14 @@ class Etapa extends Doctrine_Record {
                 if ($c->tipo == 'secuencial' || $c->tipo == 'evaluacion') {
                     $resultado->tareas = array($c->TareaDestino);
                     $resultado->estado = 'pendiente';
+                    $resultado->conexion=$c->tipo;
                     break;
                 }
                 //Si son en paralelo, vamos juntando el grupo de tareas proximas.
                 else if ($c->tipo == 'paralelo' || $c->tipo == 'paralelo_evaluacion') {
                     $resultado->tareas[] = $c->TareaDestino;
                     $resultado->estado = 'pendiente';
+                    $resultado->conexion=$c->tipo;
                 }
                 //Si es de union, chequeamos que las etapas paralelas se hayan completado antes de continuar con la proxima.
                 else if ($c->tipo == 'union') {
@@ -143,6 +167,7 @@ class Etapa extends Doctrine_Record {
                         $resultado->estado = 'standby';
                     }
                     $resultado->tareas = array($c->TareaDestino);
+                    $resultado->conexion=$c->tipo;
                     break;
                 }
             }
@@ -152,16 +177,25 @@ class Etapa extends Doctrine_Record {
     }
 
     public function hayEtapasParalelasPendientes() {
-        $etapas_paralelas = Doctrine_Query::create()
+        if($this->etapa_ancestro_split_id){
+            $n_etapas_paralelas= Doctrine_Query::create()
+                    ->from('Etapa e')
+                    ->where('e.etapa_ancestro_split_id = ?',$this->etapa_ancestro_split_id)
+                    ->andWhere('e.pendiente = 1')
+                    ->andWhere('e.id != ?',$this->id)
+                    ->count();
+        }else{  //Metodo antiguo (Deprecado)
+            $n_etapas_paralelas = Doctrine_Query::create()
                 ->from('Etapa e, e.Tarea t, t.ConexionesOrigen c, c.TareaDestino tarea_hijo, tarea_hijo.ConexionesDestino c2, c2.TareaOrigen.Etapas etapa_this')
                 ->andWhere('etapa_this.id = ?', $this->id)
                 ->andWhere('c.tipo = "union" AND c2.tipo="union"')
                 ->andWhere('e.tramite_id = ?',$this->tramite_id)
                 ->andWhere('e.pendiente = 1')
                 ->andWhere('e.id != ?',$this->id)
-                ->execute();
+                ->count();
+        }
         
-        return $etapas_paralelas->count()?true:false;
+        return $n_etapas_paralelas?true:false;
     }
 
     public function asignar($usuario_id) {
