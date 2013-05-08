@@ -177,6 +177,7 @@ class Procesos extends CI_Controller {
             $tarea->vencimiento=$this->input->post('vencimiento');
             $tarea->vencimiento_valor=$this->input->post('vencimiento_valor');
             $tarea->vencimiento_unidad=$this->input->post('vencimiento_unidad');
+            $tarea->vencimiento_habiles=$this->input->post('vencimiento_habiles');
             $tarea->vencimiento_notificar=$this->input->post('vencimiento_notificar');
             $tarea->vencimiento_notificar_email=$this->input->post('vencimiento_notificar_email');
             $tarea->save();

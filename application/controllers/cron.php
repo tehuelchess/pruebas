@@ -23,9 +23,8 @@ class Cron extends CI_Controller {
         //Buscamos las etapas que estan por vencer, pendientes y que requieren ser notificadas
         $etapas = Doctrine_Query::create()
                 ->from('Etapa e, e.Tarea t')
-                ->select('e.*, (CASE t.vencimiento_unidad WHEN "D" THEN (e.created_at + INTERVAL t.vencimiento_valor DAY) WHEN "W" THEN (e.created_at + INTERVAL t.vencimiento_valor WEEK) WHEN "M" THEN (e.created_at + INTERVAL t.vencimiento_valor MONTH) END) as fecha_vencimiento')
-                ->where('t.vencimiento = 1 AND e.pendiente = 1 AND t.vencimiento_notificar = 1')
-                ->having('DATEDIFF(fecha_vencimiento,NOW()) = 1')
+                ->where('e.pendiente = 1 AND t.vencimiento_notificar = 1')
+                ->andWhere('DATEDIFF(e.vencimiento_at,NOW()) = 1')
                 ->execute();
         foreach ($etapas as $e) {
             echo 'Enviando correo de notificacion para etapa ' . $e->id . "\n";

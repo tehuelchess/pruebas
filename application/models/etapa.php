@@ -9,6 +9,7 @@ class Etapa extends Doctrine_Record {
         $this->hasColumn('usuario_id');
         $this->hasColumn('pendiente');
         $this->hasColumn('etapa_ancestro_split_id');    //Etapa ancestro que provoco el split del flujo. (Sirve para calcular cuando se puede hacer la union del flujo)
+        $this->hasColumn('vencimiento_at');
         $this->hasColumn('created_at');
         $this->hasColumn('updated_at');
         $this->hasColumn('ended_at');
@@ -98,6 +99,7 @@ class Etapa extends Doctrine_Record {
                         $etapa->tramite_id = $this->Tramite->id;
                         $etapa->tarea_id = $tarea_proxima->id;
                         $etapa->pendiente = 1;
+                        $etapa->vencimiento_at=$etapa->calcularVencimiento();
                         
                         //Para mas adelante poder calcular como hacer las uniones
                         if($tp->conexion=='union')
@@ -281,7 +283,32 @@ class Etapa extends Doctrine_Record {
 
         return $pasos;
     }
+    
+    //Calcula la fecha en que deberia vencer esta etapa tomando en cuenta la configuracion de la tarea.
+    public function calcularVencimiento(){
+        if(!$this->Tarea->vencimiento)
+            return NULL;
+        
+        $fecha=NULL;
+        if($this->Tarea->vencimiento_unidad=='D')
+            if($this->Tarea->vencimiento_habiles){
+                $fecha=add_working_days($this->created_at,$this->Tarea->vencimiento_valor);
+            }else{
+                $temp = new DateTime($this->created_at);
+                $fecha= $temp->add(new DateInterval('P' . $this->Tarea->vencimiento_valor . 'D'))->format('Y-m-d');
+            }
+        else if($this->Tarea->vencimiento_unidad=='W'){
+            $temp = new DateTime($this->created_at);
+            $fecha= $temp->add(new DateInterval('P' . $this->Tarea->vencimiento_valor . 'W'))->format('Y-m-d');
+        }else if($this->Tarea->vencimiento_unidad=='M'){
+            $temp = new DateTime($this->created_at);
+            $fecha= $temp->add(new DateInterval('P' . $this->Tarea->vencimiento_valor . 'M'))->format('Y-m-d');
+        }
+        
+        return $fecha;
+    }
 
+    /*
     public function getFechaVencimiento() {
         if (!($this->Tarea->vencimiento && $this->Tarea->vencimiento_valor))
             return NULL;
@@ -291,21 +318,29 @@ class Etapa extends Doctrine_Record {
         //$creacion->setTime(0, 0, 0);
         return $creacion->add(new DateInterval('P' . $this->Tarea->vencimiento_valor . $this->Tarea->vencimiento_unidad));
     }
+     * 
+     */
 
     public function getFechaVencimientoAsString() {
-        //return floor(($this->getFechaVencimiento()-now())/60/60/24).' días';
         $now = new DateTime();
+        $now->setTime(0,0,0);
 
-        $interval = $now->diff($this->getFechaVencimiento());
-        return $interval->d . ' días';
+        $interval = $now->diff(new DateTime($this->vencimiento_at));
+        
+        if($interval->invert)
+            return 'vencida';
+        else
+            return 'vence en '. (1+$interval->d) . ' días';
     }
+     
 
     public function vencida() {
-        if (!$this->getFechaVencimiento())
+        if (!$this->vencimiento_at)
             return FALSE;
 
-        $vencimiento = $this->getFechaVencimiento();
+        $vencimiento = new DateTime($this->vencimiento_at);
         $now = new DateTime();
+        $now->setTime(0,0,0);
 
         return $vencimiento < $now;
     }

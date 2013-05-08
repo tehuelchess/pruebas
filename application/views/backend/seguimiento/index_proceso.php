@@ -1,3 +1,11 @@
+<script>
+    function editarVencimiento(etapaId){
+        $("#modal").load(site_url+"backend/seguimiento/ajax_editar_vencimiento/"+etapaId);
+        $("#modal").modal();
+        return false;
+    }
+</script>
+
 <ul class="breadcrumb">
     <li><a href="<?= site_url('backend/seguimiento/index') ?>">Seguimiento de Procesos</a></li> <span class="divider">/</span>
     <li class="active"><?= $proceso->nombre ?></li>
@@ -35,7 +43,7 @@
         </tr>
     </thead>
     <tbody>
-<?php foreach ($tramites as $t): ?>
+        <?php foreach ($tramites as $t): ?>
             <tr>
                 <td><?= $t->id ?></td>
                 <td><?= $t->Proceso->nombre ?></td>
@@ -44,7 +52,7 @@
                     <?php
                     $etapas_array = array();
                     foreach ($t->getEtapasActuales() as $e)
-                        $etapas_array[] = $e->Tarea->nombre . ($e->getFechaVencimiento() ? ' (Vence en ' . $e->getFechaVencimientoAsString() . ')' : '');
+                        $etapas_array[] = $e->Tarea->nombre . ($e->vencimiento_at ? ' <a href="#" onclick="return editarVencimiento('.$e->id.')" title="Cambiar fecha de vencimiento">(' . $e->getFechaVencimientoAsString() . ')</a>' : '');
                     echo implode(', ', $etapas_array);
                     ?>
                 </td>
@@ -54,6 +62,11 @@
                     <a class="btn btn-danger" href="<?= site_url('backend/seguimiento/borrar_tramite/' . $t->id) ?>" onclick="return confirm('¿Esta seguro que desea borrar estre trámite?')"><i class="icon-white icon-trash"></i> Borrar</a>
                 </td>
             </tr>
-<?php endforeach; ?>
+        <?php endforeach; ?>
     </tbody>
 </table>
+
+
+<div id="modal" class="modal hide fade" >
+    
+</div>
