@@ -235,6 +235,7 @@ CREATE  TABLE IF NOT EXISTS `tramitador`.`etapa` (
   `tarea_id` INT(10) UNSIGNED NOT NULL ,
   `usuario_id` INT(10) UNSIGNED NULL DEFAULT NULL ,
   `pendiente` TINYINT(1) NOT NULL ,
+  `etapa_ancestro_split_id` INT(10) UNSIGNED NULL DEFAULT NULL ,
   `created_at` VARCHAR(45) NULL DEFAULT NULL ,
   `updated_at` VARCHAR(45) NULL DEFAULT NULL ,
   `ended_at` DATETIME NULL DEFAULT NULL ,
@@ -243,6 +244,7 @@ CREATE  TABLE IF NOT EXISTS `tramitador`.`etapa` (
   INDEX `fk_etapa_tarea1_idx` (`tarea_id` ASC) ,
   INDEX `fk_etapa_usuario1_idx` (`usuario_id` ASC) ,
   INDEX `fk_etapa_tramite1` (`tramite_id` ASC) ,
+  INDEX `fk_etapa_etapa1_idx` (`etapa_ancestro_split_id` ASC) ,
   CONSTRAINT `etapa_ibfk_1`
     FOREIGN KEY (`tramite_id` )
     REFERENCES `tramitador`.`tramite` (`id` )
@@ -256,6 +258,11 @@ CREATE  TABLE IF NOT EXISTS `tramitador`.`etapa` (
   CONSTRAINT `fk_etapa_usuario1`
     FOREIGN KEY (`usuario_id` )
     REFERENCES `tramitador`.`usuario` (`id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_etapa_etapa1`
+    FOREIGN KEY (`etapa_ancestro_split_id` )
+    REFERENCES `tramitador`.`etapa` (`id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
