@@ -25,7 +25,7 @@
                 <div class="validacion"></div>
                 <label>¿A quien deseas asignarle esta etapa?</label>
                 <select name="usuario_id">
-                    <?php foreach($etapa->Tarea->getUsuarios() as $u):?>
+                    <?php foreach($etapa->Tarea->getUsuariosFromGruposDeUsuarioDeCuenta() as $u):?>
                     <option value="<?=$u->id?>" <?=$u->id==$etapa->usuario_id?'selected':''?>><?=$u->open_id?$u->nombres.' '.$u->apellido_paterno:$u->usuario?></option>
                     <?php endforeach?>
                 </select>

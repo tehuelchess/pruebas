@@ -92,6 +92,28 @@ class Tarea extends Doctrine_Record {
                         ->where('t.id = ? AND u.vacaciones = 0', $this->id)
                         ->execute();
     }
+    
+    //Obtiene el listado de usuarios que tienen acceso a esta tarea y que esten disponibles (no en vacaciones).
+    //Ademas, deben pertenecer a alguno de los grupos de usuarios definidos en la cuenta
+    public function getUsuariosFromGruposDeUsuarioDeCuenta() {
+        $query=Doctrine_Query::create()
+                ->from('Usuario u, u.GruposUsuarios g, g.Cuenta.Procesos.Tareas t')
+                ->where('u.vacaciones = 0')
+                ->andWhere('t.id = ?', $this->id);
+        
+        if($this->acceso_modo=='registrados')
+            $query->andWhere('u.registrado = 1');
+        else if($this->acceso_modo=='claveunica')
+            $query->andWhere('u.open_id = 1');  
+        else if($this->acceso_modo=='grupos_usuarios'){
+            $query->leftJoin('g.Tareas tar');
+            $query->andWhere('tar.id = ?',$this->id);
+        }
+            
+        
+        $usuarios=$query->execute();
+        return $usuarios;
+    }
 
     //Obtiene si el usuarios tiene acceso a esta tarea.
     public function hasUsuario($usuario_id) {
