@@ -40,7 +40,13 @@ class Reporte extends Doctrine_Record {
 
         $excel[]=array_merge(array('id','estado','etapa_actual','fecha_inicio','fecha_modificacion','fecha_termino'), $this->campos);
         
-        $tramites=$this->Proceso->Tramites;
+        $tramites=Doctrine_Query::create()
+                ->from('Tramite t, t.Proceso p, t.Etapas e, e.DatosSeguimiento d')
+                ->where('p.id = ?', $this->proceso_id)
+                ->having('COUNT(d.id) > 0 OR COUNT(e.id) > 1')  //Mostramos solo los que se han avanzado o tienen datos
+                ->groupBy('t.id')
+                ->execute();
+        
         foreach($tramites as $t){
             $etapas_actuales=array();
             foreach($t->getEtapasActuales() as $e)

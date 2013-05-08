@@ -36,8 +36,10 @@ class Seguimiento extends CI_Controller {
 
 
         $doctrine_query = Doctrine_Query::create()
-                ->from('Tramite t, t.Proceso p')
+                ->from('Tramite t, t.Proceso p, t.Etapas e, e.DatosSeguimiento d')
                 ->where('p.id = ?', $proceso_id)
+                ->having('COUNT(d.id) > 0 OR COUNT(e.id) > 1')  //Mostramos solo los que se han avanzado o tienen datos
+                ->groupBy('t.id')
                 ->orderBy('t.updated_at desc');
 
         $query = $this->input->get('query');
