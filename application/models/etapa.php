@@ -98,8 +98,7 @@ class Etapa extends Doctrine_Record {
                         $etapa = new Etapa();
                         $etapa->tramite_id = $this->Tramite->id;
                         $etapa->tarea_id = $tarea_proxima->id;
-                        $etapa->pendiente = 1;
-                        $etapa->vencimiento_at=$etapa->calcularVencimiento();
+                        $etapa->pendiente = 1;                     
                         
                         //Para mas adelante poder calcular como hacer las uniones
                         if($tp->conexion=='union')
@@ -110,6 +109,9 @@ class Etapa extends Doctrine_Record {
                             $etapa->etapa_ancestro_split_id=$this->etapa_ancestro_split_id;
                         
                         $etapa->save();
+                        $etapa->vencimiento_at=$etapa->calcularVencimiento();
+                        $etapa->save();
+                        
                         $etapa->asignar($usuario_asignado_id);
                         //$this->Tramite->Etapas[] = $etapa;     
                     }
