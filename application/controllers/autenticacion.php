@@ -62,6 +62,12 @@ class Autenticacion extends MY_Controller {
             $usuario->setPasswordWithSalt($this->input->post('password'));
             $usuario->email = $this->input->post('email');
             $usuario->save();
+            
+            $this->email->from('simple@chilesinpapeleo.cl', 'Chile Sin Papeleo');
+            $this->email->to($usuario->email);
+            $this->email->subject('Bienvenido');
+            $this->email->message('<p>Usted ya es parte de la plataforma para hacer trámites en línea "Chile Sin Papeleo".</p><p>Su nombre de usuario es: '.$usuario->usuario.'</p>');
+            $this->email->send();
 
             UsuarioSesion::login($this->input->post('usuario'), $this->input->post('password'));
 
