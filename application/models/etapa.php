@@ -41,13 +41,13 @@ class Etapa extends Doctrine_Record {
         ));
         
         $this->hasOne('Etapa as EtapaAncestroSplit', array(
-            'local'=>'etapa_id',
+            'local'=>'etapa_ancestro_split_id',
             'foreign'=>'id'
         ));
         
         $this->hasMany('Etapa as EtapasDescendientesSplit', array(
             'local'=>'id',
-            'foreign'=>'etapa_id'
+            'foreign'=>'etapa_ancestro_split_id'
         ));
     }
 
