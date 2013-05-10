@@ -28,31 +28,13 @@ class CampoDocumento extends Campo {
         }
 
         if (!$dato) {   //Generamos el documento, ya que no se ha generado
-            Doctrine_Manager::connection()->beginTransaction();
-            $etapa = Doctrine::getTable('Etapa')->find($etapa_id);
-            
-            $file=new File();
-            $file->tramite_id=$etapa->Tramite->id;
-            $file->tipo='documento';
-            $file->save();
-            
-            $res=$this->Documento->generar($file->id,$etapa->id);
-            
-            $file->llave_copia=$res->llave_copia;
-            $file->validez=$res->validez;
-            $file->filename = $res->filename;
-            $file->save();
-            
-            $dato = Doctrine::getTable('DatoSeguimiento')->findOneByNombreAndEtapaId($this->nombre,$etapa->id);
-            if (!$dato)
-                $dato = new DatoSeguimiento();
+            $file=$this->Documento->generar($etapa_id);
+
+            $dato = new DatoSeguimiento();
             $dato->nombre = $this->nombre;
             $dato->valor = $file->filename;
-            $dato->etapa_id = $etapa->id;
+            $dato->etapa_id = $etapa_id;
             $dato->save();
-            
-            
-            Doctrine_Manager::connection()->commit();
         }
 
         $display = '<p><a target="_blank" href="' . site_url('documentos/get/' . $dato->valor) . '">' . $this->etiqueta . '</a></p>';
