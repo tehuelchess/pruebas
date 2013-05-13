@@ -454,22 +454,6 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `tramitador`.`ci_sessions`
--- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `tramitador`.`ci_sessions` (
-  `session_id` VARCHAR(40) NOT NULL DEFAULT '0' ,
-  `ip_address` VARCHAR(16) NOT NULL DEFAULT '0' ,
-  `user_agent` VARCHAR(120) NOT NULL ,
-  `last_activity` INT(10) UNSIGNED NOT NULL DEFAULT '0' ,
-  `user_data` TEXT NOT NULL ,
-  PRIMARY KEY (`session_id`) ,
-  INDEX `last_activity_idx` (`last_activity` ASC) )
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8
-COLLATE = utf8_general_ci;
-
-
--- -----------------------------------------------------
 -- Table `tramitador`.`accion`
 -- -----------------------------------------------------
 CREATE  TABLE IF NOT EXISTS `tramitador`.`accion` (
