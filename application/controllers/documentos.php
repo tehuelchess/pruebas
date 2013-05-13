@@ -45,6 +45,67 @@ class Documentos extends MY_Controller {
         header('Content-Length: ' . filesize($path));
         readfile($path);
     }
+    
+    //Acceso que utiliza applet de firma con token
+    function firma_get(){
+        $id=$this->input->get('id');
+        $llave_firma=$this->input->get('token');
+        
+        if(!$id || !$llave_firma){
+            $resultado=new stdClass();
+            $resultado->status=1;
+            $resultado->error='Faltan parametros';
+            echo json_encode($resultado);
+            exit;
+        }
+        
+        $file=Doctrine_Query::create()
+                ->from('File f, f.Tramite.Etapas.Usuario u')
+                ->where('f.id = ? AND f.tipo = ? AND f.llave_firma = ? AND u.id = ?',array($id,'documento',$llave_firma,UsuarioSesion::usuario()->id))
+                ->fetchOne();
+        
+        $resultado=new stdClass();
+        if(!$file){
+            $resultado->status=1;
+            $resultado->error='Token no corresponde';
+        }else{
+            $resultado->status=0;
+            $resultado->tipo='pdf';
+            $resultado->documento=base64_encode(file_get_contents('uploads/documentos/'.$file->filename));
+        }
+        
+        echo json_encode($resultado);
+    }
+    
+    function firma_post(){
+        $id=$this->input->post('id');
+        $llave_firma=$this->input->post('token');
+        $documento=$this->input->post('documento');
+        
+        if(!$id || !$llave_firma || !$documento){
+            $resultado=new stdClass();
+            $resultado->status=1;
+            $resultado->error='Faltan parametros';
+            echo json_encode($resultado);
+            exit;
+        }
+        
+        $file=Doctrine_Query::create()
+                ->from('File f, f.Tramite.Etapas.Usuario u')
+                ->where('f.id = ? AND f.tipo = ? AND f.llave_firma = ? AND u.id = ?',array($id,'documento',$llave_firma,UsuarioSesion::usuario()->id))
+                ->fetchOne();
+        
+        $resultado=new stdClass();
+        if(!$file){
+            $resultado->status=1;
+            $resultado->error='Token no corresponde';
+        }else{
+            $resultado->status=0;
+            file_put_contents('uploads/documentos/'.$file->filename, base64_decode($documento));
+        }
+        
+        echo json_encode($resultado);
+    }
 }
 
 ?>

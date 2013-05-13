@@ -1,6 +1,6 @@
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
-SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL';
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 
 CREATE SCHEMA IF NOT EXISTS `tramitador` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci ;
 USE `tramitador` ;
@@ -567,6 +567,7 @@ CREATE  TABLE IF NOT EXISTS `tramitador`.`file` (
   `filename` VARCHAR(255) NOT NULL ,
   `tipo` ENUM('dato','documento') NOT NULL ,
   `llave_copia` VARCHAR(40) NULL ,
+  `llave_firma` VARCHAR(12) NULL ,
   `validez` INT UNSIGNED NULL ,
   `tramite_id` INT UNSIGNED NOT NULL ,
   `created_at` DATETIME NULL ,
@@ -613,6 +614,18 @@ CREATE  TABLE IF NOT EXISTS `tramitador`.`usuario_manager` (
   PRIMARY KEY (`id`) )
 ENGINE = InnoDB;
 
+
+-- -----------------------------------------------------
+-- Table `tramitador`.`feriado`
+-- -----------------------------------------------------
+CREATE  TABLE IF NOT EXISTS `tramitador`.`feriado` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
+  `fecha` DATE NOT NULL ,
+  PRIMARY KEY (`id`) ,
+  UNIQUE INDEX `fecha_UNIQUE` (`fecha` ASC) )
+ENGINE = InnoDB;
+
+USE `tramitador` ;
 
 
 SET SQL_MODE=@OLD_SQL_MODE;
