@@ -42,11 +42,12 @@ header h1#logo {
   padding-right: 20px;
   margin: 0 0 20px 0;
 }
-header #userMenu {
+header #userMenu > li > a {
   background: #ddd;
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   border-radius: 5px;
+  color: #333;
 }
 #main {
   min-height: 480px;
