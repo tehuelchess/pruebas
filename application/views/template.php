@@ -22,7 +22,9 @@
                                 <li class="dropdown">
                                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">Iniciar sesión<b class="caret"></b></a>
                                     <ul class="dropdown-menu pull-right">
-                                        <li style="margin: 20px;">
+                                        <li id="loginView">
+                                            <div class="simple">
+                                                <div class="wrapper">
                                             <form method="post" class="ajaxForm" action="<?= site_url('autenticacion/login_form') ?>">        
                                                 <fieldset>
                                                     <div class="validacion"></div>
@@ -32,10 +34,16 @@
                                                     <label>Contraseña</label>
                                                     <input name="password" type="password" class="input-xlarge">
                                                     <p style="font-size: 11px;"><a href="<?= site_url('autenticacion/olvido') ?>">¿Olvidaste tu contraseña?</a> - <a href="<?= site_url('autenticacion/registrar') ?>">¿No estas registrado?</a></p>
-                                                    <p>O utilice <a href="<?= site_url('autenticacion/login_openid?redirect=' . current_url()) ?>"><img src="<?= base_url() ?>assets/img/openid_clave_unica.png" alt="OpenID"/></a></p>
                                                     <button class="btn btn-primary pull-right" type="submit">Ingresar</button>
                                                 </fieldset>
                                             </form>
+                                            </div>
+                                            </div>
+                                            <div class="claveunica">
+                                                <div class="wrapper">
+                                                <p>O utilice ClaveÚnica</p> <a href="<?= site_url('autenticacion/login_openid?redirect=' . current_url()) ?>"><img src="<?= base_url() ?>assets/img/claveunica-medium.png" alt="OpenID"/></a>
+                                                </div>
+                                                </div>
                                         </li>
                                     </ul>
                                 </li>
