@@ -67,6 +67,7 @@ class CampoDocumento extends Campo {
         }
 
         $display = '<p>'.$this->etiqueta.'</p>';
+        $display .= '<div id="exito" class="alert alert-success" style="display: none;">Documento fue firmado con éxito.</div>';
         $display .= '<p><a class="btn btn-info" target="_blank" href="' . site_url('documentos/get/' . $dato->valor) . '"><i class="icon-search icon-white"></i> Previsualizar el documento</a></p>';
         $display .= '<script>
             $(document).ready(function() {
@@ -78,7 +79,7 @@ class CampoDocumento extends Campo {
                         var passwordToken = $("#passwordTokenValue").val();
                         var value = document.SignerApplet.hasPK(passwordToken);
                         if (value === "true") {
-                            $("#firmaDiv").css("visibility", "visible");
+                            
                         }
                         else {
                             alert("No se ha detectado Token, por favor inserte su Token de firma o la password ingresada es la incorrecta");
@@ -90,7 +91,10 @@ class CampoDocumento extends Campo {
                     var resultadoApplet = document.SignerApplet.signDocuments();
                     var status=$(resultadoApplet).find("documento").attr("RESULTADO");
                     if (status==="true") {
-                        alert("Documento firmado con éxito.");         
+                        $("#exito").show();
+                        $("#password").hide();
+                        $("#firmaDiv").hide();
+                        alert("Documento firmado con éxito.");     
                     }else{
                         alert("Hubo un error al intentar firmar el documento.");
                     }
@@ -101,28 +105,32 @@ class CampoDocumento extends Campo {
         $display .= '<div id="password" style="display: none;">
             <label>Contraseña del Token:</label> <input id="passwordTokenValue" type="password" />
             <button type="button" class="btn">Desbloquear Token</button>
-        </div>';
+        </div><br />';
         
         $display .= '<div id="firmaDiv">
+            <label>Seleccione la firma</label>
             <script>
                 var os = navigator.platform;
                 var attributes = {
                     code: os === "MacIntel" ? "cl.agile.pdf.applet.SignerAppletMinSegPressMAC" : "cl.agile.pdf.applet.SignerAppletMinSegPress",
                     width: "350",
-                    height: "100",
+                    height: "25",
                     name: "SignerApplet"
                 };
                 var parameters = {
-                    jnlp_href: base_url+"assets/applets/signer/" + (os === "MacIntel" ? "SignerApplet_0_5.jnlp" : "SignerApplet_0_5_win.jnlp")
+                    jnlp_href: base_url+"assets/applets/signer/" + (os === "MacIntel" ? "SignerApplet_0_6.jnlp" : "SignerApplet_0_6_win.jnlp")
                             , documentosPdf: "<PorFirmar><documento id=\''.$file->id.'\' token=\''.$file->llave_firma.'\' comentario=\'Firmado Digitalmente\' lugar=\'Santiago\' tipoFirma=\'TIPO_DOC\'/></PorFirmar>"
                             , urlBaseGet: "'.site_url('documentos/firma_get').'"
                             , urlBasePost: "'.site_url('documentos/firma_post').'"
                             , cLetra: "000000"
                             , cFondo: "FFFFFF"};
-
+            </script>
+            
+            <div style="float: left;">
+            <script>
                 deployJava.runApplet(attributes, parameters, "1.6");
             </script>
-
+            </div>
             <div><button type="button" class="btn btn-success"><i class="icon-pencil icon-white"></i> Firmar Documento</button></div>
 
         </div>';
