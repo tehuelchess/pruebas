@@ -26,12 +26,5 @@ class File extends Doctrine_Record {
         
 
     }
-    
-    public function setLlaveCopia($llave){
-        if($llave)
-            $this->_set('llave_copia',sha1($llave));
-        else
-            $this->_set('llave_copia',null);
-    }
 
 }
