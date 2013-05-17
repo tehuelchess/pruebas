@@ -7,12 +7,12 @@ class DatoSeguimientoTable extends Doctrine_Table{
         $etapa=Doctrine::getTable('Etapa')->find($etapa_id);
         
         return Doctrine_Query::create()
-                ->from('DatoSeguimiento d, d.Etapa.Tramite t, t.Etapas e')
+                ->from('DatoSeguimiento d, d.Etapa e, e.Tramite t')
                 ->where('d.nombre = ?',$nombre)
                 ->andWhere('t.id = ?',$etapa->tramite_id)
                 ->andWhere('e.id <= ?',$etapa->id)
                 ->orderBy('d.id DESC')
-                ->fetchOne();
+                ->fetchOne();        
     }
     
     //Devuelve un arreglo con los valores del dato recopilados durante todo el proceso
