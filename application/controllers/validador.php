@@ -72,9 +72,8 @@ class Validador extends MY_Controller {
             return FALSE;
         }
         
-        $f=new File();
-        $f->llave_copia=$key;
-        if($file->llave_copia!=$f->llave_copia){
+
+        if($file->llave_copia!=$key){
             $this->form_validation->set_message('check_documento','Folio y/o código no válido.');
             return FALSE;
         }
