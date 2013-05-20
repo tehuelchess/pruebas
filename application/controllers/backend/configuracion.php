@@ -332,7 +332,7 @@ class Configuracion extends CI_Controller {
     }
     
     function check_existe_usuario($email){
-        $u=Doctrine::getTable('Usuario')->findOneByEmail($email);
+        $u=Doctrine::getTable('Usuario')->findOneByUsuario($email);
         if(!$u)
             return TRUE;
         
