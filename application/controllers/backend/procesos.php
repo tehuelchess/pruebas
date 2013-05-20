@@ -90,11 +90,7 @@ class Procesos extends CI_Controller {
             $proceso->nombre=$this->input->post('nombre');
             $proceso->width=$this->input->post('width');
             $proceso->height=$this->input->post('height');
-            $proceso->save();
-            
-            //$socket_id_emisor=$this->input->post('socket_id_emisor');
-            $this->load->library('pusher');
-            $this->pusher->trigger('modelador-'.$proceso->id, 'updateModel', array('modelo' => $proceso->getJSONFromModel()));
+            $proceso->save();         
             
             $respuesta->validacion=TRUE;
             $respuesta->redirect=site_url('backend/procesos/editar/'.$proceso->id);
@@ -123,8 +119,6 @@ class Procesos extends CI_Controller {
         $tarea->posy=$this->input->post('posy');
         $tarea->save();
         
-        $this->load->library('pusher');
-        $this->pusher->trigger('modelador-'.$proceso->id, 'updateModel', array('modelo' => $tarea->Proceso->getJSONFromModel()));
     }
     
     public function ajax_editar_tarea($proceso_id,$tarea_identificador){
@@ -182,10 +176,6 @@ class Procesos extends CI_Controller {
             $tarea->vencimiento_notificar_email=$this->input->post('vencimiento_notificar_email');
             $tarea->save();
             
-            //$socket_id_emisor=$this->input->post('socket_id_emisor');
-            $this->load->library('pusher');
-            $this->pusher->trigger('modelador-'.$tarea->Proceso->id, 'updateModel', array('modelo' => $tarea->Proceso->getJSONFromModel()));
-            
             $respuesta->validacion=TRUE;
             $respuesta->redirect=site_url('backend/procesos/editar/'.$tarea->Proceso->id);
             
@@ -207,10 +197,6 @@ class Procesos extends CI_Controller {
         
         $proceso=$tarea->Proceso;
         $tarea->delete();
-        
-        //$socket_id_emisor=$this->input->get('socket_id_emisor');
-        $this->load->library('pusher');
-        $this->pusher->trigger('modelador-'.$proceso->id, 'updateModel', array('modelo' => $proceso->getJSONFromModel()));
     
         redirect('backend/procesos/editar/'.$proceso->id);
     }
@@ -275,10 +261,6 @@ class Procesos extends CI_Controller {
             $tarea->setConexionesFromArray($this->input->post('conexiones'));
             $tarea->save();
             
-            //$socket_id_emisor=$this->input->post('socket_id_emisor');
-            $this->load->library('pusher');
-            $this->pusher->trigger('modelador-'.$tarea->Proceso->id, 'updateModel', array('modelo' => $tarea->Proceso->getJSONFromModel()));
-            
             $respuesta->validacion=TRUE;
             $respuesta->redirect=site_url('backend/procesos/editar/'.$tarea->Proceso->id);
             
@@ -300,10 +282,6 @@ class Procesos extends CI_Controller {
         
         $proceso=$tarea->Proceso;
         $tarea->ConexionesOrigen->delete();
-        
-        //$socket_id_emisor=$this->input->get('socket_id_emisor');
-        $this->load->library('pusher');
-        $this->pusher->trigger('modelador-'.$proceso->id, 'updateModel', array('modelo' => $proceso->getJSONFromModel()));
     
         redirect('backend/procesos/editar/'.$proceso->id);
     }
@@ -317,12 +295,8 @@ class Procesos extends CI_Controller {
         }
         
         $modelo=$this->input->post('modelo');
-        $socket_id_emisor=$this->input->post('socket_id_emisor');
                 
         $proceso->updateModelFromJSON($modelo);
-             
-        $this->load->library('pusher');
-        $this->pusher->trigger('modelador-'.$proceso->id, 'updateModel', array('modelo' => $proceso->getJSONFromModel()),$socket_id_emisor);
         
     }
 

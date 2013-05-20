@@ -120,10 +120,6 @@ $(document).ready(function(){
         stop: updateModel
     });
     
-    channel.bind('updateModel', function(data) {
-        drawFromModel(JSON.parse(data.modelo));
-    });
-    
 
 });
 
@@ -155,7 +151,7 @@ function updateModel(){
     
     json=JSON.stringify(model);
     
-    $.post(site_url+"backend/procesos/ajax_editar_modelo/"+procesoId,"modelo="+json+"&socket_id_emisor="+socketId);
+    $.post(site_url+"backend/procesos/ajax_editar_modelo/"+procesoId,"modelo="+json);
 }
 
 

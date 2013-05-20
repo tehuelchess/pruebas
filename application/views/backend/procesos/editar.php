@@ -88,15 +88,6 @@
     }
 </script>
 
-<script type="text/javascript">
-    var pusher = new Pusher('<?= $this->config->item('pusher_api_key') ?>');
-    var channel = pusher.subscribe('modelador-<?=$proceso->id?>');
-    var socketId;
-    pusher.connection.bind('connected', function() {
-        socketId = pusher.connection.socket_id;
-    });
-</script>
-
 <script type="text/javascript" src="<?= base_url() ?>assets/js/diagrama-procesos.js"></script>
 <script type="text/javascript" src="<?= base_url() ?>assets/js/modelador-procesos.js"></script>
 
