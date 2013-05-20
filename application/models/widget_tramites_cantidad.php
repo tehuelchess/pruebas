@@ -20,8 +20,6 @@ class WidgetTramitesCantidad extends Widget {
                 ->groupBy('p.id')
                 ->execute();
         
-        if(!$tmp->count())
-            return;
         
         foreach ($tmp as $p)
             $datos[$p->nombre]['pendientes'] = $p->cantidad;
@@ -47,7 +45,7 @@ class WidgetTramitesCantidad extends Widget {
         $categories = json_encode($categories);
         $pendientes = json_encode($pendientes);
         $completados = json_encode($completados);
-
+        
         $display = '<div class="grafico"></div>';
         $display.='
         <script type="text/javascript">
