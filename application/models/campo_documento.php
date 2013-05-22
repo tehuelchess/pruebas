@@ -108,6 +108,9 @@ class CampoDocumento extends Campo {
                         alert("Hubo un error al intentar firmar el documento.");
                     }
                 }
+                function progreso(tot, eje, documento){
+                
+                }
             </script>
             <div id="firmaDiv">
             <label>Seleccione la firma</label>      
