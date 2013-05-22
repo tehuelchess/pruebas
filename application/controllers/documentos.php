@@ -7,17 +7,20 @@ class Documentos extends MY_Controller {
     }
     
     function get($filename){
+        $id=$this->input->get('id');
+        $token=$this->input->get('token');
+        
         //Chequeamos permisos del frontend
         $file=Doctrine_Query::create()
                 ->from('File f, f.Tramite t, t.Etapas e, e.Usuario u')
-                ->where('f.filename = ? AND f.tipo = ? AND u.id = ?',array($filename,'documento',UsuarioSesion::usuario()->id))
+                ->where('f.id = ? AND f.llave = ? AND u.id = ?',array($id,$token,UsuarioSesion::usuario()->id))
                 ->fetchOne();
         
         if(!$file){
             //Chequeamos permisos en el backend
             $file=Doctrine_Query::create()
                 ->from('File f, f.Tramite.Proceso.Cuenta.UsuariosBackend u')
-                ->where('f.filename = ? AND f.tipo = ? AND u.id = ? AND (u.rol="super" OR u.rol="operacion")',array($filename,'documento',UsuarioBackendSesion::usuario()->id))
+                ->where('f.id = ? AND f.llave = ? AND u.id = ? AND (u.rol="super" OR u.rol="operacion")',array($id,$token,UsuarioBackendSesion::usuario()->id))
                 ->fetchOne();
             
             if(!$file){
@@ -25,13 +28,11 @@ class Documentos extends MY_Controller {
                 exit;
             }
         }
+           
         
+        $path='uploads/documentos/'.$file->filename;
         
-        
-        
-        $path='uploads/documentos/'.$filename;
-        
-        if(preg_match('/^\.\./', $filename)){
+        if(preg_match('/^\.\./', $file->filename)){
             echo 'Archivo invalido';
             exit;
         }

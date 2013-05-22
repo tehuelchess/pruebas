@@ -42,9 +42,11 @@ class CampoDocumento extends Campo {
             $dato->valor = $file->filename;
             $dato->etapa_id = $etapa_id;
             $dato->save();
+        }else{
+            $file=Doctrine::getTable('File')->findOneByTipoAndFilename('documento',$dato->valor);
         }
 
-        $display = '<p><a target="_blank" href="' . site_url('documentos/get/' . $dato->valor) . '">' . $this->etiqueta . '</a></p>';
+        $display = '<p><a target="_blank" href="' . site_url('documentos/get/' . $file->filename) . '?id='.$file->id.'&token='.$file->llave.'">' . $this->etiqueta . '</a></p>';
 
         return $display;
     }

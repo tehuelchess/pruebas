@@ -550,6 +550,7 @@ CREATE  TABLE IF NOT EXISTS `tramitador`.`file` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
   `filename` VARCHAR(255) NOT NULL ,
   `tipo` ENUM('dato','documento') NOT NULL ,
+  `llave` VARCHAR(12) NOT NULL ,
   `llave_copia` VARCHAR(40) NULL ,
   `llave_firma` VARCHAR(12) NULL ,
   `validez` INT UNSIGNED NULL ,
@@ -557,8 +558,8 @@ CREATE  TABLE IF NOT EXISTS `tramitador`.`file` (
   `created_at` DATETIME NULL ,
   `updated_at` DATETIME NULL ,
   PRIMARY KEY (`id`) ,
-  INDEX `fk_file_tramite1_idx` (`tramite_id` ASC) ,
   UNIQUE INDEX `filename_tipo` (`filename` ASC, `tipo` ASC) ,
+  INDEX `fk_file_tramite1_idx` (`tramite_id` ASC) ,
   CONSTRAINT `fk_file_tramite1`
     FOREIGN KEY (`tramite_id` )
     REFERENCES `tramitador`.`tramite` (`id` )
