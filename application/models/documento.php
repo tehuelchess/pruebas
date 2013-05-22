@@ -62,6 +62,7 @@ class Documento extends Doctrine_Record {
         $file = new File();
         $file->tramite_id = $etapa->tramite_id;
         $file->tipo = 'documento';
+        $file->llave = strtolower(random_string('alnum', 12));
         $file->llave_copia = $this->tipo == 'certificado' ? strtolower(random_string('alnum', 12)) : null;
         $file->llave_firma = strtolower(random_string('alnum', 12));
         $file->validez = $this->tipo == 'certificado' ? $this->validez : null;

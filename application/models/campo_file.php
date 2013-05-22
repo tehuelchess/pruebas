@@ -19,7 +19,8 @@ class CampoFile extends Campo {
             $display.='<div class="file-uploader" data-action="'.site_url('uploader/datos/'.$this->id.'/'.$etapa->id).'"></div>';
         $display.='<input type="hidden" name="' . $this->nombre . '" value="' . ($dato ? htmlspecialchars($dato->valor) : '') . '" />';
         if ($dato){
-            $display.='<p class="link"><a href="' . site_url('uploader/datos_get?filename=' . urlencode ($dato->valor)) . '" target="_blank">' . htmlspecialchars ($dato->valor) . '</a>';
+            $file=Doctrine::getTable('File')->findOneByTipoAndFilename('dato',$dato->valor);
+            $display.='<p class="link"><a href="' . site_url('uploader/datos_get/'.$file->filename).'?id='.$file->id.'&token='.$file->llave.'" target="_blank">' . htmlspecialchars ($dato->valor) . '</a>';
             if(!($modo=='visualizacion'))
                 $display.='(<a class="remove" href="#">X</a>)</p>';
         }
