@@ -366,7 +366,6 @@ $config['https'] = false;
 /*
  * Configuracion de backups
  */
-$config['mysqldump_location']='/usr/bin/mysqldump';
 $config['backupserver_ip']='';
 $config['backupserver_username']='';
 $config['backupserver_password']='';
