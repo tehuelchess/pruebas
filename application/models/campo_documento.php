@@ -70,7 +70,7 @@ class CampoDocumento extends Campo {
 
         $display = '<p>'.$this->etiqueta.'</p>';
         $display .= '<div id="exito" class="alert alert-success" style="display: none;">Documento fue firmado con éxito.</div>';
-        $display .= '<p><a class="btn btn-info" target="_blank" href="' . site_url('documentos/get/' . $dato->valor) . '"><i class="icon-search icon-white"></i> Previsualizar el documento</a></p>';
+        $display .= '<p><a class="btn btn-info" target="_blank" href="' . site_url('documentos/get/' . $dato->valor) .'?id='.$file->id.'&token='.$file->llave. '"><i class="icon-search icon-white"></i> Previsualizar el documento</a></p>';
 
         
         $isMac = stripos( $_SERVER['HTTP_USER_AGENT'] , 'macintosh' ) !== false;
