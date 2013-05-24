@@ -43,6 +43,9 @@ class Uploader extends MY_Controller {
               $file->tipo='dato';
               $file->llave=strtolower(random_string('alnum', 12));
               $file->save();
+              
+              $result['id']=$file->id;
+              $result['llave']=$file->llave;
           }
         // to pass data through iframe you will need to encode all html tags
         echo htmlspecialchars(json_encode($result), ENT_NOQUOTES);
