@@ -9,7 +9,7 @@ Class MY_Form_validation extends CI_Form_validation {
     }
 
     function rut($rut_con_dv) {
-        $rut_con_dv = explode('-', $rut_con_dv);
+        $rut_con_dv = explode('-', strtolower($rut_con_dv));
         if (count($rut_con_dv) == 2) {
             $rut = str_replace('.','',$rut_con_dv[0]);
             $dv = str_replace('k','K',$rut_con_dv[1]);
@@ -46,7 +46,7 @@ Class MY_Form_validation extends CI_Form_validation {
             $digito = 11 - $resto;
             /* Calculamos el digito que corresponde al Rut, restando a 11 el resto obtenido anteriormente */
             if ($digito == 10) {
-                $digito = 'K';
+                $digito = 'k';
             } else {
                 if ($digito == 11) {
                     $digito = '0';
