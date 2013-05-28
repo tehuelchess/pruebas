@@ -36,15 +36,17 @@ class WidgetTramitesCantidad extends Widget {
         foreach ($tmp2 as $p)
             $datos[$p->nombre]['completados'] = $p->cantidad;
         
-        
+        $categories_arr=array();
+        $pendientes_arr=array();
+        $completados_arr=array();
         foreach ($datos as $key => $val) {
-            $categories[] = $key;
-            $pendientes[] = isset($val['pendientes']) ? (int)$val['pendientes'] : 0;
-            $completados[] = isset($val['completados']) ? (int)$val['completados'] : 0;
+            $categories_arr[] = $key;
+            $pendientes_arr[] = isset($val['pendientes']) ? (int)$val['pendientes'] : 0;
+            $completados_arr[] = isset($val['completados']) ? (int)$val['completados'] : 0;
         }
-        $categories = json_encode($categories);
-        $pendientes = json_encode($pendientes);
-        $completados = json_encode($completados);
+        $categories = json_encode($categories_arr);
+        $pendientes = json_encode($pendientes_arr);
+        $completados = json_encode($completados_arr);
         
         $display = '<div class="grafico"></div>';
         $display.='
