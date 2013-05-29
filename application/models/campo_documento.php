@@ -31,7 +31,7 @@ class CampoDocumento extends Campo {
     
     private function displayDescarga($modo, $dato, $etapa_id) {
         if (!$etapa_id) {
-            return '<p><a href="#">' . $this->etiqueta . '</a></p>';
+            return '<p><a class="btn btn-success" href="#"><i class="icon-download-alt icon-white"></i> ' . $this->etiqueta . '</a></p>';
         }
 
         if (!$dato) {   //Generamos el documento, ya que no se ha generado
@@ -46,7 +46,7 @@ class CampoDocumento extends Campo {
             $file=Doctrine::getTable('File')->findOneByTipoAndFilename('documento',$dato->valor);
         }
 
-        $display = '<p><a target="_blank" href="' . site_url('documentos/get/' . $file->filename) . '?id='.$file->id.'&token='.$file->llave.'">' . $this->etiqueta . '</a></p>';
+        $display = '<p><a class="btn btn-success" target="_blank" href="' . site_url('documentos/get/' . $file->filename) . '?id='.$file->id.'&token='.$file->llave.'"><i class="icon-download-alt icon-white"></i> ' . $this->etiqueta . '</a></p>';
 
         return $display;
     }
