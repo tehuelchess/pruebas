@@ -110,8 +110,9 @@ class Seguimiento extends CI_Controller {
         $this->load->view('backend/seguimiento/ajax_ver_etapas', $data);
     }
 
-    public function ver_etapa($etapa_id, $paso = 0) {
+    public function ver_etapa($etapa_id, $secuencia = 0) {
         $etapa = Doctrine::getTable('Etapa')->find($etapa_id);
+        $paso = $etapa->getPasoEjecutable($secuencia);
 
         if (UsuarioBackendSesion::usuario()->cuenta_id != $etapa->Tramite->Proceso->cuenta_id) {
             echo 'No tiene permisos para hacer seguimiento a este tramite.';
@@ -119,7 +120,8 @@ class Seguimiento extends CI_Controller {
         }
 
         $data['etapa'] = $etapa;
-        $data['paso'] = $paso;
+        $data['paso']=$paso;
+        $data['secuencia'] = $secuencia;
 
         $data['title'] = 'Seguimiento - ' . $etapa->Tarea->nombre;
         $data['content'] = 'backend/seguimiento/ver_etapa';
