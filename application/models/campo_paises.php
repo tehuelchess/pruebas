@@ -47,9 +47,5 @@ class CampoPaises extends Campo{
         return $display;
     }
     
-    public function formValidate() {
-        $CI=& get_instance();
-        $CI->form_validation->set_rules($this->nombre, $this->etiqueta, implode('|', $this->validacion));
-    }
     
 }
