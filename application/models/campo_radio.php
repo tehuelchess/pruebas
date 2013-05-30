@@ -15,5 +15,10 @@ class CampoRadio extends Campo {
         $display.='</div>';
         return $display;
     }
+    
+    public function backendExtraValidate(){
+        $CI=&get_instance();
+        $CI->form_validation->set_rules('datos','Datos','required');
+    }
 
 }

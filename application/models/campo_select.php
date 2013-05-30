@@ -17,5 +17,10 @@ class CampoSelect extends Campo {
 
         return $display;
     }
+    
+    public function backendExtraValidate(){
+        $CI=&get_instance();
+        $CI->form_validation->set_rules('datos','Datos','required');
+    }
 
 }
