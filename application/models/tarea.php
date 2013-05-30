@@ -199,11 +199,17 @@ class Tarea extends Doctrine_Record {
         //Agregamos los nuevos
         if (is_array($eventos_array)) {
             foreach ($eventos_array as $key => $p) {
+                //Seteamos el paso_id solamente si el paso es parte de esta tarea.
+                $paso_id=null;
+                foreach($this->Pasos as $paso)
+                    if($paso->id==$p['paso_id'])
+                        $paso_id=$p['paso_id'];
+                
                 $evento = new Evento();
                 $evento->regla=$p['regla'];
                 $evento->instante = $p['instante'];
                 $evento->accion_id = $p['accion_id'];
-                $evento->paso_id = $p['paso_id'];
+                $evento->paso_id = $paso_id;
                 $this->Eventos[] = $evento;
             }
         }
