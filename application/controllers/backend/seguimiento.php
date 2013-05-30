@@ -26,21 +26,22 @@ class Seguimiento extends CI_Controller {
 
     public function index_proceso($proceso_id) {
         $proceso = Doctrine::getTable('Proceso')->find($proceso_id);
+        $offset=$this->input->get('offset');
+        $per_page=100;
 
         if (UsuarioBackendSesion::usuario()->cuenta_id != $proceso->cuenta_id) {
             echo 'Usuario no tiene permisos';
             exit;
         }
 
-
-
-
         $doctrine_query = Doctrine_Query::create()
                 ->from('Tramite t, t.Proceso p, t.Etapas e, e.DatosSeguimiento d')
                 ->where('p.id = ?', $proceso_id)
                 ->having('COUNT(d.id) > 0 OR COUNT(e.id) > 1')  //Mostramos solo los que se han avanzado o tienen datos
                 ->groupBy('t.id')
-                ->orderBy('t.updated_at desc');
+                ->orderBy('t.updated_at desc')
+                ->limit($per_page)
+                ->offset($offset);
 
         $query = $this->input->get('query');
         if ($query) {
@@ -54,10 +55,20 @@ class Seguimiento extends CI_Controller {
                 $doctrine_query->where('0');
             }
         }
+        
+        $tramites=$doctrine_query->execute();
+        $ntramites=$doctrine_query->count();
 
+        $this->load->library('pagination');
+        $this->pagination->initialize(array(
+            'base_url'=>site_url('backend/seguimiento/index_proceso/'.$proceso_id.'?'),
+            'total_rows'=>$ntramites,
+            'per_page'=>$per_page
+        ));
+        
         $data['query'] = $query;
         $data['proceso'] = $proceso;
-        $data['tramites'] = $doctrine_query->execute();
+        $data['tramites'] = $tramites;
 
         $data['title'] = 'Seguimiento de ' . $proceso->nombre;
         $data['content'] = 'backend/seguimiento/index_proceso';
