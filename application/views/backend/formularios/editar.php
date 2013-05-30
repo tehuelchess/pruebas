@@ -38,6 +38,7 @@
         </div>
         <div class="btn-group">
             <button class="btn" onclick="return agregarCampo(<?= $formulario->id ?>,'instituciones_gob')">Instituciones</button>
+            <button class="btn" onclick="return agregarCampo(<?= $formulario->id ?>,'paises')">Paises</button>
             <button class="btn" onclick="return agregarCampo(<?= $formulario->id ?>,'comunas')">Comunas</button>
         </div>
     </div>
