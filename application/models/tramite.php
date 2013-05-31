@@ -63,10 +63,12 @@ class Tramite extends Doctrine_Record {
     }
     
     public function getEtapasActuales() {
-        return Doctrine_Query::create()
-                        ->from('Etapa e, e.Tramite t')
-                        ->where('t.id = ? AND e.pendiente=1', $this->id)
-                        ->execute();
+        $etapas=new Doctrine_Collection('Etapa');
+        foreach($this->Etapas as $e)
+            if($e->pendiente)
+                $etapas[]=$e;
+        
+        return $etapas;
     }
     
     public function getUltimaEtapa() {

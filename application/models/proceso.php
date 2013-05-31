@@ -125,19 +125,19 @@ class Proceso extends Doctrine_Record {
         return $query->execute();
     }
     
-    //Retorna una arreglo con todos los nombres usados en los campos de este proceso.
-    public function getNombresDeCampos($tipo=null, $excluir_readonly=true){
-        $campos=$this->getCampos($tipo, $excluir_readonly);
+    //Retorna una arreglo con todos los nombres de datos usados durante el proceso
+    public function getNombresDeDatos(){
+        $campos=Doctrine_Query::create()
+                ->select('d.nombre')
+                ->from('DatoSeguimiento d, d.Etapa.Tramite.Proceso p')
+                ->andWhere('p.id = ?',$this->id)
+                ->groupBy('d.nombre')
+                ->execute();
         
-        //Los insertamos a un arreglo.
-        $nombres_de_campos=array();
         foreach($campos as $c)
-            $nombres_de_campos[]=$c->nombre;
+            $result[]=$c->nombre;
         
-        //Excluimos los repetidos.
-        $nombres_de_campos=array_unique($nombres_de_campos);
-        
-        return $nombres_de_campos;
+        return $result;
     }
     
     //Verifica si el usuario_id tiene permisos para iniciar este proceso como tramite.
