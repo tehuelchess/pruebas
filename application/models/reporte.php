@@ -61,14 +61,14 @@ class Reporte extends Doctrine_Record {
                 ->select('d.*')
                 ->from('DatoSeguimiento d, d.Etapa e, e.Tramite t')
                 ->andWhere('t.id = ?',$t->id)
+                ->andWhereIn('d.nombre',$this->campos)
                 ->having('d.id = MAX(d.id)')
                 ->groupBy('d.nombre')
                 ->execute(array(),Doctrine_Core::HYDRATE_ARRAY);
             
             foreach($datos as $d){
                 $colindex=array_search($d['nombre'],$header);
-                if($colindex!==FALSE)
-                    $row[$colindex]=utf8_decode(is_string(json_decode($d['valor']))?json_decode($d['valor']):$d['valor']);
+                $row[$colindex]=utf8_decode(is_string(json_decode($d['valor']))?json_decode($d['valor']):$d['valor']);
             }
             ksort($row);
 
