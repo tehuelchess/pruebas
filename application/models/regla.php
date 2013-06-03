@@ -65,7 +65,10 @@ class Regla {
                 
          $new_regla=preg_replace_callback('/@!(\w+)/', function($match) use ($etapa_id) {
                     $nombre_dato = $match[1];
-                    $usuario=UsuarioSesion::usuario();
+                    
+                    $etapa=Doctrine::getTable('Etapa')->find($etapa_id);
+                    $usuario=$etapa->Usuario;
+                    
                     if($nombre_dato=='rut')
                         return "'".$usuario->rut."'";
                     else if($nombre_dato=='nombre')         //Deprecated
@@ -136,7 +139,10 @@ class Regla {
          
          $new_regla=preg_replace_callback('/@!(\w+)/', function($match) use ($etapa_id) {
                     $nombre_dato = $match[1];
-                    $usuario=UsuarioSesion::usuario();
+                    
+                    $etapa=Doctrine::getTable('Etapa')->find($etapa_id);
+                    $usuario=$etapa->Usuario;
+                    
                     if($nombre_dato=='rut')
                         return $usuario->rut;
                     else if($nombre_dato=='nombre')         //Deprecated
