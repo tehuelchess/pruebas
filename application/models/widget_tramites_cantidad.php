@@ -13,10 +13,11 @@ class WidgetTramitesCantidad extends Widget {
 
         $tmp = Doctrine_Query::create()
                 ->select('p.id, p.nombre, COUNT(p.id) as cantidad')
-                ->from('Proceso p, p.Tramites t, p.Cuenta c')
+                ->from('Proceso p, p.Tramites t, t.Etapas e, e.DatosSeguimiento d, p.Cuenta c')
                 ->where('c.id = ?', $this->cuenta_id)
                 ->andWhereIn('p.id', $this->config->procesos)
                 ->andWhere('t.pendiente=1')
+                ->having('COUNT(d.id) > 0 OR COUNT(e.id) > 1')  //Mostramos solo los que se han avanzado o tienen datos
                 ->groupBy('p.id')
                 ->execute();
         
@@ -26,10 +27,11 @@ class WidgetTramitesCantidad extends Widget {
 
         $tmp2 = Doctrine_Query::create()
                 ->select('p.id, p.nombre, COUNT(p.id) as cantidad')
-                ->from('Proceso p, p.Tramites t, p.Cuenta c')
+                ->from('Proceso p, p.Tramites t, t.Etapas e, e.DatosSeguimiento d, p.Cuenta c')
                 ->where('c.id = ?', $this->cuenta_id)
                 ->andWhereIn('p.id', $this->config->procesos)
                 ->andWhere('t.pendiente=0')
+                ->having('COUNT(d.id) > 0 OR COUNT(e.id) > 1')  //Mostramos solo los que se han avanzado o tienen datos
                 ->groupBy('p.id')
                 ->execute();
 
