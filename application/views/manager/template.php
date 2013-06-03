@@ -31,7 +31,7 @@
                 <div class="span8">
                     <div class="row-fluid">
                         <div class="span12">
-                <ul id="userMenu" class="nav nav-pills">
+                <ul id="userMenu" class="nav nav-pills pull-right">
                     <li class="dropdown">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#">Bienvenido <?=  UsuarioManagerSesion::usuario()->usuario?><b class="caret"></b></a>
                         <ul class="dropdown-menu">
@@ -43,7 +43,7 @@
                     </div>
                     <div class="row-fluid">
                         <div class="span12">
-                <ul id="menu" class="nav nav-pills">
+                <ul id="menu" class="nav nav-pills pull-right">
                     <li <?= $this->uri->segment(2) == 'portada' || !$this->uri->segment(2) ? 'class="active"' : '' ?>><a href="<?= site_url('backend/portada') ?>">Inicio</a></li>
                 </ul>
                         </div>
