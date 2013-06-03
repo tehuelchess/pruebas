@@ -44,7 +44,7 @@
                     <div class="row-fluid">
                         <div class="span12">
                 <ul id="menu" class="nav nav-pills pull-right">
-                    <li <?= $this->uri->segment(2) == 'portada' || !$this->uri->segment(2) ? 'class="active"' : '' ?>><a href="<?= site_url('backend/portada') ?>">Inicio</a></li>
+                    <li <?= $this->uri->segment(2) == 'portada' || !$this->uri->segment(2) ? 'class="active"' : '' ?>><a href="<?= site_url('manager/portada') ?>">Inicio</a></li>
                 </ul>
                         </div>
                     </div>
