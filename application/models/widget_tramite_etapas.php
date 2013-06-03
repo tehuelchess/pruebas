@@ -14,9 +14,10 @@ class WidgetTramiteEtapas extends Widget {
     
     $tmp=  Doctrine_Query::create()
             ->select('tar.id, tar.nombre, COUNT(tar.id) as cantidad')
-            ->from('Tarea tar, tar.Etapas e, e.Tramite t, t.Proceso p, p.Cuenta c')
+            ->from('Tarea tar, tar.Etapas e, e.DatosSeguimiento d, e.Tramite t, t.Proceso p, p.Cuenta c')
             ->where('p.id = ? and c.id = ?',array($proceso->id,$this->cuenta_id))
             ->andWhere('e.pendiente = 1')
+            ->having('COUNT(d.id) > 0 OR COUNT(e.id) > 1')  //Mostramos solo los que se han avanzado o tienen datos
             ->groupBy('tar.id')
             ->execute();
     
