@@ -18,17 +18,24 @@ class Claveunica extends CI_Controller {
     public function cuentas($cuenta_id = null) {
         if (!$cuenta_id) {
 
-            $ntramites = Doctrine_Query::create()
-                    ->from('Tramite t, t.Proceso.Cuenta c, t.Etapas e, e.Usuario u')
+            //Seleccionamos los tramites que se han avanzado o tienen datos
+            $tramites = Doctrine_Query::create()
+                    ->from('Tramite t, t.Etapas e, e.DatosSeguimiento d, e.Usuario u')
                     ->where('u.open_id = 1')
-                    ->count();
+                    ->having('COUNT(d.id) > 0 OR COUNT(e.id) > 1')  //Mostramos solo los que se han avanzado o tienen datos
+                    ->groupBy('t.id')
+                    ->execute();
 
-            $data['ntramites'] = $ntramites;
-
+            $data['ntramites'] = $tramites->count();
+            
+            //Los agrupamos por cuenta
+            foreach($tramites as $t)
+                $tramites_arr[]=$t->id;
+            
             $cuentas = Doctrine_Query::create()
-                    ->from('Cuenta c, c.Procesos.Tramites t, t.Etapas e, e.Usuario u')
+                    ->from('Cuenta c, c.Procesos.Tramites t')
                     ->select('c.*, COUNT(t.id) as ntramites')
-                    ->where('u.open_id = 1')
+                    ->whereIn('t.id',$tramites_arr)
                     ->groupBy('c.id')
                     ->execute();
 
@@ -40,8 +47,10 @@ class Claveunica extends CI_Controller {
 
 
             $tramites = Doctrine_Query::create()
-                    ->from('Tramite t, t.Proceso.Cuenta c, t.Etapas e, e.Usuario u')
+                    ->from('Tramite t, t.Proceso.Cuenta c, t.Etapas e, e.DatosSeguimiento d, e.Usuario u')
                     ->where('u.open_id = 1 AND c.id = ?',$cuenta_id)
+                    ->having('COUNT(d.id) > 0 OR COUNT(e.id) > 1')  //Mostramos solo los que se han avanzado o tienen datos
+                    ->groupBy('t.id')
                     ->orderBy('t.updated_at DESC')
                     ->execute();
 
