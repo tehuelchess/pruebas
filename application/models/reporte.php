@@ -68,7 +68,7 @@ class Reporte extends Doctrine_Record {
             
             foreach($datos as $d){
                 $colindex=array_search($d['nombre'],$header);
-                $row[$colindex]=is_string(json_decode($d['valor']))?json_decode($d['valor']):$d['valor'];
+                $row[$colindex]=is_string(json_decode($d['valor']))?json_decode($d['valor']):decode_unicode($d['valor']);
             }
             ksort($row);
             
@@ -79,6 +79,6 @@ class Reporte extends Doctrine_Record {
         $CI->excel_xml->generateXML('reporte');
     }
 
-    
+
 
 }
