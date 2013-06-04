@@ -84,7 +84,7 @@ class Seguimiento extends CI_Controller {
         }
 
         $data['tramite'] = $tramite;
-        $data['etapas'] = Doctrine_Query::create()->from('Etapa e, e.Tramite t')->where('t.id = ?', $tramite->id)->orderBy('created_at desc')->execute();
+        $data['etapas'] = Doctrine_Query::create()->from('Etapa e, e.Tramite t')->where('t.id = ?', $tramite->id)->orderBy('id desc')->execute();
 
         $data['title'] = 'Seguimiento - ' . $tramite->Proceso->nombre;
         $data['content'] = 'backend/seguimiento/ver';
