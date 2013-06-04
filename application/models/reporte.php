@@ -68,10 +68,10 @@ class Reporte extends Doctrine_Record {
             
             foreach($datos as $d){
                 $colindex=array_search($d['nombre'],$header);
-                $row[$colindex]=utf8_decode(is_string(json_decode($d['valor']))?json_decode($d['valor']):$d['valor']);
+                $row[$colindex]=is_string(json_decode($d['valor']))?json_decode($d['valor']):$d['valor'];
             }
             ksort($row);
-
+            
             $excel[]=$row;
         }
 
