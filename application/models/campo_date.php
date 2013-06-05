@@ -7,13 +7,17 @@ class CampoDate extends Campo{
     protected function display($modo, $dato) {
         $display='<label class="control-label" for="'.$this->id.'">' . $this->etiqueta . (!in_array('required', $this->validacion) ? ' (Opcional)' : '') . '</label>';
         $display.='<div class="controls">';
-        $display.='<input id="'.$this->id.'" '.($modo=='visualizacion'?'disabled':'').' class="datepicker" ' . ($modo == 'visualizacion' ? 'disabled' : '') . ' type="text" value="' . ($dato && $dato->valor?date('d/m/Y',strtotime($dato->valor)):'') . '" />';
-        $display.='<input type="hidden" name="'.$this->nombre.'" value="'.($dato?$dato->valor:'').'" />';
+        $display.='<input id="'.$this->id.'" '.($modo=='visualizacion'?'disabled':'').' class="datepicker" ' . ($modo == 'visualizacion' ? 'disabled' : '') . ' type="text" name="'.$this->nombre.'" value="' . ($dato && $dato->valor?date('d-m-Y',strtotime($dato->valor)):'') . '" placeholder="dd-mm-aaaa" />';
         if($this->ayuda)
             $display.='<span class="help-block">'.$this->ayuda.'</span>';
         $display.='</div>';
         
         return $display;
+    }
+    
+    public function formValidate() {
+        $CI=& get_instance();
+        $CI->form_validation->set_rules($this->nombre, $this->etiqueta, implode('|', array_merge(array('date_prep'),$this->validacion)));
     }
     
 }
