@@ -9,9 +9,10 @@ Class MY_Form_validation extends CI_Form_validation {
     }
 
     function rut($rut_con_dv) {
-        $rut_con_dv = explode('-', strtolower($rut_con_dv));
+        $rut_con_dv = explode('-', $rut_con_dv);
         if (count($rut_con_dv) == 2) {
             $rut = str_replace('.','',$rut_con_dv[0]);
+            $dv = strtolower($rut_con_dv[1]);
             /* Con las lineas anteriores le asignanos a las variables $rut y $dv, lo ingresado por formulario en la página anterior, solo utilizaremos el rut. El digito verificador, lo usaremos al final */
             $rutin = strrev($rut);
             /* Invertimos el rut con la funcion “strrev” */
