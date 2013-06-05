@@ -62,5 +62,10 @@ Class MY_Form_validation extends CI_Form_validation {
         $this->set_message('rut', 'El campo %s no es válido');
         return FALSE;
     }
+    
+    //Convierte una fecha en humano al formato mysql.
+    function date_prep($string){
+        return strftime('%Y-%m-%d',strtotime($string));
+    }
 
 }
