@@ -84,13 +84,13 @@
         <?php if($campo->requiere_nombre):?>
         <label>Nombre</label>
         <input type="text" name="nombre" value="<?= $campo->nombre ?>" />
-        <?php $campos_asistencia=$formulario->Proceso->getCampos($campo->tipo) ?>
-        <?php if($campos_asistencia->count()):?>
+        <?php $campos_asistencia=$formulario->Proceso->getNombresDeCampos($campo->tipo,false) ?>
+        <?php if(count($campos_asistencia)):?>
         <div class="btn-group asistencia" style="display: inline-block; vertical-align: top;">
             <a class="btn dropdown-toggle" data-toggle="dropdown" href="#"><i class="icon-th-list"></i><span class="caret"></span></a>
             <ul class="dropdown-menu">
                 <?php foreach ($campos_asistencia as $c): ?>
-                    <li><a href="#"><?= $c->nombre ?></a></li>
+                    <li><a href="#"><?= $c ?></a></li>
                 <?php endforeach; ?>
             </ul>
         </div>
