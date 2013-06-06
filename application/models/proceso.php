@@ -125,6 +125,17 @@ class Proceso extends Doctrine_Record {
         return $query->execute();
     }
     
+    //Obtiene todos los campos asociados a este proceso
+    public function getNombresDeCampos($tipo=null,$excluir_readonly=true){
+        $campos=$this->getCampos($tipo,$excluir_readonly);
+        
+        $nombres=array();
+        foreach($campos as $c)
+            $nombres[$c->nombre]=true;
+        
+        return array_keys($nombres);
+    }
+    
     //Retorna una arreglo con todos los nombres de datos usados durante el proceso
     public function getNombresDeDatos(){
         $campos=Doctrine_Query::create()
