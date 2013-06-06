@@ -367,10 +367,8 @@ $config['https'] = false;
 /*
  * Configuracion de backups
  */
-$config['backupserver_ip']='';
-$config['backupserver_username']='';
-$config['backupserver_password']='';
-$config['backupserver_path']='';
+$config['awsAccessKey']='';
+$config['awsSecretKey']='';
 
 
 /*

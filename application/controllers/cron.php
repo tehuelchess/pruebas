@@ -41,7 +41,8 @@ class Cron extends CI_Controller {
         $backupName = $this->db->database . '_' . date("Ymd-His") . '.gz';
         $command = 'mysqldump -h '.$this->db->hostname.' -u '.$this->db->username.' -p'.$this->db->password.' '.$this->db->database.' | gzip > '.$backupName;
         system($command);
-        system('sshpass -p '.$this->config->item('backupserver_password').' scp ' . $backupName . ' '.$this->config->item('backupserver_username').'@'.$this->config->item('backupserver_ip').':'.$this->config->item('backupserver_path'));
+        $this->load->library('s3wrapper');
+        $this->s3wrapper->putObject($this->s3wrapper->inputFile($backupName, false), 'chilesinpapeleo.cl', $backupName);   
         system('rm ' . $backupName);
         
         //Limpia los tramites que que llevan mas de 1 dia sin modificarse, sin avanzar de etapa y sin datos ingresados (En blanco).
