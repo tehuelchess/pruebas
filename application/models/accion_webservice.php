@@ -28,6 +28,14 @@ class AccionWebservice extends Accion {
         $r=new Regla($this->extra->url);
         $url=$r->getExpresionParaOutput($etapa->id);
         
+        //Hacemos encoding a la url
+        $url=preg_replace_callback('/([\?&][^=]+=)([^&]+)/', function($matches){
+            $key=$matches[1];
+            $value=$matches[2];
+            return $key.urlencode($value);
+        },
+        $url);
+        
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_TIMEOUT, 10);
