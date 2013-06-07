@@ -60,7 +60,7 @@ class Etapas extends MY_Controller {
             $etapa->iniciarPaso($paso);
             $etapa->finalizarPaso($paso);
             $etapa->avanzar();
-            redirect('etapas/ver/' . $etapa->id . '/' . ($secuencia));
+            redirect('etapas/ver/' . $etapa->id . '/' . (count($etapa->getPasosEjecutables())-1));
         }else{
             $etapa->iniciarPaso($paso);
 
@@ -141,7 +141,7 @@ class Etapas extends MY_Controller {
                     $etapa->iniciarPaso($prox_paso);
                     $etapa->finalizarPaso($prox_paso);
                     $etapa->avanzar();
-                    $respuesta->redirect = site_url('etapas/ver/' . $etapa->id . '/' . ($secuencia + 1));
+                    $respuesta->redirect = site_url('etapas/ver/' . $etapa->id . '/' . (count($etapa->getPasosEjecutables())-1));
                 } else {
                     $respuesta->redirect = site_url('etapas/ejecutar/' . $etapa_id . '/' . ($secuencia + 1)) . ($qs ? '?' . $qs : '');
                 }
@@ -160,7 +160,7 @@ class Etapas extends MY_Controller {
                 $etapa->iniciarPaso($prox_paso);
                 $etapa->finalizarPaso($prox_paso);
                 $etapa->avanzar();
-                $respuesta->redirect = site_url('etapas/ver/' . $etapa->id . '/' . ($secuencia + 1));
+                $respuesta->redirect = site_url('etapas/ver/' . $etapa->id . '/' . (count($etapa->getPasosEjecutables())-1));
             } else {
                 $respuesta->redirect = site_url('etapas/ejecutar/' . $etapa_id . '/' . ($secuencia + 1)) . ($qs ? '?' . $qs : '');
             }
