@@ -223,13 +223,13 @@ class Etapa extends Doctrine_Record {
 
 
         //Ejecutamos los eventos
-        $eventos=Doctrine::getTable('Evento')->findByTareaIdAndPasoId($this->Tarea->id,null);
+        $eventos=Doctrine_Query::create()->from('Evento e')
+                ->where('e.tarea_id = ? AND e.instante = ? AND e.paso_id IS NULL',array($this->Tarea->id,'antes'))
+                ->execute();
         foreach ($eventos as $e) {
-            if ($e->instante == 'antes') {
                 $r = new Regla($e->regla);
                 if ($r->evaluar($this->id))
-                    $e->Accion->ejecutar($this);
-            }
+                    $e->Accion->ejecutar($this);           
         }
     }
 
@@ -249,13 +249,13 @@ class Etapa extends Doctrine_Record {
         }
 
         //Ejecutamos los eventos
-        $eventos=Doctrine::getTable('Evento')->findByTareaIdAndPasoId($this->Tarea->id,null);
+        $eventos=Doctrine_Query::create()->from('Evento e')
+                ->where('e.tarea_id = ? AND e.instante = ? AND e.paso_id IS NULL',array($this->Tarea->id,'despues'))
+                ->execute();
         foreach ($eventos as $e) {
-            if ($e->instante == 'despues') {
                 $r = new Regla($e->regla);
                 if ($r->evaluar($this->id))
-                    $e->Accion->ejecutar($this);
-            }
+                    $e->Accion->ejecutar($this);           
         }
 
         //Cerramos la etapa
@@ -351,23 +351,27 @@ class Etapa extends Doctrine_Record {
 
     public function iniciarPaso(Paso $paso) {
         //Ejecutamos los eventos iniciales
-        foreach ($paso->Eventos as $e) {
-            if ($e->instante == 'antes') {
+        $eventos=Doctrine_Query::create()->from('Evento e')
+                ->where('e.paso_id = ? AND e.instante = ?',array($paso->id,'antes'))
+                ->execute();
+        foreach ($eventos as $e) {
                 $r = new Regla($e->regla);
                 if ($r->evaluar($this->id))
                     $e->Accion->ejecutar($this);
-            }
+            
         }
     }
 
     public function finalizarPaso(Paso $paso) {
         //Ejecutamos los eventos finales
-        foreach ($paso->Eventos as $e) {
-            if ($e->instante == 'despues') {
+        $eventos=Doctrine_Query::create()->from('Evento e')
+                ->where('e.paso_id = ? AND e.instante = ?',array($paso->id,'despues'))
+                ->execute();
+        foreach ($eventos as $e) {
                 $r = new Regla($e->regla);
                 if ($r->evaluar($this->id))
                     $e->Accion->ejecutar($this);
-            }
+            
         }
     }
 
