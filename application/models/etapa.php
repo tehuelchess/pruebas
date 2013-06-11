@@ -223,7 +223,8 @@ class Etapa extends Doctrine_Record {
 
 
         //Ejecutamos los eventos
-        foreach ($this->Tarea->Eventos as $e) {
+        $eventos=Doctrine::getTable('Evento')->findByTareaIdAndPasoId($this->Tarea->id,null);
+        foreach ($eventos as $e) {
             if ($e->instante == 'antes') {
                 $r = new Regla($e->regla);
                 if ($r->evaluar($this->id))
@@ -248,7 +249,8 @@ class Etapa extends Doctrine_Record {
         }
 
         //Ejecutamos los eventos
-        foreach ($this->Tarea->Eventos as $e) {
+        $eventos=Doctrine::getTable('Evento')->findByTareaIdAndPasoId($this->Tarea->id,null);
+        foreach ($eventos as $e) {
             if ($e->instante == 'despues') {
                 $r = new Regla($e->regla);
                 if ($r->evaluar($this->id))
