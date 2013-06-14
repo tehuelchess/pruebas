@@ -47,7 +47,11 @@ class Autenticacion extends CI_Controller {
             $usuario->reset_token=$random;
             $usuario->save();
 
-            $this->email->from('simple@chilesinpapeleo.cl', 'Simple');
+            $cuenta=Cuenta::cuentaSegunDominio();
+            if(is_a($cuenta, 'Cuenta'))
+                $this->email->from($cuenta->nombre.'@chilesinpapeleo.cl', $cuenta->nombre_largo);
+            else
+                $this->email->from('simple@chilesinpapeleo.cl', 'Simple');
             $this->email->to($usuario->email);
             $this->email->subject('Reestablecer contraseña');
             $this->email->message('<p>Haga click en el siguiente link para reestablecer su contraseña:</p><p><a href="'.site_url('backend/autenticacion/reestablecer?id='.$usuario->id.'&reset_token='.$random).'">'.site_url('autenticacion/reestablecer?id='.$usuario->id.'&reset_token='.$random).'</a></p>');

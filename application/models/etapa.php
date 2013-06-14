@@ -213,7 +213,8 @@ class Etapa extends Doctrine_Record {
             $usuario = Doctrine::getTable('Usuario')->find($usuario_id);
             if ($usuario->email) {
                 $CI = & get_instance();
-                $CI->email->from('simple@chilesinpapeleo.cl', 'Simple');
+                $cuenta=$this->Tramite->Proceso->Cuenta;
+                $CI->email->from($cuenta->nombre.'@chilesinpapeleo.cl', $cuenta->nombre_largo);
                 $CI->email->to($usuario->email);
                 $CI->email->subject('Tramitador - Tiene una tarea pendiente');
                 $CI->email->message('<p>' . $this->Tramite->Proceso->nombre . '</p><p>Tiene una tarea pendiente por realizar: ' . $this->Tarea->nombre . '</p><p>Podra realizarla en: ' . site_url('etapas/ejecutar/' . $this->id) . '</p>');

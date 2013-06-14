@@ -63,7 +63,11 @@ class Autenticacion extends MY_Controller {
             $usuario->email = $this->input->post('email');
             $usuario->save();
             
-            $this->email->from('simple@chilesinpapeleo.cl', 'Chile Sin Papeleo');
+            $cuenta=Cuenta::cuentaSegunDominio();
+            if(is_a($cuenta, 'Cuenta'))
+                $this->email->from($cuenta->nombre.'@chilesinpapeleo.cl', $cuenta->nombre_largo);
+            else
+                $this->email->from('simple@chilesinpapeleo.cl', 'Simple');
             $this->email->to($usuario->email);
             $this->email->subject('Bienvenido');
             $this->email->message('<p>Usted ya es parte de la plataforma para hacer trámites en línea "Chile Sin Papeleo".</p><p>Su nombre de usuario es: '.$usuario->usuario.'</p>');
@@ -97,7 +101,11 @@ class Autenticacion extends MY_Controller {
             $usuario->reset_token=$random;
             $usuario->save();
 
-            $this->email->from('simple@chilesinpapeleo.cl', 'Simple');
+            $cuenta=Cuenta::cuentaSegunDominio();
+            if(is_a($cuenta, 'Cuenta'))
+                $this->email->from($cuenta->nombre.'@chilesinpapeleo.cl', $cuenta->nombre_largo);
+            else
+                $this->email->from('simple@chilesinpapeleo.cl', 'Simple');
             $this->email->to($usuario->email);
             $this->email->subject('Reestablecer contraseña');
             $this->email->message('<p>Haga click en el siguiente link para reestablecer su contraseña:</p><p><a href="'.site_url('autenticacion/reestablecer?id='.$usuario->id.'&reset_token='.$random).'">'.site_url('autenticacion/reestablecer?id='.$usuario->id.'&reset_token='.$random).'</a></p>');

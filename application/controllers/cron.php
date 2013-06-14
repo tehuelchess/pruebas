@@ -28,7 +28,7 @@ class Cron extends CI_Controller {
                 ->execute();
         foreach ($etapas as $e) {
             echo 'Enviando correo de notificacion para etapa ' . $e->id . "\n";
-            $this->email->from('simple@chilesinpapeleo.cl');
+            $this->email->from('simple@chilesinpapeleo.cl','Simple');
             $this->email->to($e->Tarea->vencimiento_notificar_email);
             $this->email->subject('Simple - Etapa se encuentra por vencer');
             $this->email->message('La etapa "' . $e->Tarea->nombre . '" se encuentra a 1 día de vencer.' . "\n\n" . 'Usuario asignado: ' . $e->Usuario->usuario);

@@ -32,7 +32,8 @@ class AccionEnviarCorreo extends Accion {
         $message=$regla->getExpresionParaOutput($etapa->id);
         
         $CI = & get_instance();
-        $CI->email->from('simple@chilesinpapeleo.cl', 'Simple');
+        $cuenta=$etapa->Tramite->Proceso->Cuenta;
+        $CI->email->from($cuenta->nombre.'@chilesinpapeleo.cl', $cuenta->nombre_largo);
         $CI->email->to($to);
         $CI->email->subject($subject);
         $CI->email->message($message);
