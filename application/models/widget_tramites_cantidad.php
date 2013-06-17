@@ -11,32 +11,36 @@ class WidgetTramitesCantidad extends Widget {
 
         $datos = array();
 
-        $tmp = Doctrine_Query::create()
-                ->select('p.id, p.nombre, COUNT(p.id) as cantidad')
-                ->from('Proceso p, p.Tramites t, t.Etapas e, e.DatosSeguimiento d, p.Cuenta c')
+
+        foreach($this->config->procesos as $proceso_id){
+            $p=Doctrine::getTable('Proceso')->find($proceso_id);
+            $conteo = Doctrine_Query::create()
+                ->from('Tramite t, t.Etapas e, e.DatosSeguimiento d, t.Proceso p ,p.Cuenta c')
                 ->where('c.id = ?', $this->cuenta_id)
-                ->andWhereIn('p.id', $this->config->procesos)
+                ->andWhere('p.id = ?', $p->id)
                 ->andWhere('t.pendiente=1')
                 ->having('COUNT(d.id) > 0 OR COUNT(e.id) > 1')  //Mostramos solo los que se han avanzado o tienen datos
-                ->groupBy('p.id')
-                ->execute();
-        
-        
-        foreach ($tmp as $p)
-            $datos[$p->nombre]['pendientes'] = $p->cantidad;
+                ->groupBy('t.id')
+                ->count();
+            
+            $datos[$p->nombre]['pendientes'] = $conteo;
+        }
 
-        $tmp2 = Doctrine_Query::create()
-                ->select('p.id, p.nombre, COUNT(p.id) as cantidad')
-                ->from('Proceso p, p.Tramites t, t.Etapas e, e.DatosSeguimiento d, p.Cuenta c')
+        
+        foreach($this->config->procesos as $proceso_id){
+            $p=Doctrine::getTable('Proceso')->find($proceso_id);
+            $conteo = Doctrine_Query::create()
+                ->from('Tramite t, t.Etapas e, e.DatosSeguimiento d, t.Proceso p ,p.Cuenta c')
                 ->where('c.id = ?', $this->cuenta_id)
-                ->andWhereIn('p.id', $this->config->procesos)
+                ->andWhere('p.id = ?', $p->id)
                 ->andWhere('t.pendiente=0')
                 ->having('COUNT(d.id) > 0 OR COUNT(e.id) > 1')  //Mostramos solo los que se han avanzado o tienen datos
-                ->groupBy('p.id')
-                ->execute();
-
-        foreach ($tmp2 as $p)
-            $datos[$p->nombre]['completados'] = $p->cantidad;
+                ->groupBy('t.id')
+                ->count();
+            
+            $datos[$p->nombre]['completados'] = $conteo;
+        }
+        
         
         $categories_arr=array();
         $pendientes_arr=array();
