@@ -48,7 +48,7 @@ class Autenticacion extends MY_Controller {
     }
 
     public function registrar_form() {
-        $this->form_validation->set_rules('usuario', 'Nombre de Usuario', 'required|callback_check_usuario');
+        $this->form_validation->set_rules('usuario', 'Nombre de Usuario', 'required|alpha_dash|callback_check_usuario');
         $this->form_validation->set_rules('nombres', 'Nombres', 'required');
         $this->form_validation->set_rules('apellido_paterno', 'Apellido Paterno', 'required');
         $this->form_validation->set_rules('apellido_materno', 'Apellido Materno', 'required');
