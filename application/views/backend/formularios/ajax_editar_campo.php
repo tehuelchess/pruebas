@@ -1,5 +1,10 @@
 <script type="text/javascript">
     $(document).ready(function(){
+        $('.validacion').typeahead({
+            mode: "multiple",
+            delimiter: "|",
+            source: ["required","rut","min_length[num]","max_length[num]","exact_length[num]","greater_than[num]","less_than[num]","alpha","alpha_numeric","alpha_dash","numeric","integer","decimal","is_natural","is_natural_no_zero","valid_email","valid_emails","valid_ip","valid_base64","trim"]
+        });
         
         //Funcionalidad del llenado de nombre usando el boton de asistencia
         $("#formEditarCampo .asistencia .dropdown-menu a").click(function(){
@@ -109,13 +114,7 @@
         <?php endif; ?>
         <?php if (!$campo->estatico): ?>
             <label>Reglas de validación</label>
-            <input type="text"
-                   name="validacion"
-                   data-provide="typeahead"
-                   data-mode="multiple"
-                   data-delimiter="|"
-                   data-source="[&quot;required&quot;,&quot;rut&quot;,&quot;min_length[num]&quot;,&quot;max_length[num]&quot;,&quot;exact_length[num]&quot;,&quot;greater_than[num]&quot;,&quot;less_than[num]&quot;,&quot;alpha&quot;,&quot;alpha_numeric&quot;,&quot;alpha_dash&quot;,&quot;numeric&quot;,&quot;integer&quot;,&quot;decimal&quot;,&quot;is_natural&quot;,&quot;is_natural_no_zero&quot;,&quot;valid_email&quot;,&quot;valid_emails&quot;,&quot;valid_ip&quot;,&quot;valid_base64&quot;trim&quot;]"
-                   value="<?= $edit ? implode('|', $campo->validacion) : 'required' ?>"/>
+            <input class='validacion' type="text" name="validacion" value="<?= $edit ? implode('|', $campo->validacion) : 'required' ?>"/>
                <?php endif; ?>
             <?php if(!$campo->estatico):?>
             <label>Valor por defecto</label>
