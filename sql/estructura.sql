@@ -409,28 +409,6 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `tramitador`.`dato`
--- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `tramitador`.`dato` (
-  `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT ,
-  `nombre` VARCHAR(128) NOT NULL ,
-  `valor` TEXT NOT NULL ,
-  `tramite_id` INT(10) UNSIGNED NOT NULL ,
-  PRIMARY KEY (`id`) ,
-  UNIQUE INDEX `nombre` (`nombre` ASC, `tramite_id` ASC) ,
-  INDEX `fk_dato_etapa1` (`tramite_id` ASC) ,
-  CONSTRAINT `dato_ibfk_1`
-    FOREIGN KEY (`tramite_id` )
-    REFERENCES `tramitador`.`tramite` (`id` )
-    ON DELETE CASCADE
-    ON UPDATE CASCADE)
-ENGINE = InnoDB
-AUTO_INCREMENT = 8
-DEFAULT CHARACTER SET = utf8
-COLLATE = utf8_general_ci;
-
-
--- -----------------------------------------------------
 -- Table `tramitador`.`usuario_backend`
 -- -----------------------------------------------------
 CREATE  TABLE IF NOT EXISTS `tramitador`.`usuario_backend` (
