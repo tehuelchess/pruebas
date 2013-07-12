@@ -44,6 +44,12 @@ class CampoDocumento extends Campo {
             $dato->save();
         }else{
             $file=Doctrine::getTable('File')->findOneByTipoAndFilename('documento',$dato->valor);
+            if(isset($this->extra->regenerar) && $this->extra->regenerar){
+                $file->delete();
+                $file=$this->Documento->generar($etapa_id);
+                $dato->valor = $file->filename;
+                $dato->save();
+            }
         }
 
         $display = '<p><a class="btn btn-success" target="_blank" href="' . site_url('documentos/get/' . $file->filename) . '?id='.$file->id.'&token='.$file->llave.'"><i class="icon-download-alt icon-white"></i> ' . $this->etiqueta . '</a></p>';
@@ -66,6 +72,12 @@ class CampoDocumento extends Campo {
             $dato->save();
         }else{
             $file=Doctrine::getTable('File')->findOneByTipoAndFilename('documento',$dato->valor);
+            if(isset($this->extra->regenerar) && $this->extra->regenerar){
+                $file->delete();
+                $file=$this->Documento->generar($etapa_id);
+                $dato->valor = $file->filename;
+                $dato->save();
+            }
         }
 
         $display = '<p>'.$this->etiqueta.'</p>';
@@ -135,6 +147,7 @@ class CampoDocumento extends Campo {
     
     
     public function backendExtraFields() {
+        $regenerar=isset($this->extra->regenerar)?$this->extra->regenerar:null;
         $firmar=isset($this->extra->firmar)?$this->extra->firmar:null;
         
         $html='<label>Documento</label>';
@@ -143,6 +156,10 @@ class CampoDocumento extends Campo {
         foreach($this->Formulario->Proceso->Documentos as $d)
             $html.='<option value="'.$d->id.'" '.($this->documento_id==$d->id?'selected':'').'>'.$d->nombre.'</option>';
         $html.='</select>';
+        
+        $html.='<label class="radio"><input type="radio" name="extra[regenerar]" value="0" '.(!$regenerar?'checked':'').' /> El documento se genera solo la primera vez que se visualiza este campo.</label>';
+        $html.='<label class="radio"><input type="radio" name="extra[regenerar]" value="1" '.($regenerar?'checked':'').' /> El documento se regenera cada vez que se visualiza este campo.</label>';
+        
         $html.='<label class="checkbox"><input type="checkbox" name="extra[firmar]" '.($firmar?'checked':'').' /> Deseo firmar con token en este paso.</label>';
         
         return $html;
