@@ -29,18 +29,5 @@ class DatoSeguimiento extends Doctrine_Record {
     public function getValor(){
         return json_decode($this->_get('valor'));
     }
-    
-    //Al guardar, guardamos una copia en la tabla Dato, por si la deprecasion sale mal.
-    public function save(\Doctrine_Connection $conn = null) {
-        parent::save($conn);
-        
-        $dato=Doctrine::getTable('Dato')->findOneByTramiteIdAndNombre($this->Etapa->tramite_id,$this->nombre);
-        if(!$dato)
-            $dato=new Dato();
-        $dato->nombre=$this->nombre;
-        $dato->valor=$this->valor;
-        $dato->tramite_id=$this->Etapa->tramite_id;
-        $dato->save();
-    }
 
 }
