@@ -27,5 +27,16 @@ class File extends Doctrine_Record {
         
 
     }
+    
+    public function postDelete($event) {
+        parent::postDelete($event);
+        if($this->tipo=='documento'){
+            unlink ('uploads/documentos/'.$this->filename);
+            unlink ('uploads/documentos/'.preg_replace('/\.pdf$/','.copia.pdf',$this->filename));
+        }
+        else if($this->tipo=='dato'){
+            unlink ('uploads/datos/'.$this->filename);
+        }
+    }
 
 }
