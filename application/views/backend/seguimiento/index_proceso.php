@@ -38,11 +38,10 @@
 <table class="table">
     <thead>
         <tr>
-            <th>Id</th>
-            <th>Tramite</th>
-            <th>Estado</th>
+            <th><a href="<?=current_url().'?query='.$query.'&order=id&direction='.($direction=='asc'?'desc':'asc')?>">Id <?=$order=='id'?$direction=='asc'?'<i class="icon-chevron-down"></i>':'<i class="icon-chevron-up"></i>':''?></a></th>
+            <th><a href="<?=current_url().'?query='.$query.'&order=pendiente&direction='.($direction=='asc'?'desc':'asc')?>">Estado <?=$order=='pendiente'?$direction=='asc'?'<i class="icon-chevron-down"></i>':'<i class="icon-chevron-up"></i>':''?></a></th>
             <th>Etapa actual</th>
-            <th>Último cambio</th>
+            <th><a href="<?=current_url().'?query='.$query.'&order=updated_at&direction='.($direction=='asc'?'desc':'asc')?>">Último cambio <?=$order=='updated_at'?$direction=='asc'?'<i class="icon-chevron-down"></i>':'<i class="icon-chevron-up"></i>':''?></a></th>
             <th></th>
         </tr>
     </thead>
@@ -50,7 +49,6 @@
         <?php foreach ($tramites as $t): ?>
             <tr>
                 <td><?= $t->id ?></td>
-                <td><?= $t->Proceso->nombre ?></td>
                 <td><?= $t->pendiente ? 'En curso' : 'Completado' ?></td>
                 <td>
                     <?php
@@ -61,7 +59,7 @@
                     ?>
                 </td>
                 <td><?= strftime('%c', mysql_to_unix($t->updated_at)) ?></td>
-                <td>
+                <td style="text-align: right;">
                     <a class="btn btn-primary" href="<?= site_url('backend/seguimiento/ver/' . $t->id) ?>"><i class="icon-white icon-eye-open"></i> Seguimiento</a>
                     <a class="btn btn-danger" href="<?= site_url('backend/seguimiento/borrar_tramite/' . $t->id) ?>" onclick="return confirm('¿Esta seguro que desea borrar estre trámite?')"><i class="icon-white icon-trash"></i> Borrar</a>
                 </td>

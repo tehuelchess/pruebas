@@ -26,24 +26,27 @@ class Seguimiento extends CI_Controller {
 
     public function index_proceso($proceso_id) {
         $proceso = Doctrine::getTable('Proceso')->find($proceso_id);
-        $offset=$this->input->get('offset');
-        $per_page=100;
-
+        
         if (UsuarioBackendSesion::usuario()->cuenta_id != $proceso->cuenta_id) {
             echo 'Usuario no tiene permisos';
             exit;
         }
+        
+        $query = $this->input->get('query');
+        $offset=$this->input->get('offset');
+        $order=$this->input->get('order')?$this->input->get('order'):'updated_at';
+        $direction=$this->input->get('direction')?$this->input->get('direction'):'desc';
+        $per_page=100;
 
         $doctrine_query = Doctrine_Query::create()
                 ->from('Tramite t, t.Proceso p, t.Etapas e, e.DatosSeguimiento d')
                 ->where('p.id = ?', $proceso_id)
                 ->having('COUNT(d.id) > 0 OR COUNT(e.id) > 1')  //Mostramos solo los que se han avanzado o tienen datos
                 ->groupBy('t.id')
-                ->orderBy('t.updated_at desc')
+                ->orderBy($order.' '.$direction)
                 ->limit($per_page)
                 ->offset($offset);
-
-        $query = $this->input->get('query');
+      
         if ($query) {
             $this->load->library('sphinxclient');
             $this->sphinxclient->setFilter('proceso_id', array($proceso_id));
@@ -67,6 +70,8 @@ class Seguimiento extends CI_Controller {
         ));
         
         $data['query'] = $query;
+        $data['order']=$order;
+        $data['direction']=$direction;
         $data['proceso'] = $proceso;
         $data['tramites'] = $tramites;
 
