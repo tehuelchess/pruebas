@@ -26,11 +26,6 @@ class Tramite extends Doctrine_Record {
             'foreign' => 'tramite_id'
         ));
 
-        $this->hasMany('Dato as Datos', array(
-            'local' => 'id',
-            'foreign' => 'tramite_id'
-        ));
-
         $this->hasMany('File as Files', array(
             'local' => 'id',
             'foreign' => 'tramite_id'
