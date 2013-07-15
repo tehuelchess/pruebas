@@ -46,6 +46,10 @@ class CampoFile extends Campo {
         $output.='<option name="pdf" '.(in_array('pdf', $filetypes)?'selected':'').'>pdf</option>';
         $output.='<option name="doc" '.(in_array('doc', $filetypes)?'selected':'').'>doc</option>';
         $output.='<option name="docx" '.(in_array('docx', $filetypes)?'selected':'').'>docx</option>';
+        $output.='<option name="xls" '.(in_array('xls', $filetypes)?'selected':'').'>xls</option>';
+        $output.='<option name="xlsx" '.(in_array('xlsx', $filetypes)?'selected':'').'>xlsx</option>';
+        $output.='<option name="ppt" '.(in_array('ppt', $filetypes)?'selected':'').'>ppt</option>';
+        $output.='<option name="pptx" '.(in_array('pptx', $filetypes)?'selected':'').'>pptx</option>';
         $output.='<option name="zip" '.(in_array('zip', $filetypes)?'selected':'').'>zip</option>';
         $output.='<option name="rar" '.(in_array('rar', $filetypes)?'selected':'').'>rar</option>';
         $output.='</select>';
