@@ -60,6 +60,9 @@ class Autenticacion extends MY_Controller {
             $usuario = new Usuario();
             $usuario->usuario = $this->input->post('usuario');
             $usuario->setPasswordWithSalt($this->input->post('password'));
+            $usuario->nombres = $this->input->post('nombres');
+            $usuario->apellido_paterno = $this->input->post('apellido_paterno');
+            $usuario->apellido_materno = $this->input->post('apellido_materno');
             $usuario->email = $this->input->post('email');
             $usuario->save();
             
