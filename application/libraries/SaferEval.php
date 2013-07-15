@@ -169,7 +169,9 @@ class SaferEval {
             //Booleanos
             'true',
             'false',
-            'NULL'
+            'NULL',
+            //Helpers
+            'matrix_to_html'
         );
         $this->allowedTokens = array(
             'T_AND_EQUAL', // assignment operators
