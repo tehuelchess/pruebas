@@ -6,8 +6,12 @@ class CampoFile extends Campo {
 
     protected function display($modo, $dato,$etapa_id) {
         if(!$etapa_id){
-            $display='<label>' . $this->etiqueta . (in_array('required', $this->validacion) ? '' : ' (Opcional)') . '</label>';
+            $display='<label class="control-label">' . $this->etiqueta . (in_array('required', $this->validacion) ? '' : ' (Opcional)') . '</label>';
+            $display.='<div class="controls">';
             $display.='<button type="button" class="btn">Subir archivo</button>';
+            if($this->ayuda)
+                $display.='<span class="help-block">'.$this->ayuda.'</span>';
+            $display.='</div>';
             return $display;
         }
         
@@ -28,6 +32,10 @@ class CampoFile extends Campo {
         }
         else
             $display.='<p class="link"></p>';
+        
+        if($this->ayuda)
+            $display.='<span class="help-block">'.$this->ayuda.'</span>';
+        
         $display.='</div>';
 
         return $display;
