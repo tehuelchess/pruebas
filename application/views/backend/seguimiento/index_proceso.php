@@ -41,7 +41,8 @@
             <th><a href="<?=current_url().'?query='.$query.'&order=id&direction='.($direction=='asc'?'desc':'asc')?>">Id <?=$order=='id'?$direction=='asc'?'<i class="icon-chevron-down"></i>':'<i class="icon-chevron-up"></i>':''?></a></th>
             <th><a href="<?=current_url().'?query='.$query.'&order=pendiente&direction='.($direction=='asc'?'desc':'asc')?>">Estado <?=$order=='pendiente'?$direction=='asc'?'<i class="icon-chevron-down"></i>':'<i class="icon-chevron-up"></i>':''?></a></th>
             <th>Etapa actual</th>
-            <th><a href="<?=current_url().'?query='.$query.'&order=updated_at&direction='.($direction=='asc'?'desc':'asc')?>">Último cambio <?=$order=='updated_at'?$direction=='asc'?'<i class="icon-chevron-down"></i>':'<i class="icon-chevron-up"></i>':''?></a></th>
+            <th><a href="<?=current_url().'?query='.$query.'&order=created_at&direction='.($direction=='asc'?'desc':'asc')?>">Fecha de creación <?=$order=='created_at'?$direction=='asc'?'<i class="icon-chevron-down"></i>':'<i class="icon-chevron-up"></i>':''?></th>
+            <th><a href="<?=current_url().'?query='.$query.'&order=updated_at&direction='.($direction=='asc'?'desc':'asc')?>">Fecha de Último cambio <?=$order=='updated_at'?$direction=='asc'?'<i class="icon-chevron-down"></i>':'<i class="icon-chevron-up"></i>':''?></a></th>
             <th></th>
         </tr>
     </thead>
@@ -58,6 +59,7 @@
                     echo implode(', ', $etapas_array);
                     ?>
                 </td>
+                <td><?= strftime('%c', mysql_to_unix($t->created_at)) ?></td>
                 <td><?= strftime('%c', mysql_to_unix($t->updated_at)) ?></td>
                 <td style="text-align: right;">
                     <a class="btn btn-primary" href="<?= site_url('backend/seguimiento/ver/' . $t->id) ?>"><i class="icon-white icon-eye-open"></i> Seguimiento</a>
