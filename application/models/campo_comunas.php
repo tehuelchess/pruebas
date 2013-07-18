@@ -7,11 +7,11 @@ class CampoComunas extends Campo{
     protected function display($modo, $dato) {
         $display = '<label class="control-label">' . $this->etiqueta . (in_array('required', $this->validacion) ? '' : ' (Opcional)') . '</label>';
         $display.='<div class="controls">';
-        $display.='<select class="regiones" data-id="'.$this->id.'" name="' . $this->nombre . '[region]" ' . ($modo == 'visualizacion' ? 'disabled' : '') . '>';
+        $display.='<select class="regiones" data-id="'.$this->id.'" name="' . $this->nombre . '[region]" ' . ($modo == 'visualizacion' ? 'readonly' : '') . '>';
         $display.='<option value="">Seleccione región</option>';
         $display.='</select>';
         $display.='<br />';
-        $display.='<select class="comunas" data-id="'.$this->id.'" name="' . $this->nombre . '[comuna]" ' . ($modo == 'visualizacion' ? 'disabled' : '') . '>';
+        $display.='<select class="comunas" data-id="'.$this->id.'" name="' . $this->nombre . '[comuna]" ' . ($modo == 'visualizacion' ? 'readonly' : '') . '>';
         $display.='<option value="">Seleccione comuna</option>';
         $display.='</select>';
         if($this->ayuda)
