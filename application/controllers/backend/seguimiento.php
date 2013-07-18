@@ -36,7 +36,13 @@ class Seguimiento extends CI_Controller {
         $offset=$this->input->get('offset');
         $order=$this->input->get('order')?$this->input->get('order'):'updated_at';
         $direction=$this->input->get('direction')?$this->input->get('direction'):'desc';
-        $per_page=100;
+        $created_at_desde=$this->input->get('created_at_desde');
+        $created_at_hasta=$this->input->get('created_at_hasta');
+        $updated_at_desde=$this->input->get('updated_at_desde');
+        $updated_at_hasta=$this->input->get('updated_at_hasta');
+        $pendiente=$this->input->get('pendiente')!==false?$this->input->get('pendiente'):-1;
+        $per_page=10;
+        $busqueda_avanzada=$this->input->get('busqueda_avanzada');
 
         $doctrine_query = Doctrine_Query::create()
                 ->from('Tramite t, t.Proceso p, t.Etapas e, e.DatosSeguimiento d')
@@ -46,6 +52,18 @@ class Seguimiento extends CI_Controller {
                 ->orderBy($order.' '.$direction)
                 ->limit($per_page)
                 ->offset($offset);
+        
+        if($created_at_desde)
+            $doctrine_query->andWhere ('created_at >= ?',array(date('Y-m-d',strtotime($created_at_desde))));
+        if($created_at_hasta)
+            $doctrine_query->andWhere ('created_at <= ?',array(date('Y-m-d',strtotime($created_at_hasta))));
+        if($updated_at_desde)
+            $doctrine_query->andWhere ('updated_at >= ?',array(date('Y-m-d',strtotime($updated_at_desde))));
+        if($updated_at_hasta)
+            $doctrine_query->andWhere ('updated_at <= ?',array(date('Y-m-d',strtotime($updated_at_hasta))));
+        if($pendiente!=-1)
+            $doctrine_query->andWhere ('pendiente = ?',array($pendiente));
+        
       
         if ($query) {
             $this->load->library('sphinxclient');
@@ -64,7 +82,7 @@ class Seguimiento extends CI_Controller {
 
         $this->load->library('pagination');
         $this->pagination->initialize(array(
-            'base_url'=>site_url('backend/seguimiento/index_proceso/'.$proceso_id.'?'),
+            'base_url'=>site_url('backend/seguimiento/index_proceso/'.$proceso_id.'?order='.$order.'&direction='.$direction.'&pendiente='.$pendiente.'&created_at_desde='.$created_at_desde.'&created_at_hasta='.$created_at_hasta.'&updated_at_desde='.$updated_at_desde.'&updated_at_hasta='.$updated_at_hasta),
             'total_rows'=>$ntramites,
             'per_page'=>$per_page
         ));
@@ -72,6 +90,12 @@ class Seguimiento extends CI_Controller {
         $data['query'] = $query;
         $data['order']=$order;
         $data['direction']=$direction;
+        $data['created_at_desde']=$created_at_desde;
+        $data['created_at_hasta']=$created_at_hasta;
+        $data['updated_at_desde']=$updated_at_desde;
+        $data['updated_at_hasta']=$updated_at_hasta;
+        $data['pendiente']=$pendiente;
+        $data['busqueda_avanzada']=$busqueda_avanzada;
         $data['proceso'] = $proceso;
         $data['tramites'] = $tramites;
 
