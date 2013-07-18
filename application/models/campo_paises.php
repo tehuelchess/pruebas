@@ -7,7 +7,7 @@ class CampoPaises extends Campo{
     protected function display($modo, $dato) {
         $display = '<label class="control-label">' . $this->etiqueta . (in_array('required', $this->validacion) ? '' : ' (Opcional)') . '</label>';
         $display.='<div class="controls">';
-        $display.='<select class="paises" data-id="'.$this->id.'" name="' . $this->nombre . '" ' . ($modo == 'visualizacion' ? 'disabled' : '') . '>';
+        $display.='<select class="paises" data-id="'.$this->id.'" name="' . $this->nombre . '" ' . ($modo == 'visualizacion' ? 'readonly' : '') . '>';
         $display.='<option value="">Seleccione país</option>';
         $display.='</select>';
         if($this->ayuda)
