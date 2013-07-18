@@ -41,7 +41,7 @@ class Seguimiento extends CI_Controller {
         $updated_at_desde=$this->input->get('updated_at_desde');
         $updated_at_hasta=$this->input->get('updated_at_hasta');
         $pendiente=$this->input->get('pendiente')!==false?$this->input->get('pendiente'):-1;
-        $per_page=10;
+        $per_page=100;
         $busqueda_avanzada=$this->input->get('busqueda_avanzada');
 
         $doctrine_query = Doctrine_Query::create()
