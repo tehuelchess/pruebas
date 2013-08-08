@@ -3,8 +3,6 @@ $(document).ready(function(){
 
     $(".preventDoubleRequest").one("click", function() {
         $(this).click(function () { return false; });
-        $(this).attr("autocomplete","off"); //Fix para firefox
-        $(this).attr("disabled",true);
     });
     
     $(".datepicker")
