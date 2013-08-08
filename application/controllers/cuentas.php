@@ -34,8 +34,8 @@ class Cuentas extends MY_Controller {
         if($this->form_validation->run()==TRUE){
             $usuario=UsuarioSesion::usuario();
             $usuario->nombres=$this->input->post('nombres');
-            $usuario->apellido_paterno=$this->input->post('apellido_materno');
-            $usuario->apellido_materno=$this->input->post('apellido_paterno');
+            $usuario->apellido_paterno=$this->input->post('apellido_paterno');
+            $usuario->apellido_materno=$this->input->post('apellido_materno');
             $usuario->email=$this->input->post('email');
             $usuario->save();
             
