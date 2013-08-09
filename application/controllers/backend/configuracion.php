@@ -180,7 +180,7 @@ class Configuracion extends CI_Controller {
             }
 
             
-            if($this->input->post('password')) $usuario->password=$this->input->post('password');
+            if($this->input->post('password')) $usuario->setPasswordWithSalt($this->input->post('password'));
             $usuario->nombres = $this->input->post('nombres');
             $usuario->apellido_paterno = $this->input->post('apellido_paterno');
             $usuario->apellido_materno = $this->input->post('apellido_materno');
@@ -272,7 +272,7 @@ class Configuracion extends CI_Controller {
             }
 
             
-            if($this->input->post('password')) $usuario->password=$this->input->post('password');
+            if($this->input->post('password')) $usuario->setPasswordWithSalt($this->input->post('password'));
             $usuario->nombre = $this->input->post('nombre');
             $usuario->apellidos = $this->input->post('apellidos');
             $usuario->rol = $this->input->post('rol');
