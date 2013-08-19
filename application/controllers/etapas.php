@@ -10,8 +10,13 @@ class Etapas extends MY_Controller {
     }
 
     public function inbox() {
-        $data['etapas'] = Doctrine::getTable('Etapa')->findPendientes(UsuarioSesion::usuario()->id, Cuenta::cuentaSegunDominio());
+        $orderby=$this->input->get('orderby')?$this->input->get('orderby'):'updated_at';
+        $direction=$this->input->get('direction')?$this->input->get('direction'):'desc';
+        
+        $data['etapas'] = Doctrine::getTable('Etapa')->findPendientes(UsuarioSesion::usuario()->id, Cuenta::cuentaSegunDominio(),$orderby,$direction);
 
+        $data['orderby']=$orderby;
+        $data['direction']=$direction;
         $data['sidebar'] = 'inbox';
         $data['content'] = 'etapas/inbox';
         $data['title'] = 'Bandeja de Entrada';
