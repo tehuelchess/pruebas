@@ -15,6 +15,17 @@ class DatoSeguimientoTable extends Doctrine_Table{
                 ->fetchOne();        
     }
     
+    //Busca todos los dato hasta la ultima etapa del $tramite_id
+    public function findByTramite($tramite_id){
+        
+        return Doctrine_Query::create()
+                ->from('DatoSeguimiento d, d.Etapa e, e.Tramite t')
+                ->where('t.id = ?',$tramite_id)
+                ->having('d.id = MAX(d.id)')
+                ->groupBy('d.nombre')
+                ->execute();
+    }
+    
     //Devuelve un arreglo con los valores del dato recopilados durante todo el proceso
     public function findGlobalByNombreAndProceso($nombre,$proceso_id){        
         $datos= Doctrine_Query::create()

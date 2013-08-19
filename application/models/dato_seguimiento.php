@@ -30,4 +30,12 @@ class DatoSeguimiento extends Doctrine_Record {
         return json_decode($this->_get('valor'));
     }
 
+    
+    public function toPublicArray(){
+        $publicArray=array(
+            $this->nombre=>$this->valor
+        );
+        
+        return $publicArray;
+    }
 }
