@@ -129,5 +129,32 @@ class Tramite extends Doctrine_Record {
 
         Doctrine_Manager::connection()->commit();
     }
+    
+    //Retorna el tramite convertido en array, solamente con los campos visibles al publico a traves de la API.
+    public function toPublicArray(){
+        $etapas=null;
+        $etapas_obj=  Doctrine_Query::create()->from('Etapa e')->where('e.tramite_id = ?',$this->id)->orderBy('id desc')->execute();
+        foreach($etapas_obj as $e)
+            $etapas[]=$e->toPublicArray();
+        
+        $datos=null;
+        $datos_obj=Doctrine::getTable('DatoSeguimiento')->findByTramite($this->id);
+        foreach($datos_obj as $d)
+            $datos[]=$d->toPublicArray();
+                
+        $publicArray = array(
+            'id' => (int)$this->id,
+            'estado' => $this->pendiente?'pendiente':'completado',
+            'proceso_id' => (int)$this->proceso_id,
+            'fecha_inicio' => $this->created_at,
+            'fecha_modificacion' => $this->updated_at,
+            'fecha_termino' => $this->ended_at,
+            'etapas'=>$etapas,
+            'datos'=>$datos
+        );
+
+        return $publicArray;
+        
+    }
 
 }

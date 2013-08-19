@@ -166,5 +166,15 @@ class Proceso extends Doctrine_Record {
         
         return FALSE;
     }
+    
+    
+    public function toPublicArray(){
+        $publicArray=array(
+            'id'=>(int)$this->id,
+            'nombre'=>$this->nombre
+        );
+        
+        return $publicArray;
+    }
 
 }

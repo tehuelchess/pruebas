@@ -375,5 +375,19 @@ class Etapa extends Doctrine_Record {
             
         }
     }
+    
+    public function toPublicArray(){
+        $publicArray=array(
+            'id'=>(int)$this->id,
+            'estado'=>$this->pendiente?'pendiente':'completado',
+            'usuario_asignado'=>$this->usuario_id?$this->Usuario->toPublicArray():null,
+            'fecha_inicio' => $this->created_at,
+            'fecha_modificacion' => $this->updated_at,
+            'fecha_termino' => $this->ended_at,
+            'fecha_vencimiento'=>$this->vencimiento_at
+        );
+        
+        return $publicArray;
+    }
 
 }
