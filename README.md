@@ -32,3 +32,8 @@ El código de esta aplicación está licenciado bajo los términos de la Licenci
 - Editar el archivo "database.php" y actualizar los valores con los de su configuración, normalmente se deben editar sólo los campos "username, password, database"
 #### Aplicación de parches
 - Aplicar los últimos parches a base de datos situandose en la raiz de la aplicación y ejecutando el comando: php index.php migration migrate
+
+### Ejecución inicial
+- Acceder a http://nombrededominio/backend
+    Usuario: admin
+    Contraseña: 123456
