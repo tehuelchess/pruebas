@@ -85,7 +85,11 @@
             <input type="hidden" name="tipo" value="<?= $campo->tipo ?>" />
         <?php endif; ?>
         <label>Etiqueta</label>
+        <?php if($campo->etiqueta_tamano=='xxlarge'):?>
+        <textarea class="input-xxlarge" rows="5" name="etiqueta" ><?= htmlspecialchars($campo->etiqueta) ?></textarea>
+        <?php else: ?>
         <input type="text" name="etiqueta" value="<?= htmlspecialchars($campo->etiqueta) ?>" />
+        <?php endif ?>
         <?php if($campo->requiere_nombre):?>
         <label>Nombre</label>
         <input type="text" name="nombre" value="<?= $campo->nombre ?>" />

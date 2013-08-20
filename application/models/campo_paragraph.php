@@ -5,6 +5,7 @@ class CampoParagraph extends Campo{
     public $requiere_nombre=false;
     public $requiere_datos=false;
     public $estatico=true;
+    public $etiqueta_tamano='xxlarge';
     
     function setTableDefinition() {
         parent::setTableDefinition();
