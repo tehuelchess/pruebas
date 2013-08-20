@@ -101,6 +101,11 @@
 
         <label>Contenido</label>
         <textarea name="contenido" class="input-xxlarge" rows="20"><?= $edit ? $documento->contenido : '' ?></textarea>
+        <div class="help-block">
+            <ul>
+                <li>Para incluir un salto de página puede usar: <?=htmlspecialchars('<br pagebreak="true" />')?></li>
+            </ul>
+        </div>
 
         <?php if ($proceso->Cuenta->HsmConfiguraciones->count()): ?>
             <label>Firma Electronica Avanzada (HSM)</label>
