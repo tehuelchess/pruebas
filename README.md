@@ -27,11 +27,12 @@ El código de esta aplicación está licenciado bajo los términos de la Licenci
 #### Base de datos
 - Crear una base de datos para la plataforma
 - Cargar la estructura inicial del archivo "sql/estructura.sql"
-- Cargar los datos iniciales del archivo "sql/datos.sql"
 - Cambiar el nombre del archivo de configuración de base de datos que se encuentra dentro de la carpeta "application/config" de "database.sample.php" a "database.php"
 - Editar el archivo "database.php" y actualizar los valores con los de su configuración, normalmente se deben editar sólo los campos "username, password, database"
 #### Aplicación de parches
 - Aplicar los últimos parches a base de datos situandose en la raiz de la aplicación y ejecutando el comando: php index.php migration migrate
+#### Carga de datos iniciales
+- Cargar los datos iniciales del archivo "sql/datos.sql"
 
 ### Ejecución inicial
 - Acceder a http://nombrededominio/backend
