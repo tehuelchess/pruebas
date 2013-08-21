@@ -5,7 +5,7 @@ $(document).ready(function(){
         $(this).click(function () { return false; });
     });
     
-    $(".datepicker")
+    $(".datepicker:not([readonly])")
     .datepicker({
         format: "dd-mm-yyyy",
         weekStart: 1,
