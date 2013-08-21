@@ -6,6 +6,7 @@ class Documento extends Doctrine_Record {
         $this->hasColumn('id');
         $this->hasColumn('tipo');
         $this->hasColumn('nombre');
+        $this->hasColumn('subtitulo');
         $this->hasColumn('contenido');
         $this->hasColumn('servicio');
         $this->hasColumn('servicio_url');
@@ -102,6 +103,7 @@ class Documento extends Doctrine_Record {
             if ($this->logo)
                 $obj->logo = 'uploads/logos_certificados/' . $this->logo;
             $obj->titulo = $this->nombre;
+            $obj->subtitulo = $this->subtitulo;
             $obj->validez = $this->validez;
             if ($this->timbre)
                 $obj->timbre = 'uploads/timbres/' . $this->timbre;
