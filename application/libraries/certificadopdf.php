@@ -10,12 +10,12 @@ define('GRID_WIDTH', 8);
 class CertificadoPDF extends TCPDF {
 
     public $id='123456789';
-    public $key='abcdefghijkl';
+    public $key='abcdefghijkl'; 
     public $servicio='Servicio';
     public $servicio_url='http://www.ejemplo.com';
     public $logo='assets/img/certificados/logo_gobierno-chile.png';
-    public $titulo='Certificado';
-    public $gratuito=true;
+    public $titulo='Título';
+    public $subtitulo='Subtítulo';
     public $validez=null;
     public $timbre='';
     public $firmador_nombre='Juan Perez';
@@ -58,7 +58,7 @@ class CertificadoPDF extends TCPDF {
         $this->SetFont('helvetica', '', 18);
         $this->MultiCell(5 * CELL_WIDTH + 4 * GRID_WIDTH, 10, $this->titulo, 0, 'L', false, 1, PAGE_MARGIN, PAGE_MARGIN + 40);
         $this->SetFont('helvetica', '', 10);
-        $this->MultiCell(5 * CELL_WIDTH + 4 * GRID_WIDTH, 10, $this->gratuito?'Certificado Gratuito':'Certificado No Gratuito', 0, 'L', false, 1);
+        $this->MultiCell(5 * CELL_WIDTH + 4 * GRID_WIDTH, 10, $this->subtitulo, 0, 'L', false, 1);
 
         $this->Line(PAGE_MARGIN, PAGE_MARGIN + 60, PAGE_MARGIN + 5 * CELL_WIDTH + 4 * GRID_WIDTH, PAGE_MARGIN + 60, array('width' => 0.5));
         
