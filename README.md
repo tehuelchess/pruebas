@@ -16,7 +16,9 @@ Twitter Bootstrap 2.3.1
 jQuery 1.7.2  
 
 ### Requisitos Técnicos
-PHP >= 5.3.x, MySQL >= 5.5.x
+- Apache 2.x con modulo mod_rewrite instalado y activado.
+- PHP >= 5.3.x
+- MySQL >= 5.5.x
 
 ### Tipo de Licencia
 El código de esta aplicación está licenciado bajo los términos de la Licencia de Software Público (Chile) (más información [http://www.softwarepublico.cl](http://www.softwarepublico.cl)).
