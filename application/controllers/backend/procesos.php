@@ -147,8 +147,10 @@ class Procesos extends CI_Controller {
         $this->form_validation->set_rules('nombre', 'Nombre', 'required');
         if($this->input->post('vencimiento')){
             $this->form_validation->set_rules('vencimiento_valor','Valor de Vencimiento','required|is_natural_no_zero');
-            if($this->input->post('vencimiento_notificar'))
+            if($this->input->post('vencimiento_notificar')){
+                $this->form_validation->set_rules('vencimiento_notificar_dias','Días para notificar vencimiento','required|is_natural_no_zero');
                 $this->form_validation->set_rules('vencimiento_notificar_email','Correo electronico para notificar vencimiento','required|valid_email');
+            }
         }
 
         $respuesta=new stdClass();
@@ -173,6 +175,7 @@ class Procesos extends CI_Controller {
             $tarea->vencimiento_unidad=$this->input->post('vencimiento_unidad');
             $tarea->vencimiento_habiles=$this->input->post('vencimiento_habiles');
             $tarea->vencimiento_notificar=$this->input->post('vencimiento_notificar');
+            $tarea->vencimiento_notificar_dias=$this->input->post('vencimiento_notificar_dias');
             $tarea->vencimiento_notificar_email=$this->input->post('vencimiento_notificar_email');
             $tarea->save();
             

@@ -25,6 +25,7 @@ class Tarea extends Doctrine_Record {
         $this->hasColumn('vencimiento_unidad');             //String que indica la unidad del vencimiento. Ej: days, weeks, months, etc.
         $this->hasColumn('vencimiento_habiles');
         $this->hasColumn('vencimiento_notificar');          //Indica si se debe notificar en caso de que se acerque la fecha de vencimiento
+        $this->hasColumn('vencimiento_notificar_dias');     //Indica desde cuantos dias de anticipacion se debe notificar la fecha de vencimiento
         $this->hasColumn('vencimiento_notificar_email');    //Cual es el email donde se debe notificar
         
     }
