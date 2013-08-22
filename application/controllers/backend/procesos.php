@@ -149,7 +149,7 @@ class Procesos extends CI_Controller {
             $this->form_validation->set_rules('vencimiento_valor','Valor de Vencimiento','required|is_natural_no_zero');
             if($this->input->post('vencimiento_notificar')){
                 $this->form_validation->set_rules('vencimiento_notificar_dias','Días para notificar vencimiento','required|is_natural_no_zero');
-                $this->form_validation->set_rules('vencimiento_notificar_email','Correo electronico para notificar vencimiento','required|valid_email');
+                $this->form_validation->set_rules('vencimiento_notificar_email','Correo electronico para notificar vencimiento','required');
             }
         }
 
