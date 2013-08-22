@@ -39,6 +39,9 @@ class WidgetTramiteEtapas extends Widget {
                     title: {
                         text: "'.$proceso->nombre.'"
                     },
+                    tooltip: {
+                        pointFormat: "{point.y} trámites: <b>{point.percentage:.1f}%</b>"
+                    },
                     series: [{
                             data: '.$datos.'
                         }]
