@@ -43,6 +43,23 @@
             $inputDependienteTipo.val("string");
         });
         
+        //Funcionalidad en campo dependientes para seleccionar entre tipo igualdad y desigualdad
+        $buttonDesigualdad=$("#formEditarCampo .campoDependientes .buttonDesigualdad");
+        $buttonIgualdad=$("#formEditarCampo .campoDependientes .buttonIgualdad");
+        $inputDependienteRelacion=$("#formEditarCampo input[name=dependiente_relacion]");
+        $buttonIgualdad.attr("disabled",$inputDependienteRelacion.val()=="==");
+        $buttonDesigualdad.attr("disabled",$inputDependienteRelacion.val()=="!=");
+        $buttonDesigualdad.click(function(){
+            $buttonIgualdad.prop("disabled",false);
+            $buttonDesigualdad.prop("disabled",true);
+            $inputDependienteRelacion.val("!=");
+        });
+        $buttonIgualdad.click(function(){
+            $buttonIgualdad.prop("disabled",true);
+            $buttonDesigualdad.prop("disabled",false);
+            $inputDependienteRelacion.val("==");
+        });
+        
         //Llenado automatico del campo nombre
         $("#formEditarCampo input[name=etiqueta]").blur(function(){
             ellipsize($("#formEditarCampo input[name=etiqueta]"),$("#formEditarCampo input[name=nombre]"));
@@ -129,7 +146,10 @@
                 <select class="input-medium" name="dependiente_campo">
                     <option value="<?=$campo->dependiente_campo?>"><?=$campo->dependiente_campo?></option>
                 </select>
-                <span>=</span>
+                <div class="btn-group" style="margin-bottom: 9px;">
+                    <button type="button" class="buttonIgualdad btn">=</button><button type="button" class="buttonDesigualdad btn">!=</button>
+                </div>
+                <input type="hidden" name="dependiente_relacion" value="<?=isset($campo) && $campo->dependiente_relacion? $campo->dependiente_relacion:'==' ?>" />
                 <span class="input-append">
                     <input type="text" name="dependiente_valor" value="<?= isset($campo) ? $campo->dependiente_valor : '' ?>" /><button type="button" class="buttonString btn">String</button><button type="button" class="buttonRegex btn">Regex</button>
                 </span>

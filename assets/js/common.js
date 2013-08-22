@@ -86,6 +86,7 @@ $(document).ready(function(){
     function prepareDynaForm(form){
         $(form).find(".campo[data-dependiente-campo]").each(function(i,el){   
             var tipo=$(el).data("dependiente-tipo");
+            var relacion=$(el).data("dependiente-relacion");
             var campo=$(el).data("dependiente-campo");
             var valor=$(el).data("dependiente-valor");
             
@@ -101,7 +102,9 @@ $(document).ready(function(){
                     }else{
                         if(items[i].value==valor)
                             existe=true;                       
-                    }          
+                    }
+                    if(relacion=="!=")
+                        existe=!existe;
                 }     
             }
             if(existe){

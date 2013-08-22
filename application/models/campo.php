@@ -54,6 +54,7 @@ class Campo extends Doctrine_Record {
         $this->hasColumn('dependiente_tipo');
         $this->hasColumn('dependiente_campo');
         $this->hasColumn('dependiente_valor');
+        $this->hasColumn('dependiente_relacion');
         $this->hasColumn('datos');
         $this->hasColumn('readonly');           //Indica que en este campo solo se mostrara la informacion.
         $this->hasColumn('valor_default');
@@ -122,36 +123,39 @@ class Campo extends Doctrine_Record {
     public function isEditableWithCurrentPOST(){
         $CI=& get_instance();
         
-        if($this->readonly)
-           return false; 
+        $resultado=true;
         
-        if($this->dependiente_campo){
+        if($this->readonly){
+           $resultado=false; 
+        }else if($this->dependiente_campo){
             $variable=preg_replace('/\[\]$/', '', $this->dependiente_campo);
             if(is_array($CI->input->post($variable))){ //Es un arreglo
                 if($this->dependiente_tipo=='regex'){
                     foreach($CI->input->post($variable) as $x){
                         if(!preg_match('/'.$this->dependiente_valor.'/', $x))
-                            return false;
+                            $resultado= false;
                     }
                 }else{
                     if(!in_array($this->dependiente_valor, $CI->input->post($variable)))
-                        return false;
+                        $resultado= false;
                 }
             }else{
                 if($this->dependiente_tipo=='regex'){
                     if(!preg_match('/'.$this->dependiente_valor.'/', $CI->input->post($variable)))
-                        return false;
+                        $resultado= false;
                 }else{
                     if($CI->input->post($variable)!=$this->dependiente_valor)
-                        return false;
+                        $resultado= false;
                 }
                 
             }
             
-            
+            if($this->dependiente_relacion=='!=')
+                $resultado=!$resultado;
+   
         }
         
-        return true;
+        return $resultado;
     }
     
     public function formValidate(){
