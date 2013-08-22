@@ -38,6 +38,9 @@ class WidgetEtapaUsuarios extends Widget {
                     title: {
                         text: "'.$tarea->nombre.'"
                     },
+                    tooltip: {
+                        pointFormat: "{point.y} trámites pendientes: <b>{point.percentage:.1f}%</b>"
+                    },
                     series: [{
                             data: '.$datos.'
                         }]
