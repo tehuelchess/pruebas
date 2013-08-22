@@ -5,7 +5,7 @@
 <table id="mainTable" class="table">
     <thead>
         <tr>
-            <th>Nombre</th>
+            <th><a href="<?=current_url().'?orderby=nombre&direction='.($direction=='asc'?'desc':'asc')?>">Nombre</a></th>
             <th>Acciones</th>
         </tr>
     </thead>
