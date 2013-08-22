@@ -47,6 +47,7 @@ class Reporte extends Doctrine_Record {
                 ->where('p.id = ?', $this->proceso_id)
                 ->having('COUNT(d.id) > 0 OR COUNT(e.id) > 1')  //Mostramos solo los que se han avanzado o tienen datos
                 ->groupBy('t.id')
+                ->orderBy('t.id desc')
                 ->execute();
         
         foreach($tramites as $t){
