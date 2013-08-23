@@ -54,9 +54,13 @@ class WidgetEtapaUsuarios extends Widget {
     public function displayForm(){
         $tarea_id=$this->config?$this->config->tarea_id:null;
 
+        $procesos=  Doctrine_Query::create()
+                ->from('Proceso p, p.Tareas t')
+                ->where('p.cuenta_id = ?',$this->Cuenta->id)
+                ->andWhere('t.acceso_modo = ?','grupos_usuarios')
+                ->execute();
         
         $display='<label>Tareas</label>';
-        $procesos=$this->Cuenta->Procesos;
         $display.= '<select name="config[tarea_id]">';
         foreach($procesos as $p){
             $display.='<optgroup label="'.$p->nombre.'">';
