@@ -60,6 +60,9 @@ class WidgetEtapaUsuarios extends Widget {
                 ->andWhere('t.acceso_modo = ?','grupos_usuarios')
                 ->execute();
         
+        if(!$procesos->count())
+            return '<p>No se puede utilizar este widget ya que no tiene tareas asignadas a grupos de usuarios.</p>';
+        
         $display='<label>Tareas</label>';
         $display.= '<select name="config[tarea_id]">';
         foreach($procesos as $p){
