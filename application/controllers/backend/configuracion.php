@@ -71,7 +71,7 @@ class Configuracion extends CI_Controller {
             $data['grupo_usuarios'] = $grupo_usuarios;
         }
 
-        $data['usuarios']=Doctrine::getTable('Usuario')->findByRegistradoAndOpenId(1,0);
+        $data['usuarios']=Doctrine::getTable('Usuario')->findByCuentaId(UsuarioBackendSesion::usuario()->cuenta_id);
         
         $data['title'] = 'Configuración de Grupo de Usuarios';
         $data['content'] = 'backend/configuracion/grupo_usuarios_editar';
