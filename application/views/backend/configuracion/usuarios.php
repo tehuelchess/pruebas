@@ -22,6 +22,7 @@
                 <th>Apellido Paterno</th>
                 <th>Apellido Materno</th>
                 <th>Pertenece a</th>
+                <th>¿Fuera de oficina?</th>
                 <th>Acciones</th>
             </tr>
             <?php foreach($usuarios as $u): ?>
@@ -38,6 +39,7 @@
                     echo implode(', ', $tmp);
                     ?>
                 </td>
+                <td><?=$u->vacaciones?'Si':'No'?></td>
                 <td>
                     <a class="btn" href="<?=site_url('backend/configuracion/usuario_editar/'.$u->id)?>"><i class="icon-edit"></i> Editar</a>
                     <a class="btn" href="<?=site_url('backend/configuracion/usuario_eliminar/'.$u->id)?>" onclick="return confirm('¿Está seguro que desea eliminar?')"><i class="icon-remove"></i> Eliminar</a>
