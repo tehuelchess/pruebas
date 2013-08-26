@@ -28,6 +28,8 @@ class Campo extends Doctrine_Record {
             $campo=new CampoComunas();
         else if($tipo=='paises')
             $campo=new CampoPaises();
+        else if($tipo=='moneda')
+            $campo=new CampoMoneda();
         else if($tipo=='title')
             $campo=new CampoTitle();
         else if($tipo=='subtitle')
@@ -72,6 +74,7 @@ class Campo extends Doctrine_Record {
                 'CampoInstitucionesGob'  => array('tipo' => 'instituciones_gob'),
                 'CampoComunas'  => array('tipo' => 'comunas'),
                 'CampoPaises'  => array('tipo' => 'paises'),
+                'CampoMoneda'  => array('tipo' => 'moneda'),
                 'CampoTitle'  => array('tipo' => 'title'),
                 'CampoSubtitle'  => array('tipo' => 'subtitle'),
                 'CampoParagraph'  => array('tipo' => 'paragraph'),
