@@ -161,9 +161,17 @@ class Seguimiento extends CI_Controller {
         $this->form_validation->set_rules('usuario_id', 'Usuario', 'required');
 
         if ($this->form_validation->run() == TRUE) {
+            $usuario=Doctrine::getTable('Usuario')->find($this->input->post('usuario_id'));
+            
             $etapa = Doctrine::getTable('Etapa')->find($etapa_id);
-            $etapa->usuario_id = $this->input->post('usuario_id');
+            $etapa->Usuario = $usuario;
             $etapa->save();
+            
+            $this->email->from('simple@chilesinpapeleo.cl', 'Simple');
+            $this->email->to($usuario->email);
+            $this->email->subject('Tarea reasignada');
+            $this->email->message('<p>Atención. Se le ha reasignado una tarea "'.$etapa->Tarea->nombre.'" del proceso "'.$etapa->Tramite->Proceso->nombre.'"./p>');
+            $this->email->send();
 
             $respuesta->validacion = TRUE;
             $respuesta->redirect = site_url('backend/seguimiento/ver_etapa/' . $etapa->id);
