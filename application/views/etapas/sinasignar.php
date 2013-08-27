@@ -19,7 +19,7 @@
                 <td><?=$e->Tramite->id?></td>
                 <td class="name"><?= $e->Tramite->Proceso->nombre ?></td>
                 <td><?=$e->Tarea->nombre ?></td>
-                <td class="time"><?= strftime('%d.%b.%Y',mysql_to_unix($e->updated_at))?><br /><?= strftime('%T',mysql_to_unix($e->updated_at))?></td>
+                <td class="time"><?= strftime('%d.%b.%Y',mysql_to_unix($e->updated_at))?><br /><?= strftime('%H:%M:%S',mysql_to_unix($e->updated_at))?></td>
                 <td><?=$e->vencimiento_at?strftime('%c',strtotime($e->vencimiento_at)):'N/A'?></td>
                 <td class="actions"><a href="<?=site_url('etapas/asignar/'.$e->id)?>" class="btn btn-primary"><i class="icon-check icon-white"></i> Asignarmelo</a></td>
             </tr>
