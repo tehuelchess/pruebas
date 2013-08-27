@@ -20,9 +20,6 @@ jQuery 1.7.2
 - PHP >= 5.3.x
 - MySQL >= 5.5.x
 
-### Tipo de Licencia
-El código de esta aplicación está licenciado bajo los términos de la Licencia de Software Público (Chile) (más información [http://www.softwarepublico.cl](http://www.softwarepublico.cl)).
-
 ### Configuración de la plataforma
 #### Framework
 - Cambiar el nombre del archivo de configuración del framework que se encuentra dentro de la carpeta "application/config" de "config.sample.php" a "config.php"
