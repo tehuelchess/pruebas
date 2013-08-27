@@ -1,4 +1,3 @@
-#SOFTWARE PÚBLICO
 #SIMPLE - Sistema de Implementación de Procesos Ligeramente Estandarizados (demo.chilesinpapeleo.cl)
 
 
