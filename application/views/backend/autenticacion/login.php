@@ -34,12 +34,14 @@
                     <form method="post" class="ajaxForm" action="<?= site_url('backend/autenticacion/login_form') ?>">
                         <fieldset>
                             <legend>Ingrese al Backend</legend>
+                            <?php $this->load->view('messages') ?>
                             <div class="validacion"></div>
                             <input type="hidden" name="redirect" value="<?= $redirect ?>" />
-                            <label>Usuario</label>
-                            <input name="usuario" type="text" class="span3">
+                            <label>E-Mail</label>
+                            <input name="email" type="text" class="span3">
                             <label>Contraseña</label>
                             <input name="password" type="password" class="span3">
+                            <p><a href="<?=site_url('backend/autenticacion/olvido')?>">¿Olvidaste tu contraseña?</a></p>
                             <div class="form-actions">
                                 <button class="btn btn-primary" type="submit">Ingresar</button>
                             </div>

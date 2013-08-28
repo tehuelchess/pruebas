@@ -5,6 +5,8 @@ class Proceso extends Doctrine_Record {
     function setTableDefinition() {
         $this->hasColumn('id');
         $this->hasColumn('nombre');
+        $this->hasColumn('width');      //ancho de la grilla
+        $this->hasColumn('height');     //alto de la grilla
         $this->hasColumn('cuenta_id');
     }
 
@@ -109,30 +111,44 @@ class Proceso extends Doctrine_Record {
     }
     
     //Obtiene todos los campos asociados a este proceso
-    public function getCampos($excluir_estaticos=true){
+    public function getCampos($tipo=null,$excluir_readonly=true){
         $query= Doctrine_Query::create()
                 ->from('Campo c, c.Formulario f, f.Proceso p')
                 ->where('p.id = ?',$this->id);
         
-        if($excluir_estaticos)
-            $query->andWhere('c.estatico = 0');
-       
+        if($tipo)
+            $query->andWhere('c.tipo = ?',$tipo);
+        
+        if($excluir_readonly)
+            $query->andWhere('c.readonly = 0');
+        
         return $query->execute();
     }
     
-    //Retorna una arreglo con todos los nombres usados en los campos de este proceso.
-    public function getNombresDeCampos($excluir_estaticos=true){
-        $campos=$this->getCampos($excluir_estaticos);
+    //Obtiene todos los campos asociados a este proceso
+    public function getNombresDeCampos($tipo=null,$excluir_readonly=true){
+        $campos=$this->getCampos($tipo,$excluir_readonly);
         
-        //Los insertamos a un arreglo.
-        $nombres_de_campos=array();
+        $nombres=array();
         foreach($campos as $c)
-            $nombres_de_campos[]=$c->nombre;
+            $nombres[$c->nombre]=true;
         
-        //Excluimos los repetidos.
-        $nombres_de_campos=array_unique($nombres_de_campos);
+        return array_keys($nombres);
+    }
+    
+    //Retorna una arreglo con todos los nombres de datos usados durante el proceso
+    public function getNombresDeDatos(){
+        $campos=Doctrine_Query::create()
+                ->select('d.nombre')
+                ->from('DatoSeguimiento d, d.Etapa.Tramite.Proceso p')
+                ->andWhere('p.id = ?',$this->id)
+                ->groupBy('d.nombre')
+                ->execute();
         
-        return $nombres_de_campos;
+        foreach($campos as $c)
+            $result[]=$c->nombre;
+        
+        return $result;
     }
     
     //Verifica si el usuario_id tiene permisos para iniciar este proceso como tramite.
@@ -142,13 +158,23 @@ class Proceso extends Doctrine_Record {
         $proceso=Doctrine_Query::create()
                 ->from('Proceso p, p.Tareas t, t.GruposUsuarios g, g.Usuarios u')
                 ->where('t.inicial = 1 and p.id = ?',$this->id)
-                ->andWhere('(t.acceso_modo="grupos_usuarios" AND u.id = ?) OR (t.acceso_modo = "registrados" AND 1 = ?) OR (t.acceso_modo="publico")',array($usuario->id,$usuario->registrado))
+                ->andWhere('(t.acceso_modo="grupos_usuarios" AND u.id = ?) OR (t.acceso_modo = "registrados" AND 1 = ?) OR (t.acceso_modo = "claveunica" AND 1 = ?) OR (t.acceso_modo="publico")',array($usuario->id,$usuario->registrado,$usuario->open_id))
                 ->fetchOne();
         
         if($proceso)
             return TRUE;
         
         return FALSE;
+    }
+    
+    
+    public function toPublicArray(){
+        $publicArray=array(
+            'id'=>(int)$this->id,
+            'nombre'=>$this->nombre
+        );
+        
+        return $publicArray;
     }
 
 }

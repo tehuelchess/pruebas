@@ -22,15 +22,15 @@ $(document).ready(function(){
 
 function drawFromModel(model){
     //Modificamos el titulo
-    $("#areaDibujo h1").text(model.nombre);
+    //$("#areaDibujo h1").text(model.nombre);
     
     //limpiamos el canvas
     jsPlumb.reset();
-    $("#areaDibujo .box").remove();
+    $("#draw .box").remove();
     
     //Creamos los elementos
     $(model.elements).each(function(i,e){
-        $("#areaDibujo").append("<div id='"+e.id+"' class='box' style='top: "+e.top+"px; left: "+e.left+"px;'>"+e.name+(e.start==1?'<div class="inicial"></div>':'')+"</div>");
+        $("#draw").append("<div id='"+e.id+"' class='box' style='top: "+e.top+"px; left: "+e.left+"px;'>"+e.name+(e.start==1?'<div class="inicial"></div>':'')+"</div>");
     });
     
     //Creamos las conexiones
@@ -40,7 +40,7 @@ function drawFromModel(model){
         
     });
     
-    jsPlumb.draggable($("#areaDibujo .box"));
+    jsPlumb.draggable($("#draw .box"));
     
     //setJSPlumbEvents();
     
@@ -70,12 +70,12 @@ function drawConnection(c){
         }
         
         if(c.tipo=="union")
-            $("#areaDibujo #"+c.target).append('<div class="'+c.tipo+'"></div>');
+            $("#draw #"+c.target).append('<div class="'+c.tipo+'"></div>');
         else
-            $("#areaDibujo #"+c.source).append('<div class="conector '+c.tipo+'"></div>');
+            $("#draw #"+c.source).append('<div class="conector '+c.tipo+'"></div>');
         
         if(!c.target)
-            $("#areaDibujo #"+c.source).append('<div class="'+(c.tipo=='secuencial'?'final-secuencial':'final')+'"></div>');
+            $("#draw #"+c.source).append('<div class="'+(c.tipo=='secuencial'?'final-secuencial':'final')+'"></div>');
 }
 
 /*

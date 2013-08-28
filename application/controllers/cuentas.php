@@ -25,15 +25,17 @@ class Cuentas extends MY_Controller {
     }
     
     public function editar_form(){
-        $this->form_validation->set_rules('nombre','Nombre','required');
-        $this->form_validation->set_rules('apellidos','Apellidos','required');
+        $this->form_validation->set_rules('nombres','Nombre','required');
+        $this->form_validation->set_rules('apellido_paterno','Apellido Paterno','required');
+        $this->form_validation->set_rules('apellido_materno','Apellido Materno','required');
         $this->form_validation->set_rules('email','Correo electrónico','required|valid_email');
         
         $respuesta=new stdClass();
         if($this->form_validation->run()==TRUE){
             $usuario=UsuarioSesion::usuario();
-            $usuario->nombre=$this->input->post('nombre');
-            $usuario->apellidos=$this->input->post('apellidos');
+            $usuario->nombres=$this->input->post('nombres');
+            $usuario->apellido_paterno=$this->input->post('apellido_paterno');
+            $usuario->apellido_materno=$this->input->post('apellido_materno');
             $usuario->email=$this->input->post('email');
             $usuario->save();
             

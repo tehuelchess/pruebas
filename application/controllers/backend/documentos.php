@@ -9,6 +9,11 @@ class Documentos extends CI_Controller {
         parent::__construct();
 
         UsuarioBackendSesion::force_login();
+        
+        if(UsuarioBackendSesion::usuario()->rol!='super' && UsuarioBackendSesion::usuario()->rol!='modelamiento'){
+            echo 'No tiene permisos para acceder a esta seccion.';
+            exit;
+        }
     }
 
     public function listar($proceso_id) {
@@ -75,11 +80,40 @@ class Documentos extends CI_Controller {
             }
         
         $this->form_validation->set_rules('nombre','Nombre','required');
+        $this->form_validation->set_rules('tipo','Tipo','required');
         $this->form_validation->set_rules('contenido','Contenido','required');
+        
+        if($this->input->post('tipo')=='certificado'){
+            $this->form_validation->set_rules('subtitulo','Subtítulo','required');
+            $this->form_validation->set_rules('servicio','Servicio','required');
+            $this->form_validation->set_rules('servicio_url','URL del Servicio','required|prep_url');
+            $this->form_validation->set_rules('firmador_nombre','Nombre del firmador');
+            $this->form_validation->set_rules('firmador_cargo','Cargo del firmador');
+            $this->form_validation->set_rules('firmador_servicio','Servicio del firmador');
+            $this->form_validation->set_rules('firmador_imagen','Imagen de la firmas');
+            $this->form_validation->set_rules('validez','Dias de validez','is_natural_no_zero');
+        }
+        
         
         if($this->form_validation->run()==TRUE){         
             $documento->nombre=$this->input->post('nombre');
-            $documento->contenido=$this->input->post('contenido');
+            $documento->tipo=$this->input->post('tipo');
+            $documento->contenido=$this->input->post('contenido',false);
+            $documento->hsm_configuracion_id=$this->input->post('hsm_configuracion_id');
+            
+            if($documento->tipo=='certificado'){
+                $documento->subtitulo=$this->input->post('subtitulo');
+                $documento->servicio=$this->input->post('servicio');
+                $documento->servicio_url=$this->input->post('servicio_url');
+                $documento->logo=$this->input->post('logo');
+                $documento->timbre=$this->input->post('timbre');
+                $documento->firmador_nombre=$this->input->post('firmador_nombre');
+                $documento->firmador_cargo=$this->input->post('firmador_cargo');
+                $documento->firmador_servicio=$this->input->post('firmador_servicio');
+                $documento->firmador_imagen=$this->input->post('firmador_imagen');
+                $documento->validez=$this->input->post('validez');
+            }
+            
             $documento->save();
             
             $respuesta->validacion=TRUE;
@@ -92,6 +126,18 @@ class Documentos extends CI_Controller {
         echo json_encode($respuesta);
     }
     
+    public function previsualizar($documento_id){
+        $documento=Doctrine::getTable('Documento')->find($documento_id);
+        
+        if($documento->Proceso->cuenta_id != UsuarioBackendSesion::usuario()->cuenta_id){
+            echo 'Usuario no tiene permisos';
+            exit;
+        }
+        
+        $documento->previsualizar();
+    }
+
+
     public function eliminar($documento_id){
         $documento=Doctrine::getTable('Documento')->find($documento_id);
         

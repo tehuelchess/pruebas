@@ -161,11 +161,17 @@ class SaferEval {
             'wordwrap', // Wraps a string to a given number of characters
             //Date functions
             'date_create',
+            'strftime',
+            'strtotime',
             //JSON
             'json_encode',
             'json_decode',
-            //Funciones custom para el evaluador
-            'get'       //Obtiene el elemento dentro de un array u object.
+            //Booleanos
+            'true',
+            'false',
+            'NULL',
+            //Helpers
+            'matrix_to_html'
         );
         $this->allowedTokens = array(
             'T_AND_EQUAL', // assignment operators

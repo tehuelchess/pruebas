@@ -1,16 +1,17 @@
 <meta charset="utf-8">
-        <title>Tramitador - <?= $title ?></title>
+        <title><?=Cuenta::cuentaSegunDominio()!='localhost'?Cuenta::cuentaSegunDominio()->nombre_largo:'SIMPLE'?> - <?= $title ?></title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="description" content="">
         <meta name="author" content="">
 
         <!-- Le styles -->
         <link href="<?= base_url() ?>assets/css/bootstrap.css" rel="stylesheet">
-        <link href="<?= base_url() ?>assets/css/bootstrap-responsive.css" rel="stylesheet">
-        <link href="<?= base_url() ?>assets/css/common.css" rel="stylesheet">
+        <link href="<?= base_url() ?>assets/css/responsive.css" rel="stylesheet">
         <link href="<?= base_url() ?>assets/js/bootstrap-datepicker/css/datepicker.css" rel="stylesheet">
         <link href="<?= base_url() ?>assets/js/jquery.chosen/chosen.css" rel="stylesheet">
         <link href="<?= base_url() ?>assets/js/file-uploader/fileuploader.css" rel="stylesheet">
+        <link href="<?= base_url() ?>assets/css/common.css" rel="stylesheet">
+        <link href="<?= base_url() ?>assets/css/frontend.css" rel="stylesheet">
 
         <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
         <!--[if lt IE 9]>
@@ -18,10 +19,7 @@
         <![endif]-->
 
         <!-- Le fav and touch icons -->
-        <link rel="shortcut icon" href="<?= base_url() ?>assets/ico/favicon.ico">
-        <link rel="apple-touch-icon-precomposed" sizes="114x114" href="<?= base_url() ?>assets/ico/apple-touch-icon-114-precomposed.png">
-        <link rel="apple-touch-icon-precomposed" sizes="72x72" href="<?= base_url() ?>assets/ico/apple-touch-icon-72-precomposed.png">
-        <link rel="apple-touch-icon-precomposed" href="<?= base_url() ?>assets/ico/apple-touch-icon-57-precomposed.png">
+        <link rel="shortcut icon" href="<?= base_url() ?>assets/img/favicon.png">
         
         <script src="<?= base_url() ?>assets/js/jquery-ui/js/jquery-1.7.2.min.js"></script>
         <script src="<?= base_url() ?>assets/js/bootstrap.min.js"></script>

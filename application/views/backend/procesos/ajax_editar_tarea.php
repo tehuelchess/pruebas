@@ -38,6 +38,7 @@
             html+="<td>"+regla+"</td>";
             html+="<td>"+modo+"</td>";
             html+='<td>';
+            html+='<input type="hidden" name="pasos['+pos+'][id]" value="" />';
             html+='<input type="hidden" name="pasos['+pos+'][formulario_id]" value="'+formularioId+'" />';
             html+='<input type="hidden" name="pasos['+pos+'][regla]" value="'+regla+'" />';
             html+='<input type="hidden" name="pasos['+pos+'][modo]" value="'+modo+'" />';
@@ -57,6 +58,7 @@
                 $(this).find("tr").each(function(i,e){
                     $(e).find("td:nth-child(1)").text(i+1);
                     $(e).find("input[name*=formulario_id]").attr("name","pasos["+(i+1)+"][formulario_id]");
+                    $(e).find("input[name*=regla]").attr("name","pasos["+(i+1)+"][regla]");
                     $(e).find("input[name*=modo]").attr("name","pasos["+(i+1)+"][modo]");
                 });
             }
@@ -76,17 +78,22 @@
             var accionId=$form.find(".eventoAccion option:selected").val();
             var accionNombre=$form.find(".eventoAccion option:selected").text();
             var regla=$form.find(".eventoRegla").val();
-            var instante=$form.find(".eventoInstante option:selected").val()
+            var instante=$form.find(".eventoInstante option:selected").val();
+            var pasoId=$form.find(".eventoPasoId option:selected").val();
+            var pasoNombre=$form.find(".eventoPasoId option:selected").text();
+            var pasoTitle=$form.find(".eventoPasoId option:selected").attr("title");
             
             var html="<tr>";
             html+="<td>"+pos+"</td>";
             html+='<td><a title="Editar" target="_blank" href="'+site_url+'backend/acciones/editar/'+accionId+'">'+accionNombre+'</td>';
             html+="<td>"+regla+"</td>";
             html+="<td>"+instante+"</td>";
+            html+="<td><abbr title='"+pasoTitle+"'>"+pasoNombre+"</abbr></td>";
             html+='<td>';
             html+='<input type="hidden" name="eventos['+pos+'][accion_id]" value="'+accionId+'" />';
             html+='<input type="hidden" name="eventos['+pos+'][regla]" value="'+regla+'" />';
             html+='<input type="hidden" name="eventos['+pos+'][instante]" value="'+instante+'" />';
+            html+='<input type="hidden" name="eventos['+pos+'][paso_id]" value="'+pasoId+'" />';
             html+='<a class="delete" title="Eliminar" href="#"><i class="icon-remove"></i></a>';
             html+='</td>';
             html+="</tr>";
@@ -149,7 +156,7 @@
                                 <label>Fecha final</label>
                                 <input class="datepicker" rel="tooltip" title="Deje el campo en blanco para no considerar una fecha final" type="text" name="activacion_fin" value="<?= $tarea->activacion_fin ? date('d-m-Y', $tarea->activacion_fin) : '' ?>" placeholder="DD-MM-AAAA" />
                             </div>
-                            <label class="radio"><input name="activacion" value="no" type="radio" <?= $tarea->activacion == 'no' ? 'no' : '' ?>>Tarea desactivada</label>
+                            <label class="radio"><input name="activacion" value="no" type="radio" <?= $tarea->activacion == 'no' ? 'checked' : '' ?>>Tarea desactivada</label>
                         </div>
                     </div>
 
@@ -176,7 +183,7 @@
                         <input type="text" name="asignacion_usuario" value="<?= $tarea->asignacion_usuario ?>" />
                     </div>
                     <br />
-                    <label><input type="checkbox" name="asignacion_notificar" value="1" <?= $tarea->asignacion_notificar ? 'checked' : '' ?> /> Notificar vía correo electrónico al usuario asignado.</label>
+                    <label class="checkbox"><input type="checkbox" name="asignacion_notificar" value="1" <?= $tarea->asignacion_notificar ? 'checked' : '' ?> /> Notificar vía correo electrónico al usuario asignado.</label>
                 </div>
                 <div class="tab-pane" id="tab3">
                     <script type="text/javascript">
@@ -191,6 +198,7 @@
                     </script>
                     <label><input type="radio" name="acceso_modo" value="publico" <?= $tarea->acceso_modo == 'publico' ? 'checked' : '' ?> /> Cualquier persona puede acceder.</label>
                     <label><input type="radio" name="acceso_modo" value="registrados" <?= $tarea->acceso_modo == 'registrados' ? 'checked' : '' ?> /> Sólo los usuarios registrados.</label>
+                    <label><input type="radio" name="acceso_modo" value="claveunica" <?= $tarea->acceso_modo == 'claveunica' ? 'checked' : '' ?> /> Sólo los usuarios registrados con ClaveUnica.</label>
                     <label><input type="radio" name="acceso_modo" value="grupos_usuarios" <?= $tarea->acceso_modo == 'grupos_usuarios' ? 'checked' : '' ?> /> Sólo los siguientes grupos de usuarios pueden acceder.</label>
                     <div id="optionalGruposUsuarios" style="height: 300px;" class="<?= $tarea->acceso_modo == 'grupos_usuarios' ? '' : 'hide' ?>">
                         <select name="grupos_usuarios[]" class="chosen" multiple>
@@ -242,6 +250,7 @@
                                     <td><?= $p->regla ?></td>
                                     <td><?= $p->modo ?></td>
                                     <td>
+                                        <input type="hidden" name="pasos[<?= $key + 1 ?>][id]" value="<?= $p->id ?>" />
                                         <input type="hidden" name="pasos[<?= $key + 1 ?>][formulario_id]" value="<?= $p->formulario_id ?>" />
                                         <input type="hidden" name="pasos[<?= $key + 1 ?>][regla]" value="<?= $p->regla ?>" />
                                         <input type="hidden" name="pasos[<?= $key + 1 ?>][modo]" value="<?= $p->modo ?>" />
@@ -265,12 +274,20 @@
                                     </select>
                                 </td>
                                 <td>
-                                    <input class="eventoRegla" type="text" placeholder="Escribir regla condición aquí" />
+                                    <input class="eventoRegla input-medium" type="text" placeholder="Escribir regla condición" />
                                 </td>
                                 <td>
-                                    <select class="eventoInstante input-medium">
-                                        <option value="antes">Antes de ejecutar tarea</option>
-                                        <option value="despues">Después de finalizar tarea</option>
+                                    <select class="eventoInstante input-small">
+                                        <option value="antes">Antes</option>
+                                        <option value="despues">Después</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select class="eventoPasoId input-medium">
+                                        <option value="">Ejecutar Tarea</option>
+                                        <?php foreach ($tarea->Pasos as $p): ?>
+                                        <option value="<?=$p->id?>" title="<?=$p->Formulario->nombre?>">Ejecutar Paso <?=$p->orden?></option>
+                                        <?php endforeach ?>
                                     </select>
                                 </td>
                                 <td>
@@ -282,6 +299,7 @@
                                 <th>Accion</th>
                                 <th>Condición</th>
                                 <th>Instante</th>
+                                <th>Momento</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -292,10 +310,12 @@
                                     <td><a title="Editar" target="_blank" href="<?= site_url('backend/acciones/editar/' . $p->Accion->id) ?>"><?= $p->Accion->nombre ?></a></td>
                                     <td><?= $p->regla ?></td>
                                     <td><?= $p->instante ?></td>
+                                    <td><?=$p->paso_id?'<abbr title="'.$p->Paso->Formulario->nombre.'">Ejecutar Paso '.$p->Paso->orden.'</abbr>':'Ejecutar Tarea'?></td>
                                     <td>
                                         <input type="hidden" name="eventos[<?= $key + 1 ?>][accion_id]" value="<?= $p->accion_id ?>" />
                                         <input type="hidden" name="eventos[<?= $key + 1 ?>][regla]" value="<?= $p->regla ?>" />
                                         <input type="hidden" name="eventos[<?= $key + 1 ?>][instante]" value="<?= $p->instante ?>" />
+                                        <input type="hidden" name="eventos[<?= $key + 1 ?>][paso_id]" value="<?= $p->paso_id ?>" />
                                         <a class="delete" title="Eliminar" href="#"><i class="icon-remove"></i></a>
                                     </td>
                                 </tr>
@@ -312,6 +332,13 @@
                                 else
                                     $("#vencimientoConfig").hide();
                             }).change();
+                            
+                            $("select[name=vencimiento_unidad]").change(function(){
+                                if(this.value=="D")
+                                    $("#habilesConfig").show();
+                                else
+                                    $("#habilesConfig").hide();
+                            }).change();
                         });
                     </script>
                     <label class="checkbox"><input type="checkbox" name="vencimiento" value="1" <?=$tarea->vencimiento?'checked':''?> /> ¿La etapa tiene vencimiento?</label>
@@ -325,8 +352,11 @@
                         </select>
                         despues de completada la etapa anterior.
                         <br />
-                        <label class="checkbox"><input type="checkbox" name="vencimiento_notificar" value="1" <?=$tarea->vencimiento_notificar?'checked':''?> /> Notificar cuando quede 1 día al siguiente correo:</label>
+                        <label id='habilesConfig' class='checkbox'><input type='checkbox' name='vencimiento_habiles' value='1' <?=$tarea->vencimiento_habiles?'checked':''?> /> Considerar solo días habiles.</label>
+                        
+                        <label class="checkbox"><input type="checkbox" name="vencimiento_notificar" value="1" <?=$tarea->vencimiento_notificar?'checked':''?> /> Notificar cuando quede <input class="input-mini" type="text" name="vencimiento_notificar_dias" value="<?=$tarea->vencimiento_notificar_dias?>" /> día al siguiente correo:</label>
                          <input style="margin-left: 20px;" type="text" name="vencimiento_notificar_email" placeholder="ejemplo@mail.com" value="<?=$tarea->vencimiento_notificar_email?>" />
+                         <div style="margin-left: 20px;" class="help-block">Tambien se pueden usar variables. Ej: @@email</div>
                     </div>
                 </div>
                 <div class="tab-pane" id="tab7">

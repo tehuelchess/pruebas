@@ -24,24 +24,33 @@ class AccionWebservice extends Accion {
         $CI->form_validation->set_rules('extra[url]', 'URL', 'required');
     }
 
-    public function ejecutar($tramite_id) {
+    public function ejecutar(Etapa $etapa) {
         $r=new Regla($this->extra->url);
-        $url=$r->getExpresionParaOutput($tramite_id);
+        $url=$r->getExpresionParaOutput($etapa->id);
+        
+        //Hacemos encoding a la url
+        $url=preg_replace_callback('/([\?&][^=]+=)([^&]+)/', function($matches){
+            $key=$matches[1];
+            $value=$matches[2];
+            return $key.urlencode($value);
+        },
+        $url);
         
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         $result = curl_exec($ch);
         
         $json=json_decode($result);
         
         foreach($json as $key=>$value){
-            $dato=Doctrine::getTable('Dato')->findOneByNombreAndTramiteId('derecho_a_dignidad',$tramite_id);
+            $dato=Doctrine::getTable('DatoSeguimiento')->findOneByNombreAndEtapaId($key,$etapa->id);
             if(!$dato)
-                $dato=new Dato();
+                $dato=new DatoSeguimiento();
             $dato->nombre=$key;
             $dato->valor=$value;
-            $dato->tramite_id=$tramite_id;
+            $dato->etapa_id=$etapa->id;
             $dato->save();
         }        
         

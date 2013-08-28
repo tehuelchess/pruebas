@@ -30,7 +30,7 @@
                 -->
                 <select class="chosen" name="usuarios[]" data-placeholder="Seleccione los usuarios" multiple>
                     <?php foreach($usuarios as $g): ?>
-                    <option value="<?=$g->id?>" <?=isset($grupo_usuarios) && $grupo_usuarios->hasUsuario($g->id)?'selected':''?>><?=$g->usuario?> (<?=$g->nombre?> <?=$g->apellidos?>)</option>
+                    <option value="<?=$g->id?>" <?=isset($grupo_usuarios) && $grupo_usuarios->hasUsuario($g->id)?'selected':''?>><?=$g->usuario?> (<?=$g->nombres?> <?=$g->apellido_paterno?>)</option>
                     <?php endforeach; ?>
                 </select>
                 <div class="form-actions">

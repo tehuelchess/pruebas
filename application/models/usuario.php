@@ -7,14 +7,16 @@ class Usuario extends Doctrine_Record {
         $this->hasColumn('usuario');
         $this->hasColumn('password');
         $this->hasColumn('rut');
-        $this->hasColumn('nombre');
-        $this->hasColumn('apellidos');
+        $this->hasColumn('nombres');
+        $this->hasColumn('apellido_paterno');
+        $this->hasColumn('apellido_materno');
         $this->hasColumn('email');
         $this->hasColumn('vacaciones');
         $this->hasColumn('cuenta_id');
         $this->hasColumn('salt');
         $this->hasColumn('open_id');
         $this->hasColumn('registrado');
+        $this->hasColumn('reset_token');
     }
 
     function setUp() {
@@ -71,11 +73,50 @@ class Usuario extends Doctrine_Record {
     }
 
     public function displayName(){
-        if($this->nombre)
-            return trim($this->nombre.' '.$this->apellidos);
+        if($this->nombres)
+            return trim($this->nombres);
         else if($this->rut)
             return $this->rut;
         
         return $this->usuario;
+    }
+    
+    public function displayUsername(){
+        if($this->open_id)
+            return $this->rut;
+        
+        return $this->usuario;
+    }
+    
+    public function displayInfo(){
+        $html='
+            <ul style=\'text-align: left;\'>
+                <li>Nombres: '.$this->nombres.'</li>
+                <li>Apellido Paterno: '.$this->apellido_paterno.'</li>
+                <li>Apellido Materno: '.$this->apellido_materno.'</li>
+                <li>E-Mail: '.$this->email.'</li>
+            </ul>
+        ';
+                
+         return $html;
+    }
+    
+    public function setResetToken($llave){
+        if($llave)
+            $this->_set('reset_token',sha1($llave));
+        else
+            $this->_set('reset_token',null);
+    }
+    
+    public function toPublicArray(){
+        $publicArray=array(
+            'usuario'=>$this->usuario,
+            'email'=>$this->email,
+            'nombres'=>$this->nombres,
+            'apellido_paterno'=>$this->apellido_paterno,
+            'apellido_materno'=>$this->apellido_materno
+        );
+        
+        return $publicArray;
     }
 }

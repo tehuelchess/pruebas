@@ -126,7 +126,8 @@ $config['subclass_prefix'] = 'MY_';
 | DO NOT CHANGE THIS UNLESS YOU FULLY UNDERSTAND THE REPERCUSSIONS!!
 |
 */
-$config['permitted_uri_chars'] = 'a-z 0-9~%.:_\-';
+$strange='¦,+()';
+$config['permitted_uri_chars'] = 'a-z 0-9~%.:_\-'.$strange;
 
 
 /*
@@ -248,10 +249,10 @@ $config['sess_cookie_name']		= 'ci_session';
 $config['sess_expiration']		= 7200;
 $config['sess_expire_on_close']	= FALSE;
 $config['sess_encrypt_cookie']	= TRUE;
-$config['sess_use_database']	= TRUE;
+$config['sess_use_database']	= FALSE;
 $config['sess_table_name']		= 'ci_sessions';
 $config['sess_match_ip']		= FALSE;
-$config['sess_match_useragent']	= TRUE;
+$config['sess_match_useragent']	= FALSE;
 $config['sess_time_to_update']	= 300;
 
 /*
@@ -279,7 +280,7 @@ $config['cookie_secure']	= FALSE;
 | COOKIE data is encountered
 |
 */
-$config['global_xss_filtering'] = TRUE;
+$config['global_xss_filtering'] = FALSE;    //Esta habilitado otro filtro de todas formas
 
 /*
 |--------------------------------------------------------------------------
@@ -359,17 +360,31 @@ $config['proxy_ips'] = '';
 
 
 /*
+ * Libreria que se va a utilizar para hacer los diagramas de flujo.
+ * jsplumb: Gratuita y libre uso
+ * gojs: requiere licencia
+ */
+$config['js_diagram']='jsplumb';
+
+
+/*
  * Servidor soporta HTTPS
  */
 $config['https'] = false;
 
 /*
- * Configuracion del servidor Pusher (pusher.com) para poder modelar procesos
- * en forma colaborativa.
+ * Configuracion de backups
  */
-$config['pusher_api_key'] = '';
-$config['pusher_secret'] = '';
-$config['pusher_app_id'] = '';
+$config['awsAccessKey']='';
+$config['awsSecretKey']='';
+
+
+/*
+ * Configuracion del servidor HSM
+ */
+$config['hsm_url']='';
+$config['hsm_user']='';
+$config['hsm_password']='';
 
 /* End of file config.php */
 /* Location: ./application/config/config.php */

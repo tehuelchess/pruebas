@@ -23,16 +23,16 @@ class AccionVariable extends Accion {
         $CI->form_validation->set_rules('extra[expresion]', 'Expresión a evaluar', 'required');
     }
 
-    public function ejecutar($tramite_id) {
+    public function ejecutar(Etapa $etapa) {
         $regla=new Regla($this->extra->expresion);
-        $valor=$regla->evaluar($tramite_id);
+        $valor=$regla->evaluar($etapa->id);
         
-        $dato = Doctrine::getTable('Dato')->findOneByTramiteIdAndNombre($tramite_id, $this->extra->variable);
+        $dato = Doctrine::getTable('DatoSeguimiento')->findOneByNombreAndEtapaId($this->extra->variable,$etapa->id);
         if (!$dato)
-            $dato = new Dato();
+            $dato = new DatoSeguimiento();
         $dato->nombre = $this->extra->variable;
         $dato->valor = $valor;
-        $dato->tramite_id = $tramite_id;
+        $dato->etapa_id = $etapa->id;
         $dato->save();
     }
 

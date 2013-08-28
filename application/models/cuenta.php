@@ -6,7 +6,9 @@ class Cuenta extends Doctrine_Record {
         $this->hasColumn('id');
         $this->hasColumn('nombre');
         $this->hasColumn('nombre_largo');
+        $this->hasColumn('mensaje');
         $this->hasColumn('logo');
+        $this->hasColumn('api_token');
     }
 
     function setUp() {
@@ -20,9 +22,8 @@ class Cuenta extends Doctrine_Record {
         $this->hasMany('Usuario as Usuarios', array(
             'local' => 'id',
             'foreign' => 'cuenta_id'
-        ))
-
-        ;
+        ));
+        
         $this->hasMany('GrupoUsuarios as GruposUsuarios', array(
             'local' => 'id',
             'foreign' => 'cuenta_id'
@@ -38,6 +39,11 @@ class Cuenta extends Doctrine_Record {
             'foreign' => 'cuenta_id',
             'orderBy' => 'posicion'
         ));
+        
+        $this->hasMany('HsmConfiguracion as HsmConfiguraciones', array(
+            'local' => 'id',
+            'foreign' => 'cuenta_id'
+        ));
     }
 
     public function updatePosicionesWidgetsFromJSON($json) {
@@ -51,19 +57,22 @@ class Cuenta extends Doctrine_Record {
         Doctrine_Manager::connection()->commit();
     }
 
-    
+    //Retorna el objecto cuenta perteneciente a este dominio.
+    //Retorna null si no estamos en ninguna cuenta valida.
     public static function cuentaSegunDominio() {
         static $firstTime=true;
         static $cuentaSegunDominio=null;
         if ($firstTime) {
             $firstTime=false;
             $CI = &get_instance();
-            preg_match('/(.+)\.chilesinpapeleo\.cl/', $CI->input->server('HTTP_HOST'), $matches);
-            $dominio = null;
-            if (isset($matches[1]) && $matches[1] != 'simple'){
-                $dominio = $matches[1];
-                $cuentaSegunDominio = Doctrine::getTable('Cuenta')->findOneByNombre($dominio);
-            }
+            $host=$CI->input->server('HTTP_HOST');
+            preg_match('/(.+)\.chilesinpapeleo\.cl/', $host, $matches);
+                if($host == 'localhost'){
+                    $cuentaSegunDominio=Doctrine_Query::create()->from('Cuenta c')->limit(1)->fetchOne();
+                }else if (isset ($matches[1])){
+                    $cuentaSegunDominio = Doctrine::getTable('Cuenta')->findOneByNombre($matches[1]);
+                }
+            
                 
         }
 

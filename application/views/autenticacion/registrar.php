@@ -13,8 +13,14 @@
                         <fieldset>
                             <legend>Registrarse en el sistema</legend>
                             <div class="validacion"></div>
-                            <label>Usuario</label>
+                            <label>Nombre de Usuario</label>
                             <input name="usuario" type="text" class="input-xlarge">
+                            <label>Nombres</label>
+                            <input name="nombres" type="text" class="input-xlarge">
+                            <label>Apellido Paterno</label>
+                            <input name="apellido_paterno" type="text" class="input-xlarge">
+                            <label>Apellido Materno</label>
+                            <input name="apellido_materno" type="text" class="input-xlarge">
                             <label>Contraseña</label>
                             <input name="password" type="password" class="input-xlarge">
                             <label>Confirmar contraseña</label>
@@ -23,7 +29,7 @@
                             <input type="text" name="email" class="input-xlarge" />
                             <p class="help-block">En este correo recibiras notificaciones del estado de sus trámites.</p>
                             <div class="form-actions">
-                                <a class="btn" href="#" onclick="javascript:history.back();">Volver</a>
+                                <button class="btn" onclick="history.back()">Volver</button>
                                 <button class="btn btn-primary" type="submit">Ingresar</button>
                             </div>
                         </fieldset>
