@@ -5,14 +5,18 @@ class CampoInstitucionesGob extends Campo{
     public $requiere_datos=false;
     
     protected function display($modo, $dato) {
-        $display = '<label>' . $this->etiqueta . (in_array('required', $this->validacion) ? '' : ' (Opcional)') . '</label>';
-        $display.='<select class="entidades" data-id="'.$this->id.'" name="' . $this->nombre . '[entidad]" ' . ($modo == 'visualizacion' ? 'disabled' : '') . '>';
+        $display = '<label class="control-label">' . $this->etiqueta . (in_array('required', $this->validacion) ? '' : ' (Opcional)') . '</label>';
+        $display.='<div class="controls">';
+        $display.='<select class="entidades" data-id="'.$this->id.'" name="' . $this->nombre . '[entidad]" ' . ($modo == 'visualizacion' ? 'readonly' : '') . '>';
         $display.='<option></option>';
         $display.='</select>';
         $display.='<br />';
-        $display.='<select class="instituciones" data-id="'.$this->id.'" name="' . $this->nombre . '[servicio]" ' . ($modo == 'visualizacion' ? 'disabled' : '') . '>';
+        $display.='<select class="instituciones" data-id="'.$this->id.'" name="' . $this->nombre . '[servicio]" ' . ($modo == 'visualizacion' ? 'readonly' : '') . '>';
         $display.='<option></option>';
         $display.='</select>';
+        if($this->ayuda)
+            $display.='<span class="help-block">'.$this->ayuda.'</span>';
+        $display.='</div>';
 
         $display.='
             <script>

@@ -11,21 +11,26 @@
             <li class="active">Usuarios</li>
         </ul>
         
-        <p><a class="btn" href="<?=site_url('backend/configuracion/usuario_editar')?>"><i class="icon-file"></i> Nuevo</a></p>
+        <?php $this->load->view('messages') ?>
+        
+        <p><a class="btn btn-success" href="<?=site_url('backend/configuracion/usuario_editar')?>"><i class="icon-file icon-white"></i> Nuevo</a></p>
         
         <table class="table">
             <tr>
                 <th>Usuario</th>
-                <th>Nombre</th>
-                <th>Apellidos</th>
+                <th>Nombres</th>
+                <th>Apellido Paterno</th>
+                <th>Apellido Materno</th>
                 <th>Pertenece a</th>
+                <th>¿Fuera de oficina?</th>
                 <th>Acciones</th>
             </tr>
             <?php foreach($usuarios as $u): ?>
             <tr>
                 <td><?=$u->usuario?></td>
-                <td><?=$u->nombre?></td>
-                <td><?=$u->apellidos?></td>
+                <td><?=$u->nombres?></td>
+                <td><?=$u->apellido_paterno?></td>
+                <td><?=$u->apellido_materno?></td>
                 <td>
                     <?php
                     $tmp=array();
@@ -34,9 +39,10 @@
                     echo implode(', ', $tmp);
                     ?>
                 </td>
+                <td><?=$u->vacaciones?'Si':'No'?></td>
                 <td>
-                    <a class="btn" href="<?=site_url('backend/configuracion/usuario_editar/'.$u->id)?>"><i class="icon-edit"></i> Editar</a>
-                    <a class="btn" href="<?=site_url('backend/configuracion/usuario_eliminar/'.$u->id)?>" onclick="return confirm('¿Está seguro que desea eliminar?')"><i class="icon-remove"></i> Eliminar</a>
+                    <a class="btn btn-primary" href="<?=site_url('backend/configuracion/usuario_editar/'.$u->id)?>"><i class="icon-edit icon-white"></i> Editar</a>
+                    <a class="btn btn-danger" href="<?=site_url('backend/configuracion/usuario_eliminar/'.$u->id)?>" onclick="return confirm('¿Está seguro que desea eliminar?')"><i class="icon-remove icon-white"></i> Eliminar</a>
                 </td>
             </tr>
             <?php endforeach; ?>

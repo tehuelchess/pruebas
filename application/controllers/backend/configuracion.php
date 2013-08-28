@@ -9,6 +9,11 @@ class Configuracion extends CI_Controller {
         parent::__construct();
 
         UsuarioBackendSesion::force_login();
+        
+        if(UsuarioBackendSesion::usuario()->rol!='super'){
+            echo 'No tiene permisos para acceder a esta seccion.';
+            exit;
+        }
     }
 
     public function index() {
@@ -66,7 +71,7 @@ class Configuracion extends CI_Controller {
             $data['grupo_usuarios'] = $grupo_usuarios;
         }
 
-        $data['usuarios']=Doctrine::getTable('Usuario')->findByRegistradoAndOpenId(1,0);
+        $data['usuarios']=Doctrine::getTable('Usuario')->findByCuentaId(UsuarioBackendSesion::usuario()->cuenta_id);
         
         $data['title'] = 'Configuración de Grupo de Usuarios';
         $data['content'] = 'backend/configuracion/grupo_usuarios_editar';
@@ -160,11 +165,12 @@ class Configuracion extends CI_Controller {
         }
         
         if(!$usuario)
-            $this->form_validation->set_rules('usuario', 'Nombre de Usuario', 'required|callback_check_existe_usuario');
+            $this->form_validation->set_rules('usuario', 'Nombre de Usuario', 'required|alpha_dash|callback_check_existe_usuario');
         $this->form_validation->set_rules('password', 'Contraseña', 'matches[password_confirm]');
         $this->form_validation->set_rules('password_confirm', 'Confirmar contraseña');
-        $this->form_validation->set_rules('nombre', 'Nombre', 'required');
-        $this->form_validation->set_rules('apellidos', 'Apellidos', 'required');
+        $this->form_validation->set_rules('nombres', 'Nombres', 'required');
+        $this->form_validation->set_rules('apellido_paterno', 'Apellido Paterno', 'required');
+        $this->form_validation->set_rules('apellido_materno', 'Apellido Materno', 'required');
         $this->form_validation->set_rules('email', 'Correo electrónico', 'valid_email');
 
         if ($this->form_validation->run() == TRUE) {
@@ -174,9 +180,10 @@ class Configuracion extends CI_Controller {
             }
 
             
-            if($this->input->post('password')) $usuario->password=$this->input->post('password');
-            $usuario->nombre = $this->input->post('nombre');
-            $usuario->apellidos = $this->input->post('apellidos');
+            if($this->input->post('password')) $usuario->setPasswordWithSalt($this->input->post('password'));
+            $usuario->nombres = $this->input->post('nombres');
+            $usuario->apellido_paterno = $this->input->post('apellido_paterno');
+            $usuario->apellido_materno = $this->input->post('apellido_materno');
             $usuario->email = $this->input->post('email');
             $usuario->vacaciones = $this->input->post('vacaciones');
             $usuario->setGruposUsuariosFromArray($this->input->post('grupos_usuarios'));
@@ -200,10 +207,99 @@ class Configuracion extends CI_Controller {
             echo 'Usuario no tiene permisos para eliminar este usuario.';
             exit;
         }
+        
+        if($usuario->Etapas->count()){
+            $this->session->set_flashdata('message_error','No se puede eliminar usuario ya que participa en tramites existentes en el sistema.');
+        }else{
+            $usuario->delete();
+        }
+
+        
+
+        redirect('backend/configuracion/usuarios');
+    }
+    
+    public function backend_usuarios() {
+        $data['usuarios'] = Doctrine::getTable('UsuarioBackend')->findByCuentaId(UsuarioBackendSesion::usuario()->cuenta_id);
+
+        $data['title'] = 'Configuración de Usuarios';
+        $data['content'] = 'backend/configuracion/backend_usuarios';
+
+        $this->load->view('backend/template', $data);
+    }
+    
+    public function backend_usuario_editar($usuario_id = NULL) {
+        if ($usuario_id) {
+            $usuario = Doctrine::getTable('UsuarioBackend')->find($usuario_id);
+
+            if ($usuario->cuenta_id != UsuarioBackendSesion::usuario()->cuenta_id) {
+                echo 'Usuario no tiene permisos para editar este usuario.';
+                exit;
+            }
+
+            $data['usuario'] = $usuario;
+        }
+
+        $data['title'] = 'Configuración de Usuarios';
+        $data['content'] = 'backend/configuracion/backend_usuario_editar';
+
+        $this->load->view('backend/template', $data);
+    }
+    
+    public function backend_usuario_editar_form($usuario_id = NULL) {
+        $usuario=NULL;
+        if ($usuario_id) {
+            $usuario = Doctrine::getTable('UsuarioBackend')->find($usuario_id);
+
+            if ($usuario->cuenta_id != UsuarioBackendSesion::usuario()->cuenta_id) {
+                echo 'Usuario no tiene permisos para editar este usuario.';
+                exit;
+            }
+        }
+        
+        if(!$usuario)
+            $this->form_validation->set_rules('email', 'E-Mail', 'required|callback_check_existe_usuario');
+        $this->form_validation->set_rules('password', 'Contraseña', 'matches[password_confirm]');
+        $this->form_validation->set_rules('password_confirm', 'Confirmar contraseña');
+        $this->form_validation->set_rules('nombre', 'Nombre', 'required');
+        $this->form_validation->set_rules('apellidos', 'Apellidos', 'required');
+        $this->form_validation->set_rules('rol', 'Rol', 'required');
+
+        if ($this->form_validation->run() == TRUE) {
+            if (!$usuario){
+                $usuario = new UsuarioBackend();
+                $usuario->email = $this->input->post('email');
+            }
+
+            
+            if($this->input->post('password')) $usuario->setPasswordWithSalt($this->input->post('password'));
+            $usuario->nombre = $this->input->post('nombre');
+            $usuario->apellidos = $this->input->post('apellidos');
+            $usuario->rol = $this->input->post('rol');
+            $usuario->cuenta_id = UsuarioBackendSesion::usuario()->cuenta_id;
+            $usuario->save();
+
+            $respuesta->validacion = TRUE;
+            $respuesta->redirect = site_url('backend/configuracion/backend_usuarios');
+        }else {
+            $respuesta->validacion = FALSE;
+            $respuesta->errores = validation_errors();
+        }
+
+        echo json_encode($respuesta);
+    }
+    
+    public function backend_usuario_eliminar($usuario_id) {
+        $usuario = Doctrine::getTable('UsuarioBackend')->find($usuario_id);
+
+        if ($usuario->cuenta_id != UsuarioBackendSesion::usuario()->cuenta_id) {
+            echo 'Usuario no tiene permisos para eliminar este usuario.';
+            exit;
+        }
 
         $usuario->delete();
 
-        redirect('backend/configuracion/usuarios');
+        redirect('backend/configuracion/backend_usuarios');
     }
     
     public function misitio(){
@@ -221,6 +317,7 @@ class Configuracion extends CI_Controller {
             $cuenta=Doctrine::getTable('Cuenta')->find(UsuarioBackendSesion::usuario()->cuenta_id);
 
             $cuenta->nombre_largo=$this->input->post('nombre_largo');
+            $cuenta->mensaje=$this->input->post('mensaje');
             $cuenta->logo=$this->input->post('logo');
             $cuenta->save();
 
@@ -234,8 +331,8 @@ class Configuracion extends CI_Controller {
         echo json_encode($respuesta);
     }
     
-    function check_existe_usuario($usuario){
-        $u=Doctrine::getTable('Usuario')->findOneByUsuario($usuario);
+    function check_existe_usuario($email){
+        $u=Doctrine::getTable('Usuario')->findOneByUsuario($email);
         if(!$u)
             return TRUE;
         

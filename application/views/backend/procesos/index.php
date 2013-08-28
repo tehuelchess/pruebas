@@ -19,8 +19,8 @@
         <tr>
             <td><?=$p->nombre?></td>
             <td>
-                <a class="btn" href="<?=site_url('backend/procesos/editar/'.$p->id)?>"><i class="icon-edit"></i> Editar</a>
-                <a class="btn" href="<?=site_url('backend/procesos/eliminar/'.$p->id)?>" onclick="return confirm('¿Esta seguro que desea eliminar?')"><i class="icon-remove"></i> Eliminar</a>
+                <a class="btn btn-primary" href="<?=site_url('backend/procesos/editar/'.$p->id)?>"><i class="icon-white icon-edit"></i> Editar</a>
+                <a class="btn btn-danger" href="<?=site_url('backend/procesos/eliminar/'.$p->id)?>" onclick="return confirm('¿Esta seguro que desea eliminar?')"><i class="icon-white icon-remove"></i> Eliminar</a>
             </td>
         </tr>
         <?php endforeach; ?>

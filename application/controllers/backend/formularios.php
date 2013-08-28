@@ -9,6 +9,11 @@ class Formularios extends CI_Controller {
         parent::__construct();
 
         UsuarioBackendSesion::force_login();
+        
+        if(UsuarioBackendSesion::usuario()->rol!='super' && UsuarioBackendSesion::usuario()->rol!='modelamiento'){
+            echo 'No tiene permisos para acceder a esta seccion.';
+            exit;
+        }
     }
 
     public function listar($proceso_id){
@@ -167,12 +172,15 @@ class Formularios extends CI_Controller {
             $campo->etiqueta=$this->input->post('etiqueta');
             $campo->readonly=$this->input->post('readonly');
             $campo->valor_default=$this->input->post('valor_default');
+            $campo->ayuda=$this->input->post('ayuda');
             $campo->validacion=explode('|',$this->input->post('validacion'));
             $campo->dependiente_tipo=$this->input->post('dependiente_tipo');
             $campo->dependiente_campo=$this->input->post('dependiente_campo');
             $campo->dependiente_valor=$this->input->post('dependiente_valor');
+            $campo->dependiente_relacion=$this->input->post('dependiente_relacion');
             $campo->datos=$this->input->post('datos');
             $campo->documento_id=$this->input->post('documento_id');
+            $campo->extra=$this->input->post('extra');
             $campo->save();
             
             $respuesta->validacion=TRUE;

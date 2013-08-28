@@ -5,14 +5,18 @@ class CampoComunas extends Campo{
     public $requiere_datos=false;
     
     protected function display($modo, $dato) {
-        $display = '<label>' . $this->etiqueta . (in_array('required', $this->validacion) ? '' : ' (Opcional)') . '</label>';
-        $display.='<select class="regiones" data-id="'.$this->id.'" name="' . $this->nombre . '[region]" ' . ($modo == 'visualizacion' ? 'disabled' : '') . '>';
+        $display = '<label class="control-label">' . $this->etiqueta . (in_array('required', $this->validacion) ? '' : ' (Opcional)') . '</label>';
+        $display.='<div class="controls">';
+        $display.='<select class="regiones" data-id="'.$this->id.'" name="' . $this->nombre . '[region]" ' . ($modo == 'visualizacion' ? 'readonly' : '') . '>';
         $display.='<option value="">Seleccione región</option>';
         $display.='</select>';
         $display.='<br />';
-        $display.='<select class="comunas" data-id="'.$this->id.'" name="' . $this->nombre . '[comuna]" ' . ($modo == 'visualizacion' ? 'disabled' : '') . '>';
+        $display.='<select class="comunas" data-id="'.$this->id.'" name="' . $this->nombre . '[comuna]" ' . ($modo == 'visualizacion' ? 'readonly' : '') . '>';
         $display.='<option value="">Seleccione comuna</option>';
         $display.='</select>';
+        if($this->ayuda)
+            $display.='<span class="help-block">'.$this->ayuda.'</span>';
+        $display.='</div>';
 
         $display.='
             <script>
@@ -28,10 +32,11 @@ class CampoComunas extends Campo{
                         $.getJSON("https://apis.modernizacion.cl/dpa/regiones?callback=?",function(data){
                             var html="<option value=\'\'>Seleccione region</option>";
                             $(data).each(function(i,el){
-                                html+="<option value="+el.codigo+">"+el.nombre+"</option>";
+                                html+="<option data-id=\""+el.codigo+"\" value=\""+el.nombre+"\">"+el.nombre+"</option>";
                             });
                             $("select.regiones[data-id='.$this->id.']").html(html).change(function(event){
-                                updateComunas(this.value);
+                                var selectedId=$(this).find("option:selected").attr("data-id");
+                                updateComunas(selectedId);
                             });
                             
                             if(justLoadedRegion){
@@ -49,7 +54,7 @@ class CampoComunas extends Campo{
                             var html="<option value=\'\'>Seleccione comuna</option>";
                             if(data){
                                 $(data).each(function(i,el){
-                                    html+="<option value="+el.codigo+">"+el.nombre+"</option>";
+                                    html+="<option value=\""+el.nombre+"\">"+el.nombre+"</option>";
                                 });
                             }
                             $("select.comunas[data-id='.$this->id.']").html(html);

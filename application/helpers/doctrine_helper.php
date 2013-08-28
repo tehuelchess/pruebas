@@ -37,6 +37,10 @@ Doctrine::loadModels(APPPATH.'/models');
 Doctrine_Manager::getInstance()->setAttribute(
 	Doctrine::ATTR_AUTO_ACCESSOR_OVERRIDE, true);
 
+
+Doctrine_Manager::getInstance()->setAttribute(Doctrine_Core::ATTR_USE_NATIVE_ENUM, true);
+
+
 // Esto permite validar los datos antes de almacenarlos.
 //Doctrine_Manager::getInstance()->setAttribute(
 //        Doctrine_Core::ATTR_VALIDATE, Doctrine_Core::VALIDATE_ALL);

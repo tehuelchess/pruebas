@@ -23,7 +23,9 @@ class Tarea extends Doctrine_Record {
         $this->hasColumn('vencimiento');                    //Indica si tiene o no vencimiento.
         $this->hasColumn('vencimiento_valor');              //Entero que indica el valor del vencimiento.
         $this->hasColumn('vencimiento_unidad');             //String que indica la unidad del vencimiento. Ej: days, weeks, months, etc.
+        $this->hasColumn('vencimiento_habiles');
         $this->hasColumn('vencimiento_notificar');          //Indica si se debe notificar en caso de que se acerque la fecha de vencimiento
+        $this->hasColumn('vencimiento_notificar_dias');     //Indica desde cuantos dias de anticipacion se debe notificar la fecha de vencimiento
         $this->hasColumn('vencimiento_notificar_email');    //Cual es el email donde se debe notificar
         
     }
@@ -83,12 +85,36 @@ class Tarea extends Doctrine_Record {
             return Doctrine::getTable('Usuario')->findByVacaciones(0);
         else if ($this->acceso_modo == 'registrados')
             return Doctrine::getTable('Usuario')->findByRegistradoAndVacaciones(1,0);
+        else if ($this->acceso_modo == 'claveunica')
+            return Doctrine::getTable('Usuario')->findByOpenIdAndVacaciones(1,0);
 
 
         return Doctrine_Query::create()
                         ->from('Usuario u, u.GruposUsuarios g, g.Tareas t')
                         ->where('t.id = ? AND u.vacaciones = 0', $this->id)
                         ->execute();
+    }
+    
+    //Obtiene el listado de usuarios que tienen acceso a esta tarea y que esten disponibles (no en vacaciones).
+    //Ademas, deben pertenecer a alguno de los grupos de usuarios definidos en la cuenta
+    public function getUsuariosFromGruposDeUsuarioDeCuenta() {
+        $query=Doctrine_Query::create()
+                ->from('Usuario u, u.GruposUsuarios g, g.Cuenta.Procesos.Tareas t')
+                ->where('u.vacaciones = 0')
+                ->andWhere('t.id = ?', $this->id);
+        
+        if($this->acceso_modo=='registrados')
+            $query->andWhere('u.registrado = 1');
+        else if($this->acceso_modo=='claveunica')
+            $query->andWhere('u.open_id = 1');  
+        else if($this->acceso_modo=='grupos_usuarios'){
+            $query->leftJoin('g.Tareas tar');
+            $query->andWhere('tar.id = ?',$this->id);
+        }
+            
+        
+        $usuarios=$query->execute();
+        return $usuarios;
     }
 
     //Obtiene si el usuarios tiene acceso a esta tarea.
@@ -97,6 +123,8 @@ class Tarea extends Doctrine_Record {
             return Doctrine::getTable('Usuario')->findById($usuario_id)->count() ? true : false;
         else if ($this->acceso_modo == 'registrados')
             return Doctrine::getTable('Usuario')->findByIdAndRegistrado($usuario_id, 1) ? true : false;
+        else if ($this->acceso_modo == 'claveunica')
+            return Doctrine::getTable('Usuario')->findByIdAndOpenId($usuario_id, 1) ? true : false;
 
         return Doctrine_Query::create()
                         ->from('Usuario u, u.GruposUsuarios g, g.Tareas t')
@@ -153,12 +181,21 @@ class Tarea extends Doctrine_Record {
         //Agregamos los nuevos
         if (is_array($pasos_array)) {
             foreach ($pasos_array as $key => $p) {
-                $paso = new Paso();
-                $paso->orden = $key;
-                $paso->regla = $p['regla'];
-                $paso->modo = $p['modo'];
-                $paso->formulario_id = $p['formulario_id'];
-                $this->Pasos[] = $paso;
+                //Guardamos el paso solamente si el formulario_id corresponde a un formulario existente.
+                $formulario_id=null;
+                foreach($this->Proceso->Formularios as $f)
+                    if($f->id==$p['formulario_id'])
+                        $formulario_id=$p['formulario_id'];
+                
+                if($formulario_id){
+                    $paso = new Paso();
+                    $paso->id=$p['id'];
+                    $paso->orden = $key;
+                    $paso->regla = $p['regla'];
+                    $paso->modo = $p['modo'];
+                    $paso->formulario_id = $formulario_id;
+                    $this->Pasos[] = $paso;
+                }
             }
         }
     }
@@ -171,10 +208,17 @@ class Tarea extends Doctrine_Record {
         //Agregamos los nuevos
         if (is_array($eventos_array)) {
             foreach ($eventos_array as $key => $p) {
+                //Seteamos el paso_id solamente si el paso es parte de esta tarea.
+                $paso_id=null;
+                foreach($this->Pasos as $paso)
+                    if($paso->id==$p['paso_id'])
+                        $paso_id=$p['paso_id'];
+                
                 $evento = new Evento();
                 $evento->regla=$p['regla'];
                 $evento->instante = $p['instante'];
                 $evento->accion_id = $p['accion_id'];
+                $evento->paso_id = $paso_id;
                 $this->Eventos[] = $evento;
             }
         }

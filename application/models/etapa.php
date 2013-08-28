@@ -8,6 +8,8 @@ class Etapa extends Doctrine_Record {
         $this->hasColumn('tramite_id');
         $this->hasColumn('usuario_id');
         $this->hasColumn('pendiente');
+        $this->hasColumn('etapa_ancestro_split_id');    //Etapa ancestro que provoco el split del flujo. (Sirve para calcular cuando se puede hacer la union del flujo)
+        $this->hasColumn('vencimiento_at');
         $this->hasColumn('created_at');
         $this->hasColumn('updated_at');
         $this->hasColumn('ended_at');
@@ -37,6 +39,16 @@ class Etapa extends Doctrine_Record {
             'local' => 'id',
             'foreign' => 'etapa_id'
         ));
+        
+        $this->hasOne('Etapa as EtapaAncestroSplit', array(
+            'local'=>'etapa_ancestro_split_id',
+            'foreign'=>'id'
+        ));
+        
+        $this->hasMany('Etapa as EtapasDescendientesSplit', array(
+            'local'=>'id',
+            'foreign'=>'etapa_ancestro_split_id'
+        ));
     }
 
     //Verifica si el usuario_id tiene permisos para asignarse esta etapa del tramite.
@@ -47,13 +59,13 @@ class Etapa extends Doctrine_Record {
     //Avanza a la siguiente etapa.
     //Si se desea especificar el usuario a cargo de la prox etapa, se debe pasar como parametros en un array: $usuarios_a_asignar[$tarea_id]=$usuario_id.
     //Este parametro solamente es valido si la asignacion de la prox tarea es manual.
-    public function avanzar($usuarios_a_asignar) {
+    public function avanzar($usuarios_a_asignar = null) {
         Doctrine_Manager::connection()->beginTransaction();
         //Cerramos esta etapa
         $this->cerrar();
-        
+
         $tp = $this->getTareasProximas();
-        if ($tp->estado != 'sincontinuacion') {    
+        if ($tp->estado != 'sincontinuacion') {
             if ($tp->estado == 'completado') {
                 if ($this->Tramite->getEtapasActuales()->count() == 0)
                     $this->Tramite->cerrar();
@@ -64,9 +76,9 @@ class Etapa extends Doctrine_Record {
                     foreach ($tareas_proximas as $tarea_proxima) {
                         $usuario_asignado_id = NULL;
                         if ($tarea_proxima->asignacion == 'ciclica') {
-                            $usuarios_asignables = $tarea_proxima->getUsuarios();                
+                            $usuarios_asignables = $tarea_proxima->getUsuarios();
                             $usuario_asignado_id = $usuarios_asignables[0]->id;
-                            $ultimo_usuario = $tarea_proxima->getUltimoUsuarioAsignado($this->Tramite->Proceso->id);                      
+                            $ultimo_usuario = $tarea_proxima->getUltimoUsuarioAsignado($this->Tramite->Proceso->id);
                             if ($ultimo_usuario) {
                                 foreach ($usuarios_asignables as $key => $u) {
                                     if ($u->id == $ultimo_usuario->id) {
@@ -79,15 +91,27 @@ class Etapa extends Doctrine_Record {
                             $usuario_asignado_id = $usuarios_a_asignar[$tarea_proxima->id];
                         } else if ($tarea_proxima->asignacion == 'usuario') {
                             $regla = new Regla($tarea_proxima->asignacion_usuario);
-                            $u = $regla->evaluar($this->Tramite->id);
+                            $u = $regla->evaluar($this->id);
                             $usuario_asignado_id = $u;
                         }
 
                         $etapa = new Etapa();
                         $etapa->tramite_id = $this->Tramite->id;
                         $etapa->tarea_id = $tarea_proxima->id;
-                        $etapa->pendiente = 1;
+                        $etapa->pendiente = 1;                     
+                        
+                        //Para mas adelante poder calcular como hacer las uniones
+                        if($tp->conexion=='union')
+                            $etapa->etapa_ancestro_split_id=null;
+                        else if ($tp->conexion=='paralelo' || $tp->conexion=='paralelo_evaluacion')
+                            $etapa->etapa_ancestro_split_id=$this->id;
+                        else
+                            $etapa->etapa_ancestro_split_id=$this->etapa_ancestro_split_id;
+                        
                         $etapa->save();
+                        $etapa->vencimiento_at=$etapa->calcularVencimiento();
+                        $etapa->save();
+                        
                         $etapa->asignar($usuario_asignado_id);
                         //$this->Tramite->Etapas[] = $etapa;     
                     }
@@ -106,9 +130,10 @@ class Etapa extends Doctrine_Record {
     //          -pendiente: Hay etapas a continuacion
     //          -standby: Hay etapas a continuacion pero no se puede avanzar todavia hasta que que se completen etapas paralelas. 
     public function getTareasProximas() {
-        $resultado=new stdClass();
+        $resultado = new stdClass();
         $resultado->tareas = null;
         $resultado->estado = 'sincontinuacion';
+        $resultado->conexion=null;
 
 
         $tarea_actual = $this->Tarea;
@@ -116,11 +141,12 @@ class Etapa extends Doctrine_Record {
 
         //$tareas = null;
         foreach ($conexiones as $c) {
-            if ($c->evaluarRegla($this->Tramite->id)) {
+            if ($c->evaluarRegla($this->id)) {
                 //Si no hay destino es el fin del tramite.
                 if (!$c->tarea_id_destino) {
                     $resultado->tareas = null;
                     $resultado->estado = 'completado';
+                    $resultado->conexion=null;
                     break;
                 }
 
@@ -128,12 +154,14 @@ class Etapa extends Doctrine_Record {
                 if ($c->tipo == 'secuencial' || $c->tipo == 'evaluacion') {
                     $resultado->tareas = array($c->TareaDestino);
                     $resultado->estado = 'pendiente';
+                    $resultado->conexion=$c->tipo;
                     break;
                 }
                 //Si son en paralelo, vamos juntando el grupo de tareas proximas.
                 else if ($c->tipo == 'paralelo' || $c->tipo == 'paralelo_evaluacion') {
                     $resultado->tareas[] = $c->TareaDestino;
                     $resultado->estado = 'pendiente';
+                    $resultado->conexion=$c->tipo;
                 }
                 //Si es de union, chequeamos que las etapas paralelas se hayan completado antes de continuar con la proxima.
                 else if ($c->tipo == 'union') {
@@ -143,6 +171,7 @@ class Etapa extends Doctrine_Record {
                         $resultado->estado = 'standby';
                     }
                     $resultado->tareas = array($c->TareaDestino);
+                    $resultado->conexion=$c->tipo;
                     break;
                 }
             }
@@ -152,17 +181,25 @@ class Etapa extends Doctrine_Record {
     }
 
     public function hayEtapasParalelasPendientes() {
-        $netapas_paralelas_pendientes = Doctrine_Query::create()
-                ->from('Etapa e, e.Tarea t, t.ConexionesDestino c, c.TareaOrigen tarea_padre, tarea_padre.ConexionesOrigen c2, c2.TareaDestino.Etapas etapa_this')
-                ->where('c.tipo = "paralelo" OR c.tipo = "paralelo_evaluacion"') //Las conexiones hacia la etapa sean paralelas
-                ->andWhere('c2.tipo = "paralelo" OR c2.tipo = "paralelo_evaluacion"') //Las conexiones hacia la etapa sean paralelas
-                ->andWhere('e.pendiente = 1')   //Esten pendientes
-                ->andWhere('e.tramite_id = ?', $this->tramite_id)    //Pertenezcan a este tramite
-                ->andWhere('e.id != ?', $this->id)   //No sean esta misma etapa. Busco a las etapas hermanas.
+        if($this->etapa_ancestro_split_id){
+            $n_etapas_paralelas= Doctrine_Query::create()
+                    ->from('Etapa e')
+                    ->where('e.etapa_ancestro_split_id = ?',$this->etapa_ancestro_split_id)
+                    ->andWhere('e.pendiente = 1')
+                    ->andWhere('e.id != ?',$this->id)
+                    ->count();
+        }else{  //Metodo antiguo (Deprecado)
+            $n_etapas_paralelas = Doctrine_Query::create()
+                ->from('Etapa e, e.Tarea t, t.ConexionesOrigen c, c.TareaDestino tarea_hijo, tarea_hijo.ConexionesDestino c2, c2.TareaOrigen.Etapas etapa_this')
                 ->andWhere('etapa_this.id = ?', $this->id)
+                ->andWhere('c.tipo = "union" AND c2.tipo="union"')
+                ->andWhere('e.tramite_id = ?',$this->tramite_id)
+                ->andWhere('e.pendiente = 1')
+                ->andWhere('e.id != ?',$this->id)
                 ->count();
-
-        return $netapas_paralelas_pendientes ? true : false;
+        }
+        
+        return $n_etapas_paralelas?true:false;
     }
 
     public function asignar($usuario_id) {
@@ -176,22 +213,24 @@ class Etapa extends Doctrine_Record {
             $usuario = Doctrine::getTable('Usuario')->find($usuario_id);
             if ($usuario->email) {
                 $CI = & get_instance();
-                $CI->email->from('simple@chilesinpapeleo.cl','Simple');
+                $cuenta=$this->Tramite->Proceso->Cuenta;
+                $CI->email->from($cuenta->nombre.'@chilesinpapeleo.cl', $cuenta->nombre_largo);
                 $CI->email->to($usuario->email);
                 $CI->email->subject('Tramitador - Tiene una tarea pendiente');
-                $CI->email->message('<p>'.$this->Tramite->Proceso->nombre.'</p><p>Tiene una tarea pendiente por realizar: '.$this->Tarea->nombre.'</p><p>Podra realizarla en: ' . site_url('etapas/ejecutar/'.$this->id).'</p>');
+                $CI->email->message('<p>' . $this->Tramite->Proceso->nombre . '</p><p>Tiene una tarea pendiente por realizar: ' . $this->Tarea->nombre . '</p><p>Podra realizarla en: ' . site_url('etapas/ejecutar/' . $this->id) . '</p>');
                 $CI->email->send();
             }
         }
 
 
         //Ejecutamos los eventos
-        foreach ($this->Tarea->Eventos as $e){
-            if ($e->instante == 'antes'){
-                $r=new Regla($e->regla);
-                if($r->evaluar($this->tramite_id))
-                    $e->Accion->ejecutar($this->tramite_id);
-            }
+        $eventos=Doctrine_Query::create()->from('Evento e')
+                ->where('e.tarea_id = ? AND e.instante = ? AND e.paso_id IS NULL',array($this->Tarea->id,'antes'))
+                ->execute();
+        foreach ($eventos as $e) {
+                $r = new Regla($e->regla);
+                if ($r->evaluar($this->id))
+                    $e->Accion->ejecutar($this);           
         }
     }
 
@@ -201,93 +240,154 @@ class Etapa extends Doctrine_Record {
             return;
 
         if ($this->Tarea->almacenar_usuario) {
-            $dato = Doctrine::getTable('Dato')->findOneByTramiteIdAndNombre($this->Tramite->id, $this->Tarea->almacenar_usuario_variable);
+            $dato = Doctrine::getTable('DatoSeguimiento')->findOneByNombreAndEtapaId($this->Tarea->almacenar_usuario_variable,$this->id);
             if (!$dato)
-                $dato = new Dato();
+                $dato = new DatoSeguimiento();
             $dato->nombre = $this->Tarea->almacenar_usuario_variable;
             $dato->valor = UsuarioSesion::usuario()->id;
-            $dato->tramite_id = $this->Tramite->id;
+            $dato->etapa_id = $this->id;
             $dato->save();
         }
-        
-        //Ejecutamos los eventos
-        foreach ($this->Tarea->Eventos as $e){
-            if ($e->instante == 'despues'){
-                $r=new Regla($e->regla);
-                if($r->evaluar($this->tramite_id))
-                    $e->Accion->ejecutar($this->tramite_id);
-            }
-        }
 
-        //Le generamos los datos para el seguimiento
-        foreach ($this->Tramite->Datos as $d) {
-            //$dato = Doctrine::getTable('DatoSeguimiento')->findOneByEtapaIdAndNombre($this->id, $nombre);
-            //if (!$dato)
-            $dato = new DatoSeguimiento();
-            $dato->nombre = $d->nombre;
-            $dato->valor = $d->valor;
-            $dato->etapa_id = $this->id;
-            $this->DatosSeguimiento[] = $dato;
+        //Ejecutamos los eventos
+        $eventos=Doctrine_Query::create()->from('Evento e')
+                ->where('e.tarea_id = ? AND e.instante = ? AND e.paso_id IS NULL',array($this->Tarea->id,'despues'))
+                ->execute();
+        foreach ($eventos as $e) {
+                $r = new Regla($e->regla);
+                if ($r->evaluar($this->id))
+                    $e->Accion->ejecutar($this);           
         }
 
         //Cerramos la etapa
         $this->pendiente = 0;
         $this->ended_at = date('Y-m-d H:i:s');
         $this->save();
-
-        
     }
-    
+
     //Retorna el paso correspondiente a la secuencia, dado los datos ingresados en el tramite hasta el momento.
     //Es decir, tomando en cuenta las condiciones para que se ejecute cada paso.
-    public function getPasoEjecutable($secuencia){
-        $pasos=$this->getPasosEjecutables($this->tramite_id);
-        
-        if(isset($pasos[$secuencia]))
+    public function getPasoEjecutable($secuencia) {
+        $pasos = $this->getPasosEjecutables($this->tramite_id);
+
+        if (isset($pasos[$secuencia]))
             return $pasos[$secuencia];
-        
+
         return null;
     }
-    
+
     //Retorna un arreglo con todos los pasos que son ejecutables dado los datos ingresados en el tramite hasta el momento.
     //Es decir, tomando en cuenta las condiciones para que se ejecute cada paso.
-    public function getPasosEjecutables(){
-        $pasos=array();
-        foreach($this->Tarea->Pasos as $p){
-            $r=new Regla($p->regla);
-            if($r->evaluar($this->tramite_id))
-                $pasos[]=$p;
+    public function getPasosEjecutables() {
+        $pasos = array();
+        foreach ($this->Tarea->Pasos as $p) {
+            $r = new Regla($p->regla);
+            if ($r->evaluar($this->id))
+                $pasos[] = $p;
         }
-        
+
         return $pasos;
     }
     
-    public function getFechaVencimiento(){
-        if(!($this->Tarea->vencimiento && $this->Tarea->vencimiento_valor))
+    //Calcula la fecha en que deberia vencer esta etapa tomando en cuenta la configuracion de la tarea.
+    public function calcularVencimiento(){
+        if(!$this->Tarea->vencimiento)
             return NULL;
         
+        $fecha=NULL;
+        if($this->Tarea->vencimiento_unidad=='D')
+            if($this->Tarea->vencimiento_habiles){
+                $fecha=add_working_days($this->created_at,$this->Tarea->vencimiento_valor);
+            }else{
+                $temp = new DateTime($this->created_at);
+                $fecha= $temp->add(new DateInterval('P' . $this->Tarea->vencimiento_valor . 'D'))->format('Y-m-d');
+            }
+        else if($this->Tarea->vencimiento_unidad=='W'){
+            $temp = new DateTime($this->created_at);
+            $fecha= $temp->add(new DateInterval('P' . $this->Tarea->vencimiento_valor . 'W'))->format('Y-m-d');
+        }else if($this->Tarea->vencimiento_unidad=='M'){
+            $temp = new DateTime($this->created_at);
+            $fecha= $temp->add(new DateInterval('P' . $this->Tarea->vencimiento_valor . 'M'))->format('Y-m-d');
+        }
+        
+        return $fecha;
+    }
+
+    /*
+    public function getFechaVencimiento() {
+        if (!($this->Tarea->vencimiento && $this->Tarea->vencimiento_valor))
+            return NULL;
+
         //return strtotime($this->Tarea->vencimiento_valor.' '.$this->Tarea->vencimiento_unidad, mysql_to_unix($this->created_at));
-        $creacion=new DateTime($this->created_at);
+        $creacion = new DateTime($this->created_at);
         //$creacion->setTime(0, 0, 0);
-        return $creacion->add(new DateInterval('P'.$this->Tarea->vencimiento_valor.$this->Tarea->vencimiento_unidad));
+        return $creacion->add(new DateInterval('P' . $this->Tarea->vencimiento_valor . $this->Tarea->vencimiento_unidad));
     }
-    
-    public function getFechaVencimientoAsString(){
-        //return floor(($this->getFechaVencimiento()-now())/60/60/24).' días';
-        $now=new DateTime();
+     * 
+     */
+
+    public function getFechaVencimientoAsString() {
+        $now = new DateTime();
+        $now->setTime(0,0,0);
+
+        $interval = $now->diff(new DateTime($this->vencimiento_at));
         
-        $interval=$now->diff($this->getFechaVencimiento());
-        echo $interval->d.' días';
+        if($interval->invert)
+            return 'vencida';
+        else
+            return 'vence en '. (1+$interval->d) . ' días';
     }
-    
-    public function vencida(){
-        if(!$this->getFechaVencimiento())
+     
+
+    public function vencida() {
+        if (!$this->vencimiento_at)
             return FALSE;
+
+        $vencimiento = new DateTime($this->vencimiento_at);
+        $now = new DateTime();
+        $now->setTime(0,0,0);
+
+        return $vencimiento < $now;
+    }
+
+    public function iniciarPaso(Paso $paso) {
+        //Ejecutamos los eventos iniciales
+        $eventos=Doctrine_Query::create()->from('Evento e')
+                ->where('e.paso_id = ? AND e.instante = ?',array($paso->id,'antes'))
+                ->execute();
+        foreach ($eventos as $e) {
+                $r = new Regla($e->regla);
+                if ($r->evaluar($this->id))
+                    $e->Accion->ejecutar($this);
+            
+        }
+    }
+
+    public function finalizarPaso(Paso $paso) {
+        //Ejecutamos los eventos finales
+        $eventos=Doctrine_Query::create()->from('Evento e')
+                ->where('e.paso_id = ? AND e.instante = ?',array($paso->id,'despues'))
+                ->execute();
+        foreach ($eventos as $e) {
+                $r = new Regla($e->regla);
+                if ($r->evaluar($this->id))
+                    $e->Accion->ejecutar($this);
+            
+        }
+    }
+    
+    public function toPublicArray(){
+        $publicArray=array(
+            'id'=>(int)$this->id,
+            'estado'=>$this->pendiente?'pendiente':'completado',
+            'usuario_asignado'=>$this->usuario_id?$this->Usuario->toPublicArray():null,
+            'fecha_inicio' => $this->created_at,
+            'fecha_modificacion' => $this->updated_at,
+            'fecha_termino' => $this->ended_at,
+            'fecha_vencimiento'=>$this->vencimiento_at
+        );
         
-        $vencimiento=$this->getFechaVencimiento();
-        $now=new DateTime();
-        
-        return $vencimiento<$now;
+        return $publicArray;
     }
 
 }

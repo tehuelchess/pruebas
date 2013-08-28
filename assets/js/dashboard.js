@@ -16,7 +16,7 @@ function widgetChangePositions(){
     });
     var json=JSON.stringify(widgets);
     
-    $.post(site_url+"backend/portada/widget_change_positions/","posiciones="+json);
+    $.post(site_url+"backend/gestion/widget_change_positions/","posiciones="+json);
 }
 
 function widgetConfig(button){
@@ -31,5 +31,5 @@ function widgetConfigOk(form){
     $(widget).removeClass('flip');
     
     //Damos tiempo para que termine la animacion
-    setTimeout(function(){$(widget).load(site_url+"backend/portada/widget_load/"+widgetId)},1000);
+    setTimeout(function(){$(widget).load(site_url+"backend/gestion/widget_load/"+widgetId)},1000);
 }

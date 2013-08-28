@@ -2,10 +2,12 @@
     <fieldset>
         <legend>Completa la información de tu cuenta</legend>
         <div class="validacion"></div>
-        <label>Nombre</label>
-        <input type="text" name="nombre" value="<?=$usuario->nombre?>" />
-        <label>Apellidos</label>
-        <input type="text" name="apellidos" value="<?=$usuario->apellidos?>" />
+        <label>Nombres</label>
+        <input type="text" name="nombres" value="<?=$usuario->nombres?>" />
+        <label>Apellido Paterno</label>
+        <input type="text" name="apellido_paterno" value="<?=$usuario->apellido_paterno?>" />
+        <label>Apellido Materno</label>
+        <input type="text" name="apellido_materno" value="<?=$usuario->apellido_materno?>" />
         <label>Correo electrónico</label>
         <input type="text" name="email" value="<?=$usuario->email?>" />
         <input type="hidden" name="redirect" value="<?=$redirect?>" />

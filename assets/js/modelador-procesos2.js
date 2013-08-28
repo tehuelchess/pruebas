@@ -59,8 +59,9 @@ $(document).ready(function(){
                 c.source=elements[0];
                 c.target=elements[1];
                 
+                
                 //Validaciones
-                if(tipo=="secuencial" && jsPlumb.getConnections({source:c.source}).length){
+                if(tipo=="secuencial" && diagram.findNodeForKey(c.source).findLinksOutOf().count){
                     alert("Las conexiones secuenciales no pueden ir hacia mas de una tarea");
                     return;
                 }
@@ -107,14 +108,12 @@ $(document).ready(function(){
   //Asigno el evento para editar el proceso al hacerle click al titulo
     $(document).on("dblclick doubletap","#areaDibujo h1",function(event){
         $('#modal').load(site_url+"backend/procesos/ajax_editar/"+procesoId);
-        $('#modal').modal('show')
+        $('#modal').modal('show');
     });
     
     diagram.addDiagramListener("SelectionMoved",updateModel);
     
-    channel.bind('updateModel', function(data) {
-        drawFromModel(JSON.parse(data.modelo));
-    });
+
  
  
 });
@@ -162,5 +161,5 @@ function updateModel(){
     json=JSON.stringify(model);
     
     
-    $.post(site_url+"backend/procesos/ajax_editar_modelo/"+procesoId,"modelo="+json+"&socket_id_emisor="+socketId);
+    $.post(site_url+"backend/procesos/ajax_editar_modelo/"+procesoId,"modelo="+json);
 }

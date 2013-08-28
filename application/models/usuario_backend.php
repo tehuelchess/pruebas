@@ -4,12 +4,14 @@ class UsuarioBackend extends Doctrine_Record {
 
     function setTableDefinition() {
         $this->hasColumn('id');
-        $this->hasColumn('usuario');
+        $this->hasColumn('email');
         $this->hasColumn('password');
         $this->hasColumn('nombre');
         $this->hasColumn('apellidos');
+        $this->hasColumn('rol');
         $this->hasColumn('salt');
         $this->hasColumn('cuenta_id');
+        $this->hasColumn('reset_token');
     }
 
     function setUp() {
@@ -33,6 +35,13 @@ class UsuarioBackend extends Doctrine_Record {
             $this->salt=random_string ('alnum', 32);
         
         $this->setPassword($password);
+    }
+    
+    public function setResetToken($llave){
+        if($llave)
+            $this->_set('reset_token',sha1($llave));
+        else
+            $this->_set('reset_token',null);
     }
 
 }

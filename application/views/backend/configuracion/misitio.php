@@ -19,6 +19,8 @@
                 <input disabled type="text" name="nombre" value="<?=$cuenta->nombre?>"/>
                 <label>Nombre largo</label>
                 <input class="input-xxlarge" type="text" name="nombre_largo" value="<?=$cuenta->nombre_largo?>"/>
+                <label>Mensaje de bienvenida (Puede contener HTML)</label>
+                <textarea name="mensaje" class="input-xxlarge"><?=$cuenta->mensaje?></textarea>
                 <label>Logo</label>
                 <div id="file-uploader"></div>
                 <input type="hidden" name="logo" value="<?=$cuenta->logo?>" />

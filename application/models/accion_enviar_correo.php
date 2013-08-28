@@ -23,16 +23,17 @@ class AccionEnviarCorreo extends Accion {
         $CI->form_validation->set_rules('extra[contenido]', 'Contenido', 'required');
     }
 
-    public function ejecutar($tramite_id) {
+    public function ejecutar(Etapa $etapa) {
         $regla=new Regla($this->extra->para);
-        $to=$regla->getExpresionParaOutput($tramite_id);
+        $to=$regla->getExpresionParaOutput($etapa->id);
         $regla=new Regla($this->extra->tema);
-        $subject=$regla->getExpresionParaOutput($tramite_id);
+        $subject=$regla->getExpresionParaOutput($etapa->id);
         $regla=new Regla($this->extra->contenido);
-        $message=$regla->getExpresionParaOutput($tramite_id);
+        $message=$regla->getExpresionParaOutput($etapa->id);
         
         $CI = & get_instance();
-        $CI->email->from('simple@chilesinpapeleo.cl', 'Simple');
+        $cuenta=$etapa->Tramite->Proceso->Cuenta;
+        $CI->email->from($cuenta->nombre.'@chilesinpapeleo.cl', $cuenta->nombre_largo);
         $CI->email->to($to);
         $CI->email->subject($subject);
         $CI->email->message($message);

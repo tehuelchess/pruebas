@@ -88,17 +88,17 @@
     }
 </script>
 
-<script type="text/javascript">
-    var pusher = new Pusher('<?= $this->config->item('pusher_api_key') ?>');
-    var channel = pusher.subscribe('modelador-<?=$proceso->id?>');
-    var socketId;
-    pusher.connection.bind('connected', function() {
-        socketId = pusher.connection.socket_id;
-    });
-</script>
-
+<?php if($this->config->item('js_diagram')=='gojs'):?>
+<link href="<?= base_url() ?>assets/css/diagrama-procesos2.css" rel="stylesheet">
+<script src="<?= base_url() ?>assets/js/go/go-debug.js" type="text/javascript"></script>
 <script type="text/javascript" src="<?= base_url() ?>assets/js/diagrama-procesos2.js"></script>
 <script type="text/javascript" src="<?= base_url() ?>assets/js/modelador-procesos2.js"></script>
+<?php else: ?>
+<link href="<?= base_url() ?>assets/css/diagrama-procesos.css" rel="stylesheet">
+<script src="<?= base_url() ?>assets/js/jquery.jsplumb/jquery.jsPlumb-1.3.16-all-min.js" type="text/javascript"></script>
+<script type="text/javascript" src="<?= base_url() ?>assets/js/diagrama-procesos.js"></script>
+<script type="text/javascript" src="<?= base_url() ?>assets/js/modelador-procesos.js"></script>
+<?php endif ?>
 
 <script type="text/javascript">
     $(document).ready(function(){
@@ -107,6 +107,12 @@
     });
     
 </script>
+<style>
+    #draw{
+        width: <?=$proceso->width?>;
+        height: <?=$proceso->height?>;
+    }
+</style>
 
 <ul class="breadcrumb">
     <li>
@@ -120,7 +126,6 @@
     <li><a href="<?= site_url('backend/formularios/listar/' . $proceso->id) ?>">Formularios</a></li>
     <li><a href="<?= site_url('backend/documentos/listar/' . $proceso->id) ?>">Documentos</a></li>
     <li><a href="<?= site_url('backend/acciones/listar/' . $proceso->id) ?>">Acciones</a></li>
-    <li><a href="<?= site_url('backend/reportes/listar/' . $proceso->id) ?>">Reportes</a></li>
 </ul>
 
 
@@ -138,7 +143,6 @@
             <button class="btn createConnection" data-tipo="union" title="Crear conexión de unión" ><img src="<?= base_url() ?>assets/img/union.gif" /></button>
         </div>
     </div>
-    
 </div>
 <div id="draw"></div>
 <div class="modal hide fade" id="modal">
