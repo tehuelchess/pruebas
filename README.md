@@ -4,6 +4,8 @@
 ### Resumen
 SIMPLE (Sistema para la Implementación de Procesos Ligeramente Estandarizados) corresponde a un sistema para la implementación de procesos electrónicos mediante un diseñador simplificado, desarrollado para entregar una solución flexible a instituciones públicas que deseen digitalizar sus trámites de forma amigable, rápida y sencilla.
 
+### Licencia
+Este software esta licenciado bajo la licencia BSD-3.
 
 ### Ambiente de Ejecución
 Los usuarios deben ingresar mediante ambiente web, a través de la URL provista por el organismo.
