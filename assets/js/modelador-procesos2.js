@@ -125,13 +125,13 @@ function updateModel(){
     //model.connections=new Array();
     
     
-     var it = diagram.nodes;
- while (it.next()) {
-     var node=it.value;
+     var nodes = diagram.model.nodeDataArray;
+ for (var i in nodes) {
+     var node=nodes[i];
      var tmp=new Object();
-        tmp.id=node.sm.key;
-        tmp.left=node.position.x;
-        tmp.top=node.position.y;
+        tmp.id=node.key;
+        tmp.left=diagram.findNodeForKey(node.key).location.x;
+        tmp.top=diagram.findNodeForKey(node.key).location.y;
         model.elements.push(tmp);
  }
 
