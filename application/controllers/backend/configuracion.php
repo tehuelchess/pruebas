@@ -256,9 +256,8 @@ class Configuracion extends CI_Controller {
                 exit;
             }
         }
-        
         if(!$usuario)
-            $this->form_validation->set_rules('email', 'E-Mail', 'required|callback_check_existe_usuario');
+            $this->form_validation->set_rules('email', 'E-Mail', 'required|valid_email|callback_check_existe_usuario_backend');
         $this->form_validation->set_rules('password', 'Contraseña', 'matches[password_confirm]');
         $this->form_validation->set_rules('password_confirm', 'Confirmar contraseña');
         $this->form_validation->set_rules('nombre', 'Nombre', 'required');
@@ -337,6 +336,16 @@ class Configuracion extends CI_Controller {
             return TRUE;
         
         $this->form_validation->set_message('check_existe_usuario','%s ya existe');
+        return FALSE;
+             
+    }
+    
+    function check_existe_usuario_backend($email){
+        $u=Doctrine::getTable('UsuarioBackend')->findOneByEmail($email);
+        if(!$u)
+            return TRUE;
+        
+        $this->form_validation->set_message('check_existe_usuario_backend','%s ya existe');
         return FALSE;
              
     }
