@@ -129,7 +129,7 @@ function updateModel(){
     model.elements=new Array();
     //model.connections=new Array();
     
-    $("#areaDibujo .box").each(function(i,e){
+    $("#draw .box").each(function(i,e){
         var tmp=new Object();
         tmp.id=e.id;
         //tmp.name=$(e).text();
