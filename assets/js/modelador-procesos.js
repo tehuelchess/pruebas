@@ -88,7 +88,7 @@ $(document).ready(function(){
     });
     
     //Asigno los eventos a las lineas conectoras
-    $(document).on("dblclick doubletap","#areaDibujo ._jsPlumb_connector",function(event){
+    $(document).on("dblclick doubletap","#draw ._jsPlumb_connector",function(event){
         window.getSelection().removeAllRanges() //Previene bug de firefox que selecciona el texto de toda la pantalla.
         var conectorSeleccionado=$(event.target).closest("._jsPlumb_connector").get(0);
         var connections=jsPlumb.getConnections();
