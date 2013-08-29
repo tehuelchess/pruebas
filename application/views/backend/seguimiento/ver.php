@@ -1,6 +1,6 @@
 <?php if($this->config->item('js_diagram')=='gojs'):?>
 <link href="<?= base_url() ?>assets/css/diagrama-procesos2.css" rel="stylesheet">
-<script src="<?= base_url() ?>assets/js/go/go-debug.js" type="text/javascript"></script>
+<script src="<?= base_url() ?>assets/js/go/go.js" type="text/javascript"></script>
 <script type="text/javascript" src="<?= base_url() ?>assets/js/diagrama-procesos2.js"></script>
 <script type="text/javascript" src="<?= base_url() ?>assets/js/seguimiento2.js"></script>
 <?php else: ?>
