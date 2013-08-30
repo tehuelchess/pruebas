@@ -13,17 +13,10 @@
 <script type="text/javascript">
     $(document).ready(function(){
         tramiteId=<?= $tramite->id ?>;
-        drawFromModel(<?= $tramite->Proceso->getJSONFromModel() ?>);
+        drawFromModel(<?= $tramite->Proceso->getJSONFromModel() ?>,"<?=$tramite->Proceso->width?>","<?=$tramite->Proceso->height?>");
         drawSeguimiento(<?= json_encode($tramite->getTareasActuales()->toArray()) ?>,<?= json_encode($tramite->getTareasCompletadas()->toArray()) ?>);
     });
 </script>
-
-<style>
-    #draw{
-        width: <?= $tramite->Proceso->width ?>;
-        height: <?= $tramite->Proceso->height ?>;
-    }
-</style>
 
 <ul class="breadcrumb">
     <li><a href="<?= site_url('backend/seguimiento/index') ?>">Seguimiento de Procesos</a></li> <span class="divider">/</span>

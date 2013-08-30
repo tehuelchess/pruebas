@@ -1,19 +1,29 @@
 
 $(document).ready(function(){
     diagram = new go.Diagram("draw");
-    diagram.allowVerticalScroll = false;
-   diagram.allowHorizontalScroll = false;
-   diagram.fixedBounds=new go.Rect(0,0,10000,10000);
+    //diagram.contentAlignment=go.Spot.AllSides;
     $$ = go.GraphObject.make;
     
 });
 
 
 
-function drawFromModel(model){
-    //console.log(model);
+function drawFromModel(model,width,height){
+    
+    //Convertimos el width y height a valores numericos. Puede venir con % o con px
+    width=width.search("%")>=0?parseInt(width)/100*diagram.viewportBounds.width-30:parseInt(width);
+    height=height.search("%")>=0?parseInt(height)/100*diagram.viewportBounds.height-30:parseInt(height);
+    
+    //Parche para que gojs no haga un scrolling raro cuando el tamaño del diagrama es menor que el viewport.
+    if(diagram.viewportBounds.width>width) width=diagram.viewportBounds.width-30;
+    if(diagram.viewportBounds.height>height) height=diagram.viewportBounds.height-30;
     
     
+    
+
+    
+    
+    diagram.fixedBounds=new go.Rect(0,0,width,height);
 
 
       //diagram.grid.visible=true;

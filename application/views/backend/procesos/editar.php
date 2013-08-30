@@ -103,16 +103,10 @@
 <script type="text/javascript">
     $(document).ready(function(){
         procesoId=<?= $proceso->id ?>;
-        drawFromModel(<?= $proceso->getJSONFromModel() ?>);
+        drawFromModel(<?= $proceso->getJSONFromModel()?>,"<?=$proceso->width?>","<?=$proceso->height?>");
     });
     
 </script>
-<style>
-    #draw{
-        width: <?=$proceso->width?>;
-        height: <?=$proceso->height?>;
-    }
-</style>
 
 <ul class="breadcrumb">
     <li>
@@ -130,7 +124,7 @@
 
 
 <div id="areaDibujo">
-    <h1><?= $proceso->nombre ?></h1>
+    <h1><?= $proceso->nombre ?> <a href="#" title="Editar"><i class="icon-edit" style="vertical-align:middle;"></i></a></h1>
     <div class="botonera btn-toolbar">
         <div class="btn-group">
             <button class="btn createBox" title="Crear tarea"><img src="<?= base_url() ?>assets/img/tarea.png" /></button>
@@ -144,7 +138,7 @@
         </div>
     </div>
 </div>
-<div id="draw"></div>
+<div id="drawWrapper"><div id="draw"></div></div>
 <div class="modal hide fade" id="modal">
 
 </div>

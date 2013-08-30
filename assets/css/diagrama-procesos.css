@@ -5,10 +5,14 @@
     height: 60px;
 }
 
+#drawWrapper{
+    width: 100%;
+    height: 810px;
+    overflow: auto;
+}
+
 #draw{
     background: url(../img/bg_pm.gif);
-    height: 800px;
-    width: 100%;
     position: relative;
 }
 
