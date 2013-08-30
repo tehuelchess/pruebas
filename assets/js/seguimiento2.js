@@ -33,7 +33,7 @@ function drawSeguimiento(actuales, completadas) {
             id = part.data.key;
             //console.log(part);
             //part.locationSpot=new go.Spot(1,0.5,0,0);
-            $(".popover[data-id="+id+"]").css("left",part.location.x+200).css("top",part.location.y).toggle();
+            $(".popover[data-id="+id+"]").css("left",part.location.x-diagram.position.x+200).css("top",part.location.y-diagram.position.y).toggle();
         }
     });
 
