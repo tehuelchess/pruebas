@@ -44,7 +44,7 @@
 <div id="areaDibujo">
     <h1><?= $tramite->Proceso->nombre ?></h1>
 </div>  
-<div id="draw"></div>
+<div id="drawWrapper"><div id="draw"></div></div>
 </div>
 
 
