@@ -110,9 +110,10 @@ $(document).ready(function(){
     });
     
     //Asigno el evento para editar el proceso al hacerle click al titulo
-    $(document).on("dblclick doubletap","#areaDibujo h1",function(event){
+    $(document).on("click","#areaDibujo h1 a",function(event){
         $('#modal').load(site_url+"backend/procesos/ajax_editar/"+procesoId);
-        $('#modal').modal('show')
+        $('#modal').modal('show');
+        return false;
     });
 
     

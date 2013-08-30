@@ -39,7 +39,8 @@ $(document).ready(function(){
             diagram.model.addNodeData({
                 key: id,
                 name: "Tarea",
-                loc: new go.Point(parseInt(left),parseInt(top))
+                loc: new go.Point(parseInt(left),parseInt(top)),
+                status: "pending"
             });
             modo=null;
             $("#areaDibujo .botonera .createBox").removeClass("disabled");
@@ -106,9 +107,10 @@ $(document).ready(function(){
   });
   
   //Asigno el evento para editar el proceso al hacerle click al titulo
-    $(document).on("dblclick doubletap","#areaDibujo h1",function(event){
+    $(document).on("click","#areaDibujo h1 a",function(event){
         $('#modal').load(site_url+"backend/procesos/ajax_editar/"+procesoId);
         $('#modal').modal('show');
+        return false;
     });
     
     diagram.addDiagramListener("SelectionMoved",updateModel);

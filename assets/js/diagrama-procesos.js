@@ -20,9 +20,11 @@ $(document).ready(function(){
     } ]];
 });
 
-function drawFromModel(model){
+function drawFromModel(model,width,height){
     //Modificamos el titulo
     //$("#areaDibujo h1").text(model.nombre);
+    
+    $("#draw").css("width",width).css("height",height);
     
     //limpiamos el canvas
     jsPlumb.reset();
