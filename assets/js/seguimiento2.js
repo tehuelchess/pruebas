@@ -7,8 +7,8 @@ function drawSeguimiento(actuales, completadas) {
         var nodedata = diagram.model.findNodeDataForKey(el.identificador);
         diagram.model.setDataProperty(nodedata, "status", "completed");
 
-        $.get(site_url + "backend/seguimiento/ajax_ver_etapas/" + tramiteId + "/" + el.id, function(d) {
-            $("#draw").append("<div data-id='" + el.id + "' class='popover'><div class='arrow'></div><h3 class='popover-title'>Etapas ejecutadas</h3><div class='popover-content'>" + d + "</div></div>");
+        $.get(site_url + "backend/seguimiento/ajax_ver_etapas/" + tramiteId + "/" + el.identificador, function(d) {
+            $("#draw").append("<div data-id='" + el.identificador + "' class='popover'><div class='arrow'></div><h3 class='popover-title'>Etapas ejecutadas</h3><div class='popover-content'>" + d + "</div></div>");
         });
 
         
@@ -18,8 +18,8 @@ function drawSeguimiento(actuales, completadas) {
         var nodedata = diagram.model.findNodeDataForKey(el.identificador);
         diagram.model.setDataProperty(nodedata, "status", "current");
         
-        $.get(site_url + "backend/seguimiento/ajax_ver_etapas/" + tramiteId + "/" + el.id, function(d) {
-            $("#draw").append("<div data-id='" + el.id + "' class='popover'><div class='arrow'></div><h3 class='popover-title'>Etapas ejecutadas</h3><div class='popover-content'>" + d + "</div></div>");
+        $.get(site_url + "backend/seguimiento/ajax_ver_etapas/" + tramiteId + "/" + el.identificador, function(d) {
+            $("#draw").append("<div data-id='" + el.identificador + "' class='popover'><div class='arrow'></div><h3 class='popover-title'>Etapas ejecutadas</h3><div class='popover-content'>" + d + "</div></div>");
         });
     });
     
