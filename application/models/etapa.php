@@ -53,7 +53,34 @@ class Etapa extends Doctrine_Record {
 
     //Verifica si el usuario_id tiene permisos para asignarse esta etapa del tramite.
     public function canUsuarioAsignarsela($usuario_id) {
-        return $this->Tarea->hasUsuario($usuario_id);
+        $usuario=Doctrine::getTable('Usuario')->find($usuario_id);
+        
+
+        if ($this->Tarea->acceso_modo == 'publico')
+            return true;
+
+        if ($this->Tarea->acceso_modo == 'claveunica' && $usuario->open_id)
+            return true;
+
+        if ($this->Tarea->acceso_modo == 'registrados' && $usuario->registrado)
+            return true;
+
+        if ($this->Tarea->acceso_modo == 'grupos_usuarios') {
+            $r=new Regla($this->Tarea->grupos_usuarios);
+            $grupos_arr = explode(',', $r->getExpresionParaOutput($this->id));
+            $u = Doctrine_Query::create()
+                    ->from('Usuario u, u.GruposUsuarios g')
+                    ->where('u.id = ?', $usuario->id)
+                    ->andWhereIn('g.id', $grupos_arr)
+                    ->fetchOne();
+            if ($u)
+                return true;
+        }
+
+
+
+
+        return false;
     }
 
     //Avanza a la siguiente etapa.
@@ -74,9 +101,15 @@ class Etapa extends Doctrine_Record {
                 if ($tp->estado == 'pendiente') {
                     $tareas_proximas = $tp->tareas;
                     foreach ($tareas_proximas as $tarea_proxima) {
+                        $etapa = new Etapa();
+                        $etapa->tramite_id = $this->Tramite->id;
+                        $etapa->tarea_id = $tarea_proxima->id;
+                        $etapa->pendiente = 1;
+                        $etapa->save();
+                        
                         $usuario_asignado_id = NULL;
                         if ($tarea_proxima->asignacion == 'ciclica') {
-                            $usuarios_asignables = $tarea_proxima->getUsuarios();
+                            $usuarios_asignables = $etapa->getUsuarios();
                             $usuario_asignado_id = $usuarios_asignables[0]->id;
                             $ultimo_usuario = $tarea_proxima->getUltimoUsuarioAsignado($this->Tramite->Proceso->id);
                             if ($ultimo_usuario) {
@@ -95,10 +128,7 @@ class Etapa extends Doctrine_Record {
                             $usuario_asignado_id = $u;
                         }
 
-                        $etapa = new Etapa();
-                        $etapa->tramite_id = $this->Tramite->id;
-                        $etapa->tarea_id = $tarea_proxima->id;
-                        $etapa->pendiente = 1;                     
+                                            
                         
                         //Para mas adelante poder calcular como hacer las uniones
                         if($tp->conexion=='union')
@@ -389,5 +419,16 @@ class Etapa extends Doctrine_Record {
         
         return $publicArray;
     }
+    
+    //Obtiene el listado de usuarios que tienen acceso a esta tarea y que esten disponibles (no en vacaciones).
+    public function getUsuarios() {
+        
+        return $this->Tarea->getUsuarios($this->id);
+    }
 
+    //Obtiene el listado de usuarios que tienen acceso a esta tarea y que esten disponibles (no en vacaciones).
+    //Ademas, deben pertenecer a alguno de los grupos de usuarios definidos en la cuenta
+    public function getUsuariosFromGruposDeUsuarioDeCuenta() {
+        return $this->Tarea->getUsuariosFromGruposDeUsuarioDeCuenta($this->id);
+    }
 }

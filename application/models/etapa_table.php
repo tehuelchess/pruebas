@@ -7,17 +7,24 @@ class EtapaTable extends Doctrine_Table {
         $usuario=Doctrine::getTable('Usuario')->find($usuario_id);
         
         $query=Doctrine_Query::create()
-                ->from('Etapa e, e.Tarea tar, tar.GruposUsuarios g, e.Tramite.Proceso.Cuenta c')
+                ->from('Etapa e, e.Tarea tar, e.Tramite.Proceso.Cuenta c')
                 //Si la etapa no se encuentra asignada
                 ->where('e.usuario_id IS NULL')
                 //Si el usuario tiene permisos de acceso
-                ->andWhere('(tar.acceso_modo="grupos_usuarios" AND g.id IN (SELECT gru.id FROM GrupoUsuarios gru, gru.Usuarios usr WHERE usr.id = ?)) OR (tar.acceso_modo = "registrados" AND 1 = ?) OR (tar.acceso_modo = "claveunica" AND 1 = ?) OR (tar.acceso_modo="publico")',array($usuario->id,$usuario->registrado,$usuario->open_id))
+                //->andWhere('(tar.acceso_modo="grupos_usuarios" AND g.id IN (SELECT gru.id FROM GrupoUsuarios gru, gru.Usuarios usr WHERE usr.id = ?)) OR (tar.acceso_modo = "registrados" AND 1 = ?) OR (tar.acceso_modo = "claveunica" AND 1 = ?) OR (tar.acceso_modo="publico")',array($usuario->id,$usuario->registrado,$usuario->open_id))
                 ->orderBy('e.updated_at desc');
         
         if($cuenta!='localhost')
             $query->andWhere('c.nombre = ?',$cuenta->nombre);
         
-        return $query->execute();
+        $tareas=$query->execute();
+        
+        //Chequeamos los permisos de acceso
+        foreach($tareas as $key=>$t)
+            if(!$t->canUsuarioAsignarsela($usuario_id))
+                unset($tareas[$key]);
+        
+        return $tareas;
     }
     
     //busca las etapas donde esta pendiente una accion de $usuario_id

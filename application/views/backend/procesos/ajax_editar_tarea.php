@@ -1,6 +1,40 @@
 <script type="text/javascript">
     $(document).ready(function(){
-        $(".chosen").chosen();
+        $("#selectGruposUsuarios").select2({
+            multiple: true,
+            query: function (query) {
+                var data = {results: []};
+                var options=$(query.element).data("options");
+                
+                for(i in options)
+                    if(options[i].nombre.toUpperCase().indexOf(query.term.toUpperCase())==0)
+                        data.results.push({id: options[i].id, text: options[i].nombre});
+                
+                if(/@@\w/.test(query.term))
+                    data.results.push({id: query.term, text: query.term});
+            
+            
+                query.callback(data);
+            },
+            initSelection : function (element, callback) {
+                var options=$(element).data("options");
+                var data = [];
+                $(element.val().split(",")).each(function (i,term) {
+                    console.log(term);
+                    for(i in options){
+                        if(options[i].id==term){
+                            data.push({id: options[i].id, text: options[i].nombre});
+                            return;
+                        }
+                    }
+                    data.push({id: term, text: term});
+                    return;
+                
+                });
+                callback(data);
+            }
+
+        });
         
         $("[rel=tooltip]").tooltip();
         
@@ -196,16 +230,13 @@
                             });
                         });
                     </script>
-                    <label><input type="radio" name="acceso_modo" value="publico" <?= $tarea->acceso_modo == 'publico' ? 'checked' : '' ?> /> Cualquier persona puede acceder.</label>
-                    <label><input type="radio" name="acceso_modo" value="registrados" <?= $tarea->acceso_modo == 'registrados' ? 'checked' : '' ?> /> Sólo los usuarios registrados.</label>
-                    <label><input type="radio" name="acceso_modo" value="claveunica" <?= $tarea->acceso_modo == 'claveunica' ? 'checked' : '' ?> /> Sólo los usuarios registrados con ClaveUnica.</label>
-                    <label><input type="radio" name="acceso_modo" value="grupos_usuarios" <?= $tarea->acceso_modo == 'grupos_usuarios' ? 'checked' : '' ?> /> Sólo los siguientes grupos de usuarios pueden acceder.</label>
+                    <label class='radio'><input type="radio" name="acceso_modo" value="publico" <?= $tarea->acceso_modo == 'publico' ? 'checked' : '' ?> /> Cualquier persona puede acceder.</label>
+                    <label class='radio'><input type="radio" name="acceso_modo" value="registrados" <?= $tarea->acceso_modo == 'registrados' ? 'checked' : '' ?> /> Sólo los usuarios registrados.</label>
+                    <label class='radio'><input type="radio" name="acceso_modo" value="claveunica" <?= $tarea->acceso_modo == 'claveunica' ? 'checked' : '' ?> /> Sólo los usuarios registrados con ClaveUnica.</label>
+                    <label class='radio'><input type="radio" name="acceso_modo" value="grupos_usuarios" <?= $tarea->acceso_modo == 'grupos_usuarios' ? 'checked' : '' ?> /> Sólo los siguientes grupos de usuarios pueden acceder.</label>
                     <div id="optionalGruposUsuarios" style="height: 300px;" class="<?= $tarea->acceso_modo == 'grupos_usuarios' ? '' : 'hide' ?>">
-                        <select name="grupos_usuarios[]" class="chosen" multiple>
-                            <?php foreach ($tarea->Proceso->Cuenta->GruposUsuarios as $g): ?>
-                                <option value="<?= $g->id ?>" <?= $tarea->hasGrupoUsuarios($g->id) ? 'selected="selected"' : '' ?>><?= $g->nombre ?></option>
-                            <?php endforeach; ?>
-                        </select>
+                        <input id="selectGruposUsuarios" type="hidden" name="grupos_usuarios" class="input-xlarge" value="<?=$tarea->grupos_usuarios?>" data-options='<?=json_encode($tarea->Proceso->Cuenta->GruposUsuarios->toArray(false))?>' />
+                        <div class='help-block'>Puede incluir variables usando @@. Las variables deben contener el numero id del grupo de usuarios.</div>
                     </div>
                 </div>
                 <div class="tab-pasos tab-pane" id="tab4">

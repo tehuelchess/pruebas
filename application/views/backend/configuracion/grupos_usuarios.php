@@ -15,12 +15,14 @@
         
         <table class="table">
             <tr>
+                <th>Id</th>
                 <th>Nombre</th>
                 <th>Usuarios</th>
                 <th>Acciones</th>
             </tr>
             <?php foreach($grupos_usuarios as $u): ?>
             <tr>
+                <td><?=$u->id?></td>
                 <td><?=$u->nombre?></td>
                 <td>
                     <?php
