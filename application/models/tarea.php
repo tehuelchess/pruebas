@@ -17,6 +17,7 @@ class Tarea extends Doctrine_Record {
         $this->hasColumn('almacenar_usuario');              //Se almacena el usuario o no
         $this->hasColumn('almacenar_usuario_variable');     //Nombre de la variable con que se debe almacenar
         $this->hasColumn('acceso_modo');                    //Quienes pueden acceder: grupos_usuarios, publico o registrados
+        $this->hasColumn('grupos_usuarios');                //En caso que el modo de acceso sea grupos_usuarios, aqui se listan separados por coma los grupos.
         $this->hasColumn('activacion');                     //'si','no','entre_fechas'
         $this->hasColumn('activacion_inicio');              //Si es que la activacion es entre_fechas, esta seria la fecha de inicio
         $this->hasColumn('activacion_fin');                 //Si es que la activacion es entre_fechas, esta seria la fecha de fin
@@ -53,12 +54,6 @@ class Tarea extends Doctrine_Record {
             'foreign' => 'tarea_id_destino'
         ));
 
-        $this->hasMany('GrupoUsuarios as GruposUsuarios', array(
-            'local' => 'tarea_id',
-            'foreign' => 'grupo_usuarios_id',
-            'refClass' => 'TareaHasGrupoUsuarios'
-        ));
-
         $this->hasMany('Paso as Pasos', array(
             'local' => 'id',
             'foreign' => 'tarea_id',
@@ -79,8 +74,10 @@ class Tarea extends Doctrine_Record {
         return false;
     }
 
+
     //Obtiene el listado de usuarios que tienen acceso a esta tarea y que esten disponibles (no en vacaciones).
-    public function getUsuarios() {
+    //$etapa_id indica la etapa hasta la cual se debe calcular la variable para obtener el grupo de usuario.
+    public function getUsuarios($etapa_id) {
         if ($this->acceso_modo == 'publico')
             return Doctrine::getTable('Usuario')->findByVacaciones(0);
         else if ($this->acceso_modo == 'registrados')
@@ -89,48 +86,39 @@ class Tarea extends Doctrine_Record {
             return Doctrine::getTable('Usuario')->findByOpenIdAndVacaciones(1,0);
 
 
+        $r=new Regla($this->grupos_usuarios);
+        $grupos_arr=$r->getExpresionParaOutput($etapa_id);
+        
         return Doctrine_Query::create()
-                        ->from('Usuario u, u.GruposUsuarios g, g.Tareas t')
-                        ->where('t.id = ? AND u.vacaciones = 0', $this->id)
+                        ->from('Usuario u, u.GruposUsuarios g')
+                        ->where('u.vacaciones = 0')
+                        ->andWhereIn('g.id',  explode(',', $grupos_arr))
                         ->execute();
     }
     
     //Obtiene el listado de usuarios que tienen acceso a esta tarea y que esten disponibles (no en vacaciones).
     //Ademas, deben pertenecer a alguno de los grupos de usuarios definidos en la cuenta
-    public function getUsuariosFromGruposDeUsuarioDeCuenta() {
-        $query=Doctrine_Query::create()
-                ->from('Usuario u, u.GruposUsuarios g, g.Cuenta.Procesos.Tareas t')
-                ->where('u.vacaciones = 0')
-                ->andWhere('t.id = ?', $this->id);
-        
-        if($this->acceso_modo=='registrados')
-            $query->andWhere('u.registrado = 1');
-        else if($this->acceso_modo=='claveunica')
-            $query->andWhere('u.open_id = 1');  
-        else if($this->acceso_modo=='grupos_usuarios'){
-            $query->leftJoin('g.Tareas tar');
-            $query->andWhere('tar.id = ?',$this->id);
-        }
-            
-        
-        $usuarios=$query->execute();
-        return $usuarios;
-    }
-
-    //Obtiene si el usuarios tiene acceso a esta tarea.
-    public function hasUsuario($usuario_id) {
+    public function getUsuariosFromGruposDeUsuarioDeCuenta($etapa_id) {
         if ($this->acceso_modo == 'publico')
-            return Doctrine::getTable('Usuario')->findById($usuario_id)->count() ? true : false;
+            return Doctrine::getTable('Usuario')->findByVacaciones(0);
         else if ($this->acceso_modo == 'registrados')
-            return Doctrine::getTable('Usuario')->findByIdAndRegistrado($usuario_id, 1) ? true : false;
+            return Doctrine::getTable('Usuario')->findByRegistradoAndVacaciones(1,0);
         else if ($this->acceso_modo == 'claveunica')
-            return Doctrine::getTable('Usuario')->findByIdAndOpenId($usuario_id, 1) ? true : false;
+            return Doctrine::getTable('Usuario')->findByOpenIdAndVacaciones(1,0);
 
+
+        $r=new Regla($this->grupos_usuarios);
+        $grupos_arr=$r->getExpresionParaOutput($etapa_id);
+        
         return Doctrine_Query::create()
-                        ->from('Usuario u, u.GruposUsuarios g, g.Tareas t')
-                        ->where('t.id = ? AND u.id=?', array($this->id, $usuario_id))
-                        ->count() ? true : false;
+                        ->from('Usuario u, u.GruposUsuarios g')
+                        ->where('u.vacaciones = 0', $this->id)
+                        ->andWhere('c.id = ?',$this->Tarea->Proceso->Cuenta->id)
+                        ->andWhereIn('g.id',  explode(',', $grupos_arr))
+                        ->execute();
     }
+     
+
 
     //Obtiene el ultimo usuario que fue a asignado a esta tarea dentro del tramite tramite_id
     public function getUltimoUsuarioAsignado($proceso_id) {
@@ -139,20 +127,6 @@ class Tarea extends Doctrine_Record {
                         ->where('t.id = ? AND p.id = ?', array($this->id, $proceso_id))
                         ->orderBy('e.created_at DESC')
                         ->fetchOne();
-    }
-
-    public function setGruposUsuariosFromArray($grupos_usuarios_ids) {
-        //Limpiamos la lista antigua
-        foreach ($this->GruposUsuarios as $key => $val)
-            unset($this->GruposUsuarios[$key]);
-
-        //Agregamos los nuevos
-        if (is_array($grupos_usuarios_ids))
-            foreach ($grupos_usuarios_ids as $g){
-                $grupo=Doctrine::getTable('GrupoUsuarios')->find($g);
-                if($grupo->cuenta_id==$this->Proceso->cuenta_id)
-                    $this->GruposUsuarios[] = $grupo;
-            }
     }
 
     public function setConexionesFromArray($conexiones_array) {

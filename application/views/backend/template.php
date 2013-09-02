@@ -12,6 +12,7 @@
         <link href="<?= base_url() ?>assets/css/common.css" rel="stylesheet">
         <link href="<?= base_url() ?>assets/js/bootstrap-datepicker/css/datepicker.css" rel="stylesheet">
         <link href="<?= base_url() ?>assets/js/jquery.chosen/chosen.css" rel="stylesheet">
+        <link href="<?= base_url() ?>assets/js/jquery.select2/select2.css" rel="stylesheet">
         <link href="<?= base_url() ?>assets/js/file-uploader/fileuploader.css" rel="stylesheet">
         
         <link href="<?= base_url() ?>assets/css/modelador-formularios.css" rel="stylesheet">
@@ -32,6 +33,7 @@
         <script src="<?= base_url() ?>assets/js/bootstrap-datepicker/js/locales/bootstrap-datepicker.es.js"></script>
         <script src="<?= base_url() ?>assets/js/bootstrap-typeahead-multiple/bootstrap-typeahead-multiple.js" type="text/javascript"></script> <?php //JS typeahead modificado para multiples items     ?>
         <script src="<?= base_url() ?>assets/js/jquery.chosen/chosen.jquery.min.js"></script> <?php //Soporte para selects con multiple choices     ?>
+        <script src="<?= base_url() ?>assets/js/jquery.select2/select2.min.js"></script> <?php //Soporte para selects con multiple choices     ?>
         <script src="<?= base_url() ?>assets/js/file-uploader/fileuploader.js"></script> <?php //Soporte para subir archivos con ajax     ?>
         <script src="<?= base_url() ?>assets/js/jquery-ui/js/jquery-ui-1.8.21.custom.min.js" type="text/javascript"></script>
         <script src="<?= base_url() ?>assets/js/jquery.ui.touch-punch/jquery.ui.touch-punch.min.js" type="text/javascript"></script> <?php //JS para soportar drag & drop en iPad     ?>

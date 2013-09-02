@@ -155,16 +155,71 @@ class Proceso extends Doctrine_Record {
     public function canUsuarioIniciarlo($usuario_id){
         $usuario=Doctrine::getTable('Usuario')->find($usuario_id);
         
-        $proceso=Doctrine_Query::create()
-                ->from('Proceso p, p.Tareas t, t.GruposUsuarios g, g.Usuarios u')
-                ->where('t.inicial = 1 and p.id = ?',$this->id)
-                ->andWhere('(t.acceso_modo="grupos_usuarios" AND u.id = ?) OR (t.acceso_modo = "registrados" AND 1 = ?) OR (t.acceso_modo = "claveunica" AND 1 = ?) OR (t.acceso_modo="publico")',array($usuario->id,$usuario->registrado,$usuario->open_id))
-                ->fetchOne();
+        $tareas = Doctrine_Query::create()
+                ->from('Tarea t, t.Proceso p')
+                ->where('p.id = ? AND t.inicial = 1',$this->id)
+                ->execute();
+
+        foreach ($tareas as $t) {
+            if($t->acceso_modo=='publico')
+                return true;
+
+            if ($t->acceso_modo == 'claveunica' && $usuario->open_id)
+                return true;
+
+            if ($t->acceso_modo == 'registrados' && $usuario->registrado)
+                return true;
+
+            if ($t->acceso_modo == 'grupos_usuarios') {
+                $grupos_arr = explode(',', $t->grupos_usuarios);
+                $u = Doctrine_Query::create()
+                        ->from('Usuario u, u.GruposUsuarios g')
+                        ->where('u.id = ?', $usuario->id)
+                        ->andWhereIn('g.id', $grupos_arr)
+                        ->fetchOne();
+                if ($u)
+                    return true;
+            }
+            
+        }
         
-        if($proceso)
-            return TRUE;
         
-        return FALSE;
+        return false;
+    }
+    
+    //Verifica si el usuario_id tiene permisos para que le aparezca listado en las bandejas del frontend
+    public function canUsuarioListarlo($usuario_id){
+        $usuario=Doctrine::getTable('Usuario')->find($usuario_id);
+        
+        $tareas = Doctrine_Query::create()
+                ->from('Tarea t, t.Proceso p')
+                ->where('p.id = ? AND t.inicial = 1',$this->id)
+                ->execute();
+
+        foreach ($tareas as $t) {
+            if($t->acceso_modo=='publico')
+                return true;
+
+            if ($t->acceso_modo == 'claveunica')
+                return true;
+
+            if ($t->acceso_modo == 'registrados')
+                return true;
+
+            if ($t->acceso_modo == 'grupos_usuarios') {
+                $grupos_arr = explode(',', $t->grupos_usuarios);
+                $u = Doctrine_Query::create()
+                        ->from('Usuario u, u.GruposUsuarios g')
+                        ->where('u.id = ?', $usuario->id)
+                        ->andWhereIn('g.id', $grupos_arr)
+                        ->fetchOne();
+                if ($u)
+                    return true;
+            }
+            
+        }
+        
+        return false;
     }
     
     
