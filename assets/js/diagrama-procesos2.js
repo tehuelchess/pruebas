@@ -24,6 +24,8 @@ function drawFromModel(model,width,height){
     
     
     diagram.fixedBounds=new go.Rect(0,0,width,height);
+    
+    diagram.allowClipboard=false;
 
 
       //diagram.grid.visible=true;
