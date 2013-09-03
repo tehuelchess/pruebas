@@ -26,7 +26,7 @@ class Uploader extends MY_Controller {
         
         
         // list of valid extensions, ex. array("jpeg", "xml", "bmp")
-        $allowedExtensions = array('gif', 'jpg', 'png', 'pdf', 'doc', 'docx','zip','rar','ppt','pptx','xls','xlsx');
+        $allowedExtensions = array('gif', 'jpg', 'png', 'pdf', 'doc', 'docx','zip','rar','ppt','pptx','xls','xlsx','mpp','vsd');
         if(isset($campo->extra->filetypes))
             $allowedExtensions=$campo->extra->filetypes;
             
