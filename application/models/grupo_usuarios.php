@@ -22,6 +22,13 @@ class GrupoUsuarios extends Doctrine_Record {
             'foreign'=>'usuario_id',
             'refClass' => 'GrupoUsuariosHasUsuario'
         ));
+        
+        $this->hasMany('Tarea as Tareas',array(
+            'local'=>'grupo_usuarios_id',
+            'foreign'=>'tarea_id',
+            'refClass' => 'TareaHasGrupoUsuarios'
+        ));
+
     }
     
     public function hasUsuario($usuario_id){
