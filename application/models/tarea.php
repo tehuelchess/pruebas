@@ -103,7 +103,7 @@ class Tarea extends Doctrine_Record {
         return Doctrine_Query::create()
                         ->from('Usuario u, u.GruposUsuarios g')
                         ->where('u.vacaciones = 0')
-                        ->andWhereIn('g.id',  explode(',', $grupos_arr))
+                        ->andWhereIn('g.id',  $grupos_arr)
                         ->execute();
     }
     
