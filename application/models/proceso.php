@@ -31,21 +31,25 @@ class Proceso extends Doctrine_Record {
         $this->hasMany('Formulario as Formularios',array(
             'local'=>'id',
             'foreign'=>'proceso_id',
+            'orderBy'=>'nombre asc'
         ));
         
         $this->hasMany('Accion as Acciones',array(
             'local'=>'id',
             'foreign'=>'proceso_id',
+            'orderBy'=>'nombre asc'
         ));
         
         $this->hasMany('Documento as Documentos',array(
             'local'=>'id',
             'foreign'=>'proceso_id',
+            'orderBy'=>'nombre asc'
         ));
         
         $this->hasMany('Reporte as Reportes',array(
             'local'=>'id',
             'foreign'=>'proceso_id',
+            'orderBy'=>'nombre asc'
         ));
     }
     
