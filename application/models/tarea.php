@@ -86,8 +86,19 @@ class Tarea extends Doctrine_Record {
             return Doctrine::getTable('Usuario')->findByOpenIdAndVacaciones(1,0);
 
 
-        $r=new Regla($this->grupos_usuarios);
-        $grupos_arr=$r->getExpresionParaOutput($etapa_id);
+        //Convertimos las variables e ids, separados por coma, en una arreglo de grupos de usuarios.
+        $grupos_arr=array(-1);
+        $grupos=explode(',', $this->grupos_usuarios);
+        foreach($grupos as $key=>$g){
+            $r=new Regla($g);
+            $var=$r->evaluar($etapa_id);
+            if(is_numeric($var))
+                $grupos_arr[]=$var;
+            else if(is_array($var))
+                foreach($var as $v)
+                    if(is_numeric($v))
+                        $grupos_arr[]=$v;
+        }
         
         return Doctrine_Query::create()
                         ->from('Usuario u, u.GruposUsuarios g')
@@ -107,14 +118,25 @@ class Tarea extends Doctrine_Record {
             return Doctrine::getTable('Usuario')->findByOpenIdAndVacaciones(1,0);
 
 
-        $r=new Regla($this->grupos_usuarios);
-        $grupos_arr=$r->getExpresionParaOutput($etapa_id);
+        //Convertimos las variables e ids, separados por coma, en una arreglo de grupos de usuarios.
+        $grupos_arr=array(-1);
+        $grupos=explode(',', $this->grupos_usuarios);
+        foreach($grupos as $key=>$g){
+            $r=new Regla($g);
+            $var=$r->evaluar($etapa_id);
+            if(is_numeric($var))
+                $grupos_arr[]=$var;
+            else if(is_array($var))
+                foreach($var as $v)
+                    if(is_numeric($v))
+                        $grupos_arr[]=$v;
+        }
         
         return Doctrine_Query::create()
-                        ->from('Usuario u, u.GruposUsuarios g')
-                        ->where('u.vacaciones = 0', $this->id)
-                        ->andWhere('c.id = ?',$this->Tarea->Proceso->Cuenta->id)
-                        ->andWhereIn('g.id',  explode(',', $grupos_arr))
+                        ->from('Usuario u, u.GruposUsuarios g, g.Cuenta c')
+                        ->where('u.vacaciones = 0')
+                        ->andWhere('c.id = ?',$this->Proceso->Cuenta->id)
+                        ->andWhereIn('g.id',  $grupos_arr)
                         ->execute();
     }
      
