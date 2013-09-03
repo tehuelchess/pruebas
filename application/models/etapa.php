@@ -142,7 +142,8 @@ class Etapa extends Doctrine_Record {
                         $etapa->vencimiento_at=$etapa->calcularVencimiento();
                         $etapa->save();
                         
-                        $etapa->asignar($usuario_asignado_id);
+                        if($usuario_asignado_id)
+                            $etapa->asignar($usuario_asignado_id);
                         //$this->Tramite->Etapas[] = $etapa;     
                     }
                     $this->Tramite->updated_at = date("Y-m-d H:i:s");
