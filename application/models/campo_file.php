@@ -58,6 +58,8 @@ class CampoFile extends Campo {
         $output.='<option name="docx" '.(in_array('docx', $filetypes)?'selected':'').'>docx</option>';
         $output.='<option name="xls" '.(in_array('xls', $filetypes)?'selected':'').'>xls</option>';
         $output.='<option name="xlsx" '.(in_array('xlsx', $filetypes)?'selected':'').'>xlsx</option>';
+        $output.='<option name="mpp" '.(in_array('mpp', $filetypes)?'selected':'').'>mpp</option>';
+        $output.='<option name="vsd" '.(in_array('vsd', $filetypes)?'selected':'').'>vsd</option>';
         $output.='<option name="ppt" '.(in_array('ppt', $filetypes)?'selected':'').'>ppt</option>';
         $output.='<option name="pptx" '.(in_array('pptx', $filetypes)?'selected':'').'>pptx</option>';
         $output.='<option name="zip" '.(in_array('zip', $filetypes)?'selected':'').'>zip</option>';
