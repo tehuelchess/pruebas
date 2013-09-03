@@ -15,11 +15,11 @@
                 <?php endif; ?>
             <?php endforeach; ?>
         <?php elseif($tareas_proximas->estado=='standby'): ?>
-            <p>Luego de hacer click en Finalizar este hilo de ejecución quedara detenido momentaneamente hasta que se completen otras etapas.</p>
+            <p>Luego de hacer click en Finalizar esta etapa quedara detenida momentaneamente hasta que se completen el resto de etapas pendientes.</p>
         <?php elseif($tareas_proximas->estado=='completado'):?>
             <p>Luego de hacer click en Finalizar este trámite quedará completado.</p>
         <?php elseif($tareas_proximas->estado=='sincontinuacion'):?>
-            <p>Este trámite no tiene hilo donde continuar.</p>
+            <p>Este trámite no tiene una etapa donde continuar.</p>
         <?php endif; ?>
 
 
