@@ -103,6 +103,7 @@ class Documentos extends CI_Controller {
             $documento->hsm_configuracion_id=$this->input->post('hsm_configuracion_id');
             
             if($documento->tipo=='certificado'){
+                $documento->titulo=$this->input->post('titulo');
                 $documento->subtitulo=$this->input->post('subtitulo');
                 $documento->servicio=$this->input->post('servicio');
                 $documento->servicio_url=$this->input->post('servicio_url');
