@@ -42,7 +42,7 @@ class Documentos extends MY_Controller {
             exit;
         }
   
-        header('Content-Type: '. finfo_file(finfo_open(FILEINFO_MIME_TYPE), $path));
+        header('Content-Type: '. get_mime_by_extension($path));
         header('Content-Length: ' . filesize($path));
         readfile($path);
     }
