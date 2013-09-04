@@ -84,6 +84,7 @@ class Documentos extends CI_Controller {
         $this->form_validation->set_rules('contenido','Contenido','required');
         
         if($this->input->post('tipo')=='certificado'){
+            $this->form_validation->set_rules('titulo','Título','required');
             $this->form_validation->set_rules('subtitulo','Subtítulo','required');
             $this->form_validation->set_rules('servicio','Servicio','required');
             $this->form_validation->set_rules('servicio_url','URL del Servicio','required|prep_url');
