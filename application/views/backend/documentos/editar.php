@@ -43,6 +43,8 @@
         <label class="radio"><input type="radio" name="tipo" value="certificado" <?= $edit && $documento->tipo == 'certificado' ? 'checked' : '' ?> /> Certificado</label>
 
         <div id="certificadoArea">
+            <label>Título</label>
+            <input class="input-xxlarge" type="text" name="subtitulo" value="<?= $edit ? $documento->titulo : '' ?>" placeholder="Ej: Certificado de Educación" />
             <label>Subtítulo</label>
             <input class="input-xxlarge" type="text" name="subtitulo" value="<?= $edit ? $documento->subtitulo : '' ?>" placeholder="Ej: Certificado Gratuito" />
             <label>Servicio que emite el documento</label>
