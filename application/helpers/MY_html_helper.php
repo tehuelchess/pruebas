@@ -9,6 +9,6 @@ function matrix_to_html($matrix){
         }
         $html.='</tr>';
     } 
-    
+    $html.='</table>';
     return $html;
 }
