@@ -11,43 +11,49 @@ class WidgetTramitesCantidad extends Widget {
 
         $datos = array();
 
-        $tmp = Doctrine_Query::create()
-                ->select('p.id, p.nombre, COUNT(p.id) as cantidad')
-                ->from('Proceso p, p.Tramites t, p.Cuenta c')
+
+        foreach($this->config->procesos as $proceso_id){
+            $p=Doctrine::getTable('Proceso')->find($proceso_id);
+            $conteo = Doctrine_Query::create()
+                ->from('Tramite t, t.Etapas e, e.DatosSeguimiento d, t.Proceso p ,p.Cuenta c')
                 ->where('c.id = ?', $this->cuenta_id)
-                ->andWhereIn('p.id', $this->config->procesos)
+                ->andWhere('p.id = ?', $p->id)
                 ->andWhere('t.pendiente=1')
-                ->groupBy('p.id')
-                ->execute();
-        
-        if(!$tmp->count())
-            return;
-        
-        foreach ($tmp as $p)
-            $datos[$p->nombre]['pendientes'] = $p->cantidad;
-
-        $tmp2 = Doctrine_Query::create()
-                ->select('p.id, p.nombre, COUNT(p.id) as cantidad')
-                ->from('Proceso p, p.Tramites t, p.Cuenta c')
-                ->where('c.id = ?', $this->cuenta_id)
-                ->andWhereIn('p.id', $this->config->procesos)
-                ->andWhere('t.pendiente=0')
-                ->groupBy('p.id')
-                ->execute();
-
-        foreach ($tmp2 as $p)
-            $datos[$p->nombre]['completados'] = $p->cantidad;
-        
-        
-        foreach ($datos as $key => $val) {
-            $categories[] = $key;
-            $pendientes[] = isset($val['pendientes']) ? (int)$val['pendientes'] : 0;
-            $completados[] = isset($val['completados']) ? (int)$val['completados'] : 0;
+                ->having('COUNT(d.id) > 0 OR COUNT(e.id) > 1')  //Mostramos solo los que se han avanzado o tienen datos
+                ->groupBy('t.id')
+                ->count();
+            
+            $datos[$p->nombre]['pendientes'] = $conteo;
         }
-        $categories = json_encode($categories);
-        $pendientes = json_encode($pendientes);
-        $completados = json_encode($completados);
 
+        
+        foreach($this->config->procesos as $proceso_id){
+            $p=Doctrine::getTable('Proceso')->find($proceso_id);
+            $conteo = Doctrine_Query::create()
+                ->from('Tramite t, t.Etapas e, e.DatosSeguimiento d, t.Proceso p ,p.Cuenta c')
+                ->where('c.id = ?', $this->cuenta_id)
+                ->andWhere('p.id = ?', $p->id)
+                ->andWhere('t.pendiente=0')
+                ->having('COUNT(d.id) > 0 OR COUNT(e.id) > 1')  //Mostramos solo los que se han avanzado o tienen datos
+                ->groupBy('t.id')
+                ->count();
+            
+            $datos[$p->nombre]['completados'] = $conteo;
+        }
+        
+        
+        $categories_arr=array();
+        $pendientes_arr=array();
+        $completados_arr=array();
+        foreach ($datos as $key => $val) {
+            $categories_arr[] = $key;
+            $pendientes_arr[] = isset($val['pendientes']) ? (int)$val['pendientes'] : 0;
+            $completados_arr[] = isset($val['completados']) ? (int)$val['completados'] : 0;
+        }
+        $categories = json_encode($categories_arr);
+        $pendientes = json_encode($pendientes_arr);
+        $completados = json_encode($completados_arr);
+        
         $display = '<div class="grafico"></div>';
         $display.='
         <script type="text/javascript">

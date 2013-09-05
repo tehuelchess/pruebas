@@ -126,7 +126,8 @@ $config['subclass_prefix'] = 'MY_';
 | DO NOT CHANGE THIS UNLESS YOU FULLY UNDERSTAND THE REPERCUSSIONS!!
 |
 */
-$config['permitted_uri_chars'] = 'a-z 0-9~%.:_\-';
+$strange='¦,+()';
+$config['permitted_uri_chars'] = 'a-z 0-9~%.:_\-'.$strange;
 
 
 /*
@@ -248,10 +249,10 @@ $config['sess_cookie_name']		= 'ci_session';
 $config['sess_expiration']		= 7200;
 $config['sess_expire_on_close']	= FALSE;
 $config['sess_encrypt_cookie']	= TRUE;
-$config['sess_use_database']	= TRUE;
+$config['sess_use_database']	= FALSE;
 $config['sess_table_name']		= 'ci_sessions';
 $config['sess_match_ip']		= FALSE;
-$config['sess_match_useragent']	= TRUE;
+$config['sess_match_useragent']	= FALSE;
 $config['sess_time_to_update']	= 300;
 
 /*
@@ -359,6 +360,14 @@ $config['proxy_ips'] = '';
 
 
 /*
+ * Libreria que se va a utilizar para hacer los diagramas de flujo.
+ * jsplumb: Gratuita y libre uso
+ * gojs: requiere licencia
+ */
+$config['js_diagram']='jsplumb';
+
+
+/*
  * Servidor soporta HTTPS
  */
 $config['https'] = false;
@@ -366,20 +375,9 @@ $config['https'] = false;
 /*
  * Configuracion de backups
  */
-$config['mysqldump_location']='/usr/bin/mysqldump';
-$config['backupserver_ip']='';
-$config['backupserver_username']='';
-$config['backupserver_password']='';
-$config['backupserver_path']='';
+$config['awsAccessKey']='';
+$config['awsSecretKey']='';
 
-
-/*
- * Configuracion del servidor Pusher (pusher.com) para poder modelar procesos
- * en forma colaborativa.
- */
-$config['pusher_api_key'] = '';
-$config['pusher_secret'] = '';
-$config['pusher_app_id'] = '';
 
 /*
  * Configuracion del servidor HSM

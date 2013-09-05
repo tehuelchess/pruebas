@@ -8,6 +8,7 @@ class Cuenta extends Doctrine_Record {
         $this->hasColumn('nombre_largo');
         $this->hasColumn('mensaje');
         $this->hasColumn('logo');
+        $this->hasColumn('api_token');
     }
 
     function setUp() {
@@ -57,7 +58,6 @@ class Cuenta extends Doctrine_Record {
     }
 
     //Retorna el objecto cuenta perteneciente a este dominio.
-    //Retorna el string localhost si estamos en localhost
     //Retorna null si no estamos en ninguna cuenta valida.
     public static function cuentaSegunDominio() {
         static $firstTime=true;
@@ -67,8 +67,8 @@ class Cuenta extends Doctrine_Record {
             $CI = &get_instance();
             $host=$CI->input->server('HTTP_HOST');
             preg_match('/(.+)\.chilesinpapeleo\.cl/', $host, $matches);
-                if($host == 'localhost' || (isset($matches[1]) && $matches[1] == 'simple')){
-                    $cuentaSegunDominio='localhost';
+                if($host == 'localhost'){
+                    $cuentaSegunDominio=Doctrine_Query::create()->from('Cuenta c')->limit(1)->fetchOne();
                 }else if (isset ($matches[1])){
                     $cuentaSegunDominio = Doctrine::getTable('Cuenta')->findOneByNombre($matches[1]);
                 }

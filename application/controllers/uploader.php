@@ -26,7 +26,7 @@ class Uploader extends MY_Controller {
         
         
         // list of valid extensions, ex. array("jpeg", "xml", "bmp")
-        $allowedExtensions = array('gif', 'jpg', 'png', 'pdf', 'doc', 'docx','zip','rar');
+        $allowedExtensions = array('gif', 'jpg', 'png', 'pdf', 'doc', 'docx','zip','rar','ppt','pptx','xls','xlsx','mpp','vsd');
         if(isset($campo->extra->filetypes))
             $allowedExtensions=$campo->extra->filetypes;
             
@@ -41,27 +41,31 @@ class Uploader extends MY_Controller {
               $file->tramite_id=$etapa->Tramite->id;
               $file->filename=$result['file_name'];
               $file->tipo='dato';
+              $file->llave=strtolower(random_string('alnum', 12));
               $file->save();
+              
+              $result['id']=$file->id;
+              $result['llave']=$file->llave;
           }
         // to pass data through iframe you will need to encode all html tags
         echo htmlspecialchars(json_encode($result), ENT_NOQUOTES);
     }
 
-    function datos_get() {
-        $filename=$this->input->get('filename');
-        $filename=urldecode($filename);
+    function datos_get($filename) {
+        $id=$this->input->get('id');
+        $token=$this->input->get('token');
         
         //Chequeamos los permisos en el frontend
         $file=Doctrine_Query::create()
                 ->from('File f, f.Tramite t, t.Etapas e, e.Usuario u')
-                ->where('f.filename = ? AND f.tipo = ? AND u.id = ?',array($filename,'dato',UsuarioSesion::usuario()->id))
+                ->where('f.id = ? AND f.llave = ? AND u.id = ?',array($id,$token,UsuarioSesion::usuario()->id))
                 ->fetchOne();
         
         if(!$file){
             //Chequeamos permisos en el backend
             $file=Doctrine_Query::create()
                 ->from('File f, f.Tramite.Proceso.Cuenta.UsuariosBackend u')
-                ->where('f.filename = ? AND f.tipo = ? AND u.id = ? AND (u.rol="super" OR u.rol="operacion")',array($filename,'dato',UsuarioBackendSesion::usuario()->id))
+                ->where('f.id = ? AND f.llave = ? AND u.id = ? AND (u.rol="super" OR u.rol="operacion")',array($id,$token,UsuarioBackendSesion::usuario()->id))
                 ->fetchOne();
             
             if(!$file){
@@ -70,9 +74,9 @@ class Uploader extends MY_Controller {
             }
         }
         
-        $path='uploads/datos/'.$filename;
+        $path='uploads/datos/'.$file->filename;
         
-        if(preg_match('/^\.\./', $filename)){
+        if(preg_match('/^\.\./', $file->filename)){
             echo 'Archivo invalido';
             exit;
         }
@@ -82,7 +86,7 @@ class Uploader extends MY_Controller {
             exit;
         }
   
-        header('Content-Disposition: attachment; filename="'.$filename.'"');
+        header('Content-Type: '. get_mime_by_extension($path));
         header('Content-Length: ' . filesize($path));
         readfile($path);
     }

@@ -46,6 +46,9 @@ h2 {
   font-size: 21px;
   color: #005181;
 }
+#mainTable th a{
+    color:inherit;
+}
 #mainTable td {
   font-size: 12px;
   color: #999;
@@ -64,4 +67,21 @@ h2 {
 #mainTable td.time {
   font-size: 12px;
   color: #0B5DA5;
+}
+#loginView .simple .wrapper {
+  padding: 20px 20px 0 20px;
+}
+#loginView .claveunica {
+  background: #E1ECF6;
+  height: 70px;
+}
+#loginView .claveunica .wrapper {
+  padding: 20px;
+}
+#loginView .claveunica .wrapper p {
+  float: left;
+  line-height: 30px;
+}
+#loginView .claveunica .wrapper a {
+  float: right;
 }

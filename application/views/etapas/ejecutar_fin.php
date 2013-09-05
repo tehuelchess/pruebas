@@ -8,18 +8,18 @@
                 <?php if ($t->asignacion == 'manual'): ?>
                     <label>Asignar próxima etapa a</label>
                     <select name="usuarios_a_asignar[<?= $t->id ?>]">
-                        <?php foreach ($t->getUsuarios() as $u): ?>
+                        <?php foreach ($t->getUsuarios($etapa->id) as $u): ?>
                             <option value="<?= $u->id ?>"><?= $u->usuario ?> <?=$u->nombres?'('.$u->nombres.' '.$u->apellido_paterno.')':''?></option>
                         <?php endforeach; ?>
                     </select>
                 <?php endif; ?>
             <?php endforeach; ?>
         <?php elseif($tareas_proximas->estado=='standby'): ?>
-            <p>Luego de hacer click en Finalizar este hilo de ejecución quedara detenido momentaneamente hasta que se completen otras etapas.</p>
+            <p>Luego de hacer click en Finalizar esta etapa quedara detenida momentaneamente hasta que se completen el resto de etapas pendientes.</p>
         <?php elseif($tareas_proximas->estado=='completado'):?>
             <p>Luego de hacer click en Finalizar este trámite quedará completado.</p>
         <?php elseif($tareas_proximas->estado=='sincontinuacion'):?>
-            <p>Este trámite no tiene hilo donde continuar.</p>
+            <p>Este trámite no tiene una etapa donde continuar.</p>
         <?php endif; ?>
 
 

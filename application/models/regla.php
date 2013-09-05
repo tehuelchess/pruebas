@@ -30,7 +30,7 @@ class Regla {
     //Esta expresion es la que se evalua finalmente en la regla
     public function getExpresionParaEvaluar($etapa_id){
         $new_regla=$this->regla;
-        $new_regla=preg_replace_callback('/@@(\w+)(->\w+|\[\w+\])*/', function($match) use ($etapa_id) {
+        $new_regla=preg_replace_callback('/@@(\w+)([->\w+|\[\w+\]]*)/', function($match) use ($etapa_id) {
                     $nombre_dato = $match[1];
                     $accesor=isset($match[2])?$match[2]:'';
                     
@@ -60,7 +60,10 @@ class Regla {
                 
          $new_regla=preg_replace_callback('/@!(\w+)/', function($match) use ($etapa_id) {
                     $nombre_dato = $match[1];
-                    $usuario=UsuarioSesion::usuario();
+                    
+                    $etapa=Doctrine::getTable('Etapa')->find($etapa_id);
+                    $usuario=$etapa->Usuario;
+                    
                     if($nombre_dato=='rut')
                         return "'".$usuario->rut."'";
                     else if($nombre_dato=='nombre')         //Deprecated
@@ -93,7 +96,7 @@ class Regla {
         //print_r( stdClass::__set_state(array( 'region' => 'Antofagasta', 'comuna' => 'San Pedro de Atacama' )));
         //exit;
         $new_regla=$this->regla;     
-        $new_regla=preg_replace_callback('/@@(\w+)(->\w+|\[\w+\])*/', function($match) use ($etapa_id) {
+        $new_regla=preg_replace_callback('/@@(\w+)([->\w+|\[\w+\]]*)/', function($match) use ($etapa_id) {
                     $nombre_dato = $match[1];
                     $accesor=isset($match[2])?$match[2]:'';
                     
@@ -127,7 +130,10 @@ class Regla {
          
          $new_regla=preg_replace_callback('/@!(\w+)/', function($match) use ($etapa_id) {
                     $nombre_dato = $match[1];
-                    $usuario=UsuarioSesion::usuario();
+                    
+                    $etapa=Doctrine::getTable('Etapa')->find($etapa_id);
+                    $usuario=$etapa->Usuario;
+                    
                     if($nombre_dato=='rut')
                         return $usuario->rut;
                     else if($nombre_dato=='nombre')         //Deprecated

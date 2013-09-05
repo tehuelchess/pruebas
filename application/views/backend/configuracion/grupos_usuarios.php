@@ -11,16 +11,18 @@
             <li class="active">Grupos de Usuarios</li>
         </ul>
         
-        <p><a class="btn" href="<?=site_url('backend/configuracion/grupo_usuarios_editar')?>"><i class="icon-file"></i> Nuevo</a></p>
+        <p><a class="btn btn-success" href="<?=site_url('backend/configuracion/grupo_usuarios_editar')?>"><i class="icon-file icon-white"></i> Nuevo</a></p>
         
         <table class="table">
             <tr>
+                <th>Id</th>
                 <th>Nombre</th>
                 <th>Usuarios</th>
                 <th>Acciones</th>
             </tr>
             <?php foreach($grupos_usuarios as $u): ?>
             <tr>
+                <td><?=$u->id?></td>
                 <td><?=$u->nombre?></td>
                 <td>
                     <?php
@@ -31,8 +33,8 @@
                     ?>
                 </td>
                 <td>
-                    <a class="btn" href="<?=site_url('backend/configuracion/grupo_usuarios_editar/'.$u->id)?>"><i class="icon-edit"></i> Editar</a>
-                    <a class="btn" href="<?=site_url('backend/configuracion/grupo_usuarios_eliminar/'.$u->id)?>" onclick="return confirm('¿Está seguro que desea eliminar?')"><i class="icon-remove"></i> Eliminar</a>
+                    <a class="btn btn-primary" href="<?=site_url('backend/configuracion/grupo_usuarios_editar/'.$u->id)?>"><i class="icon-edit icon-white"></i> Editar</a>
+                    <a class="btn btn-danger" href="<?=site_url('backend/configuracion/grupo_usuarios_eliminar/'.$u->id)?>" onclick="return confirm('¿Está seguro que desea eliminar?')"><i class="icon-remove icon-white"></i> Eliminar</a>
                 </td>
             </tr>
             <?php endforeach; ?>

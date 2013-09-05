@@ -31,21 +31,25 @@ class Proceso extends Doctrine_Record {
         $this->hasMany('Formulario as Formularios',array(
             'local'=>'id',
             'foreign'=>'proceso_id',
+            'orderBy'=>'nombre asc'
         ));
         
         $this->hasMany('Accion as Acciones',array(
             'local'=>'id',
             'foreign'=>'proceso_id',
+            'orderBy'=>'nombre asc'
         ));
         
         $this->hasMany('Documento as Documentos',array(
             'local'=>'id',
             'foreign'=>'proceso_id',
+            'orderBy'=>'nombre asc'
         ));
         
         $this->hasMany('Reporte as Reportes',array(
             'local'=>'id',
             'foreign'=>'proceso_id',
+            'orderBy'=>'nombre asc'
         ));
     }
     
@@ -125,35 +129,111 @@ class Proceso extends Doctrine_Record {
         return $query->execute();
     }
     
-    //Retorna una arreglo con todos los nombres usados en los campos de este proceso.
-    public function getNombresDeCampos($tipo=null, $excluir_readonly=true){
-        $campos=$this->getCampos($tipo, $excluir_readonly);
+    //Obtiene todos los campos asociados a este proceso
+    public function getNombresDeCampos($tipo=null,$excluir_readonly=true){
+        $campos=$this->getCampos($tipo,$excluir_readonly);
         
-        //Los insertamos a un arreglo.
-        $nombres_de_campos=array();
+        $nombres=array();
         foreach($campos as $c)
-            $nombres_de_campos[]=$c->nombre;
+            $nombres[$c->nombre]=true;
         
-        //Excluimos los repetidos.
-        $nombres_de_campos=array_unique($nombres_de_campos);
+        return array_keys($nombres);
+    }
+    
+    //Retorna una arreglo con todos los nombres de datos usados durante el proceso
+    public function getNombresDeDatos(){
+        $campos=Doctrine_Query::create()
+                ->select('d.nombre')
+                ->from('DatoSeguimiento d, d.Etapa.Tramite.Proceso p')
+                ->andWhere('p.id = ?',$this->id)
+                ->groupBy('d.nombre')
+                ->execute();
         
-        return $nombres_de_campos;
+        foreach($campos as $c)
+            $result[]=$c->nombre;
+        
+        return $result;
     }
     
     //Verifica si el usuario_id tiene permisos para iniciar este proceso como tramite.
     public function canUsuarioIniciarlo($usuario_id){
         $usuario=Doctrine::getTable('Usuario')->find($usuario_id);
         
-        $proceso=Doctrine_Query::create()
-                ->from('Proceso p, p.Tareas t, t.GruposUsuarios g, g.Usuarios u')
-                ->where('t.inicial = 1 and p.id = ?',$this->id)
-                ->andWhere('(t.acceso_modo="grupos_usuarios" AND u.id = ?) OR (t.acceso_modo = "registrados" AND 1 = ?) OR (t.acceso_modo = "claveunica" AND 1 = ?) OR (t.acceso_modo="publico")',array($usuario->id,$usuario->registrado,$usuario->open_id))
-                ->fetchOne();
+        $tareas = Doctrine_Query::create()
+                ->from('Tarea t, t.Proceso p')
+                ->where('p.id = ? AND t.inicial = 1',$this->id)
+                ->execute();
+
+        foreach ($tareas as $t) {
+            if($t->acceso_modo=='publico')
+                return true;
+
+            if ($t->acceso_modo == 'claveunica' && $usuario->open_id)
+                return true;
+
+            if ($t->acceso_modo == 'registrados' && $usuario->registrado)
+                return true;
+
+            if ($t->acceso_modo == 'grupos_usuarios') {
+                $grupos_arr = explode(',', $t->grupos_usuarios);
+                $u = Doctrine_Query::create()
+                        ->from('Usuario u, u.GruposUsuarios g')
+                        ->where('u.id = ?', $usuario->id)
+                        ->andWhereIn('g.id', $grupos_arr)
+                        ->fetchOne();
+                if ($u)
+                    return true;
+            }
+            
+        }
         
-        if($proceso)
-            return TRUE;
         
-        return FALSE;
+        return false;
+    }
+    
+    //Verifica si el usuario_id tiene permisos para que le aparezca listado en las bandejas del frontend
+    public function canUsuarioListarlo($usuario_id){
+        $usuario=Doctrine::getTable('Usuario')->find($usuario_id);
+        
+        $tareas = Doctrine_Query::create()
+                ->from('Tarea t, t.Proceso p')
+                ->where('p.id = ? AND t.inicial = 1',$this->id)
+                ->execute();
+
+        foreach ($tareas as $t) {
+            if($t->acceso_modo=='publico')
+                return true;
+
+            if ($t->acceso_modo == 'claveunica')
+                return true;
+
+            if ($t->acceso_modo == 'registrados')
+                return true;
+
+            if ($t->acceso_modo == 'grupos_usuarios') {
+                $grupos_arr = explode(',', $t->grupos_usuarios);
+                $u = Doctrine_Query::create()
+                        ->from('Usuario u, u.GruposUsuarios g')
+                        ->where('u.id = ?', $usuario->id)
+                        ->andWhereIn('g.id', $grupos_arr)
+                        ->fetchOne();
+                if ($u)
+                    return true;
+            }
+            
+        }
+        
+        return false;
+    }
+    
+    
+    public function toPublicArray(){
+        $publicArray=array(
+            'id'=>(int)$this->id,
+            'nombre'=>$this->nombre
+        );
+        
+        return $publicArray;
     }
 
 }

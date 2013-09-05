@@ -29,13 +29,14 @@ class Reportes extends CI_Controller {
 
     public function listar($proceso_id) {
         $proceso = Doctrine::getTable('Proceso')->find($proceso_id);
+        $reportes=Doctrine_query::create()->from('Reporte r')->where('r.proceso_id = ?',$proceso_id)->orderBy('r.id desc')->execute();
 
         if ($proceso->cuenta_id != UsuarioBackendSesion::usuario()->cuenta_id) {
             echo 'Usuario no tiene permisos para listar los formularios de este proceso';
             exit;
         }
         $data['proceso'] = $proceso;
-        $data['reportes'] = $data['proceso']->Reportes;
+        $data['reportes'] = $reportes;
 
         $data['title'] = 'Documentos';
         $data['content'] = 'backend/reportes/listar';
@@ -104,6 +105,7 @@ class Reportes extends CI_Controller {
         $this->form_validation->set_rules('nombre', 'Nombre', 'required');
         $this->form_validation->set_rules('campos', 'Campos', 'required');
 
+        $respuesta=new stdClass();
         if ($this->form_validation->run() == TRUE) {
             $reporte->nombre = $this->input->post('nombre');
             $reporte->campos = $this->input->post('campos');

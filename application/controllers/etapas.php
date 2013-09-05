@@ -10,8 +10,13 @@ class Etapas extends MY_Controller {
     }
 
     public function inbox() {
-        $data['etapas'] = Doctrine::getTable('Etapa')->findPendientes(UsuarioSesion::usuario()->id, Cuenta::cuentaSegunDominio());
+        $orderby=$this->input->get('orderby')?$this->input->get('orderby'):'updated_at';
+        $direction=$this->input->get('direction')?$this->input->get('direction'):'desc';
+        
+        $data['etapas'] = Doctrine::getTable('Etapa')->findPendientes(UsuarioSesion::usuario()->id, Cuenta::cuentaSegunDominio(),$orderby,$direction);
 
+        $data['orderby']=$orderby;
+        $data['direction']=$direction;
         $data['sidebar'] = 'inbox';
         $data['content'] = 'etapas/inbox';
         $data['title'] = 'Bandeja de Entrada';
@@ -31,6 +36,9 @@ class Etapas extends MY_Controller {
         $iframe = $this->input->get('iframe');
 
         $etapa = Doctrine::getTable('Etapa')->find($etapa_id);
+        if(!$etapa){
+            show_404();
+        }
         if ($etapa->usuario_id != UsuarioSesion::usuario()->id) {
             if (!UsuarioSesion::usuario()->registrado) {
                 $this->session->set_flashdata('redirect', current_url());
@@ -60,7 +68,7 @@ class Etapas extends MY_Controller {
             $etapa->iniciarPaso($paso);
             $etapa->finalizarPaso($paso);
             $etapa->avanzar();
-            redirect('etapas/ver/' . $etapa->id . '/' . ($secuencia));
+            redirect('etapas/ver/' . $etapa->id . '/' . (count($etapa->getPasosEjecutables())-1));
         }else{
             $etapa->iniciarPaso($paso);
 
@@ -141,7 +149,7 @@ class Etapas extends MY_Controller {
                     $etapa->iniciarPaso($prox_paso);
                     $etapa->finalizarPaso($prox_paso);
                     $etapa->avanzar();
-                    $respuesta->redirect = site_url('etapas/ver/' . $etapa->id . '/' . ($secuencia + 1));
+                    $respuesta->redirect = site_url('etapas/ver/' . $etapa->id . '/' . (count($etapa->getPasosEjecutables())-1));
                 } else {
                     $respuesta->redirect = site_url('etapas/ejecutar/' . $etapa_id . '/' . ($secuencia + 1)) . ($qs ? '?' . $qs : '');
                 }
@@ -160,7 +168,7 @@ class Etapas extends MY_Controller {
                 $etapa->iniciarPaso($prox_paso);
                 $etapa->finalizarPaso($prox_paso);
                 $etapa->avanzar();
-                $respuesta->redirect = site_url('etapas/ver/' . $etapa->id . '/' . ($secuencia + 1));
+                $respuesta->redirect = site_url('etapas/ver/' . $etapa->id . '/' . (count($etapa->getPasosEjecutables())-1));
             } else {
                 $respuesta->redirect = site_url('etapas/ejecutar/' . $etapa_id . '/' . ($secuencia + 1)) . ($qs ? '?' . $qs : '');
             }

@@ -165,7 +165,13 @@ class SaferEval {
             'strtotime',
             //Serializacion
             'json_encode',
-            'json_decode'
+            'json_decode',
+            //Booleanos
+            'true',
+            'false',
+            'NULL',
+            //Helpers
+            'matrix_to_html'
         );
         $this->allowedTokens = array(
             'T_AND_EQUAL', // assignment operators

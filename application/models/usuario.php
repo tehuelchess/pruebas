@@ -107,4 +107,16 @@ class Usuario extends Doctrine_Record {
         else
             $this->_set('reset_token',null);
     }
+    
+    public function toPublicArray(){
+        $publicArray=array(
+            'usuario'=>$this->usuario,
+            'email'=>$this->email,
+            'nombres'=>$this->nombres,
+            'apellido_paterno'=>$this->apellido_paterno,
+            'apellido_materno'=>$this->apellido_materno
+        );
+        
+        return $publicArray;
+    }
 }

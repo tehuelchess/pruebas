@@ -6,6 +6,8 @@ class Documento extends Doctrine_Record {
         $this->hasColumn('id');
         $this->hasColumn('tipo');
         $this->hasColumn('nombre');
+        $this->hasColumn('titulo');
+        $this->hasColumn('subtitulo');
         $this->hasColumn('contenido');
         $this->hasColumn('servicio');
         $this->hasColumn('servicio_url');
@@ -32,7 +34,7 @@ class Documento extends Doctrine_Record {
             'local' => 'id',
             'foreign' => 'documento_id'
         ));
-        
+
         $this->hasOne('HsmConfiguracion', array(
             'local' => 'hsm_configuracion_id',
             'foreign' => 'id'
@@ -45,7 +47,7 @@ class Documento extends Doctrine_Record {
 
         $this->_set('validez', $validez);
     }
-    
+
     public function setHsmConfiguracionId($hsm_configuracion_id) {
         if (!$hsm_configuracion_id)
             $hsm_configuracion_id = null;
@@ -53,27 +55,35 @@ class Documento extends Doctrine_Record {
         $this->_set('hsm_configuracion_id', $hsm_configuracion_id);
     }
 
-    public function generar($file_id, $etapa_id) {
-        $regla = new Regla($this->contenido);
-        $contenido = $regla->getExpresionParaOutput($etapa_id);
+    public function generar($etapa_id) {
+        $etapa = Doctrine::getTable('Etapa')->find($etapa_id);
 
-        $resultado->llave_copia=$this->tipo=='certificado'?strtolower(random_string('alnum', 12)):null;
-        $resultado->validez=$this->tipo=='certificado'?$this->validez:null;
-        $filename_uniqid = uniqid();     
+        $filename_uniqid = uniqid();
+        
+        //Generamos el file
+        $file = new File();
+        $file->tramite_id = $etapa->tramite_id;
+        $file->tipo = 'documento';
+        $file->llave = strtolower(random_string('alnum', 12));
+        $file->llave_copia = $this->tipo == 'certificado' ? strtolower(random_string('alnum', 12)) : null;
+        $file->llave_firma = strtolower(random_string('alnum', 12));
+        $file->validez = $this->tipo == 'certificado' ? $this->validez : null;
+        $file->filename = $filename_uniqid . '.pdf';
+        $file->save();
 
-        $resultado->filename = $filename_uniqid . '.pdf';
-        $this->render($contenido, $file_id, $resultado->llave_copia, $resultado->filename, false);
+        //Renderizamos     
+        $this->render($file->id, $file->llave_copia, $etapa->id, $file->filename, false);
         $filename_copia = $filename_uniqid . '.copia.pdf';
-        $this->render($contenido, $file_id, $resultado->llave_copia, $filename_copia, true);
+        $this->render($file->id, $file->llave_copia, $etapa->id,$filename_copia, true);
 
-        return $resultado;
+        return $file;
     }
 
     public function previsualizar() {
-        $this->render($this->contenido, '123456789', 'abcdefghijkl');
+        $this->render('123456789', 'abcdefghijkl');
     }
 
-    private function render($contenido, $identifier, $key, $filename = false, $copia = false) {
+    private function render($identifier, $key, $etapa_id=null ,$filename = false, $copia = false) {
 
 
         $uploadDirectory = 'uploads/documentos/';
@@ -83,36 +93,65 @@ class Documento extends Doctrine_Record {
         if ($this->tipo == 'certificado') {
             $CI->load->library('certificadopdf');
             $obj = new $CI->certificadopdf;
+            
+            $contenido=$this->contenido;
+            $titulo=$this->titulo;
+            $subtitulo=$this->subtitulo;
+            $firmador_nombre = $this->firmador_nombre;
+            $firmador_cargo = $this->firmador_cargo;
+            $firmador_servicio = $this->firmador_servicio;
+            if($etapa_id){
+                $regla = new Regla($contenido);
+                $contenido = $regla->getExpresionParaOutput($etapa_id);  
+                $regla = new Regla($titulo);
+                $titulo = $regla->getExpresionParaOutput($etapa_id);
+                $regla = new Regla($subtitulo);
+                $subtitulo = $regla->getExpresionParaOutput($etapa_id);
+                $regla = new Regla($firmador_nombre);
+                $firmador_nombre = $regla->getExpresionParaOutput($etapa_id); 
+                $regla = new Regla($firmador_cargo);
+                $firmador_cargo = $regla->getExpresionParaOutput($etapa_id); 
+                $regla = new Regla($firmador_servicio);
+                $firmador_servicio = $regla->getExpresionParaOutput($etapa_id); 
+            }
 
             $obj->content = $contenido;
             $obj->id = $identifier;
             $obj->key = $key;
             $obj->servicio = $this->servicio;
             $obj->servicio_url = $this->servicio_url;
-            if($this->logo)
-                $obj->logo = 'uploads/logos_certificados/'.$this->logo;
-            $obj->titulo = $this->nombre;
+            if ($this->logo)
+                $obj->logo = 'uploads/logos_certificados/' . $this->logo;
+            $obj->titulo = $titulo;
+            $obj->subtitulo = $subtitulo;
             $obj->validez = $this->validez;
-            if($this->timbre)
-                $obj->timbre = 'uploads/timbres/'.$this->timbre;
-            $obj->firmador_nombre = $this->firmador_nombre;
-            $obj->firmado_cargo = $this->firmador_cargo;
-            $obj->firmador_servicio = $this->firmador_servicio;
+            if ($this->timbre)
+                $obj->timbre = 'uploads/timbres/' . $this->timbre;
+            $obj->firmador_nombre = $firmador_nombre;
+            $obj->firmado_cargo = $firmador_cargo;
+            $obj->firmador_servicio = $firmador_servicio;
             if ($this->firmador_imagen)
                 $obj->firmador_imagen = 'uploads/firmas/' . $this->firmador_imagen;
-            $obj->firma_electronica = $this->hsm_configuracion_id?true:false;
+            $obj->firma_electronica = $this->hsm_configuracion_id ? true : false;
             $obj->copia = $copia;
         }else {
             $CI->load->library('blancopdf');
             $obj = new $CI->blancopdf;
-            $obj->content=$contenido;
+            
+            $contenido=$this->contenido;
+            if($etapa_id){
+                $regla = new Regla($contenido);
+                $contenido = $regla->getExpresionParaOutput($etapa_id);  
+            }
+            
+            $obj->content = $contenido;
         }
 
         if ($filename) {
             $obj->Output($uploadDirectory . $filename, 'F');
-            if(!$copia && $this->hsm_configuracion_id) {
+            if (!$copia && $this->hsm_configuracion_id) {
                 $client = new SoapClient($CI->config->item('hsm_url'));
-                
+
                 $result = $client->IntercambiaDoc(array(
                     'Encabezado' => array(
                         'User' => $CI->config->item('hsm_user'),
@@ -126,7 +165,7 @@ class Documento extends Doctrine_Record {
                         'NombreDocumento' => $filename
                     )
                 ));
-                                
+
                 file_put_contents($uploadDirectory . $filename, base64_decode($result->IntercambiaDocResult->Documento));
             }
         } else {

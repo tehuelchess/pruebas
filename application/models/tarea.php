@@ -17,13 +17,16 @@ class Tarea extends Doctrine_Record {
         $this->hasColumn('almacenar_usuario');              //Se almacena el usuario o no
         $this->hasColumn('almacenar_usuario_variable');     //Nombre de la variable con que se debe almacenar
         $this->hasColumn('acceso_modo');                    //Quienes pueden acceder: grupos_usuarios, publico o registrados
+        $this->hasColumn('grupos_usuarios');                //En caso que el modo de acceso sea grupos_usuarios, aqui se listan separados por coma los grupos.
         $this->hasColumn('activacion');                     //'si','no','entre_fechas'
         $this->hasColumn('activacion_inicio');              //Si es que la activacion es entre_fechas, esta seria la fecha de inicio
         $this->hasColumn('activacion_fin');                 //Si es que la activacion es entre_fechas, esta seria la fecha de fin
         $this->hasColumn('vencimiento');                    //Indica si tiene o no vencimiento.
         $this->hasColumn('vencimiento_valor');              //Entero que indica el valor del vencimiento.
         $this->hasColumn('vencimiento_unidad');             //String que indica la unidad del vencimiento. Ej: days, weeks, months, etc.
+        $this->hasColumn('vencimiento_habiles');
         $this->hasColumn('vencimiento_notificar');          //Indica si se debe notificar en caso de que se acerque la fecha de vencimiento
+        $this->hasColumn('vencimiento_notificar_dias');     //Indica desde cuantos dias de anticipacion se debe notificar la fecha de vencimiento
         $this->hasColumn('vencimiento_notificar_email');    //Cual es el email donde se debe notificar
         
     }
@@ -51,12 +54,6 @@ class Tarea extends Doctrine_Record {
             'foreign' => 'tarea_id_destino'
         ));
 
-        $this->hasMany('GrupoUsuarios as GruposUsuarios', array(
-            'local' => 'tarea_id',
-            'foreign' => 'grupo_usuarios_id',
-            'refClass' => 'TareaHasGrupoUsuarios'
-        ));
-
         $this->hasMany('Paso as Pasos', array(
             'local' => 'id',
             'foreign' => 'tarea_id',
@@ -67,6 +64,13 @@ class Tarea extends Doctrine_Record {
             'local' => 'id',
             'foreign' => 'tarea_id'
         ));
+        
+        $this->hasMany('GrupoUsuarios as GruposUsuarios', array(
+            'local' => 'tarea_id',
+            'foreign' => 'grupo_usuarios_id',
+            'refClass' => 'TareaHasGrupoUsuarios'
+        ));
+
     }
 
     public function hasGrupoUsuarios($grupo_id) {
@@ -77,8 +81,10 @@ class Tarea extends Doctrine_Record {
         return false;
     }
 
+
     //Obtiene el listado de usuarios que tienen acceso a esta tarea y que esten disponibles (no en vacaciones).
-    public function getUsuarios() {
+    //$etapa_id indica la etapa hasta la cual se debe calcular la variable para obtener el grupo de usuario.
+    public function getUsuarios($etapa_id) {
         if ($this->acceso_modo == 'publico')
             return Doctrine::getTable('Usuario')->findByVacaciones(0);
         else if ($this->acceso_modo == 'registrados')
@@ -87,26 +93,61 @@ class Tarea extends Doctrine_Record {
             return Doctrine::getTable('Usuario')->findByOpenIdAndVacaciones(1,0);
 
 
+        //Convertimos las variables e ids, separados por coma, en una arreglo de grupos de usuarios.
+        $grupos_arr=array(-1);
+        $grupos=explode(',', $this->grupos_usuarios);
+        foreach($grupos as $key=>$g){
+            $r=new Regla($g);
+            $var=$r->evaluar($etapa_id);
+            if(is_numeric($var))
+                $grupos_arr[]=$var;
+            else if(is_array($var))
+                foreach($var as $v)
+                    if(is_numeric($v))
+                        $grupos_arr[]=$v;
+        }
+        
         return Doctrine_Query::create()
-                        ->from('Usuario u, u.GruposUsuarios g, g.Tareas t')
-                        ->where('t.id = ? AND u.vacaciones = 0', $this->id)
+                        ->from('Usuario u, u.GruposUsuarios g')
+                        ->where('u.vacaciones = 0')
+                        ->andWhereIn('g.id',  $grupos_arr)
                         ->execute();
     }
-
-    //Obtiene si el usuarios tiene acceso a esta tarea.
-    public function hasUsuario($usuario_id) {
+    
+    //Obtiene el listado de usuarios que tienen acceso a esta tarea y que esten disponibles (no en vacaciones).
+    //Ademas, deben pertenecer a alguno de los grupos de usuarios definidos en la cuenta
+    public function getUsuariosFromGruposDeUsuarioDeCuenta($etapa_id) {
         if ($this->acceso_modo == 'publico')
-            return Doctrine::getTable('Usuario')->findById($usuario_id)->count() ? true : false;
+            return Doctrine::getTable('Usuario')->findByVacaciones(0);
         else if ($this->acceso_modo == 'registrados')
-            return Doctrine::getTable('Usuario')->findByIdAndRegistrado($usuario_id, 1) ? true : false;
+            return Doctrine::getTable('Usuario')->findByRegistradoAndVacaciones(1,0);
         else if ($this->acceso_modo == 'claveunica')
-            return Doctrine::getTable('Usuario')->findByIdAndOpenId($usuario_id, 1) ? true : false;
+            return Doctrine::getTable('Usuario')->findByOpenIdAndVacaciones(1,0);
 
+
+        //Convertimos las variables e ids, separados por coma, en una arreglo de grupos de usuarios.
+        $grupos_arr=array(-1);
+        $grupos=explode(',', $this->grupos_usuarios);
+        foreach($grupos as $key=>$g){
+            $r=new Regla($g);
+            $var=$r->evaluar($etapa_id);
+            if(is_numeric($var))
+                $grupos_arr[]=$var;
+            else if(is_array($var))
+                foreach($var as $v)
+                    if(is_numeric($v))
+                        $grupos_arr[]=$v;
+        }
+        
         return Doctrine_Query::create()
-                        ->from('Usuario u, u.GruposUsuarios g, g.Tareas t')
-                        ->where('t.id = ? AND u.id=?', array($this->id, $usuario_id))
-                        ->count() ? true : false;
+                        ->from('Usuario u, u.GruposUsuarios g, g.Cuenta c')
+                        ->where('u.vacaciones = 0')
+                        ->andWhere('c.id = ?',$this->Proceso->Cuenta->id)
+                        ->andWhereIn('g.id',  $grupos_arr)
+                        ->execute();
     }
+     
+
 
     //Obtiene el ultimo usuario que fue a asignado a esta tarea dentro del tramite tramite_id
     public function getUltimoUsuarioAsignado($proceso_id) {
@@ -115,20 +156,6 @@ class Tarea extends Doctrine_Record {
                         ->where('t.id = ? AND p.id = ?', array($this->id, $proceso_id))
                         ->orderBy('e.created_at DESC')
                         ->fetchOne();
-    }
-
-    public function setGruposUsuariosFromArray($grupos_usuarios_ids) {
-        //Limpiamos la lista antigua
-        foreach ($this->GruposUsuarios as $key => $val)
-            unset($this->GruposUsuarios[$key]);
-
-        //Agregamos los nuevos
-        if (is_array($grupos_usuarios_ids))
-            foreach ($grupos_usuarios_ids as $g){
-                $grupo=Doctrine::getTable('GrupoUsuarios')->find($g);
-                if($grupo->cuenta_id==$this->Proceso->cuenta_id)
-                    $this->GruposUsuarios[] = $grupo;
-            }
     }
 
     public function setConexionesFromArray($conexiones_array) {
@@ -157,13 +184,21 @@ class Tarea extends Doctrine_Record {
         //Agregamos los nuevos
         if (is_array($pasos_array)) {
             foreach ($pasos_array as $key => $p) {
-                $paso = new Paso();
-                $paso->id=$p['id'];
-                $paso->orden = $key;
-                $paso->regla = $p['regla'];
-                $paso->modo = $p['modo'];
-                $paso->formulario_id = $p['formulario_id'];
-                $this->Pasos[] = $paso;
+                //Guardamos el paso solamente si el formulario_id corresponde a un formulario existente.
+                $formulario_id=null;
+                foreach($this->Proceso->Formularios as $f)
+                    if($f->id==$p['formulario_id'])
+                        $formulario_id=$p['formulario_id'];
+                
+                if($formulario_id){
+                    $paso = new Paso();
+                    $paso->id=$p['id'];
+                    $paso->orden = $key;
+                    $paso->regla = $p['regla'];
+                    $paso->modo = $p['modo'];
+                    $paso->formulario_id = $formulario_id;
+                    $this->Pasos[] = $paso;
+                }
             }
         }
     }
@@ -176,11 +211,17 @@ class Tarea extends Doctrine_Record {
         //Agregamos los nuevos
         if (is_array($eventos_array)) {
             foreach ($eventos_array as $key => $p) {
+                //Seteamos el paso_id solamente si el paso es parte de esta tarea.
+                $paso_id=null;
+                foreach($this->Pasos as $paso)
+                    if($paso->id==$p['paso_id'])
+                        $paso_id=$p['paso_id'];
+                
                 $evento = new Evento();
                 $evento->regla=$p['regla'];
                 $evento->instante = $p['instante'];
                 $evento->accion_id = $p['accion_id'];
-                $evento->paso_id = $p['paso_id'];
+                $evento->paso_id = $paso_id;
                 $this->Eventos[] = $evento;
             }
         }

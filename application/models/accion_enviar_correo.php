@@ -7,11 +7,15 @@ class AccionEnviarCorreo extends Accion {
 
 
         $display = '<label>Para</label>';
-        $display.='<input type="text" name="extra[para]" value="' . ($this->extra ? $this->extra->para : '') . '" />';
+        $display.='<input type="text" name="extra[para]" value="' . (isset($this->extra->para) ? $this->extra->para : '') . '" />';
+        $display.= '<label>CC</label>';
+        $display.='<input type="text" name="extra[cc]" value="' . (isset($this->extra->cc) ? $this->extra->cc : '') . '" />';
+        $display.= '<label>CCO</label>';
+        $display.='<input type="text" name="extra[cco]" value="' . (isset($this->extra->cco) ? $this->extra->cco : '') . '" />';
         $display.='<label>Tema</label>';
-        $display.='<input type="text" name="extra[tema]" value="' . ($this->extra ? $this->extra->tema : '') . '" />';
+        $display.='<input type="text" name="extra[tema]" value="' . (isset($this->extra->tema) ? $this->extra->tema : '') . '" />';
         $display.='<label>Contenido</label>';
-        $display.='<textarea name="extra[contenido]">' . ($this->extra ? $this->extra->contenido : '') . '</textarea>';
+        $display.='<textarea name="extra[contenido]">' . (isset($this->extra->contenido) ? $this->extra->contenido : '') . '</textarea>';
 
         return $display;
     }
@@ -26,14 +30,25 @@ class AccionEnviarCorreo extends Accion {
     public function ejecutar(Etapa $etapa) {
         $regla=new Regla($this->extra->para);
         $to=$regla->getExpresionParaOutput($etapa->id);
+        if(isset($this->extra->cc)){
+            $regla=new Regla($this->extra->cc);
+            $cc=$regla->getExpresionParaOutput($etapa->id);
+        }
+        if(isset($this->extra->cco)){
+            $regla=new Regla($this->extra->cco);
+            $bcc=$regla->getExpresionParaOutput($etapa->id);
+        }
         $regla=new Regla($this->extra->tema);
         $subject=$regla->getExpresionParaOutput($etapa->id);
         $regla=new Regla($this->extra->contenido);
         $message=$regla->getExpresionParaOutput($etapa->id);
         
         $CI = & get_instance();
-        $CI->email->from('simple@chilesinpapeleo.cl', 'Simple');
+        $cuenta=$etapa->Tramite->Proceso->Cuenta;
+        $CI->email->from($cuenta->nombre.'@chilesinpapeleo.cl', $cuenta->nombre_largo);
         $CI->email->to($to);
+        if(isset($cc))$CI->email->cc($cc);
+        if(isset($bcc))$CI->email->bcc($bcc);      
         $CI->email->subject($subject);
         $CI->email->message($message);
         $CI->email->send();

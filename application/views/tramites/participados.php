@@ -26,7 +26,7 @@
                         echo implode(', ', $etapas_array);
                         ?>
                     </td>
-                    <td class="time"><?= strftime('%d.%b.%Y', mysql_to_unix($t->updated_at)) ?><br /><?= strftime('%T', mysql_to_unix($t->updated_at)) ?></td>
+                    <td class="time"><?= strftime('%d.%b.%Y', mysql_to_unix($t->updated_at)) ?><br /><?= strftime('%H:%M:%S', mysql_to_unix($t->updated_at)) ?></td>
                     <td><?= $t->pendiente ? 'Pendiente' : 'Completado' ?></td>
                     <td class="actions">
                         <?php $etapas = $t->getEtapasParticipadas(UsuarioSesion::usuario()->id) ?>

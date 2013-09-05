@@ -48,7 +48,7 @@ class Autenticacion extends MY_Controller {
     }
 
     public function registrar_form() {
-        $this->form_validation->set_rules('usuario', 'Nombre de Usuario', 'required|callback_check_usuario');
+        $this->form_validation->set_rules('usuario', 'Nombre de Usuario', 'required|alpha_dash|callback_check_usuario');
         $this->form_validation->set_rules('nombres', 'Nombres', 'required');
         $this->form_validation->set_rules('apellido_paterno', 'Apellido Paterno', 'required');
         $this->form_validation->set_rules('apellido_materno', 'Apellido Materno', 'required');
@@ -60,8 +60,21 @@ class Autenticacion extends MY_Controller {
             $usuario = new Usuario();
             $usuario->usuario = $this->input->post('usuario');
             $usuario->setPasswordWithSalt($this->input->post('password'));
+            $usuario->nombres = $this->input->post('nombres');
+            $usuario->apellido_paterno = $this->input->post('apellido_paterno');
+            $usuario->apellido_materno = $this->input->post('apellido_materno');
             $usuario->email = $this->input->post('email');
             $usuario->save();
+            
+            $cuenta=Cuenta::cuentaSegunDominio();
+            if(is_a($cuenta, 'Cuenta'))
+                $this->email->from($cuenta->nombre.'@chilesinpapeleo.cl', $cuenta->nombre_largo);
+            else
+                $this->email->from('simple@chilesinpapeleo.cl', 'Simple');
+            $this->email->to($usuario->email);
+            $this->email->subject('Bienvenido');
+            $this->email->message('<p>Usted ya es parte de la plataforma para hacer trámites en línea "Chile Sin Papeleo".</p><p>Su nombre de usuario es: '.$usuario->usuario.'</p>');
+            $this->email->send();
 
             UsuarioSesion::login($this->input->post('usuario'), $this->input->post('password'));
 
@@ -91,7 +104,11 @@ class Autenticacion extends MY_Controller {
             $usuario->reset_token=$random;
             $usuario->save();
 
-            $this->email->from('simple@chilesinpapeleo.cl', 'Simple');
+            $cuenta=Cuenta::cuentaSegunDominio();
+            if(is_a($cuenta, 'Cuenta'))
+                $this->email->from($cuenta->nombre.'@chilesinpapeleo.cl', $cuenta->nombre_largo);
+            else
+                $this->email->from('simple@chilesinpapeleo.cl', 'Simple');
             $this->email->to($usuario->email);
             $this->email->subject('Reestablecer contraseña');
             $this->email->message('<p>Haga click en el siguiente link para reestablecer su contraseña:</p><p><a href="'.site_url('autenticacion/reestablecer?id='.$usuario->id.'&reset_token='.$random).'">'.site_url('autenticacion/reestablecer?id='.$usuario->id.'&reset_token='.$random).'</a></p>');

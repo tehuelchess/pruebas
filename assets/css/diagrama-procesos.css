@@ -1,44 +1,53 @@
 #areaDibujo{
     width: 100%;
-    height: 800px;
+    
+    
+    height: 60px;
+}
+
+#drawWrapper{
+    width: 100%;
+    height: 810px;
+    overflow: auto;
+}
+
+#draw{
     background: url(../img/bg_pm.gif);
     position: relative;
 }
 
 #areaDibujo h1{
-    position:absolute;
-    top:10px;
-    left: 10px;
+
     font-size: 20px;
-    z-index: 1000;
 }
 
 #areaDibujo .botonera{
     position: fixed;
     top: 220px;
     right: 20px;
+    z-index: 1000;
 }
 
-#areaDibujo .box{
+#draw .box{
     padding: 10px 30px;
     background: #006699;
     color: #fff;
     position: absolute;
     border-radius: 5px;
     cursor: move;
-    z-index: 1000;
+    z-index: 100;
 }
-#areaDibujo .box.actual{
+#draw .box.actual{
     background: goldenrod;
 }
-#areaDibujo .box.completado{
+#draw .box.completado{
     background: green;
 }
-#areaDibujo .box.selected{
+#draw .box.selected{
     background: #666;
 }
 
-#areaDibujo .box .inicial{
+#draw .box .inicial{
     background: url(../img/inicial.gif);
     width: 30px;
     height: 30px;
@@ -48,7 +57,7 @@
     margin-left: -15px;
 }
 
-#areaDibujo .box .final-secuencial{
+#draw .box .final-secuencial{
     background: url(../img/final_secuencial.gif);
     width: 25px;
     height: 25px;
@@ -57,7 +66,7 @@
     left: 50%;
     margin-left: -12px;
 }
-#areaDibujo .box .final{
+#draw .box .final{
     background: url(../img/final.jpg);
     width: 38px;
     height: 38px;
@@ -67,7 +76,7 @@
     margin-left: 10px;
 }
 
-#areaDibujo .box .conector{
+#draw .box .conector{
     width: 25px;
     height: 25px;
     position: absolute;
@@ -76,23 +85,23 @@
     margin-left: -12px;
 }
 
-#areaDibujo .box .conector.evaluacion{
+#draw .box .conector.evaluacion{
     background: url(../img/evaluacion.gif);
 }
 
-#areaDibujo .box .conector.paralelo{
+#draw .box .conector.paralelo{
     background: url(../img/paralelo.gif);
 }
 
-#areaDibujo .box .conector.paralelo_evaluacion{
+#draw .box .conector.paralelo_evaluacion{
     background: url(../img/paralelo_evaluacion.gif);
 }
 
-#areaDibujo .box .conector.secuencial{
-    background: url(../img/secuencial.gif);
+#draw .box .conector.secuencial{
+    background: url(../img/secuencial-bar.gif);
 }
 
-#areaDibujo .box .union{
+#draw .box .union{
     width: 25px;
     height: 25px;
     position: absolute;
@@ -102,7 +111,7 @@
     background: url(../img/union.gif);
 }
 
-#areaDibujo ._jsPlumb_connector{
+#draw ._jsPlumb_connector{
     cursor: pointer;
 }
 

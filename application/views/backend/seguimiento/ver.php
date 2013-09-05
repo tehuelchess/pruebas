@@ -1,20 +1,22 @@
+<?php if($this->config->item('js_diagram')=='gojs'):?>
+<link href="<?= base_url() ?>assets/css/diagrama-procesos2.css" rel="stylesheet">
+<script src="<?= base_url() ?>assets/js/go/go.js" type="text/javascript"></script>
+<script type="text/javascript" src="<?= base_url() ?>assets/js/diagrama-procesos2.js"></script>
+<script type="text/javascript" src="<?= base_url() ?>assets/js/seguimiento2.js"></script>
+<?php else: ?>
+<link href="<?= base_url() ?>assets/css/diagrama-procesos.css" rel="stylesheet">
+<script src="<?= base_url() ?>assets/js/jquery.jsplumb/jquery.jsPlumb-1.3.16-all-min.js" type="text/javascript"></script>
 <script type="text/javascript" src="<?= base_url() ?>assets/js/diagrama-procesos.js"></script>
 <script type="text/javascript" src="<?= base_url() ?>assets/js/seguimiento.js"></script>
+<?php endif ?>
 
 <script type="text/javascript">
     $(document).ready(function(){
         tramiteId=<?= $tramite->id ?>;
-        drawFromModel(<?= $tramite->Proceso->getJSONFromModel() ?>);
+        drawFromModel(<?= $tramite->Proceso->getJSONFromModel() ?>,"<?=$tramite->Proceso->width?>","<?=$tramite->Proceso->height?>");
         drawSeguimiento(<?= json_encode($tramite->getTareasActuales()->toArray()) ?>,<?= json_encode($tramite->getTareasCompletadas()->toArray()) ?>);
     });
 </script>
-
-<style>
-    #areaDibujo{
-        width: <?= $tramite->Proceso->width ?>;
-        height: <?= $tramite->Proceso->height ?>;
-    }
-</style>
 
 <ul class="breadcrumb">
     <li><a href="<?= site_url('backend/seguimiento/index') ?>">Seguimiento de Procesos</a></li> <span class="divider">/</span>
@@ -22,7 +24,7 @@
     <li class="active">Trámite # <?= $tramite->id ?></li>
 </ul>
 
-<div class="well" style="position:fixed; top: 200px; right: 20px; width: 300px; height: 500px; z-index: 1000; overflow-y: scroll">
+<div class="well" style="position:fixed; top: 230px; right: 20px; width: 300px; height: 500px; z-index: 1000; overflow-y: scroll">
     <h3>Registro de eventos</h3>
     <hr />
     <ul>
@@ -42,6 +44,7 @@
 <div id="areaDibujo">
     <h1><?= $tramite->Proceso->nombre ?></h1>
 </div>  
+<div id="drawWrapper"><div id="draw"></div></div>
 </div>
 
 
