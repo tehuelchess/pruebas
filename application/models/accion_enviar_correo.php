@@ -38,7 +38,7 @@ class AccionEnviarCorreo extends Accion {
             $bcc=$regla->getExpresionParaOutput($etapa->id);
             $regla=new Regla($this->extra->tema);
         }
-        $regla=new Regla($this->extra->cc);
+        $regla=new Regla($this->extra->tema);
         $subject=$regla->getExpresionParaOutput($etapa->id);
         $regla=new Regla($this->extra->contenido);
         $message=$regla->getExpresionParaOutput($etapa->id);
