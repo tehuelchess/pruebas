@@ -31,18 +31,18 @@ class AccionEnviarCorreo extends Accion {
         $regla=new Regla($this->extra->para);
         $to=$regla->getExpresionParaOutput($etapa->id);
         if(isset($this->extra->cc)){
+            $regla=new Regla($this->extra->cc);
             $cc=$regla->getExpresionParaOutput($etapa->id);
-            $regla=new Regla($this->extra->cco);
         }
         if(isset($this->extra->cco)){
+            $regla=new Regla($this->extra->cco);
             $bcc=$regla->getExpresionParaOutput($etapa->id);
-            $regla=new Regla($this->extra->tema);
         }
         $regla=new Regla($this->extra->tema);
         $subject=$regla->getExpresionParaOutput($etapa->id);
         $regla=new Regla($this->extra->contenido);
         $message=$regla->getExpresionParaOutput($etapa->id);
-              
+        
         $CI = & get_instance();
         $cuenta=$etapa->Tramite->Proceso->Cuenta;
         $CI->email->from($cuenta->nombre.'@chilesinpapeleo.cl', $cuenta->nombre_largo);
