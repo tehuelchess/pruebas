@@ -30,21 +30,25 @@ class AccionEnviarCorreo extends Accion {
     public function ejecutar(Etapa $etapa) {
         $regla=new Regla($this->extra->para);
         $to=$regla->getExpresionParaOutput($etapa->id);
+        if(isset($this->extra->cc)){
+            $cc=$regla->getExpresionParaOutput($etapa->id);
+            $regla=new Regla($this->extra->cco);
+        }
+        if(isset($this->extra->cco)){
+            $bcc=$regla->getExpresionParaOutput($etapa->id);
+            $regla=new Regla($this->extra->tema);
+        }
         $regla=new Regla($this->extra->cc);
-        $cc=$regla->getExpresionParaOutput($etapa->id);
-        $regla=new Regla($this->extra->cco);
-        $bcc=$regla->getExpresionParaOutput($etapa->id);
-        $regla=new Regla($this->extra->tema);
         $subject=$regla->getExpresionParaOutput($etapa->id);
         $regla=new Regla($this->extra->contenido);
         $message=$regla->getExpresionParaOutput($etapa->id);
-        
+              
         $CI = & get_instance();
         $cuenta=$etapa->Tramite->Proceso->Cuenta;
         $CI->email->from($cuenta->nombre.'@chilesinpapeleo.cl', $cuenta->nombre_largo);
         $CI->email->to($to);
-        if($cc)$CI->email->cc($cc);
-        if($bcc)$CI->email->bcc($bcc);      
+        if(isset($cc))$CI->email->cc($cc);
+        if(isset($bcc))$CI->email->bcc($bcc);      
         $CI->email->subject($subject);
         $CI->email->message($message);
         $CI->email->send();
