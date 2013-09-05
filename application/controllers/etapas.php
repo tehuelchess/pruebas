@@ -36,6 +36,9 @@ class Etapas extends MY_Controller {
         $iframe = $this->input->get('iframe');
 
         $etapa = Doctrine::getTable('Etapa')->find($etapa_id);
+        if(!$etapa){
+            show_404();
+        }
         if ($etapa->usuario_id != UsuarioSesion::usuario()->id) {
             if (!UsuarioSesion::usuario()->registrado) {
                 $this->session->set_flashdata('redirect', current_url());
