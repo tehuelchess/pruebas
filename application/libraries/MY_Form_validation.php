@@ -12,7 +12,7 @@ Class MY_Form_validation extends CI_Form_validation {
         $rut_con_dv = explode('-', $rut_con_dv);
         if (count($rut_con_dv) == 2) {
             $rut = str_replace('.','',$rut_con_dv[0]);
-            $dv = str_replace('k','K',$rut_con_dv[1]);
+            $dv = strtolower($rut_con_dv[1]);
             /* Con las lineas anteriores le asignanos a las variables $rut y $dv, lo ingresado por formulario en la página anterior, solo utilizaremos el rut. El digito verificador, lo usaremos al final */
             $rutin = strrev($rut);
             /* Invertimos el rut con la funcion “strrev” */
@@ -46,7 +46,7 @@ Class MY_Form_validation extends CI_Form_validation {
             $digito = 11 - $resto;
             /* Calculamos el digito que corresponde al Rut, restando a 11 el resto obtenido anteriormente */
             if ($digito == 10) {
-                $digito = 'K';
+                $digito = 'k';
             } else {
                 if ($digito == 11) {
                     $digito = '0';
@@ -61,6 +61,11 @@ Class MY_Form_validation extends CI_Form_validation {
 
         $this->set_message('rut', 'El campo %s no es válido');
         return FALSE;
+    }
+    
+    //Convierte una fecha en humano al formato mysql.
+    function date_prep($string){
+        return strftime('%Y-%m-%d',strtotime($string));
     }
 
 }

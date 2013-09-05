@@ -12,8 +12,9 @@
         <link href="<?= base_url() ?>assets/css/common.css" rel="stylesheet">
         <link href="<?= base_url() ?>assets/js/bootstrap-datepicker/css/datepicker.css" rel="stylesheet">
         <link href="<?= base_url() ?>assets/js/jquery.chosen/chosen.css" rel="stylesheet">
+        <link href="<?= base_url() ?>assets/js/jquery.select2/select2.css" rel="stylesheet">
         <link href="<?= base_url() ?>assets/js/file-uploader/fileuploader.css" rel="stylesheet">
-        <link href="<?= base_url() ?>assets/css/diagrama-procesos.css" rel="stylesheet">
+        
         <link href="<?= base_url() ?>assets/css/modelador-formularios.css" rel="stylesheet">
         <link href="<?= base_url() ?>assets/css/dashboard.css" rel="stylesheet">
 
@@ -32,14 +33,13 @@
         <script src="<?= base_url() ?>assets/js/bootstrap-datepicker/js/locales/bootstrap-datepicker.es.js"></script>
         <script src="<?= base_url() ?>assets/js/bootstrap-typeahead-multiple/bootstrap-typeahead-multiple.js" type="text/javascript"></script> <?php //JS typeahead modificado para multiples items     ?>
         <script src="<?= base_url() ?>assets/js/jquery.chosen/chosen.jquery.min.js"></script> <?php //Soporte para selects con multiple choices     ?>
+        <script src="<?= base_url() ?>assets/js/jquery.select2/select2.min.js"></script> <?php //Soporte para selects con multiple choices     ?>
         <script src="<?= base_url() ?>assets/js/file-uploader/fileuploader.js"></script> <?php //Soporte para subir archivos con ajax     ?>
         <script src="<?= base_url() ?>assets/js/jquery-ui/js/jquery-ui-1.8.21.custom.min.js" type="text/javascript"></script>
         <script src="<?= base_url() ?>assets/js/jquery.ui.touch-punch/jquery.ui.touch-punch.min.js" type="text/javascript"></script> <?php //JS para soportar drag & drop en iPad     ?>
         <script src="<?= base_url() ?>assets/js/jquery.ui.livedraggable/jquery.ui.livedraggable.js" type="text/javascript"></script> <?php //JS para que evento draggable sea live     ?>
         <script src="<?= base_url() ?>assets/js/jquery.doubletap/jquery.doubletap.js" type="text/javascript"></script> <?php //JS para soportar dobleclick en iPad     ?>      
-        <script src="//d3dy5gmtp8yhk7.cloudfront.net/1.11/pusher.min.js" type="text/javascript"></script> <?php //JS para recibir eventos push via websockets     ?>
         <script src="<?= base_url() ?>assets/js/json-js/json2.js" type="text/javascript"></script> <?php //JS para convertir objetos a notacion JSON en multiples browsers     ?>
-        <script src="<?= base_url() ?>assets/js/jquery.jsplumb/jquery.jsPlumb-1.3.16-all-min.js" type="text/javascript"></script> <?php //JS para conectar elementos como diagramas de flujos     ?>
         <script src="<?= base_url() ?>assets/js/highcharts/highcharts.js" type="text/javascript"></script> <?php //JS para hacer graficos     ?>
         <script type="text/javascript">
             var site_url = "<?= site_url() ?>";
@@ -86,6 +86,9 @@
                                     <?php endif ?>
                                     <?php if (UsuarioBackendSesion::usuario()->rol == 'super' || UsuarioBackendSesion::usuario()->rol == 'gestion'): ?>
                                         <li <?= $this->uri->segment(2) == 'reportes' || !$this->uri->segment(2) ? 'class="active"' : '' ?>><a href="<?= site_url('backend/reportes') ?>">Gestión</a></li>
+                                    <?php endif ?>
+                                    <?php if (UsuarioBackendSesion::usuario()->rol == 'super' || UsuarioBackendSesion::usuario()->rol == 'desarrollo'): ?>
+                                        <li <?= $this->uri->segment(2) == 'api' || !$this->uri->segment(2) ? 'class="active"' : '' ?>><a href="<?= site_url('backend/api') ?>">API</a></li>
                                     <?php endif ?>
                                     <?php if (UsuarioBackendSesion::usuario()->rol == 'super'): ?>
                                         <li <?= $this->uri->segment(2) == 'configuracion' ? 'class="active"' : '' ?>><a href="<?= site_url('backend/configuracion') ?>">Configuración</a></li>

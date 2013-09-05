@@ -20,7 +20,7 @@
         <tr>
             <td><?=$p->nombre?></td>
             <td>
-                <a href="<?=site_url('backend/reportes/listar/'.$p->id)?>" class="btn"><i class="icon-eye-open"></i> Ver Reportes</a>
+                <a href="<?=site_url('backend/reportes/listar/'.$p->id)?>" class="btn btn-primary"><i class="icon-eye-open icon-white"></i> Ver Reportes</a>
             </td>
         </tr>
         <?php endforeach; ?>

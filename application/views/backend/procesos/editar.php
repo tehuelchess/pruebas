@@ -88,31 +88,25 @@
     }
 </script>
 
-<script type="text/javascript">
-    var pusher = new Pusher('<?= $this->config->item('pusher_api_key') ?>');
-    var channel = pusher.subscribe('modelador-<?=$proceso->id?>');
-    var socketId;
-    pusher.connection.bind('connected', function() {
-        socketId = pusher.connection.socket_id;
-    });
-</script>
-
+<?php if($this->config->item('js_diagram')=='gojs'):?>
+<link href="<?= base_url() ?>assets/css/diagrama-procesos2.css" rel="stylesheet">
+<script src="<?= base_url() ?>assets/js/go/go.js" type="text/javascript"></script>
+<script type="text/javascript" src="<?= base_url() ?>assets/js/diagrama-procesos2.js"></script>
+<script type="text/javascript" src="<?= base_url() ?>assets/js/modelador-procesos2.js"></script>
+<?php else: ?>
+<link href="<?= base_url() ?>assets/css/diagrama-procesos.css" rel="stylesheet">
+<script src="<?= base_url() ?>assets/js/jquery.jsplumb/jquery.jsPlumb-1.3.16-all-min.js" type="text/javascript"></script>
 <script type="text/javascript" src="<?= base_url() ?>assets/js/diagrama-procesos.js"></script>
 <script type="text/javascript" src="<?= base_url() ?>assets/js/modelador-procesos.js"></script>
+<?php endif ?>
 
 <script type="text/javascript">
     $(document).ready(function(){
         procesoId=<?= $proceso->id ?>;
-        drawFromModel(<?= $proceso->getJSONFromModel() ?>);
+        drawFromModel(<?= $proceso->getJSONFromModel()?>,"<?=$proceso->width?>","<?=$proceso->height?>");
     });
     
 </script>
-<style>
-    #areaDibujo{
-        width: <?=$proceso->width?>;
-        height: <?=$proceso->height?>;
-    }
-</style>
 
 <ul class="breadcrumb">
     <li>
@@ -130,13 +124,13 @@
 
 
 <div id="areaDibujo">
-    <h1><?= $proceso->nombre ?></h1>
+    <h1><?= $proceso->nombre ?> <a href="#" title="Editar"><i class="icon-edit" style="vertical-align:middle;"></i></a></h1>
     <div class="botonera btn-toolbar">
         <div class="btn-group">
             <button class="btn createBox" title="Crear tarea"><img src="<?= base_url() ?>assets/img/tarea.png" /></button>
         </div>
         <div class="btn-group">
-            <button class="btn createConnection" data-tipo="secuencial" title="Crear conexión secuencial" ><img src="<?= base_url() ?>assets/img/secuencial.gif" /></button>
+            <button class="btn createConnection" data-tipo="secuencial" title="Crear conexión secuencial" ><img src="<?= base_url() ?>assets/img/secuencial-bar.gif" /></button>
             <button class="btn createConnection" data-tipo="evaluacion" title="Crear conexión por evaluación" ><img src="<?= base_url() ?>assets/img/evaluacion.gif" /></button>
             <button class="btn createConnection" data-tipo="paralelo" title="Crear conexión paralela" ><img src="<?= base_url() ?>assets/img/paralelo.gif" /></button>
             <button class="btn createConnection" data-tipo="paralelo_evaluacion" title="Crear conexión paralela con evaluación" ><img src="<?= base_url() ?>assets/img/paralelo_evaluacion.gif" /></button>
@@ -144,6 +138,7 @@
         </div>
     </div>
 </div>
+<div id="drawWrapper"><div id="draw"></div></div>
 <div class="modal hide fade" id="modal">
 
 </div>

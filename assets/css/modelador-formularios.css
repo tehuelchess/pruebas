@@ -1,7 +1,17 @@
-#areaFormulario .handler{
-    width: 20px;
-    height: 20px;
-    background: #ccc;
-    border: 1px solid #999;
+
+#areaFormulario .btn-toolbar{
+    margin-bottom: 20px;
+}
+
+#areaFormulario .control-group{
+        padding: 5px 0;
+        border: 1px dashed transparent;
+    
+        margin: 0;
+}
+
+#areaFormulario .control-group:hover{
+    background: #eee;
+    border: 1px dashed #ccc;
     cursor: move;
 }

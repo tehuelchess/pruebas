@@ -22,7 +22,7 @@ $(document).ready(function(){
        tipo=$(this).data("tipo");    
     });
 
-    $("#areaDibujo").on("click",function(event){
+    $("#draw").on("click",function(event){
         if(modo=="createBox"){
             var left=event.pageX - $(this).position().left;
             var top=event.pageY - $(this).position().top;
@@ -44,7 +44,7 @@ $(document).ready(function(){
             $.post(site_url+"backend/procesos/ajax_crear_tarea/"+procesoId+"/"+id,"nombre=Tarea&posx="+left+"&posy="+top);
         }
     });
-    $("#areaDibujo").on("click",".box",function(event){
+    $("#draw").on("click",".box",function(event){
         event.stopPropagation();
         if(modo=="createConnection"){
             elements.push(this.id);
@@ -81,14 +81,14 @@ $(document).ready(function(){
     });
 
     //Asigno los eventos a los boxes tareas
-    $(document).on("dblclick doubletap","#areaDibujo .box",function(event){
+    $(document).on("dblclick doubletap","#draw .box",function(event){
         var id=$(this).attr("id");
         $('#modal').load(site_url+"backend/procesos/ajax_editar_tarea/"+procesoId+"/"+id);
         $('#modal').modal('show')
     });
     
     //Asigno los eventos a las lineas conectoras
-    $(document).on("dblclick doubletap","#areaDibujo ._jsPlumb_connector",function(event){
+    $(document).on("dblclick doubletap","#draw ._jsPlumb_connector",function(event){
         window.getSelection().removeAllRanges() //Previene bug de firefox que selecciona el texto de toda la pantalla.
         var conectorSeleccionado=$(event.target).closest("._jsPlumb_connector").get(0);
         var connections=jsPlumb.getConnections();
@@ -102,7 +102,7 @@ $(document).ready(function(){
     });
     
     //Asigno los eventos a los conectores
-    $(document).on("dblclick doubletap","#areaDibujo .conector",function(event){
+    $(document).on("dblclick doubletap","#draw .conector",function(event){
         event.stopPropagation();
         var id=$(this).closest(".box").attr("id");
         $('#modal').load(site_url+"backend/procesos/ajax_editar_conexiones/"+procesoId+"/"+id);
@@ -110,18 +110,15 @@ $(document).ready(function(){
     });
     
     //Asigno el evento para editar el proceso al hacerle click al titulo
-    $(document).on("dblclick doubletap","#areaDibujo h1",function(event){
+    $(document).on("click","#areaDibujo h1 a",function(event){
         $('#modal').load(site_url+"backend/procesos/ajax_editar/"+procesoId);
-        $('#modal').modal('show')
+        $('#modal').modal('show');
+        return false;
     });
 
     
-    $( "#areaDibujo .box" ).liveDraggable({
+    $( "#draw .box" ).liveDraggable({
         stop: updateModel
-    });
-    
-    channel.bind('updateModel', function(data) {
-        drawFromModel(JSON.parse(data.modelo));
     });
     
 
@@ -133,7 +130,7 @@ function updateModel(){
     model.elements=new Array();
     //model.connections=new Array();
     
-    $("#areaDibujo .box").each(function(i,e){
+    $("#draw .box").each(function(i,e){
         var tmp=new Object();
         tmp.id=e.id;
         //tmp.name=$(e).text();
@@ -155,7 +152,7 @@ function updateModel(){
     
     json=JSON.stringify(model);
     
-    $.post(site_url+"backend/procesos/ajax_editar_modelo/"+procesoId,"modelo="+json+"&socket_id_emisor="+socketId);
+    $.post(site_url+"backend/procesos/ajax_editar_modelo/"+procesoId,"modelo="+json);
 }
 
 

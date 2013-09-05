@@ -24,39 +24,13 @@ class Validador extends MY_Controller {
             $file=Doctrine::getTable('File')->find($this->input->post('id'));
             $filename_copia=  str_replace('.pdf', '.copia.pdf', $file->filename);
             $path='uploads/documentos/'.$filename_copia;
-            header('Content-Type: '.  mime_content_type($path));
+            header('Content-Type: '. get_mime_by_extension($path));
             header('Content-Length: ' . filesize($path));
             readfile($path);
         }
         
         $this->load->view('validador/documento');
     }
-    
-    /*
-    public function documento_get(){
-        
-        $codigo=$this->input->get_post('codigo');
-        $filename=$codigo.'.pdf';
-        $filename_copia=$codigo.'.copia.pdf';
-        
-        $file=Doctrine_Query::create()
-                ->from('File f')
-                ->where('f.filename = ? AND f.tipo = ?',array($filename,'documento'))
-                ->fetchOne();
-        
-        if(!$file){
-            echo 'Usuario no tiene permisos para ver este archivo.';
-            exit;
-        }
-        
-        $path='uploads/documentos/'.$filename_copia;
-        
-        header('Content-Type: '.  mime_content_type($path));
-        header('Content-Length: ' . filesize($path));
-        readfile($path);
-    }
-     * 
-     */
     
     public function check_documento($id){  
         $key=$this->input->post('key');
@@ -72,9 +46,8 @@ class Validador extends MY_Controller {
             return FALSE;
         }
         
-        $f=new File();
-        $f->llave_copia=$key;
-        if($file->llave_copia!=$f->llave_copia){
+
+        if($file->llave_copia!=$key){
             $this->form_validation->set_message('check_documento','Folio y/o código no válido.');
             return FALSE;
         }

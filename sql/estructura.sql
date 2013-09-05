@@ -29,7 +29,7 @@ CREATE  TABLE IF NOT EXISTS `tramitador`.`proceso` (
   `height` VARCHAR(8) NOT NULL DEFAULT '800px' ,
   `cuenta_id` INT UNSIGNED NOT NULL ,
   PRIMARY KEY (`id`) ,
-  INDEX `fk_proceso_cuenta1` (`cuenta_id` ASC) ,
+  INDEX `fk_proceso_cuenta1_idx` (`cuenta_id` ASC) ,
   CONSTRAINT `fk_proceso_cuenta1`
     FOREIGN KEY (`cuenta_id` )
     REFERENCES `tramitador`.`cuenta` (`id` )
@@ -61,6 +61,7 @@ CREATE  TABLE IF NOT EXISTS `tramitador`.`tarea` (
   `vencimiento` TINYINT(1) NOT NULL DEFAULT 0 ,
   `vencimiento_valor` INT UNSIGNED NOT NULL DEFAULT 5 ,
   `vencimiento_unidad` ENUM('D','W','M') NOT NULL DEFAULT 'D' ,
+  `vencimiento_habiles` TINYINT(1) NOT NULL DEFAULT 0 ,
   `vencimiento_notificar` TINYINT(1) NOT NULL DEFAULT 0 ,
   `vencimiento_notificar_email` VARCHAR(255) NOT NULL ,
   PRIMARY KEY (`id`) ,
@@ -115,7 +116,7 @@ CREATE  TABLE IF NOT EXISTS `tramitador`.`grupo_usuarios` (
   `cuenta_id` INT(10) UNSIGNED NOT NULL ,
   PRIMARY KEY (`id`) ,
   UNIQUE INDEX `grupo_usuarios_UNIQUE` (`cuenta_id` ASC, `nombre` ASC) ,
-  INDEX `fk_grupo_usuarios_cuenta1` (`cuenta_id` ASC) ,
+  INDEX `fk_grupo_usuarios_cuenta1_idx` (`cuenta_id` ASC) ,
   CONSTRAINT `fk_grupo_usuarios_cuenta1`
     FOREIGN KEY (`cuenta_id` )
     REFERENCES `tramitador`.`cuenta` (`id` )
@@ -149,7 +150,7 @@ CREATE  TABLE IF NOT EXISTS `tramitador`.`usuario` (
   `updated_at` DATETIME NULL DEFAULT NULL ,
   PRIMARY KEY (`id`) ,
   UNIQUE INDEX `usuario_unique` (`usuario` ASC, `open_id` ASC) ,
-  INDEX `fk_usuario_cuenta1` (`cuenta_id` ASC) ,
+  INDEX `fk_usuario_cuenta1_idx` (`cuenta_id` ASC) ,
   CONSTRAINT `fk_usuario_cuenta1`
     FOREIGN KEY (`cuenta_id` )
     REFERENCES `tramitador`.`cuenta` (`id` )
@@ -168,8 +169,8 @@ CREATE  TABLE IF NOT EXISTS `tramitador`.`tarea_has_grupo_usuarios` (
   `tarea_id` INT(10) UNSIGNED NOT NULL ,
   `grupo_usuarios_id` INT(10) UNSIGNED NOT NULL ,
   PRIMARY KEY (`tarea_id`, `grupo_usuarios_id`) ,
-  INDEX `fk_tarea_has_grupo_usuarios_grupo_usuarios1` (`grupo_usuarios_id` ASC) ,
-  INDEX `fk_tarea_has_grupo_usuarios_tarea1` (`tarea_id` ASC) ,
+  INDEX `fk_tarea_has_grupo_usuarios_grupo_usuarios1_idx` (`grupo_usuarios_id` ASC) ,
+  INDEX `fk_tarea_has_grupo_usuarios_tarea1_idx` (`tarea_id` ASC) ,
   CONSTRAINT `fk_tarea_has_grupo_usuarios_grupo_usuarios1`
     FOREIGN KEY (`grupo_usuarios_id` )
     REFERENCES `tramitador`.`grupo_usuarios` (`id` )
@@ -192,8 +193,8 @@ CREATE  TABLE IF NOT EXISTS `tramitador`.`grupo_usuarios_has_usuario` (
   `grupo_usuarios_id` INT UNSIGNED NOT NULL ,
   `usuario_id` INT UNSIGNED NOT NULL ,
   PRIMARY KEY (`grupo_usuarios_id`, `usuario_id`) ,
-  INDEX `fk_grupo_usuarios_has_usuario_usuario1` (`usuario_id` ASC) ,
-  INDEX `fk_grupo_usuarios_has_usuario_grupo_usuarios1` (`grupo_usuarios_id` ASC) ,
+  INDEX `fk_grupo_usuarios_has_usuario_usuario1_idx` (`usuario_id` ASC) ,
+  INDEX `fk_grupo_usuarios_has_usuario_grupo_usuarios1_idx` (`grupo_usuarios_id` ASC) ,
   CONSTRAINT `fk_grupo_usuarios_has_usuario_grupo_usuarios1`
     FOREIGN KEY (`grupo_usuarios_id` )
     REFERENCES `tramitador`.`grupo_usuarios` (`id` )
@@ -218,7 +219,7 @@ CREATE  TABLE IF NOT EXISTS `tramitador`.`tramite` (
   `updated_at` DATETIME NULL ,
   `ended_at` DATETIME NULL ,
   PRIMARY KEY (`id`) ,
-  INDEX `fk_tramite_proceso1` (`proceso_id` ASC) ,
+  INDEX `fk_tramite_proceso1_idx` (`proceso_id` ASC) ,
   CONSTRAINT `fk_tramite_proceso1`
     FOREIGN KEY (`proceso_id` )
     REFERENCES `tramitador`.`proceso` (`id` )
@@ -235,14 +236,17 @@ CREATE  TABLE IF NOT EXISTS `tramitador`.`etapa` (
   `tarea_id` INT(10) UNSIGNED NOT NULL ,
   `usuario_id` INT(10) UNSIGNED NULL DEFAULT NULL ,
   `pendiente` TINYINT(1) NOT NULL ,
-  `created_at` VARCHAR(45) NULL DEFAULT NULL ,
-  `updated_at` VARCHAR(45) NULL DEFAULT NULL ,
+  `etapa_ancestro_split_id` INT(10) UNSIGNED NULL DEFAULT NULL ,
+  `vencimiento_at` DATE NULL DEFAULT NULL ,
+  `created_at` DATETIME NULL DEFAULT NULL ,
+  `updated_at` DATETIME NULL DEFAULT NULL ,
   `ended_at` DATETIME NULL DEFAULT NULL ,
   `tramite_id` INT(10) UNSIGNED NOT NULL ,
   PRIMARY KEY (`id`) ,
-  INDEX `fk_etapa_tarea1` (`tarea_id` ASC) ,
-  INDEX `fk_etapa_usuario1` (`usuario_id` ASC) ,
+  INDEX `fk_etapa_tarea1_idx` (`tarea_id` ASC) ,
+  INDEX `fk_etapa_usuario1_idx` (`usuario_id` ASC) ,
   INDEX `fk_etapa_tramite1` (`tramite_id` ASC) ,
+  INDEX `fk_etapa_etapa1_idx` (`etapa_ancestro_split_id` ASC) ,
   CONSTRAINT `etapa_ibfk_1`
     FOREIGN KEY (`tramite_id` )
     REFERENCES `tramitador`.`tramite` (`id` )
@@ -257,7 +261,12 @@ CREATE  TABLE IF NOT EXISTS `tramitador`.`etapa` (
     FOREIGN KEY (`usuario_id` )
     REFERENCES `tramitador`.`usuario` (`id` )
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_etapa_etapa1`
+    FOREIGN KEY (`etapa_ancestro_split_id` )
+    REFERENCES `tramitador`.`etapa` (`id` )
+    ON DELETE SET NULL
+    ON UPDATE CASCADE)
 ENGINE = InnoDB
 AUTO_INCREMENT = 57
 DEFAULT CHARACTER SET = utf8
@@ -272,7 +281,7 @@ CREATE  TABLE IF NOT EXISTS `tramitador`.`formulario` (
   `nombre` VARCHAR(128) NOT NULL ,
   `proceso_id` INT UNSIGNED NOT NULL ,
   PRIMARY KEY (`id`) ,
-  INDEX `fk_formulario_proceso1` (`proceso_id` ASC) ,
+  INDEX `fk_formulario_proceso1_idx` (`proceso_id` ASC) ,
   CONSTRAINT `fk_formulario_proceso1`
     FOREIGN KEY (`proceso_id` )
     REFERENCES `tramitador`.`proceso` (`id` )
@@ -290,7 +299,7 @@ CREATE  TABLE IF NOT EXISTS `tramitador`.`hsm_configuracion` (
   `cuenta_id` INT UNSIGNED NOT NULL ,
   PRIMARY KEY (`id`) ,
   UNIQUE INDEX `nombre_UNIQUE` (`nombre` ASC) ,
-  INDEX `fk_hsm_configuracion_cuenta1` (`cuenta_id` ASC) ,
+  INDEX `fk_hsm_configuracion_cuenta1_idx` (`cuenta_id` ASC) ,
   CONSTRAINT `fk_hsm_configuracion_cuenta1`
     FOREIGN KEY (`cuenta_id` )
     REFERENCES `tramitador`.`cuenta` (`id` )
@@ -319,8 +328,8 @@ CREATE  TABLE IF NOT EXISTS `tramitador`.`documento` (
   `hsm_configuracion_id` INT UNSIGNED NULL ,
   `proceso_id` INT UNSIGNED NOT NULL ,
   PRIMARY KEY (`id`) ,
-  INDEX `fk_documento_proceso1` (`proceso_id` ASC) ,
-  INDEX `fk_documento_hsm_configuracion1` (`hsm_configuracion_id` ASC) ,
+  INDEX `fk_documento_proceso1_idx` (`proceso_id` ASC) ,
+  INDEX `fk_documento_hsm_configuracion1_idx` (`hsm_configuracion_id` ASC) ,
   CONSTRAINT `fk_documento_proceso1`
     FOREIGN KEY (`proceso_id` )
     REFERENCES `tramitador`.`proceso` (`id` )
@@ -356,7 +365,7 @@ CREATE  TABLE IF NOT EXISTS `tramitador`.`campo` (
   `extra` TEXT NULL ,
   PRIMARY KEY (`id`) ,
   INDEX `fk_campo_formulario1` (`formulario_id` ASC) ,
-  INDEX `fk_campo_documento1` (`documento_id` ASC) ,
+  INDEX `fk_campo_documento1_idx` (`documento_id` ASC) ,
   CONSTRAINT `campo_ibfk_1`
     FOREIGN KEY (`formulario_id` )
     REFERENCES `tramitador`.`formulario` (`id` )
@@ -384,8 +393,8 @@ CREATE  TABLE IF NOT EXISTS `tramitador`.`paso` (
   `formulario_id` INT UNSIGNED NOT NULL ,
   `tarea_id` INT UNSIGNED NOT NULL ,
   PRIMARY KEY (`id`) ,
-  INDEX `fk_paso_formulario1` (`formulario_id` ASC) ,
-  INDEX `fk_paso_tarea1` (`tarea_id` ASC) ,
+  INDEX `fk_paso_formulario1_idx` (`formulario_id` ASC) ,
+  INDEX `fk_paso_tarea1_idx` (`tarea_id` ASC) ,
   CONSTRAINT `fk_paso_formulario1`
     FOREIGN KEY (`formulario_id` )
     REFERENCES `tramitador`.`formulario` (`id` )
@@ -397,28 +406,6 @@ CREATE  TABLE IF NOT EXISTS `tramitador`.`paso` (
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `tramitador`.`dato`
--- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `tramitador`.`dato` (
-  `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT ,
-  `nombre` VARCHAR(128) NOT NULL ,
-  `valor` TEXT NOT NULL ,
-  `tramite_id` INT(10) UNSIGNED NOT NULL ,
-  PRIMARY KEY (`id`) ,
-  UNIQUE INDEX `nombre` (`nombre` ASC, `tramite_id` ASC) ,
-  INDEX `fk_dato_etapa1` (`tramite_id` ASC) ,
-  CONSTRAINT `dato_ibfk_1`
-    FOREIGN KEY (`tramite_id` )
-    REFERENCES `tramitador`.`tramite` (`id` )
-    ON DELETE CASCADE
-    ON UPDATE CASCADE)
-ENGINE = InnoDB
-AUTO_INCREMENT = 8
-DEFAULT CHARACTER SET = utf8
-COLLATE = utf8_general_ci;
 
 
 -- -----------------------------------------------------
@@ -435,29 +422,13 @@ CREATE  TABLE IF NOT EXISTS `tramitador`.`usuario_backend` (
   `cuenta_id` INT UNSIGNED NOT NULL ,
   `reset_token` VARCHAR(40) NULL ,
   PRIMARY KEY (`id`) ,
-  INDEX `fk_usuario_backend_cuenta1` (`cuenta_id` ASC) ,
+  INDEX `fk_usuario_backend_cuenta1_idx` (`cuenta_id` ASC) ,
   CONSTRAINT `fk_usuario_backend_cuenta1`
     FOREIGN KEY (`cuenta_id` )
     REFERENCES `tramitador`.`cuenta` (`id` )
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `tramitador`.`ci_sessions`
--- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `tramitador`.`ci_sessions` (
-  `session_id` VARCHAR(40) NOT NULL DEFAULT '0' ,
-  `ip_address` VARCHAR(16) NOT NULL DEFAULT '0' ,
-  `user_agent` VARCHAR(120) NOT NULL ,
-  `last_activity` INT(10) UNSIGNED NOT NULL DEFAULT '0' ,
-  `user_data` TEXT NOT NULL ,
-  PRIMARY KEY (`session_id`) ,
-  INDEX `last_activity_idx` (`last_activity` ASC) )
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8
-COLLATE = utf8_general_ci;
 
 
 -- -----------------------------------------------------
@@ -470,7 +441,7 @@ CREATE  TABLE IF NOT EXISTS `tramitador`.`accion` (
   `extra` TEXT NULL ,
   `proceso_id` INT UNSIGNED NOT NULL ,
   PRIMARY KEY (`id`) ,
-  INDEX `fk_trigger_proceso1` (`proceso_id` ASC) ,
+  INDEX `fk_trigger_proceso1_idx` (`proceso_id` ASC) ,
   CONSTRAINT `fk_trigger_proceso1`
     FOREIGN KEY (`proceso_id` )
     REFERENCES `tramitador`.`proceso` (`id` )
@@ -490,7 +461,7 @@ CREATE  TABLE IF NOT EXISTS `tramitador`.`widget` (
   `config` TEXT NULL ,
   `cuenta_id` INT UNSIGNED NOT NULL ,
   PRIMARY KEY (`id`) ,
-  INDEX `fk_widget_cuenta1` (`cuenta_id` ASC) ,
+  INDEX `fk_widget_cuenta1_idx` (`cuenta_id` ASC) ,
   CONSTRAINT `fk_widget_cuenta1`
     FOREIGN KEY (`cuenta_id` )
     REFERENCES `tramitador`.`cuenta` (`id` )
@@ -510,9 +481,9 @@ CREATE  TABLE IF NOT EXISTS `tramitador`.`evento` (
   `accion_id` INT UNSIGNED NOT NULL ,
   `paso_id` INT UNSIGNED NULL ,
   PRIMARY KEY (`id`) ,
-  INDEX `fk_evento_tarea1` (`tarea_id` ASC) ,
-  INDEX `fk_evento_accion1` (`accion_id` ASC) ,
-  INDEX `fk_evento_paso1` (`paso_id` ASC) ,
+  INDEX `fk_evento_tarea1_idx` (`tarea_id` ASC) ,
+  INDEX `fk_evento_accion1_idx` (`accion_id` ASC) ,
+  INDEX `fk_evento_paso1_idx` (`paso_id` ASC) ,
   CONSTRAINT `fk_evento_tarea1`
     FOREIGN KEY (`tarea_id` )
     REFERENCES `tramitador`.`tarea` (`id` )
@@ -540,7 +511,7 @@ CREATE  TABLE IF NOT EXISTS `tramitador`.`dato_seguimiento` (
   `valor` TEXT NOT NULL ,
   `etapa_id` INT(10) UNSIGNED NOT NULL ,
   PRIMARY KEY (`id`) ,
-  INDEX `fk_dato_seguimiento_etapa1` (`etapa_id` ASC) ,
+  INDEX `fk_dato_seguimiento_etapa1_idx` (`etapa_id` ASC) ,
   UNIQUE INDEX `nombre_etapa` (`nombre` ASC, `etapa_id` ASC) ,
   CONSTRAINT `fk_dato_seguimiento_etapa1`
     FOREIGN KEY (`etapa_id` )
@@ -557,14 +528,16 @@ CREATE  TABLE IF NOT EXISTS `tramitador`.`file` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
   `filename` VARCHAR(255) NOT NULL ,
   `tipo` ENUM('dato','documento') NOT NULL ,
+  `llave` VARCHAR(12) NOT NULL ,
   `llave_copia` VARCHAR(40) NULL ,
+  `llave_firma` VARCHAR(12) NULL ,
   `validez` INT UNSIGNED NULL ,
   `tramite_id` INT UNSIGNED NOT NULL ,
   `created_at` DATETIME NULL ,
   `updated_at` DATETIME NULL ,
   PRIMARY KEY (`id`) ,
-  INDEX `fk_file_tramite1` (`tramite_id` ASC) ,
   UNIQUE INDEX `filename_tipo` (`filename` ASC, `tipo` ASC) ,
+  INDEX `fk_file_tramite1_idx` (`tramite_id` ASC) ,
   CONSTRAINT `fk_file_tramite1`
     FOREIGN KEY (`tramite_id` )
     REFERENCES `tramitador`.`tramite` (`id` )
@@ -582,7 +555,7 @@ CREATE  TABLE IF NOT EXISTS `tramitador`.`reporte` (
   `campos` TEXT NOT NULL ,
   `proceso_id` INT UNSIGNED NOT NULL ,
   PRIMARY KEY (`id`) ,
-  INDEX `fk_reporte_proceso1` (`proceso_id` ASC) ,
+  INDEX `fk_reporte_proceso1_idx` (`proceso_id` ASC) ,
   CONSTRAINT `fk_reporte_proceso1`
     FOREIGN KEY (`proceso_id` )
     REFERENCES `tramitador`.`proceso` (`id` )
@@ -604,6 +577,18 @@ CREATE  TABLE IF NOT EXISTS `tramitador`.`usuario_manager` (
   PRIMARY KEY (`id`) )
 ENGINE = InnoDB;
 
+
+-- -----------------------------------------------------
+-- Table `tramitador`.`feriado`
+-- -----------------------------------------------------
+CREATE  TABLE IF NOT EXISTS `tramitador`.`feriado` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
+  `fecha` DATE NOT NULL ,
+  PRIMARY KEY (`id`) ,
+  UNIQUE INDEX `fecha_UNIQUE` (`fecha` ASC) )
+ENGINE = InnoDB;
+
+USE `tramitador` ;
 
 
 SET SQL_MODE=@OLD_SQL_MODE;

@@ -7,17 +7,20 @@ class Documentos extends MY_Controller {
     }
     
     function get($filename){
+        $id=$this->input->get('id');
+        $token=$this->input->get('token');
+        
         //Chequeamos permisos del frontend
         $file=Doctrine_Query::create()
                 ->from('File f, f.Tramite t, t.Etapas e, e.Usuario u')
-                ->where('f.filename = ? AND f.tipo = ? AND u.id = ?',array($filename,'documento',UsuarioSesion::usuario()->id))
+                ->where('f.id = ? AND f.llave = ? AND u.id = ?',array($id,$token,UsuarioSesion::usuario()->id))
                 ->fetchOne();
         
         if(!$file){
             //Chequeamos permisos en el backend
             $file=Doctrine_Query::create()
                 ->from('File f, f.Tramite.Proceso.Cuenta.UsuariosBackend u')
-                ->where('f.filename = ? AND f.tipo = ? AND u.id = ? AND (u.rol="super" OR u.rol="operacion")',array($filename,'documento',UsuarioBackendSesion::usuario()->id))
+                ->where('f.id = ? AND f.llave = ? AND u.id = ? AND (u.rol="super" OR u.rol="operacion")',array($id,$token,UsuarioBackendSesion::usuario()->id))
                 ->fetchOne();
             
             if(!$file){
@@ -25,13 +28,11 @@ class Documentos extends MY_Controller {
                 exit;
             }
         }
+           
         
+        $path='uploads/documentos/'.$file->filename;
         
-        
-        
-        $path='uploads/documentos/'.$filename;
-        
-        if(preg_match('/^\.\./', $filename)){
+        if(preg_match('/^\.\./', $file->filename)){
             echo 'Archivo invalido';
             exit;
         }
@@ -41,9 +42,70 @@ class Documentos extends MY_Controller {
             exit;
         }
   
-        header('Content-Type: '.  mime_content_type($path));
+        header('Content-Type: '. get_mime_by_extension($path));
         header('Content-Length: ' . filesize($path));
         readfile($path);
+    }
+    
+    //Acceso que utiliza applet de firma con token
+    function firma_get(){
+        $id=$this->input->get('id');
+        $llave_firma=$this->input->get('token');
+        
+        if(!$id || !$llave_firma){
+            $resultado=new stdClass();
+            $resultado->status=1;
+            $resultado->error='Faltan parametros';
+            echo json_encode($resultado);
+            exit;
+        }
+        
+        $file=Doctrine_Query::create()
+                ->from('File f, f.Tramite.Etapas.Usuario u')
+                ->where('f.id = ? AND f.tipo = ? AND f.llave_firma = ? AND u.id = ?',array($id,'documento',$llave_firma,UsuarioSesion::usuario()->id))
+                ->fetchOne();
+        
+        $resultado=new stdClass();
+        if(!$file){
+            $resultado->status=1;
+            $resultado->error='Token no corresponde';
+        }else{
+            $resultado->status=0;
+            $resultado->tipo='pdf';
+            $resultado->documento=base64_encode(file_get_contents('uploads/documentos/'.$file->filename));
+        }
+        
+        echo json_encode($resultado);
+    }
+    
+    function firma_post(){
+        $id=$this->input->post('id');
+        $llave_firma=$this->input->post('token');
+        $documento=$this->input->post('documento');
+        
+        if(!$id || !$llave_firma || !$documento){
+            $resultado=new stdClass();
+            $resultado->status=1;
+            $resultado->error='Faltan parametros';
+            echo json_encode($resultado);
+            exit;
+        }
+        
+        $file=Doctrine_Query::create()
+                ->from('File f, f.Tramite.Etapas.Usuario u')
+                ->where('f.id = ? AND f.tipo = ? AND f.llave_firma = ? AND u.id = ?',array($id,'documento',$llave_firma,UsuarioSesion::usuario()->id))
+                ->fetchOne();
+        
+        $resultado=new stdClass();
+        if(!$file){
+            $resultado->status=1;
+            $resultado->error='Token no corresponde';
+        }else{
+            $resultado->status=0;
+            file_put_contents('uploads/documentos/'.$file->filename, base64_decode($documento));
+        }
+        
+        echo json_encode($resultado);
     }
 }
 

@@ -1,6 +1,6 @@
 $(document).ready(function(){
     $('#areaFormulario .edicionFormulario').sortable({
-        handle: '.handler',
+        //handle: '.handler',
         revert: true,
         stop: editarPosicionCampos
     });

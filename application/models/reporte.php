@@ -38,19 +38,48 @@ class Reporte extends Doctrine_Record {
         
         $CI->load->library('Excel_XML');
 
-        $excel[]=array_merge(array('id','estado','etapa_actual','fecha_inicio','fecha_modificacion','fecha_termino'), $this->campos);
+        $header=array_merge(array('id','estado','etapa_actual','fecha_inicio','fecha_modificacion','fecha_termino'),$this->campos);  
         
-        $tramites=$this->Proceso->Tramites;
+        $excel[]=$header;
+        
+        $tramites=Doctrine_Query::create()
+                ->from('Tramite t, t.Proceso p, t.Etapas e, e.DatosSeguimiento d')
+                ->where('p.id = ?', $this->proceso_id)
+                ->having('COUNT(d.id) > 0 OR COUNT(e.id) > 1')  //Mostramos solo los que se han avanzado o tienen datos
+                ->groupBy('t.id')
+                ->orderBy('t.id desc')
+                ->execute();
+        
         foreach($tramites as $t){
-            $etapas_actuales=array();
-            foreach($t->getEtapasActuales() as $e)
-                $etapas_actuales[]=$e->Tarea->nombre;
-            $etapas_actuales=  implode(',', $etapas_actuales);
-            $row=array($t->id,$t->pendiente?'pendiente':'completado',$etapas_actuales,$t->created_at,$t->updated_at,$t->ended_at);
-            foreach($this->campos as $c){
-                $regla=new Regla('@@'.$c);
-                $row[]=$regla->getExpresionParaOutput($t->getUltimaEtapa()->id);
-            }
+            $etapas_actuales=$t->getEtapasActuales();
+            $etapas_actuales_arr=array();
+            foreach($etapas_actuales as $e)
+                $etapas_actuales_arr[]=$e->Tarea->nombre;
+            $etapas_actuales_str=implode(',', $etapas_actuales_arr);
+            $row=array($t->id,$t->pendiente?'pendiente':'completado',$etapas_actuales_str,$t->created_at,$t->updated_at,$t->ended_at);
+                 
+            $datos=Doctrine_Query::create()
+                ->select('d.*')
+                ->from('DatoSeguimiento d, d.Etapa e, e.Tramite t')
+                ->andWhere('t.id = ?',$t->id)
+                ->andWhereIn('d.nombre',$this->campos)
+                ->having('d.id = MAX(d.id)')
+                ->groupBy('d.nombre')
+                ->execute(array(),Doctrine_Core::HYDRATE_ARRAY);
+            
+            foreach($datos as $d){
+                $colindex=array_search($d['nombre'],$header);
+                $row[$colindex]=is_string(json_decode($d['valor']))?json_decode($d['valor']):decode_unicode($d['valor']);
+            }    
+                     
+            //Rellenamos con espacios en blanco los campos que no existen.
+            for($i=0; $i<count($row); $i++)
+                if(!isset($row[$i]))
+                    $row[$i]='';
+                
+            //Ordenamos
+            ksort($row);
+
             $excel[]=$row;
         }
 
@@ -58,6 +87,6 @@ class Reporte extends Doctrine_Record {
         $CI->excel_xml->generateXML('reporte');
     }
 
-    
+
 
 }

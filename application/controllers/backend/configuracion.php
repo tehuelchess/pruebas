@@ -71,7 +71,7 @@ class Configuracion extends CI_Controller {
             $data['grupo_usuarios'] = $grupo_usuarios;
         }
 
-        $data['usuarios']=Doctrine::getTable('Usuario')->findByRegistradoAndOpenId(1,0);
+        $data['usuarios']=Doctrine::getTable('Usuario')->findByCuentaId(UsuarioBackendSesion::usuario()->cuenta_id);
         
         $data['title'] = 'Configuración de Grupo de Usuarios';
         $data['content'] = 'backend/configuracion/grupo_usuarios_editar';
@@ -165,7 +165,7 @@ class Configuracion extends CI_Controller {
         }
         
         if(!$usuario)
-            $this->form_validation->set_rules('usuario', 'Nombre de Usuario', 'required|callback_check_existe_usuario');
+            $this->form_validation->set_rules('usuario', 'Nombre de Usuario', 'required|alpha_dash|callback_check_existe_usuario');
         $this->form_validation->set_rules('password', 'Contraseña', 'matches[password_confirm]');
         $this->form_validation->set_rules('password_confirm', 'Confirmar contraseña');
         $this->form_validation->set_rules('nombres', 'Nombres', 'required');
@@ -180,7 +180,7 @@ class Configuracion extends CI_Controller {
             }
 
             
-            if($this->input->post('password')) $usuario->password=$this->input->post('password');
+            if($this->input->post('password')) $usuario->setPasswordWithSalt($this->input->post('password'));
             $usuario->nombres = $this->input->post('nombres');
             $usuario->apellido_paterno = $this->input->post('apellido_paterno');
             $usuario->apellido_materno = $this->input->post('apellido_materno');
@@ -256,9 +256,8 @@ class Configuracion extends CI_Controller {
                 exit;
             }
         }
-        
         if(!$usuario)
-            $this->form_validation->set_rules('email', 'E-Mail', 'required|callback_check_existe_usuario');
+            $this->form_validation->set_rules('email', 'E-Mail', 'required|valid_email|callback_check_existe_usuario_backend');
         $this->form_validation->set_rules('password', 'Contraseña', 'matches[password_confirm]');
         $this->form_validation->set_rules('password_confirm', 'Confirmar contraseña');
         $this->form_validation->set_rules('nombre', 'Nombre', 'required');
@@ -272,7 +271,7 @@ class Configuracion extends CI_Controller {
             }
 
             
-            if($this->input->post('password')) $usuario->password=$this->input->post('password');
+            if($this->input->post('password')) $usuario->setPasswordWithSalt($this->input->post('password'));
             $usuario->nombre = $this->input->post('nombre');
             $usuario->apellidos = $this->input->post('apellidos');
             $usuario->rol = $this->input->post('rol');
@@ -332,11 +331,21 @@ class Configuracion extends CI_Controller {
     }
     
     function check_existe_usuario($email){
-        $u=Doctrine::getTable('Usuario')->findOneByEmail($email);
+        $u=Doctrine::getTable('Usuario')->findOneByUsuario($email);
         if(!$u)
             return TRUE;
         
         $this->form_validation->set_message('check_existe_usuario','%s ya existe');
+        return FALSE;
+             
+    }
+    
+    function check_existe_usuario_backend($email){
+        $u=Doctrine::getTable('UsuarioBackend')->findOneByEmail($email);
+        if(!$u)
+            return TRUE;
+        
+        $this->form_validation->set_message('check_existe_usuario_backend','%s ya existe');
         return FALSE;
              
     }

@@ -18,4 +18,6 @@ $lang['integer'] = 'El campo %s debe contener un número entero.';
 $lang['matches'] = 'El campo %s no coincide con el campo %s.';
 $lang['is_natural'] = 'El campo %s debe contener sólamente números positivos';
 $lang['is_natural_no_zero'] = 'El campo %s debe contener un número positivo mayor que cero.';
+$lang['less_than'] = "El campo %s debe contener un número menor que %s.";
+$lang['greater_than'] = "El campo %s debe contener un número mayor que %s.";
 ?>

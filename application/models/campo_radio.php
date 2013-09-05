@@ -7,13 +7,18 @@ class CampoRadio extends Campo {
         $display.='<div class="controls">';
         foreach ($this->datos as $d) {
             $display.='<label class="radio">';
-            $display.='<input ' . ($modo == 'visualizacion' ? 'disabled' : '') . ' type="radio" name="' . $this->nombre . '" value="' . $d->valor . '" ' . ($dato && $d->valor == $dato->valor ? 'checked' : '') . ' />';
+            $display.='<input ' . ($modo == 'visualizacion' ? 'readonly' : '') . ' type="radio" name="' . $this->nombre . '" value="' . $d->valor . '" ' . ($dato && $d->valor == $dato->valor ? 'checked' : '') . ' />';
             $display.=$d->etiqueta . '</label>';
         }
         if($this->ayuda)
             $display.='<span class="help-block">'.$this->ayuda.'</span>';
         $display.='</div>';
         return $display;
+    }
+    
+    public function backendExtraValidate(){
+        $CI=&get_instance();
+        $CI->form_validation->set_rules('datos','Datos','required');
     }
 
 }

@@ -18,6 +18,10 @@
             <fieldset>
                 <legend>Editar grupo de usuario</legend>
                 <div class="validacion"></div>
+                <?php if(isset($grupo_usuarios)):?>
+                <label>Id</label>
+                <input type='text' value='<?=$grupo_usuarios->id?>' disabled />
+                <?php endif ?>
                 <label>Nombre</label>
                 <input type="text" name="nombre" value="<?=isset($grupo_usuarios)?$grupo_usuarios->nombre:''?>"/>
                 <label>Este grupo lo componen</label>

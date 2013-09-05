@@ -3,21 +3,19 @@ $(document).ready(function(){
 
     $(".preventDoubleRequest").one("click", function() {
         $(this).click(function () { return false; });
-        $(this).attr("autocomplete","off"); //Fix para firefox
-        $(this).attr("disabled",true);
     });
     
-    $(".datepicker")
+    $(".datepicker:not([readonly])")
     .datepicker({
-        format: "dd/mm/yyyy",
+        format: "dd-mm-yyyy",
         weekStart: 1,
         autoclose: true,
         language: "es"
-    })
-    .on("changeDate",function(event){
-        var fecha=event.date.getFullYear()+"-"+(event.date.getMonth()+1)+"-"+event.date.getDate();
-        $(this).next("input:hidden").val(fecha);
     });
+    
+    $("input[type=checkbox][readonly],input[type=radio][readonly]").click(function(e){e.preventDefault();});
+    
+    $("select[readonly]").focus(function(){$(this).blur();});
     
     $(".file-uploader").each(function(i,el){
         var $parentDiv=$(el).parent();
@@ -28,7 +26,7 @@ $(document).ready(function(){
                 if(!respuesta.error){
                     $parentDiv.find("input[type=hidden]").val(respuesta.file_name);
                     $parentDiv.find(".qq-upload-list").empty();
-                    $parentDiv.find(".link").html("<a href='"+site_url+"uploader/datos_get?filename="+respuesta.file_name+"'>"+respuesta.file_name+"</a> (<a href='#' class='remove'>X</a>)")
+                    $parentDiv.find(".link").html("<a target='blank' href='"+site_url+"uploader/datos_get/"+respuesta.file_name+"?id="+respuesta.id+"&token="+respuesta.llave+"'>"+respuesta.file_name+"</a> (<a href='#' class='remove'>X</a>)")
                 }
             }
         }); 
@@ -90,17 +88,13 @@ $(document).ready(function(){
     
     //Para manejar los input dependientes en dynaforms
     function prepareDynaForm(form){
-        $(form).find(".campo[data-dependiente-campo]").each(function(i,el){          
+        $(form).find(".campo[data-dependiente-campo]").each(function(i,el){   
             var tipo=$(el).data("dependiente-tipo");
+            var relacion=$(el).data("dependiente-relacion");
             var campo=$(el).data("dependiente-campo");
             var valor=$(el).data("dependiente-valor");
             
-            //Obtenemos el arreglo de inputs del sistema. Hacemos un hack para incluir los disabled elements ya que estos nos sirven
-            //para obtener los campos que son de solo visualizacion y armar el formulario acorde a ellos.
-            var disabledElements=$(form).find(":input:disabled");
-            $(disabledElements).prop("disabled",false);
             var items=$(form).find(":input:not(:hidden)").serializeArray();
-            $(disabledElements).prop("disabled",true);
             
             var existe=false;
             for(var i in items){
@@ -112,7 +106,9 @@ $(document).ready(function(){
                     }else{
                         if(items[i].value==valor)
                             existe=true;                       
-                    }          
+                    }
+                    if(relacion=="!=")
+                        existe=!existe;
                 }     
             }
             if(existe){

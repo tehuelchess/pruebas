@@ -4,6 +4,7 @@ class Campo extends Doctrine_Record {
     
     public $requiere_datos=true;    //Indica si requiere datos seleccionables. Como las opciones de un checkbox, select, etc.
     public $estatico=false; //Indica si es un campo estatico, es decir que no es un input con informacion. Ej: Parrafos, titulos, etc.
+    public $etiqueta_tamano='large'; //Indica el tamaño default que tendra el campo de etiqueta. Puede ser large o xxlarge.
     public $requiere_nombre=true;    //Indica si requiere que se le ingrese un nombre (Es decir, no generarlo aleatoriamente)
     
     public static function factory($tipo){
@@ -25,6 +26,10 @@ class Campo extends Doctrine_Record {
             $campo=new CampoInstitucionesGob();
         else if($tipo=='comunas')
             $campo=new CampoComunas();
+        else if($tipo=='paises')
+            $campo=new CampoPaises();
+        else if($tipo=='moneda')
+            $campo=new CampoMoneda();
         else if($tipo=='title')
             $campo=new CampoTitle();
         else if($tipo=='subtitle')
@@ -51,6 +56,7 @@ class Campo extends Doctrine_Record {
         $this->hasColumn('dependiente_tipo');
         $this->hasColumn('dependiente_campo');
         $this->hasColumn('dependiente_valor');
+        $this->hasColumn('dependiente_relacion');
         $this->hasColumn('datos');
         $this->hasColumn('readonly');           //Indica que en este campo solo se mostrara la informacion.
         $this->hasColumn('valor_default');
@@ -67,6 +73,8 @@ class Campo extends Doctrine_Record {
                 'CampoDate'  => array('tipo' => 'date'),
                 'CampoInstitucionesGob'  => array('tipo' => 'instituciones_gob'),
                 'CampoComunas'  => array('tipo' => 'comunas'),
+                'CampoPaises'  => array('tipo' => 'paises'),
+                'CampoMoneda'  => array('tipo' => 'moneda'),
                 'CampoTitle'  => array('tipo' => 'title'),
                 'CampoSubtitle'  => array('tipo' => 'subtitle'),
                 'CampoParagraph'  => array('tipo' => 'paragraph'),
@@ -118,36 +126,39 @@ class Campo extends Doctrine_Record {
     public function isEditableWithCurrentPOST(){
         $CI=& get_instance();
         
-        if($this->readonly)
-           return false; 
+        $resultado=true;
         
-        if($this->dependiente_campo){
+        if($this->readonly){
+           $resultado=false; 
+        }else if($this->dependiente_campo){
             $variable=preg_replace('/\[\]$/', '', $this->dependiente_campo);
             if(is_array($CI->input->post($variable))){ //Es un arreglo
                 if($this->dependiente_tipo=='regex'){
                     foreach($CI->input->post($variable) as $x){
                         if(!preg_match('/'.$this->dependiente_valor.'/', $x))
-                            return false;
+                            $resultado= false;
                     }
                 }else{
                     if(!in_array($this->dependiente_valor, $CI->input->post($variable)))
-                        return false;
+                        $resultado= false;
                 }
             }else{
                 if($this->dependiente_tipo=='regex'){
                     if(!preg_match('/'.$this->dependiente_valor.'/', $CI->input->post($variable)))
-                        return false;
+                        $resultado= false;
                 }else{
                     if($CI->input->post($variable)!=$this->dependiente_valor)
-                        return false;
+                        $resultado= false;
                 }
                 
             }
             
-            
+            if($this->dependiente_relacion=='!=')
+                $resultado=!$resultado;
+   
         }
         
-        return true;
+        return $resultado;
     }
     
     public function formValidate(){

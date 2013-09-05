@@ -1,6 +1,40 @@
 <script type="text/javascript">
     $(document).ready(function(){
-        $(".chosen").chosen();
+        $("#selectGruposUsuarios").select2({
+            multiple: true,
+            query: function (query) {
+                var data = {results: []};
+                var options=$(query.element).data("options");
+                
+                for(i in options)
+                    if(options[i].nombre.toUpperCase().indexOf(query.term.toUpperCase())==0)
+                        data.results.push({id: options[i].id, text: options[i].nombre});
+                
+                if(/@@\w/.test(query.term))
+                    data.results.push({id: query.term, text: query.term});
+            
+            
+                query.callback(data);
+            },
+            initSelection : function (element, callback) {
+                var options=$(element).data("options");
+                var data = [];
+                $(element.val().split(",")).each(function (i,term) {
+                    console.log(term);
+                    for(i in options){
+                        if(options[i].id==term){
+                            data.push({id: options[i].id, text: options[i].nombre});
+                            return;
+                        }
+                    }
+                    data.push({id: term, text: term});
+                    return;
+                
+                });
+                callback(data);
+            }
+
+        });
         
         $("[rel=tooltip]").tooltip();
         
@@ -180,7 +214,7 @@
                     <label class="radio" rel="tooltip" title="La tarea queda sin asignar, y los usuarios mismos deciden asignarsela segun corresponda."><input type="radio" name="asignacion" value="autoservicio" <?= $tarea->asignacion == 'autoservicio' ? 'checked' : '' ?> /> Auto Servicio</label>
                     <label class="radio" rel="tooltip" title="Ingresar el id de usuario a quien se le va asignar. Se puede ingresar una variable que haya almacenado esta información. Ej: @@usuario_inical"><input type="radio" name="asignacion" value="usuario" <?= $tarea->asignacion == 'usuario' ? 'checked' : '' ?> /> Usuario</label>
                     <div id="optionalAsignacionUsuario" class="<?= $tarea->asignacion == 'usuario' ? '' : 'hide' ?>">
-                        <input type="text" name="asignacion_usuario" value="<?= $tarea->asignacion_usuario ?>" />
+                        <input type="text" name="asignacion_usuario" value="<?= $tarea->asignacion_usuario ?>" placeholder='Ej: @@id' />
                     </div>
                     <br />
                     <label class="checkbox"><input type="checkbox" name="asignacion_notificar" value="1" <?= $tarea->asignacion_notificar ? 'checked' : '' ?> /> Notificar vía correo electrónico al usuario asignado.</label>
@@ -196,16 +230,13 @@
                             });
                         });
                     </script>
-                    <label><input type="radio" name="acceso_modo" value="publico" <?= $tarea->acceso_modo == 'publico' ? 'checked' : '' ?> /> Cualquier persona puede acceder.</label>
-                    <label><input type="radio" name="acceso_modo" value="registrados" <?= $tarea->acceso_modo == 'registrados' ? 'checked' : '' ?> /> Sólo los usuarios registrados.</label>
-                    <label><input type="radio" name="acceso_modo" value="claveunica" <?= $tarea->acceso_modo == 'claveunica' ? 'checked' : '' ?> /> Sólo los usuarios registrados con ClaveUnica.</label>
-                    <label><input type="radio" name="acceso_modo" value="grupos_usuarios" <?= $tarea->acceso_modo == 'grupos_usuarios' ? 'checked' : '' ?> /> Sólo los siguientes grupos de usuarios pueden acceder.</label>
+                    <label class='radio'><input type="radio" name="acceso_modo" value="publico" <?= $tarea->acceso_modo == 'publico' ? 'checked' : '' ?> /> Cualquier persona puede acceder.</label>
+                    <label class='radio'><input type="radio" name="acceso_modo" value="registrados" <?= $tarea->acceso_modo == 'registrados' ? 'checked' : '' ?> /> Sólo los usuarios registrados.</label>
+                    <label class='radio'><input type="radio" name="acceso_modo" value="claveunica" <?= $tarea->acceso_modo == 'claveunica' ? 'checked' : '' ?> /> Sólo los usuarios registrados con ClaveUnica.</label>
+                    <label class='radio'><input type="radio" name="acceso_modo" value="grupos_usuarios" <?= $tarea->acceso_modo == 'grupos_usuarios' ? 'checked' : '' ?> /> Sólo los siguientes grupos de usuarios pueden acceder.</label>
                     <div id="optionalGruposUsuarios" style="height: 300px;" class="<?= $tarea->acceso_modo == 'grupos_usuarios' ? '' : 'hide' ?>">
-                        <select name="grupos_usuarios[]" class="chosen" multiple>
-                            <?php foreach ($tarea->Proceso->Cuenta->GruposUsuarios as $g): ?>
-                                <option value="<?= $g->id ?>" <?= $tarea->hasGrupoUsuarios($g->id) ? 'selected="selected"' : '' ?>><?= $g->nombre ?></option>
-                            <?php endforeach; ?>
-                        </select>
+                        <input id="selectGruposUsuarios" type="hidden" name="grupos_usuarios" class="input-xlarge" value="<?=$tarea->grupos_usuarios?>" data-options='<?=json_encode($tarea->Proceso->Cuenta->GruposUsuarios->toArray(false))?>' />
+                        <div class='help-block'>Puede incluir variables usando @@. Las variables deben contener el numero id del grupo de usuarios.</div>
                     </div>
                 </div>
                 <div class="tab-pasos tab-pane" id="tab4">
@@ -332,6 +363,13 @@
                                 else
                                     $("#vencimientoConfig").hide();
                             }).change();
+                            
+                            $("select[name=vencimiento_unidad]").change(function(){
+                                if(this.value=="D")
+                                    $("#habilesConfig").show();
+                                else
+                                    $("#habilesConfig").hide();
+                            }).change();
                         });
                     </script>
                     <label class="checkbox"><input type="checkbox" name="vencimiento" value="1" <?=$tarea->vencimiento?'checked':''?> /> ¿La etapa tiene vencimiento?</label>
@@ -345,8 +383,11 @@
                         </select>
                         despues de completada la etapa anterior.
                         <br />
-                        <label class="checkbox"><input type="checkbox" name="vencimiento_notificar" value="1" <?=$tarea->vencimiento_notificar?'checked':''?> /> Notificar cuando quede 1 día al siguiente correo:</label>
+                        <label id='habilesConfig' class='checkbox'><input type='checkbox' name='vencimiento_habiles' value='1' <?=$tarea->vencimiento_habiles?'checked':''?> /> Considerar solo días habiles.</label>
+                        
+                        <label class="checkbox"><input type="checkbox" name="vencimiento_notificar" value="1" <?=$tarea->vencimiento_notificar?'checked':''?> /> Notificar cuando quede <input class="input-mini" type="text" name="vencimiento_notificar_dias" value="<?=$tarea->vencimiento_notificar_dias?>" /> día al siguiente correo:</label>
                          <input style="margin-left: 20px;" type="text" name="vencimiento_notificar_email" placeholder="ejemplo@mail.com" value="<?=$tarea->vencimiento_notificar_email?>" />
+                         <div style="margin-left: 20px;" class="help-block">Tambien se pueden usar variables. Ej: @@email</div>
                     </div>
                 </div>
                 <div class="tab-pane" id="tab7">

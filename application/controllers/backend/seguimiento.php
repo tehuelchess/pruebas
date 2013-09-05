@@ -26,21 +26,45 @@ class Seguimiento extends CI_Controller {
 
     public function index_proceso($proceso_id) {
         $proceso = Doctrine::getTable('Proceso')->find($proceso_id);
-
+        
         if (UsuarioBackendSesion::usuario()->cuenta_id != $proceso->cuenta_id) {
             echo 'Usuario no tiene permisos';
             exit;
         }
-
-
-
+        
+        $query = $this->input->get('query');
+        $offset=$this->input->get('offset');
+        $order=$this->input->get('order')?$this->input->get('order'):'updated_at';
+        $direction=$this->input->get('direction')?$this->input->get('direction'):'desc';
+        $created_at_desde=$this->input->get('created_at_desde');
+        $created_at_hasta=$this->input->get('created_at_hasta');
+        $updated_at_desde=$this->input->get('updated_at_desde');
+        $updated_at_hasta=$this->input->get('updated_at_hasta');
+        $pendiente=$this->input->get('pendiente')!==false?$this->input->get('pendiente'):-1;
+        $per_page=100;
+        $busqueda_avanzada=$this->input->get('busqueda_avanzada');
 
         $doctrine_query = Doctrine_Query::create()
-                ->from('Tramite t, t.Proceso p')
+                ->from('Tramite t, t.Proceso p, t.Etapas e, e.DatosSeguimiento d')
                 ->where('p.id = ?', $proceso_id)
-                ->orderBy('t.updated_at desc');
-
-        $query = $this->input->get('query');
+                ->having('COUNT(d.id) > 0 OR COUNT(e.id) > 1')  //Mostramos solo los que se han avanzado o tienen datos
+                ->groupBy('t.id')
+                ->orderBy($order.' '.$direction)
+                ->limit($per_page)
+                ->offset($offset);
+        
+        if($created_at_desde)
+            $doctrine_query->andWhere ('created_at >= ?',array(date('Y-m-d',strtotime($created_at_desde))));
+        if($created_at_hasta)
+            $doctrine_query->andWhere ('created_at <= ?',array(date('Y-m-d',strtotime($created_at_hasta))));
+        if($updated_at_desde)
+            $doctrine_query->andWhere ('updated_at >= ?',array(date('Y-m-d',strtotime($updated_at_desde))));
+        if($updated_at_hasta)
+            $doctrine_query->andWhere ('updated_at <= ?',array(date('Y-m-d',strtotime($updated_at_hasta))));
+        if($pendiente!=-1)
+            $doctrine_query->andWhere ('pendiente = ?',array($pendiente));
+        
+      
         if ($query) {
             $this->load->library('sphinxclient');
             $this->sphinxclient->setFilter('proceso_id', array($proceso_id));
@@ -52,10 +76,28 @@ class Seguimiento extends CI_Controller {
                 $doctrine_query->where('0');
             }
         }
+        
+        $tramites=$doctrine_query->execute();
+        $ntramites=$doctrine_query->count();
 
+        $this->load->library('pagination');
+        $this->pagination->initialize(array(
+            'base_url'=>site_url('backend/seguimiento/index_proceso/'.$proceso_id.'?order='.$order.'&direction='.$direction.'&pendiente='.$pendiente.'&created_at_desde='.$created_at_desde.'&created_at_hasta='.$created_at_hasta.'&updated_at_desde='.$updated_at_desde.'&updated_at_hasta='.$updated_at_hasta),
+            'total_rows'=>$ntramites,
+            'per_page'=>$per_page
+        ));
+        
         $data['query'] = $query;
+        $data['order']=$order;
+        $data['direction']=$direction;
+        $data['created_at_desde']=$created_at_desde;
+        $data['created_at_hasta']=$created_at_hasta;
+        $data['updated_at_desde']=$updated_at_desde;
+        $data['updated_at_hasta']=$updated_at_hasta;
+        $data['pendiente']=$pendiente;
+        $data['busqueda_avanzada']=$busqueda_avanzada;
         $data['proceso'] = $proceso;
-        $data['tramites'] = $doctrine_query->execute();
+        $data['tramites'] = $tramites;
 
         $data['title'] = 'Seguimiento de ' . $proceso->nombre;
         $data['content'] = 'backend/seguimiento/index_proceso';
@@ -71,7 +113,7 @@ class Seguimiento extends CI_Controller {
         }
 
         $data['tramite'] = $tramite;
-        $data['etapas'] = Doctrine_Query::create()->from('Etapa e, e.Tramite t')->where('t.id = ?', $tramite->id)->orderBy('created_at desc')->execute();
+        $data['etapas'] = Doctrine_Query::create()->from('Etapa e, e.Tramite t')->where('t.id = ?', $tramite->id)->orderBy('id desc')->execute();
 
         $data['title'] = 'Seguimiento - ' . $tramite->Proceso->nombre;
         $data['content'] = 'backend/seguimiento/ver';
@@ -97,8 +139,9 @@ class Seguimiento extends CI_Controller {
         $this->load->view('backend/seguimiento/ajax_ver_etapas', $data);
     }
 
-    public function ver_etapa($etapa_id, $paso = 0) {
+    public function ver_etapa($etapa_id, $secuencia = 0) {
         $etapa = Doctrine::getTable('Etapa')->find($etapa_id);
+        $paso = $etapa->getPasoEjecutable($secuencia);
 
         if (UsuarioBackendSesion::usuario()->cuenta_id != $etapa->Tramite->Proceso->cuenta_id) {
             echo 'No tiene permisos para hacer seguimiento a este tramite.';
@@ -106,7 +149,8 @@ class Seguimiento extends CI_Controller {
         }
 
         $data['etapa'] = $etapa;
-        $data['paso'] = $paso;
+        $data['paso']=$paso;
+        $data['secuencia'] = $secuencia;
 
         $data['title'] = 'Seguimiento - ' . $etapa->Tarea->nombre;
         $data['content'] = 'backend/seguimiento/ver_etapa';
@@ -117,9 +161,17 @@ class Seguimiento extends CI_Controller {
         $this->form_validation->set_rules('usuario_id', 'Usuario', 'required');
 
         if ($this->form_validation->run() == TRUE) {
+            $usuario=Doctrine::getTable('Usuario')->find($this->input->post('usuario_id'));
+            
             $etapa = Doctrine::getTable('Etapa')->find($etapa_id);
-            $etapa->usuario_id = $this->input->post('usuario_id');
+            $etapa->Usuario = $usuario;
             $etapa->save();
+            
+            $this->email->from('simple@chilesinpapeleo.cl', 'Simple');
+            $this->email->to($usuario->email);
+            $this->email->subject('Tarea reasignada');
+            $this->email->message('<p>Atención. Se le ha reasignado una tarea "'.$etapa->Tarea->nombre.'" del proceso "'.$etapa->Tramite->Proceso->nombre.'"./p>');
+            $this->email->send();
 
             $respuesta->validacion = TRUE;
             $respuesta->redirect = site_url('backend/seguimiento/ver_etapa/' . $etapa->id);
@@ -155,6 +207,31 @@ class Seguimiento extends CI_Controller {
         $proceso->Tramites->delete();
 
         redirect($this->input->server('HTTP_REFERER'));
+    }
+    
+    public function ajax_editar_vencimiento($etapa_id){
+        $etapa=Doctrine::getTable('Etapa')->find($etapa_id);
+        $data['etapa']=$etapa;
+        
+        $this->load->view('backend/seguimiento/ajax_editar_vencimiento',$data);
+    }
+    
+    public function editar_vencimiento_form($etapa_id){
+        $this->form_validation->set_rules('vencimiento_at','Fecha de vencimiento','required');
+        $respuesta=new stdClass();
+        if($this->form_validation->run()==TRUE){
+            $etapa=Doctrine::getTable('Etapa')->find($etapa_id);
+            $etapa->vencimiento_at=date('Y-m-d',strtotime($this->input->post('vencimiento_at')));
+            $etapa->save();
+            
+            $respuesta->validacion=TRUE;
+            $respuesta->redirect=  site_url('backend/seguimiento/index_proceso/'.$etapa->Tarea->proceso_id);
+        }else{
+            $respuesta->validacion=FALSE;
+            $respuesta->errores=  validation_errors();
+        }
+        
+        echo json_encode($respuesta);
     }
 
 }

@@ -84,6 +84,8 @@ class Documentos extends CI_Controller {
         $this->form_validation->set_rules('contenido','Contenido','required');
         
         if($this->input->post('tipo')=='certificado'){
+            $this->form_validation->set_rules('titulo','Título','required');
+            $this->form_validation->set_rules('subtitulo','Subtítulo','required');
             $this->form_validation->set_rules('servicio','Servicio','required');
             $this->form_validation->set_rules('servicio_url','URL del Servicio','required|prep_url');
             $this->form_validation->set_rules('firmador_nombre','Nombre del firmador');
@@ -101,6 +103,8 @@ class Documentos extends CI_Controller {
             $documento->hsm_configuracion_id=$this->input->post('hsm_configuracion_id');
             
             if($documento->tipo=='certificado'){
+                $documento->titulo=$this->input->post('titulo');
+                $documento->subtitulo=$this->input->post('subtitulo');
                 $documento->servicio=$this->input->post('servicio');
                 $documento->servicio_url=$this->input->post('servicio_url');
                 $documento->logo=$this->input->post('logo');

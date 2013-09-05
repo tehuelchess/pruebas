@@ -43,6 +43,10 @@
         <label class="radio"><input type="radio" name="tipo" value="certificado" <?= $edit && $documento->tipo == 'certificado' ? 'checked' : '' ?> /> Certificado</label>
 
         <div id="certificadoArea">
+            <label>Título</label>
+            <input class="input-xxlarge" type="text" name="titulo" value="<?= $edit ? $documento->titulo : '' ?>" placeholder="Ej: Certificado de Educación" />
+            <label>Subtítulo</label>
+            <input class="input-xxlarge" type="text" name="subtitulo" value="<?= $edit ? $documento->subtitulo : '' ?>" placeholder="Ej: Certificado Gratuito" />
             <label>Servicio que emite el documento</label>
             <input class="input-xxlarge" type="text" name="servicio" value="<?= $edit ? $documento->servicio : '' ?>" placeholder="Ej: Ministerio Secretaría General de la Presidencia" />
             <label>URL al sitio web del servicio</label>
@@ -101,6 +105,11 @@
 
         <label>Contenido</label>
         <textarea name="contenido" class="input-xxlarge" rows="20"><?= $edit ? $documento->contenido : '' ?></textarea>
+        <div class="help-block">
+            <ul>
+                <li>Para incluir un salto de página puede usar: <?=htmlspecialchars('<br pagebreak="true" />')?></li>
+            </ul>
+        </div>
 
         <?php if ($proceso->Cuenta->HsmConfiguraciones->count()): ?>
             <label>Firma Electronica Avanzada (HSM)</label>

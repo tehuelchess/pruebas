@@ -8,7 +8,8 @@ source src_tramites
     sql_db = 
     sql_port = 3306
 
-    sql_query = SELECT tramite.id, tramite.proceso_id, GROUP_CONCAT(dato_seguimiento.valor), GROUP_CONCAT(usuario.rut), GROUP_CONCAT(CONCAT(usuario.nombres,' ',usuario.apellido_paterno,' ',usuario.apellido_materno)) \
+    sql_query_pre = SET NAMES utf8
+    sql_query = SELECT tramite.id, tramite.id as tramite_id, tramite.proceso_id, GROUP_CONCAT(dato_seguimiento.valor), GROUP_CONCAT(usuario.rut), GROUP_CONCAT(CONCAT(usuario.nombres,' ',usuario.apellido_paterno,' ',usuario.apellido_materno)) \
                 FROM tramite \
                 LEFT JOIN etapa on tramite.id = etapa.tramite_id \
                 LEFT JOIN dato_seguimiento on etapa.id = dato_seguimiento.etapa_id \
