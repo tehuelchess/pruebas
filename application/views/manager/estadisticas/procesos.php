@@ -5,23 +5,26 @@
     <li class="active"><?=$title?></li>
 </ul>
 
+<p style="text-align: right; color: red;">*Estadisticas con respecto a los últimos 30 días.</p>
+
 <table class="table table-striped">
     <thead>
         <tr>
-            <th>#</th>
-            <th>Tramite</th>
-            <th>Estado</th>
-            <th>Fecha</th>
+            <th>Proceso</th>
+            <th>Nº de Trámites</th>
         </tr>
     </thead>
     <tbody>
-        <?php foreach ($tramites as $t): ?>
-            <tr>
-                <td><?= $t->id ?></td>
-                <td><?= $t->Proceso->nombre ?></td>
-                <td><?= $t->pendiente ? 'Pendiente' : 'Completado' ?></td>
-                <td><?= strftime('%c', strtotime($t->updated_at)) ?></td>
-            </tr>
+        <?php foreach($procesos as $p): ?>
+        <tr>
+            <td><a href="<?=site_url('manager/estadisticas/cuentas/'.$p->cuenta_id.'/'.$p->id)?>"><?=$p->nombre?></a></td>
+            <td><?=$p->ntramites?></td>
+        </tr>
         <?php endforeach; ?>
+        
+        <tr class="success">
+            <td>Total</td>
+            <td><?=$ntramites?></td>
+        </tr>
     </tbody>
 </table>

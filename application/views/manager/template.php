@@ -59,8 +59,7 @@
                             <li><a href="<?= site_url('manager/cuentas') ?>">Cuentas</a></li>
                             <li><a href="<?= site_url('manager/usuarios') ?>">Usuarios Backend</a></li>
                             <li class="nav-header">Estadisticas</li>
-                            <li><a href="<?= site_url('manager/claveunica') ?>">ClaveUnica</a></li>
-                            <li><a href="<?= site_url('manager/estadisticas') ?>">Completas</a></li>
+                            <li><a href="<?= site_url('manager/estadisticas/cuentas') ?>">Trámites en curso</a></li>
                         </ul>
                     </div>
                     <div class="span9">

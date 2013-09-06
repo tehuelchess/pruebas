@@ -4,6 +4,8 @@
     <li class="active"><?=$title?></li>
 </ul>
 
+<p style="text-align: right; color: red;">*Estadisticas con respecto a los últimos 30 días.</p>
+
 <table class="table table-striped">
     <thead>
         <tr>
