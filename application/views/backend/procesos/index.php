@@ -4,7 +4,7 @@
     </li>
 </ul>
 
-<a class="btn" href="<?=site_url('backend/procesos/crear/')?>"><i class="icon-file"></i> Nuevo</a>
+<a class="btn btn-success" href="<?=site_url('backend/procesos/crear/')?>"><i class="icon-file icon-white"></i> Nuevo</a>
 
 
 <table class="table">
