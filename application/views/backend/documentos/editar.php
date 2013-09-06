@@ -88,16 +88,30 @@
             <label>Imagen de la firma</label>
             <div id="file-uploader"></div>
             <input type="hidden" name="firmador_imagen" value="<?= $edit ? $documento->firmador_imagen : '' ?>" />
-            <img class="firma" src="<?= $edit && $documento->firmador_imagen ? site_url('backend/uploader/firma_get/' . $documento->firmador_imagen) : '#' ?>" alt="firma" width="200" />
+            <div id="firmaPreview" class="<?=$edit && $documento->firmador_imagen?'':'hidden'?>">       
+                <img src="<?= $edit && $documento->firmador_imagen?site_url('backend/uploader/firma_get/' . $documento->firmador_imagen):'#' ?>" alt="firma" width="200" />
+                <a href="#">Quitar</a>
+            </div>
             <script>
-                var uploader = new qq.FileUploader({
-                    element: document.getElementById('file-uploader'),
-                    action: site_url + 'backend/uploader/firma',
-                    onComplete: function(id, filename, respuesta) {
-                        $("input[name=firmador_imagen]").val(respuesta.file_name);
-                        $("img.firma").attr("src", site_url + "backend/uploader/firma_get/" + respuesta.file_name);
-                    }
+                $(document).ready(function(){
+                    var uploader = new qq.FileUploader({
+                        element: document.getElementById('file-uploader'),
+                        action: site_url + 'backend/uploader/firma',
+                        onComplete: function(id, filename, respuesta) {
+                            $("input[name=firmador_imagen]").val(respuesta.file_name);
+                            $("#firmaPreview").show();
+                            $("#firmaPreview img").attr("src", site_url + "backend/uploader/firma_get/" + respuesta.file_name);
+                        }
+                    });
+                    
+                    $("#firmaPreview a").click(function(){
+                        $("input[name=firmador_imagen]").val("");
+                        $("#firmaPreview").hide();
+                        $("#firmaPreview img").attr("src","#");
+                        return false;
+                    });
                 });
+                
             </script>          
             <label>Numero de dias de validez (Dejar en blanco para periodo ilimitado)</label>
             <input class="input-mini" type="text" name="validez" value="<?= $edit ? $documento->validez : '' ?>" placeholder="Ej: 90" />
