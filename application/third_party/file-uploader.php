@@ -125,7 +125,8 @@ class qqFileUploader {
         }
         
         $pathinfo = pathinfo($this->file->getName());
-        $filename = mb_strtolower($pathinfo['filename']);
+        $filename = mb_strtolower($pathinfo['filename']);   //Lo convertimos a minusculas
+        $filename=  preg_replace('/\s+/', ' ', $filename);  //Le hacemos un trim
         //$filename = sha1(uniqid(mt_rand(),true));
         $ext = $pathinfo['extension'];
 
