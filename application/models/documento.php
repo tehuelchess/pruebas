@@ -102,7 +102,7 @@ class Documento extends Doctrine_Record {
             $firmador_servicio = $this->firmador_servicio;
             if($etapa_id){
                 $regla = new Regla($contenido);
-                $contenido = $regla->getExpresionParaOutput($etapa_id);  
+                $contenido = nl2br($regla->getExpresionParaOutput($etapa_id));  
                 $regla = new Regla($titulo);
                 $titulo = $regla->getExpresionParaOutput($etapa_id);
                 $regla = new Regla($subtitulo);
@@ -141,7 +141,7 @@ class Documento extends Doctrine_Record {
             $contenido=$this->contenido;
             if($etapa_id){
                 $regla = new Regla($contenido);
-                $contenido = $regla->getExpresionParaOutput($etapa_id);  
+                $contenido = nl2br($regla->getExpresionParaOutput($etapa_id));  
             }
             
             $obj->content = $contenido;
