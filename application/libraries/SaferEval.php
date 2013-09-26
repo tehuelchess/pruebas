@@ -117,6 +117,7 @@ class SaferEval {
             'metaphone', // Calculate the metaphone key of a string
             'money_format', // Formats a number as a currency string
             'number_format', // Format a number with grouped thousands
+            'nl2br',  //Convierte newline a <br />
             'rtrim', // Strip whitespace (or other characters) from the end of a string
             'similar_text', // Calculate the similarity between two strings
             'soundex', // Calculate the soundex key of a string
