@@ -6,11 +6,8 @@ class Migration_2 extends Doctrine_Migration_Base {
     }
     
     public function postUp() {
-        $documentos=Doctrine::getTable('Documento')->findByTipo('certificado');
-        foreach($documentos as $d){
-            $d->subtitulo='Certificado Gratuito';
-            $d->save();
-        }
+        $q = Doctrine_Manager::getInstance()->getCurrentConnection();
+        $q->execute("UPDATE documento SET subtitulo='Certificado Gratuito' WHERE tipo='certificado'");
     }
     
     public function down(){
