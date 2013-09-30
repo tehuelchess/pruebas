@@ -1,2 +1,2 @@
 INSERT INTO `cuenta` VALUES(1, 'default','','',NULL,'');
-INSERT INTO `usuario_backend` VALUES(1, 'admin', 'edd687cf5a62c4c35f5f91f721e55a57ed768e71', 'Admin', 'Admin', 'super', 'r3g4o3ipqjg43qg4r3', 1, NULL);
+INSERT INTO `usuario_backend` (`id`, `email`, `password`, `nombre`, `apellidos`, `rol`, `salt`, `cuenta_id`, `reset_token`) VALUES (1, 'admin@admin.com', '7c4a8d09ca3762af61e59520943dc26494f8941b', 'Admin', 'Admin', 'super', '', 1, NULL);
