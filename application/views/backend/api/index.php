@@ -12,9 +12,9 @@
 
         <?php if (UsuarioBackendSesion::usuario()->Cuenta->api_token): ?>
             <p>El codigo de acceso de esta cuenta es: <strong><?= UsuarioBackendSesion::usuario()->Cuenta->api_token ?></strong> <a href="<?= site_url('backend/api/token') ?>">(Cambiar código de acceso)</a></p>
-        <? else: ?>
+        <?php else: ?>
             <p>No se ha configurado un codigo de acceso. <a href="<?= site_url('backend/api/token') ?>">Para poder acceder a la API debera configurar un codigo de acceso aquí.</a></p>
-        <? endif ?>
+        <?php endif ?>
 
         <h3>Llamadas a la API</h3>
 
