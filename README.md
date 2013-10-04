@@ -1,4 +1,4 @@
-#SIMPLE - Sistema de Implementación de Procesos Ligeramente Estandarizados (demo.chilesinpapeleo.cl)
+#SIMPLE (Beta) - Sistema de Implementación de Procesos Ligeramente Estandarizados (demo.chilesinpapeleo.cl)
 
 
 ### Resumen
