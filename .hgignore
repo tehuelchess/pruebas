@@ -9,3 +9,4 @@ sphinx/index
 sphinx/run
 sphinx.conf
 searchd.log
+.idea
