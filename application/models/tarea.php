@@ -117,34 +117,35 @@ class Tarea extends Doctrine_Record {
     //Obtiene el listado de usuarios que tienen acceso a esta tarea y que esten disponibles (no en vacaciones).
     //Ademas, deben pertenecer a alguno de los grupos de usuarios definidos en la cuenta
     public function getUsuariosFromGruposDeUsuarioDeCuenta($etapa_id) {
-        if ($this->acceso_modo == 'publico')
-            return Doctrine::getTable('Usuario')->findByVacaciones(0);
-        else if ($this->acceso_modo == 'registrados')
-            return Doctrine::getTable('Usuario')->findByRegistradoAndVacaciones(1,0);
-        else if ($this->acceso_modo == 'claveunica')
-            return Doctrine::getTable('Usuario')->findByOpenIdAndVacaciones(1,0);
+        $query=Doctrine_Query::create()
+            ->from('Usuario u, u.GruposUsuarios g, g.Cuenta c')
+            ->where('u.vacaciones = 0')
+            ->andWhere('c.id = ?',$this->Proceso->Cuenta->id);
 
-
-        //Convertimos las variables e ids, separados por coma, en una arreglo de grupos de usuarios.
-        $grupos_arr=array(-1);
-        $grupos=explode(',', $this->grupos_usuarios);
-        foreach($grupos as $key=>$g){
-            $r=new Regla($g);
-            $var=$r->evaluar($etapa_id);
-            if(is_numeric($var))
-                $grupos_arr[]=$var;
-            else if(is_array($var))
-                foreach($var as $v)
-                    if(is_numeric($v))
-                        $grupos_arr[]=$v;
+        if ($this->acceso_modo == 'publico'){
+            ;
+        }else if ($this->acceso_modo == 'registrados'){
+            $query->andWhere('u.registrado = 1');
+        }else if ($this->acceso_modo == 'claveunica'){
+            $query->andWhere('u.open_id = 1');
+        }else{
+            //Convertimos las variables e ids, separados por coma, en una arreglo de grupos de usuarios.
+            $grupos_arr=array(-1);
+            $grupos=explode(',', $this->grupos_usuarios);
+            foreach($grupos as $key=>$g){
+                $r=new Regla($g);
+                $var=$r->evaluar($etapa_id);
+                if(is_numeric($var))
+                    $grupos_arr[]=$var;
+                else if(is_array($var))
+                    foreach($var as $v)
+                        if(is_numeric($v))
+                            $grupos_arr[]=$v;
+            }
+            $query->andWhereIn('g.id',  $grupos_arr);
         }
         
-        return Doctrine_Query::create()
-                        ->from('Usuario u, u.GruposUsuarios g, g.Cuenta c')
-                        ->where('u.vacaciones = 0')
-                        ->andWhere('c.id = ?',$this->Proceso->Cuenta->id)
-                        ->andWhereIn('g.id',  $grupos_arr)
-                        ->execute();
+        return $query->execute();
     }
      
 
