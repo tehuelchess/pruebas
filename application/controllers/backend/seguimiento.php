@@ -170,7 +170,7 @@ class Seguimiento extends CI_Controller {
             $this->email->from('simple@chilesinpapeleo.cl', 'Simple');
             $this->email->to($usuario->email);
             $this->email->subject('Tarea reasignada');
-            $this->email->message('<p>Atención. Se le ha reasignado una tarea "'.$etapa->Tarea->nombre.'" del proceso "'.$etapa->Tramite->Proceso->nombre.'"./p>');
+            $this->email->message('<p>Atención. Se le ha reasignado una tarea "'.$etapa->Tarea->nombre.'" del proceso "'.$etapa->Tramite->Proceso->nombre.'".</p>');
             $this->email->send();
 
             $respuesta->validacion = TRUE;
