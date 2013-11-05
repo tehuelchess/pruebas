@@ -125,39 +125,43 @@ class Campo extends Doctrine_Record {
     //Funcion que retorna si este campo debiera poderse editar de acuerdo al input POST del usuario
     public function isEditableWithCurrentPOST(){
         $CI=& get_instance();
-        
+
         $resultado=true;
-        
+
         if($this->readonly){
-           $resultado=false; 
+           $resultado=false;
         }else if($this->dependiente_campo){
             $variable=preg_replace('/\[\]$/', '', $this->dependiente_campo);
-            if(is_array($CI->input->post($variable))){ //Es un arreglo
-                if($this->dependiente_tipo=='regex'){
-                    foreach($CI->input->post($variable) as $x){
-                        if(!preg_match('/'.$this->dependiente_valor.'/', $x))
+            if($CI->input->post($variable)===false){    //Si la variable dependiente no existe
+                $resultado=false;
+            }else{
+                if(is_array($CI->input->post($variable))){ //Es un arreglo
+                    if($this->dependiente_tipo=='regex'){
+                        foreach($CI->input->post($variable) as $x){
+                            if(!preg_match('/'.$this->dependiente_valor.'/', $x))
+                                $resultado= false;
+                        }
+                    }else{
+                        if(!in_array($this->dependiente_valor, $CI->input->post($variable)))
                             $resultado= false;
                     }
                 }else{
-                    if(!in_array($this->dependiente_valor, $CI->input->post($variable)))
-                        $resultado= false;
+                    if($this->dependiente_tipo=='regex'){
+                        if(!preg_match('/'.$this->dependiente_valor.'/', $CI->input->post($variable)))
+                            $resultado= false;
+                    }else{
+                        if($CI->input->post($variable)!=$this->dependiente_valor)
+                            $resultado= false;
+                    }
+
                 }
-            }else{
-                if($this->dependiente_tipo=='regex'){
-                    if(!preg_match('/'.$this->dependiente_valor.'/', $CI->input->post($variable)))
-                        $resultado= false;
-                }else{
-                    if($CI->input->post($variable)!=$this->dependiente_valor)
-                        $resultado= false;
-                }
-                
+
+                if($this->dependiente_relacion=='!=')
+                    $resultado=!$resultado;
             }
-            
-            if($this->dependiente_relacion=='!=')
-                $resultado=!$resultado;
-   
+
         }
-        
+
         return $resultado;
     }
     
