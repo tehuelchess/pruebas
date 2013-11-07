@@ -34,19 +34,21 @@ class CampoDocumento extends Campo {
             return '<p><a class="btn btn-success" href="#"><i class="icon-download-alt icon-white"></i> ' . $this->etiqueta . '</a></p>';
         }
 
+        $etapa=Doctrine::getTable('Etapa')->find($etapa_id);
+
         if (!$dato) {   //Generamos el documento, ya que no se ha generado
-            $file=$this->Documento->generar($etapa_id);
+            $file=$this->Documento->generar($etapa->id);
 
             $dato = new DatoSeguimiento();
             $dato->nombre = $this->nombre;
             $dato->valor = $file->filename;
-            $dato->etapa_id = $etapa_id;
+            $dato->etapa_id = $etapa->id;
             $dato->save();
         }else{
             $file=Doctrine::getTable('File')->findOneByTipoAndFilename('documento',$dato->valor);
-            if(isset($this->extra->regenerar) && $this->extra->regenerar){
+            if($etapa->pendiente && isset($this->extra->regenerar) && $this->extra->regenerar){
                 $file->delete();
-                $file=$this->Documento->generar($etapa_id);
+                $file=$this->Documento->generar($etapa->id);
                 $dato->valor = $file->filename;
                 $dato->save();
             }
@@ -62,19 +64,21 @@ class CampoDocumento extends Campo {
             return '<p>' . $this->etiqueta . '</p>';
         }
 
+        $etapa=Doctrine::getTable('Etapa')->find($etapa_id);
+
         if (!$dato) {   //Generamos el documento, ya que no se ha generado
-            $file=$this->Documento->generar($etapa_id);
+            $file=$this->Documento->generar($etapa->id);
 
             $dato = new DatoSeguimiento();
             $dato->nombre = $this->nombre;
             $dato->valor = $file->filename;
-            $dato->etapa_id = $etapa_id;
+            $dato->etapa_id = $etapa->id;
             $dato->save();
         }else{
             $file=Doctrine::getTable('File')->findOneByTipoAndFilename('documento',$dato->valor);
-            if(isset($this->extra->regenerar) && $this->extra->regenerar){
+            if($etapa->pendiente && isset($this->extra->regenerar) && $this->extra->regenerar){
                 $file->delete();
-                $file=$this->Documento->generar($etapa_id);
+                $file=$this->Documento->generar($etapa->id);
                 $dato->valor = $file->filename;
                 $dato->save();
             }
