@@ -1,18 +1,8 @@
 <div class="row-fluid">
 
-    <div class="span3">
-        <?php $this->load->view('backend/configuracion/sidebar') ?>
-    </div>
-    <div class="span9">
-        <ul class="breadcrumb">
-            <li>
-                <a href="<?= site_url('backend/configuracion') ?>">Configuración</a> <span class="divider">/</span>
-            </li>
-            <li>
-                <a href="<?= site_url('backend/configuracion/usuarios') ?>">Mi Cuenta</a> <span class="divider">/</span>
-            </li>
-            <li class="active">Cambiar contraseña</li>
-        </ul>
+
+    <div class="span12">
+
         
         <?php if($this->session->flashdata('message')):?>
         <div class="alert alert-success">
@@ -20,7 +10,7 @@
             <?=$this->session->flashdata('message')?></div>
         <?php endif?>
 
-        <form class="ajaxForm" method="post" action="<?= site_url('backend/configuracion/cuenta_form/' . (isset($usuario)?$usuario->id:'')) ?>">
+        <form class="ajaxForm" method="post" action="<?= site_url('backend/cuentas/cuenta_form/' . (isset($usuario)?$usuario->id:'')) ?>">
             <fieldset>
                 <legend>Cambiar contraseña</legend>
                 <div class="validacion"></div>
