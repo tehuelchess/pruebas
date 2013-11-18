@@ -345,7 +345,7 @@ class Configuracion extends CI_Controller {
         if(!$u)
             return TRUE;
         
-        $this->form_validation->set_message('check_existe_usuario_backend','%s ya existe');
+        $this->form_validation->set_message('check_existe_usuario_backend','%s ya existe en cuenta: '.$u->Cuenta->nombre);
         return FALSE;
              
     }
