@@ -10,6 +10,9 @@
         <input type="text" name="apellido_materno" value="<?=$usuario->apellido_materno?>" />
         <label>Correo electrónico</label>
         <input type="text" name="email" value="<?=$usuario->email?>" />
+        <?php if($usuario->cuenta_id): ?>
+        <label class="checkbox"><input type="checkbox" name="vacaciones" value="1" <?=$usuario->vacaciones?'checked':''?> /> ¿Fuera de oficina?</label>
+        <?php endif ?>
         <input type="hidden" name="redirect" value="<?=$redirect?>" />
         <div class="form-actions">
             <button class="btn btn-primary" type="submit">Guardar</button>

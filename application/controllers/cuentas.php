@@ -19,7 +19,7 @@ class Cuentas extends MY_Controller {
         $data['usuario']=UsuarioSesion::usuario();
         $data['redirect']=$this->session->flashdata('redirect');
         
-        $data['content'] = 'cuentas/editar';
+        $data['content'] = 'cuenta/editar';
         $data['title'] = 'Edita tu información';
         $this->load->view('template', $data);
     }
@@ -37,6 +37,9 @@ class Cuentas extends MY_Controller {
             $usuario->apellido_paterno=$this->input->post('apellido_paterno');
             $usuario->apellido_materno=$this->input->post('apellido_materno');
             $usuario->email=$this->input->post('email');
+            if($usuario->cuenta_id)
+                $usuario->vacaciones=$this->input->post('vacaciones');
+
             $usuario->save();
             
             $respuesta->validacion=TRUE;
@@ -58,7 +61,7 @@ class Cuentas extends MY_Controller {
         $data['usuario']=UsuarioSesion::usuario();
         $data['redirect']=$this->input->server('HTTP_REFERER');
         
-        $data['content'] = 'cuentas/editar_password';
+        $data['content'] = 'cuenta/editar_password';
         $data['title'] = 'Edita tu información';
         $this->load->view('template', $data);
     }
