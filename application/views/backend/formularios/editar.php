@@ -42,6 +42,9 @@
             <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'comunas')">Comunas</button>
             <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'moneda')">Moneda</button>
         </div>
+        <div class="btn-group">
+            <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'javascript')">Javascript</button>
+        </div>
     </div>
 
     <div class="row">
