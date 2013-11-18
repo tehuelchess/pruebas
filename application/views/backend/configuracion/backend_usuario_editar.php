@@ -35,6 +35,7 @@
                     <option value="operacion" <?=  isset($usuario) && $usuario->rol=='operacion'?'selected':''?>>operacion</option>
                     <option value="gestion" <?=  isset($usuario) && $usuario->rol=='gestion'?'selected':''?>>gestion</option>
                     <option value="gestion" <?=  isset($usuario) && $usuario->rol=='desarrollo'?'selected':''?>>desarrollo</option>
+                    <option value="configuracion" <?=  isset($usuario) && $usuario->rol=='configuracion'?'selected':''?>>configuracion</option>
                 </select>
                 <div class="form-actions">
                     <button class="btn btn-primary" type="submit">Guardar</button>

@@ -19,7 +19,7 @@ class Cuentas extends MY_Controller {
         $data['usuario']=UsuarioSesion::usuario();
         $data['redirect']=$this->session->flashdata('redirect');
         
-        $data['content'] = 'cuenta/editar';
+        $data['content'] = 'cuentas/editar';
         $data['title'] = 'Edita tu información';
         $this->load->view('template', $data);
     }
@@ -58,7 +58,7 @@ class Cuentas extends MY_Controller {
         $data['usuario']=UsuarioSesion::usuario();
         $data['redirect']=$this->input->server('HTTP_REFERER');
         
-        $data['content'] = 'cuenta/editar_password';
+        $data['content'] = 'cuentas/editar_password';
         $data['title'] = 'Edita tu información';
         $this->load->view('template', $data);
     }

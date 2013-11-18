@@ -20,10 +20,5 @@
     <li class="<?=strpos($this->uri->segment(3),'backend_usuario')===0?'active':''?>">
         <a href="<?=site_url('backend/configuracion/backend_usuarios')?>">Usuarios</a>
     </li>
-    <li class="nav-header">
-        Mi Cuenta
-    </li>
-    <li class="<?=strpos($this->uri->segment(3),'cuenta')===0?'active':''?>">
-        <a href="<?=site_url('backend/configuracion/cuenta')?>">Cambiar contraseña</a>
-    </li>
+
 </ul>
