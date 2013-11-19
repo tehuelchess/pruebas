@@ -27,7 +27,7 @@ class CampoJavascript extends Campo{
             $etiqueta=$this->etiqueta;
         }
         
-        $display='<script type="text/javascript">'.$etiqueta.'</script>';
+        $display='<script type="text/javascript">try{'.$etiqueta.'}catch(err){alert(err)}</script>';
         
         return $display;
     }
