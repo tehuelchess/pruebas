@@ -134,26 +134,32 @@ class Campo extends Doctrine_Record {
         if($this->readonly){
            $resultado=false;
         }else if($this->dependiente_campo){
-            $variable=preg_replace('/\[\]$/', '', $this->dependiente_campo);
-            if($CI->input->post($variable)===false){    //Si la variable dependiente no existe
+            $nombre_campo=preg_replace('/\[\w*\]$/', '', $this->dependiente_campo);
+            $variable=$CI->input->post($nombre_campo);
+
+            //Parche para el caso de campos dependientes con accesores. Ej: ubicacion[comuna]!='Las Condes|Santiago'
+            if(preg_match('/\[(\w+)\]$/',$this->dependiente_campo,$matches))
+                $variable=$variable[$matches[1]];
+
+            if($variable===false){    //Si la variable dependiente no existe
                 $resultado=false;
             }else{
-                if(is_array($CI->input->post($variable))){ //Es un arreglo
+                if(is_array($variable)){ //Es un arreglo
                     if($this->dependiente_tipo=='regex'){
-                        foreach($CI->input->post($variable) as $x){
+                        foreach($variable as $x){
                             if(!preg_match('/'.$this->dependiente_valor.'/', $x))
                                 $resultado= false;
                         }
                     }else{
-                        if(!in_array($this->dependiente_valor, $CI->input->post($variable)))
+                        if(!in_array($this->dependiente_valor, $variable))
                             $resultado= false;
                     }
                 }else{
                     if($this->dependiente_tipo=='regex'){
-                        if(!preg_match('/'.$this->dependiente_valor.'/', $CI->input->post($variable)))
+                        if(!preg_match('/'.$this->dependiente_valor.'/', $variable))
                             $resultado= false;
                     }else{
-                        if($CI->input->post($variable)!=$this->dependiente_valor)
+                        if($variable!=$this->dependiente_valor)
                             $resultado= false;
                     }
 
