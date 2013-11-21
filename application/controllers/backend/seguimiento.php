@@ -10,7 +10,7 @@ class Seguimiento extends CI_Controller {
 
         UsuarioBackendSesion::force_login();
         
-        if(UsuarioBackendSesion::usuario()->rol!='super' && UsuarioBackendSesion::usuario()->rol!='operacion'){
+        if(UsuarioBackendSesion::usuario()->rol!='super' && UsuarioBackendSesion::usuario()->rol!='operacion' && UsuarioBackendSesion::usuario()->rol!='seguimiento'){
             echo 'No tiene permisos para acceder a esta seccion.';
             exit;
         }
@@ -184,6 +184,10 @@ class Seguimiento extends CI_Controller {
     }
 
     public function borrar_tramite($tramite_id) {
+        if(UsuarioBackendSesion::usuario()->rol=='seguimiento')
+            show_error('No tiene permisos',401);
+
+
         $tramite = Doctrine::getTable('Tramite')->find($tramite_id);
 
         if (UsuarioBackendSesion::usuario()->cuenta_id != $tramite->Proceso->cuenta_id) {
@@ -197,6 +201,9 @@ class Seguimiento extends CI_Controller {
     }
 
     public function borrar_proceso($proceso_id) {
+        if(UsuarioBackendSesion::usuario()->rol=='seguimiento')
+            show_error('No tiene permisos',401);
+
         $proceso = Doctrine::getTable('Proceso')->find($proceso_id);
 
         if (UsuarioBackendSesion::usuario()->cuenta_id != $proceso->cuenta_id) {
