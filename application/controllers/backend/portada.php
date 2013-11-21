@@ -20,8 +20,10 @@ class Portada extends CI_Controller {
             redirect('backend/gestion');
         else if ($usuario->rol=='modelamiento')
             redirect('backend/procesos');
-        else if($usuario->rol=='operacion')
+        else if($usuario->rol=='operacion' || $usuario->rol=='seguimiento')
             redirect('backend/seguimiento');
+        else if($usuario->rol=='configuracion')
+            redirect('backend/configuracion');
     }
     
   
