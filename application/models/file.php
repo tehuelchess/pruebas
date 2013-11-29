@@ -10,6 +10,7 @@ class File extends Doctrine_Record {
         $this->hasColumn('llave_copia');    //Llave para obtener la copia del documento
         $this->hasColumn('llave_firma');    //Llave para poder firmar con token el documento
         $this->hasColumn('validez');
+        $this->hasColumn('validez_habiles');
         $this->hasColumn('tramite_id');
     }
 

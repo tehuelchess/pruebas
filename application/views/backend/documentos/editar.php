@@ -115,6 +115,19 @@
             </script>          
             <label>Numero de dias de validez (Dejar en blanco para periodo ilimitado)</label>
             <input class="input-mini" type="text" name="validez" value="<?= $edit ? $documento->validez : '' ?>" placeholder="Ej: 90" />
+            <label style="display: inline-block" class="checkbox"><input type="checkbox" name="validez_habiles" value="1" <?=$edit && $documento->validez_habiles ? 'checked':''?> /> Hábiles</label>
+            <script>
+                $(document).ready(function(){
+                    $("input[name=validez_habiles]").keyup(function(){
+                        if($(this).val().length>0){
+                            $("input[name=validez_habiles]").prop("disabled",false);
+                        }else{
+                            $("input[name=validez_habiles]").prop("disabled",true);
+                        }
+                    }).keyup();
+                });
+            </script>
+
         </div>
 
         <label>Contenido</label>
