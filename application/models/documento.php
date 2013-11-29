@@ -12,6 +12,7 @@ class Documento extends Doctrine_Record {
         $this->hasColumn('servicio');
         $this->hasColumn('servicio_url');
         $this->hasColumn('validez');
+        $this->hasColumn('validez_habiles');
         $this->hasColumn('firmador_nombre');
         $this->hasColumn('firmador_cargo');
         $this->hasColumn('firmador_servicio');
@@ -67,7 +68,10 @@ class Documento extends Doctrine_Record {
         $file->llave = strtolower(random_string('alnum', 12));
         $file->llave_copia = $this->tipo == 'certificado' ? strtolower(random_string('alnum', 12)) : null;
         $file->llave_firma = strtolower(random_string('alnum', 12));
-        $file->validez = $this->tipo == 'certificado' ? $this->validez : null;
+        if($this->tipo=='certificado'){
+            $file->validez = $this->validez;
+            $file->validez_habiles= $this->validez_habiles;
+        }
         $file->filename = $filename_uniqid . '.pdf';
         $file->save();
 
@@ -125,6 +129,7 @@ class Documento extends Doctrine_Record {
             $obj->titulo = $titulo;
             $obj->subtitulo = $subtitulo;
             $obj->validez = $this->validez;
+            $obj->validez_habiles = $this->validez_habiles;
             if ($this->timbre)
                 $obj->timbre = 'uploads/timbres/' . $this->timbre;
             $obj->firmador_nombre = $firmador_nombre;

@@ -93,6 +93,7 @@ class Documentos extends CI_Controller {
             $this->form_validation->set_rules('firmador_servicio','Servicio del firmador');
             $this->form_validation->set_rules('firmador_imagen','Imagen de la firmas');
             $this->form_validation->set_rules('validez','Dias de validez','is_natural_no_zero');
+            $this->form_validation->set_rules('validez_habiles','Habiles');
         }
         
         
@@ -114,6 +115,7 @@ class Documentos extends CI_Controller {
                 $documento->firmador_servicio=$this->input->post('firmador_servicio');
                 $documento->firmador_imagen=$this->input->post('firmador_imagen');
                 $documento->validez=$this->input->post('validez');
+                $documento->validez_habiles=$this->input->post('validez_habiles');
             }
             
             $documento->save();
