@@ -135,10 +135,14 @@ class Configuracion extends CI_Controller {
             }
         }
         
-        if(!$usuario)
+        if(!$usuario){
             $this->form_validation->set_rules('usuario', 'Nombre de Usuario', 'required|alpha_dash|callback_check_existe_usuario');
-        $this->form_validation->set_rules('password', 'Contraseña', 'matches[password_confirm]');
-        $this->form_validation->set_rules('password_confirm', 'Confirmar contraseña');
+            $this->form_validation->set_rules('password', 'Contraseña', 'required|min_length[6]|matches[password_confirm]');
+        }
+        if($this->input->post('password')){
+            $this->form_validation->set_rules('password', 'Contraseña', 'required|min_length[6]|matches[password_confirm]');
+            $this->form_validation->set_rules('password_confirm', 'Confirmar contraseña');
+        }
         $this->form_validation->set_rules('nombres', 'Nombres', 'required');
         $this->form_validation->set_rules('apellido_paterno', 'Apellido Paterno', 'required');
         $this->form_validation->set_rules('apellido_materno', 'Apellido Materno', 'required');
@@ -227,10 +231,14 @@ class Configuracion extends CI_Controller {
                 exit;
             }
         }
-        if(!$usuario)
+        if(!$usuario){
             $this->form_validation->set_rules('email', 'E-Mail', 'required|valid_email|callback_check_existe_usuario_backend');
-        $this->form_validation->set_rules('password', 'Contraseña', 'matches[password_confirm]');
-        $this->form_validation->set_rules('password_confirm', 'Confirmar contraseña');
+            $this->form_validation->set_rules('password', 'Contraseña', 'required|min_length[6]|matches[password_confirm]');
+        }
+        if($this->input->post('password')){
+            $this->form_validation->set_rules('password', 'Contraseña', 'required|min_length[6]|matches[password_confirm]');
+            $this->form_validation->set_rules('password_confirm', 'Confirmar contraseña');
+        }
         $this->form_validation->set_rules('nombre', 'Nombre', 'required');
         $this->form_validation->set_rules('apellidos', 'Apellidos', 'required');
         $this->form_validation->set_rules('rol', 'Rol', 'required');

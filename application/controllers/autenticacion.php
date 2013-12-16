@@ -52,7 +52,7 @@ class Autenticacion extends MY_Controller {
         $this->form_validation->set_rules('nombres', 'Nombres', 'required');
         $this->form_validation->set_rules('apellido_paterno', 'Apellido Paterno', 'required');
         $this->form_validation->set_rules('apellido_materno', 'Apellido Materno', 'required');
-        $this->form_validation->set_rules('password', 'Contraseña', 'required|matches[password_confirm]');
+        $this->form_validation->set_rules('password', 'Contraseña', 'required|min_length[6]|matches[password_confirm]');
         $this->form_validation->set_rules('password_confirm', 'Confirmar contraseña');
         $this->form_validation->set_rules('email', 'Correo electrónico', 'required|valid_email');
 
@@ -177,7 +177,7 @@ class Autenticacion extends MY_Controller {
             exit;
         }
         
-        $this->form_validation->set_rules('password','Contraseña','required');
+        $this->form_validation->set_rules('password','Contraseña','required|min_length[6]');
         $this->form_validation->set_rules('password_confirm','Confirmar contraseña','required|matches[password]');
         
         $respuesta=new stdClass();
