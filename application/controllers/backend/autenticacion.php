@@ -120,7 +120,7 @@ class Autenticacion extends CI_Controller {
             exit;
         }
         
-        $this->form_validation->set_rules('password','Contraseña','required');
+        $this->form_validation->set_rules('password','Contraseña','required|min_length[6]');
         $this->form_validation->set_rules('password_confirm','Confirmar contraseña','required|matches[password]');
         
         $respuesta=new stdClass();

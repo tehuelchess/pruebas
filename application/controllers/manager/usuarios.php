@@ -44,9 +44,11 @@ class Usuarios extends CI_Controller{
         $this->form_validation->set_rules('cuenta_id','Cuenta', 'required');
         $this->form_validation->set_rules('rol','Rol', 'required');
         if(!$usuario->id)
-            $this->form_validation->set_rules('password','Contraseña', 'required');
-        if($this->input->post('password'))
-            $this->form_validation->set_rules('password_confirm','Confirmar contraseña', 'required|matches[password]');
+            $this->form_validation->set_rules('password','Contraseña', 'required|min_length[6]|matches[password_confirm]');
+        if($this->input->post('password')){
+            $this->form_validation->set_rules('password','Contraseña', 'required|min_length[6]|matches[password_confirm]');
+            $this->form_validation->set_rules('password_confirm','Confirmar contraseña', 'required');
+        }
         
         $respuesta=new stdClass();
         if($this->form_validation->run()==true){

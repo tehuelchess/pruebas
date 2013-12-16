@@ -23,7 +23,7 @@ class Cuentas extends CI_Controller {
     }
     
     public function cuenta_form(){
-        $this->form_validation->set_rules('password', 'Contraseña', 'required|matches[password_confirm]');
+        $this->form_validation->set_rules('password', 'Contraseña', 'required|min_length[6]|matches[password_confirm]');
         $this->form_validation->set_rules('password_confirm', 'Confirmar contraseña');
 
         if ($this->form_validation->run() == TRUE) {
