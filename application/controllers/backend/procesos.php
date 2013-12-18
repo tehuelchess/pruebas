@@ -166,8 +166,8 @@ class Procesos extends CI_Controller {
             $tarea->asignacion_usuario=$this->input->post('asignacion_usuario');
             $tarea->asignacion_notificar=$this->input->post('asignacion_notificar');
             $tarea->grupos_usuarios=$this->input->post('grupos_usuarios');           
-            $tarea->setPasosFromArray($this->input->post('pasos'));
-            $tarea->setEventosFromArray($this->input->post('eventos'));
+            $tarea->setPasosFromArray($this->input->post('pasos',false));
+            $tarea->setEventosFromArray($this->input->post('eventos',false));
             $tarea->almacenar_usuario=$this->input->post('almacenar_usuario');
             $tarea->almacenar_usuario_variable=$this->input->post('almacenar_usuario_variable');
             $tarea->acceso_modo=$this->input->post('acceso_modo');
@@ -265,7 +265,7 @@ class Procesos extends CI_Controller {
         $this->form_validation->set_rules('conexiones', 'Conexiones','required');
 
         if ($this->form_validation->run() == TRUE) {
-            $tarea->setConexionesFromArray($this->input->post('conexiones'));
+            $tarea->setConexionesFromArray($this->input->post('conexiones',false));
             $tarea->save();
             
             $respuesta->validacion=TRUE;
