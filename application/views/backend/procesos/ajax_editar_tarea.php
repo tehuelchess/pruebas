@@ -235,7 +235,7 @@
                     <label class='radio'><input type="radio" name="acceso_modo" value="claveunica" <?= $tarea->acceso_modo == 'claveunica' ? 'checked' : '' ?> /> Sólo los usuarios registrados con ClaveUnica.</label>
                     <label class='radio'><input type="radio" name="acceso_modo" value="grupos_usuarios" <?= $tarea->acceso_modo == 'grupos_usuarios' ? 'checked' : '' ?> /> Sólo los siguientes grupos de usuarios pueden acceder.</label>
                     <div id="optionalGruposUsuarios" style="height: 300px;" class="<?= $tarea->acceso_modo == 'grupos_usuarios' ? '' : 'hide' ?>">
-                        <input id="selectGruposUsuarios" type="hidden" name="grupos_usuarios" class="input-xlarge" value="<?=$tarea->grupos_usuarios?>" data-options='<?=json_encode($tarea->Proceso->Cuenta->GruposUsuarios->toArray(false))?>' />
+                        <input id="selectGruposUsuarios" type="hidden" name="grupos_usuarios" class="input-xlarge" value="<?=$tarea->grupos_usuarios?>" data-options='<?=json_encode($tarea->Proceso->Cuenta->GruposUsuarios->toArray(false),JSON_HEX_APOS)?>' />
                         <div class='help-block'>Puede incluir variables usando @@. Las variables deben contener el numero id del grupo de usuarios.</div>
                     </div>
                 </div>
