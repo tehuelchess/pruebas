@@ -36,7 +36,10 @@ class Autenticacion extends MY_Controller {
     }
 
     public function login() {
-        $data['redirect'] = $this->session->flashdata('redirect');
+        if($this->input->get('redirect'))
+            $data['redirect'] = $this->input->get('redirect');
+        else
+            $data['redirect'] = $this->session->flashdata('redirect');
 
         $data['title'] = 'Login';
         $this->load->view('autenticacion/login', $data);
