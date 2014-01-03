@@ -1,5 +1,14 @@
 <script type="text/javascript">
     $(document).ready(function(){
+        function escapeHtml(text) {
+            return text
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
         $("#selectGruposUsuarios").select2({
             multiple: true,
             query: function (query) {
@@ -65,7 +74,7 @@
             var formularioNombre=$form.find(".pasoFormulario option:selected").text();
             var modo=$form.find(".pasoModo option:selected").val();
             var regla=$form.find(".pasoRegla").val();
-            
+
             var html="<tr>";
             html+="<td>"+pos+"</td>";
             html+='<td><a title="Editar" target="_blank" href="'+site_url+'backend/formularios/editar/'+formularioId+'">'+formularioNombre+'</td>';
@@ -74,7 +83,7 @@
             html+='<td>';
             html+='<input type="hidden" name="pasos['+pos+'][id]" value="" />';
             html+='<input type="hidden" name="pasos['+pos+'][formulario_id]" value="'+formularioId+'" />';
-            html+='<input type="hidden" name="pasos['+pos+'][regla]" value="'+regla+'" />';
+            html+='<input type="hidden" name="pasos['+pos+'][regla]" value="'+escapeHtml(regla)+'" />';
             html+='<input type="hidden" name="pasos['+pos+'][modo]" value="'+modo+'" />';
             html+='<a class="delete" title="Eliminar" href="#"><i class="icon-remove"></i></a>';
             html+='</td>';
@@ -125,7 +134,7 @@
             html+="<td><abbr title='"+pasoTitle+"'>"+pasoNombre+"</abbr></td>";
             html+='<td>';
             html+='<input type="hidden" name="eventos['+pos+'][accion_id]" value="'+accionId+'" />';
-            html+='<input type="hidden" name="eventos['+pos+'][regla]" value="'+regla+'" />';
+            html+='<input type="hidden" name="eventos['+pos+'][regla]" value="'+escapeHtml(regla)+'" />';
             html+='<input type="hidden" name="eventos['+pos+'][instante]" value="'+instante+'" />';
             html+='<input type="hidden" name="eventos['+pos+'][paso_id]" value="'+pasoId+'" />';
             html+='<a class="delete" title="Eliminar" href="#"><i class="icon-remove"></i></a>';
