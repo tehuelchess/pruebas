@@ -3,6 +3,7 @@
 <script type="text/javascript">
     var clip;
     var intervalId;
+    var ocultarAsistenteHTML="<br /><br /><button onclick='javascript:clip_hide()'>Ocultar Asistente</button>";
     var textos=[
         "Veo que estas escribiendo una carta. Necesitas ayuda?",
         "Veo que necesitas ayuda.",
@@ -21,7 +22,6 @@
         "Tu monitor se encuentra 100% operacional.",
         "Si necesitas ayuda, por favor pidemela.",
         "Tu mouse esta sucio. Limpialo para un rendimiento optimo.",
-        "¿Quieres que me oculte? Esa funcionalidad no se ha implementado.",
         "¿Quieres que me oculte?<br /><br /><button onclick='javascript:clip_hide()'>Si, por favor!</button><button>No, gracias</button>"
     ];
     clippy.load('Clippy', function(agent) {
@@ -31,13 +31,7 @@
         //var animaciones=agent.animations();
         
         // Do anything with the loaded agent
-        
-        
-        
-       
-       
-       
-        
+
     });
     
     function clip_start(vengativo){
@@ -48,7 +42,7 @@
             intervalId=setInterval(function(){
                 clip.animate();
                 var randomTextId=Math.floor((Math.random()*textos.length));
-                clip.speak(textos[randomTextId]);
+                clip.speak(textos[randomTextId]+ocultarAsistenteHTML);
             },10000);
         }else{
             clip.speak("Volviiiiii! Te echaba de menos.");
@@ -78,6 +72,8 @@
     }
     
     function clip_hide(){
+        $('#modalClip').modal();
+        /*
         clip.stop();
         clip.hide();
         clearInterval(intervalId);
@@ -85,8 +81,29 @@
         setTimeout(function(){
             clip_start(true);
         },10000);
+        */
     }
 </script>
+<div id="modalClip" class="modal hide fade">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3>Ocultar Asistente Interactivo</h3>
+    </div>
+    <div class="modal-body">
+        <p>Para ocultar el asistente interactivo debemos verificar de que eres humano. Para ello completa las letras del siguiente código Captcha:</p>
+
+        <p id="captchaResult" style="color: red; display:none;">Código invalido.</p>
+
+        <div style="text-align: center;"><iframe src="http://crapcha.com/embed/" frameborder="0" scrolling="0" width="300" height="150"></iframe></div>
+    </div>
+
+    <div class="modal-footer">
+        <button class="btn" data-dismiss="modal" aria-hidden="true">Cerrar</button>
+        <button class="btn btn-primary" onclick="javascript:$('#captchaResult').show()">Validar Captcha</button>
+    </div>
+</div>
+
+
 
 <?php if($this->config->item('js_diagram')=='gojs'):?>
 <link href="<?= base_url() ?>assets/css/diagrama-procesos2.css" rel="stylesheet">
