@@ -94,7 +94,7 @@
 
         <p id="captchaResult" style="color: red; display:none;">Código invalido.</p>
 
-        <div style="text-align: center;"><iframe src="http://crapcha.com/embed/" frameborder="0" scrolling="0" width="300" height="150"></iframe></div>
+        <div style="text-align: center;"><iframe src="https://apis.modernizacion.cl/captcha" frameborder="0" scrolling="0" width="300" height="150"></iframe></div>
     </div>
 
     <div class="modal-footer">
