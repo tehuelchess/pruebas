@@ -386,5 +386,15 @@ $config['hsm_url']='';
 $config['hsm_user']='';
 $config['hsm_password']='';
 
+/*
+ * Se define el dominio principal de simple.
+ * Esto sirve para definir cuentas segun dominio.
+ * Si no se define un dominio principal, siempre se accedera en el home a la cuenta principal
+ * Si se define como dominio: ejemplo.com
+ *      Para acceder a cuenta1: cuenta1.ejemplo.com
+ *      Para acceder a cuenta2: cuenta2.ejemplo.com
+ */
+$config['main_domain']='';
+
 /* End of file config.php */
 /* Location: ./application/config/config.php */
