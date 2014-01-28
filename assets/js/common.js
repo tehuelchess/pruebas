@@ -38,12 +38,12 @@ $(document).ready(function(){
         $parentDiv.find(".qq-upload-list").empty();
     });
     
-    
+
+    $(".ajaxForm :submit").attr("disabled",false);
     $(document).on("submit",".ajaxForm",function(){
         var form=this;
         if(!form.submitting){
             form.submitting=true;
-            $(form).find(":submit").attr("autocomplete","off"); //Fix para firefox
             $(form).find(":submit").attr("disabled",true);
             $(form).append("<div class='ajaxLoader'>Cargando</div>");
             var ajaxLoader=$(form).find(".ajaxLoader");
