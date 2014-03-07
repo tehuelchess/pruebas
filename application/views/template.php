@@ -29,11 +29,11 @@
                                                 <fieldset>
                                                     <div class="validacion"></div>
                                                     <input type="hidden" name="redirect" value="<?= current_url() ?>" />
-                                                    <label>Usuario</label>
+                                                    <label>Usuario o Correo electrónico</label>
                                                     <input name="usuario" type="text" class="input-xlarge">
                                                     <label>Contraseña</label>
                                                     <input name="password" type="password" class="input-xlarge">
-                                                    <p style="font-size: 11px;"><a href="<?= site_url('autenticacion/olvido') ?>">¿Olvidaste tu contraseña?</a> - <a href="<?= site_url('autenticacion/registrar') ?>">¿No estas registrado?</a></p>
+                                                    <p style="font-size: 11px;"><a href="<?= site_url('autenticacion/olvido') ?>">¿Olvidaste tu contraseña?</a> - <a href="<?= site_url('autenticacion/registrar') ?>">Registrate aquí</a></p>
                                                     <button class="btn btn-primary pull-right" type="submit">Ingresar</button>
                                                 </fieldset>
                                             </form>

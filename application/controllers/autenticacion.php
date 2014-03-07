@@ -57,7 +57,7 @@ class Autenticacion extends MY_Controller {
         $this->form_validation->set_rules('apellido_materno', 'Apellido Materno', 'required');
         $this->form_validation->set_rules('password', 'Contraseña', 'required|min_length[6]|matches[password_confirm]');
         $this->form_validation->set_rules('password_confirm', 'Confirmar contraseña');
-        $this->form_validation->set_rules('email', 'Correo electrónico', 'required|valid_email');
+        $this->form_validation->set_rules('email', 'Correo electrónico', 'required|valid_email|callback_check_email');
 
         if ($this->form_validation->run() == TRUE) {
             $usuario = new Usuario();
@@ -223,6 +223,16 @@ class Autenticacion extends MY_Controller {
             return TRUE;
 
         $this->form_validation->set_message('check_usuario', 'Usuario ya existe.');
+        return FALSE;
+    }
+    
+    function check_email($email) {
+        $usuario = Doctrine::getTable('Usuario')->findOneByEmailAndOpenId($email,0);
+
+        if (!$usuario)
+            return TRUE;
+
+        $this->form_validation->set_message('check_email', 'Correo electrónico ya esta en uso por otro usuario.');
         return FALSE;
     }
 
