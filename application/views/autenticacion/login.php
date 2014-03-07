@@ -14,7 +14,7 @@
                             <legend>Autenticación</legend>
                             <?php $this->load->view('messages') ?>
                             <div class="validacion"></div>
-                            <label>Usuario</label>
+                            <label>Usuario o Correo electrónico</label>
                             <input name="usuario" type="text" class="input-xlarge">
                             <label>Contraseña</label>
                             <input name="password" type="password" class="input-xlarge">

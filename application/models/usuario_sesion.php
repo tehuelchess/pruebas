@@ -52,10 +52,9 @@ class UsuarioSesion {
     public static function login($usuario, $password) {
         $CI = & get_instance();
 
-        $autorizacion = self::validar_acceso($usuario, $password);
+        $u = self::validar_acceso($usuario, $password);
 
-        if ($autorizacion) {
-            $u = Doctrine::getTable('Usuario')->findOneByUsuarioAndOpenId($usuario,0);
+        if ($u) {
 
             //Logueamos al usuario
             $CI->session->set_userdata('usuario_id', $u->id);
@@ -67,11 +66,19 @@ class UsuarioSesion {
         return FALSE;
     }
 
-    public static function validar_acceso($usuario, $password) {
-        $u = Doctrine::getTable('Usuario')->findOneByUsuarioAndOpenId($usuario,0);
+    public static function validar_acceso($usuario_o_email, $password) {
+        $users = Doctrine::getTable('Usuario')->findByUsuarioAndOpenId($usuario_o_email, 0);
 
-        if ($u) {
+        if ($users->count()==0) {
+            $users = Doctrine::getTable('Usuario')->findByEmailAndOpenId($usuario_o_email, 0);
+        }
 
+        if ($users->count()==0) {
+            return FALSE;
+        }
+
+
+        foreach ($users as $u) {    //Se debe chequear en varias cuentas, ya que en las cuentas del legado (antiguas) podian haber usuarios con el mismo correo.
             // this mutates (encrypts) the input password
             $u_input = new Usuario();
             $u_input->setPasswordWithSalt($password, $u->salt);
@@ -81,28 +88,27 @@ class UsuarioSesion {
                 unset($u_input);
 
 
-                return TRUE;
+                return $u;
             }
 
             unset($u_input);
         }
 
-        // login failed
         return FALSE;
     }
 
     private static function login_open_id() {
         $CI = & get_instance();
-        if ($CI->lightopenid->validate() && strpos($CI->lightopenid->claimed_id,'https://www.claveunica.cl/')===0) {
+        if ($CI->lightopenid->validate() && strpos($CI->lightopenid->claimed_id, 'https://www.claveunica.cl/') === 0) {
             $atributos = $CI->lightopenid->getAttributes();
-            $usuario = Doctrine::getTable('Usuario')->findOneByUsuarioAndOpenId($CI->lightopenid->claimed_id,1);
+            $usuario = Doctrine::getTable('Usuario')->findOneByUsuarioAndOpenId($CI->lightopenid->claimed_id, 1);
             if (!$usuario) {
                 $usuario = new Usuario();
                 $usuario->usuario = $CI->lightopenid->claimed_id;
                 $usuario->registrado = 1;
-                $usuario->open_id=1;
+                $usuario->open_id = 1;
             }
-            $usuario->rut=$atributos['person/guid'];
+            $usuario->rut = $atributos['person/guid'];
             $usuario->save();
 
             $CI->session->set_userdata('usuario_id', $usuario->id);
