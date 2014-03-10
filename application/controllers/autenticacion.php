@@ -103,7 +103,10 @@ class Autenticacion extends MY_Controller {
         if ($this->form_validation->run() == TRUE) {
             $random=random_string('alnum',16);
             
-            $usuario = Doctrine::getTable('Usuario')->findOneByUsuario($this->input->post('usuario'));
+            $usuario = Doctrine::getTable('Usuario')->findOneByUsuarioAndOpenId($this->input->post('usuario'),0);
+            if(!$usuario){
+                $usuario = Doctrine::getTable('Usuario')->findOneByEmailAndOpenId($this->input->post('usuario'),0);
+            }
             $usuario->reset_token=$random;
             $usuario->save();
 
@@ -236,8 +239,11 @@ class Autenticacion extends MY_Controller {
         return FALSE;
     }
 
-    function check_usuario_existe($usuario) {
-        $usuario = Doctrine::getTable('Usuario')->findOneByUsuario($usuario);
+    function check_usuario_existe($usuario_o_email) {
+        $usuario = Doctrine::getTable('Usuario')->findOneByUsuarioAndOpenId($usuario_o_email,0);
+        if(!$usuario){
+            $usuario = Doctrine::getTable('Usuario')->findOneByEmailAndOpenId($usuario_o_email,0);
+        }
 
         if ($usuario)
             return TRUE;
