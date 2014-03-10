@@ -28,7 +28,7 @@ class Cuentas extends MY_Controller {
         $this->form_validation->set_rules('nombres','Nombre','required');
         $this->form_validation->set_rules('apellido_paterno','Apellido Paterno','required');
         $this->form_validation->set_rules('apellido_materno','Apellido Materno','required');
-        $this->form_validation->set_rules('email','Correo electrónico','required|valid_email');
+        $this->form_validation->set_rules('email','Correo electrónico','required|valid_email|callback_check_email');
         
         $respuesta=new stdClass();
         if($this->form_validation->run()==TRUE){
@@ -96,6 +96,16 @@ class Cuentas extends MY_Controller {
         $this->form_validation->set_message('check_password','Usuario y/o contraseña incorrecta.');
         return FALSE;
         
+    }
+    
+    function check_email($email) {
+        $usuario = Doctrine::getTable('Usuario')->findOneByEmailAndOpenId($email,0);
+
+        if (!$usuario || $usuario==UsuarioSesion::usuario())
+            return TRUE;
+
+        $this->form_validation->set_message('check_email', 'Correo electrónico ya esta en uso por otro usuario.');
+        return FALSE;
     }
 
 }

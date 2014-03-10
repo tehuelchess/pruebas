@@ -17,7 +17,7 @@
 
                             <p>Al hacer click en Reestablecer se te enviara un email indicando las instrucciones para reestablecer tu contraseña.</p>
 
-                            <label>Usuario</label>
+                            <label>Usuario o Correo electrónico</label>
                             <input name="usuario" type="text" class="input-xlarge">
 
 
