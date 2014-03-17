@@ -146,7 +146,7 @@ class Configuracion extends CI_Controller {
         $this->form_validation->set_rules('nombres', 'Nombres', 'required');
         $this->form_validation->set_rules('apellido_paterno', 'Apellido Paterno', 'required');
         $this->form_validation->set_rules('apellido_materno', 'Apellido Materno', 'required');
-        $this->form_validation->set_rules('email', 'Correo electrónico', 'valid_email');
+        $this->form_validation->set_rules('email', 'Correo electrónico', 'valid_email|callback_check_existe_email['.($usuario?$usuario->id:'').']');
 
         if ($this->form_validation->run() == TRUE) {
             if (!$usuario){
@@ -315,6 +315,17 @@ class Configuracion extends CI_Controller {
             return TRUE;
         
         $this->form_validation->set_message('check_existe_usuario','%s ya existe');
+        return FALSE;
+             
+    }
+    
+    function check_existe_email($email,$usuario_id){
+        $u=Doctrine::getTable('Usuario')->findOneByEmail($email);
+        
+        if(!$u || ($u && $u->id==$usuario_id))
+            return TRUE;
+        
+        $this->form_validation->set_message('check_existe_email','%s ya esta en uso por otro usuario');
         return FALSE;
              
     }
