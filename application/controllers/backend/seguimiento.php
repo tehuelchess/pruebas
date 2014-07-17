@@ -160,6 +160,7 @@ class Seguimiento extends CI_Controller {
     public function reasignar_form($etapa_id) {
         $this->form_validation->set_rules('usuario_id', 'Usuario', 'required');
 
+        $respuesta=new stdClass();
         if ($this->form_validation->run() == TRUE) {
             $usuario=Doctrine::getTable('Usuario')->find($this->input->post('usuario_id'));
             

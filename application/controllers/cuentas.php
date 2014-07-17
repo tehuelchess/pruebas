@@ -70,7 +70,8 @@ class Cuentas extends MY_Controller {
         $this->form_validation->set_rules('password_old','Contraseña antigua','required|callback_check_password');
         $this->form_validation->set_rules('password_new','Contraseña nueva','required|min_length[6]');
         $this->form_validation->set_rules('password_new_confirm','Confirmar contraseña nueva','required|matches[password_new]');
-        
+
+        $respuesta=new stdClass();
         if($this->form_validation->run()==TRUE){
             $usuario=UsuarioSesion::usuario();
             $usuario->password=$this->input->post('password_new');

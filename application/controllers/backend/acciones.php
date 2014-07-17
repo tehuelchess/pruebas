@@ -53,7 +53,8 @@ class Acciones extends CI_Controller {
         }
         
         $this->form_validation->set_rules('tipo','Tipo','required');
-        
+
+        $respuesta=new stdClass();
         if($this->form_validation->run()==TRUE){
             $tipo=$this->input->post('tipo');
             $respuesta->validacion=TRUE;
@@ -135,7 +136,8 @@ class Acciones extends CI_Controller {
             $this->form_validation->set_rules('proceso_id','Proceso','required');
             $this->form_validation->set_rules('tipo','Tipo de Campo','required');
         }
-        
+
+        $respuesta=new stdClass();
         if($this->form_validation->run()==TRUE){
             if(!$accion){
                 
