@@ -26,6 +26,7 @@ class Cuentas extends CI_Controller {
         $this->form_validation->set_rules('password', 'Contraseña', 'required|min_length[6]|matches[password_confirm]');
         $this->form_validation->set_rules('password_confirm', 'Confirmar contraseña');
 
+        $respuesta=new stdClass();
         if ($this->form_validation->run() == TRUE) {
             $usuario=UsuarioBackendSesion::usuario();
             $usuario->password=$this->input->post('password');

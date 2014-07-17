@@ -95,8 +95,8 @@ class Documentos extends CI_Controller {
             $this->form_validation->set_rules('validez','Dias de validez','is_natural_no_zero');
             $this->form_validation->set_rules('validez_habiles','Habiles');
         }
-        
-        
+
+        $respuesta=new stdClass();
         if($this->form_validation->run()==TRUE){         
             $documento->nombre=$this->input->post('nombre');
             $documento->tipo=$this->input->post('tipo');

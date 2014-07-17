@@ -59,6 +59,7 @@ class Autenticacion extends MY_Controller {
         $this->form_validation->set_rules('password_confirm', 'Confirmar contraseña');
         $this->form_validation->set_rules('email', 'Correo electrónico', 'required|valid_email|callback_check_email');
 
+        $respuesta=new stdClass();
         if ($this->form_validation->run() == TRUE) {
             $usuario = new Usuario();
             $usuario->usuario = $this->input->post('usuario');

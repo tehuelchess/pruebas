@@ -148,6 +148,7 @@ class Configuracion extends CI_Controller {
         $this->form_validation->set_rules('apellido_materno', 'Apellido Materno', 'required');
         $this->form_validation->set_rules('email', 'Correo electrónico', 'valid_email|callback_check_existe_email['.($usuario?$usuario->id:'').']');
 
+        $respuesta=new stdClass();
         if ($this->form_validation->run() == TRUE) {
             if (!$usuario){
                 $usuario = new Usuario();
@@ -243,6 +244,7 @@ class Configuracion extends CI_Controller {
         $this->form_validation->set_rules('apellidos', 'Apellidos', 'required');
         $this->form_validation->set_rules('rol', 'Rol', 'required');
 
+        $respuesta=new stdClass();
         if ($this->form_validation->run() == TRUE) {
             if (!$usuario){
                 $usuario = new UsuarioBackend();
@@ -290,7 +292,8 @@ class Configuracion extends CI_Controller {
     
     public function misitio_form() {      
         $this->form_validation->set_rules('nombre_largo', 'Nombre largo', 'required');
-        
+
+        $respuesta=new stdClass();
         if ($this->form_validation->run() == TRUE) {
             $cuenta=Doctrine::getTable('Cuenta')->find(UsuarioBackendSesion::usuario()->cuenta_id);
 

@@ -264,6 +264,7 @@ class Procesos extends CI_Controller {
         
         $this->form_validation->set_rules('conexiones', 'Conexiones','required');
 
+        $respuesta=new stdClass();
         if ($this->form_validation->run() == TRUE) {
             $tarea->setConexionesFromArray($this->input->post('conexiones',false));
             $tarea->save();
