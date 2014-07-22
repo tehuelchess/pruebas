@@ -36,5 +36,5 @@ jQuery 1.7.2
 
 ### Ejecución inicial
 - Acceder a http://nombrededominio/backend
-    Usuario: admin
+    Usuario: admin@admin.com
     Contraseña: 123456
