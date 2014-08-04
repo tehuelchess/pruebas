@@ -1,596 +1,608 @@
-SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
-SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
-SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL';
+-- phpMyAdmin SQL Dump
+-- version 4.0.10deb1
+-- http://www.phpmyadmin.net
+--
+-- Servidor: localhost
+-- Tiempo de generación: 03-08-2014 a las 20:29:21
+-- Versión del servidor: 5.5.37-0ubuntu0.14.04.1
+-- Versión de PHP: 5.5.9-1ubuntu4
 
-CREATE SCHEMA IF NOT EXISTS `tramitador` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci ;
-USE `tramitador` ;
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET time_zone = "+00:00";
 
--- -----------------------------------------------------
--- Table `tramitador`.`cuenta`
--- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `tramitador`.`cuenta` (
-  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
-  `nombre` VARCHAR(128) NOT NULL ,
-  `nombre_largo` VARCHAR(256) NOT NULL ,
-  `mensaje` TEXT NOT NULL ,
-  `logo` VARCHAR(128) NULL ,
-  PRIMARY KEY (`id`) ,
-  UNIQUE INDEX `nombre` (`nombre` ASC) )
-ENGINE = InnoDB;
+--
+-- Base de datos: `tramitador`
+--
 
+-- --------------------------------------------------------
 
--- -----------------------------------------------------
--- Table `tramitador`.`proceso`
--- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `tramitador`.`proceso` (
-  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
-  `nombre` VARCHAR(128) NOT NULL ,
-  `width` VARCHAR(8) NOT NULL DEFAULT '100%' ,
-  `height` VARCHAR(8) NOT NULL DEFAULT '800px' ,
-  `cuenta_id` INT UNSIGNED NOT NULL ,
-  PRIMARY KEY (`id`) ,
-  INDEX `fk_proceso_cuenta1_idx` (`cuenta_id` ASC) ,
-  CONSTRAINT `fk_proceso_cuenta1`
-    FOREIGN KEY (`cuenta_id` )
-    REFERENCES `tramitador`.`cuenta` (`id` )
-    ON DELETE CASCADE
-    ON UPDATE CASCADE)
-ENGINE = InnoDB;
+--
+-- Estructura de tabla para la tabla `accion`
+--
 
+CREATE TABLE IF NOT EXISTS `accion` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(128) NOT NULL,
+  `tipo` varchar(32) NOT NULL,
+  `extra` text,
+  `proceso_id` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_trigger_proceso1_idx` (`proceso_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
--- -----------------------------------------------------
--- Table `tramitador`.`tarea`
--- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `tramitador`.`tarea` (
-  `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT ,
-  `identificador` VARCHAR(32) NOT NULL ,
-  `inicial` TINYINT(1) NOT NULL DEFAULT '0' ,
-  `nombre` VARCHAR(128) NOT NULL ,
-  `posx` INT(10) UNSIGNED NOT NULL DEFAULT '0' ,
-  `posy` INT(10) UNSIGNED NOT NULL DEFAULT '0' ,
-  `asignacion` ENUM('ciclica','manual','autoservicio','usuario') NOT NULL DEFAULT 'ciclica' ,
-  `asignacion_usuario` VARCHAR(128) NULL ,
-  `asignacion_notificar` TINYINT(1) NOT NULL DEFAULT 0 ,
-  `proceso_id` INT(10) UNSIGNED NOT NULL ,
-  `almacenar_usuario` TINYINT(1) NOT NULL DEFAULT 0 ,
-  `almacenar_usuario_variable` VARCHAR(128) NULL ,
-  `acceso_modo` ENUM('grupos_usuarios','publico','registrados','claveunica') NOT NULL DEFAULT 'grupos_usuarios' ,
-  `activacion` ENUM('si','entre_fechas','no') NOT NULL DEFAULT 'si' ,
-  `activacion_inicio` DATE NULL ,
-  `activacion_fin` DATE NULL ,
-  `vencimiento` TINYINT(1) NOT NULL DEFAULT 0 ,
-  `vencimiento_valor` INT UNSIGNED NOT NULL DEFAULT 5 ,
-  `vencimiento_unidad` ENUM('D','W','M') NOT NULL DEFAULT 'D' ,
-  `vencimiento_habiles` TINYINT(1) NOT NULL DEFAULT 0 ,
-  `vencimiento_notificar` TINYINT(1) NOT NULL DEFAULT 0 ,
-  `vencimiento_notificar_email` VARCHAR(255) NOT NULL ,
-  PRIMARY KEY (`id`) ,
-  UNIQUE INDEX `identificador_proceso` (`identificador` ASC, `proceso_id` ASC) ,
-  INDEX `fk_tarea_proceso1` (`proceso_id` ASC) ,
-  CONSTRAINT `tarea_ibfk_1`
-    FOREIGN KEY (`proceso_id` )
-    REFERENCES `tramitador`.`proceso` (`id` )
-    ON DELETE CASCADE
-    ON UPDATE CASCADE)
-ENGINE = InnoDB
-AUTO_INCREMENT = 51
-DEFAULT CHARACTER SET = utf8
-COLLATE = utf8_general_ci;
+-- --------------------------------------------------------
 
+--
+-- Estructura de tabla para la tabla `campo`
+--
 
--- -----------------------------------------------------
--- Table `tramitador`.`conexion`
--- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `tramitador`.`conexion` (
-  `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT ,
-  `tarea_id_origen` INT(10) UNSIGNED NOT NULL ,
-  `tarea_id_destino` INT(10) UNSIGNED NULL ,
-  `tipo` ENUM('secuencial','evaluacion','paralelo','paralelo_evaluacion','union') NOT NULL ,
-  `regla` VARCHAR(256) NOT NULL ,
-  PRIMARY KEY (`id`) ,
-  UNIQUE INDEX `tarea_origen_destino` (`tarea_id_origen` ASC, `tarea_id_destino` ASC) ,
-  INDEX `fk_ruta_tarea` (`tarea_id_origen` ASC) ,
-  INDEX `fk_ruta_tarea1` (`tarea_id_destino` ASC) ,
-  CONSTRAINT `conexion_ibfk_1`
-    FOREIGN KEY (`tarea_id_origen` )
-    REFERENCES `tramitador`.`tarea` (`id` )
-    ON DELETE CASCADE
-    ON UPDATE CASCADE,
-  CONSTRAINT `conexion_ibfk_2`
-    FOREIGN KEY (`tarea_id_destino` )
-    REFERENCES `tramitador`.`tarea` (`id` )
-    ON DELETE CASCADE
-    ON UPDATE CASCADE)
-ENGINE = InnoDB
-AUTO_INCREMENT = 28
-DEFAULT CHARACTER SET = utf8
-COLLATE = utf8_general_ci;
+CREATE TABLE IF NOT EXISTS `campo` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(32) NOT NULL,
+  `readonly` tinyint(1) NOT NULL DEFAULT '0',
+  `valor_default` text NOT NULL,
+  `posicion` int(10) unsigned NOT NULL,
+  `tipo` varchar(32) NOT NULL,
+  `formulario_id` int(10) unsigned NOT NULL,
+  `etiqueta` text NOT NULL,
+  `validacion` varchar(128) NOT NULL,
+  `ayuda` text NOT NULL,
+  `dependiente_tipo` enum('string','regex') DEFAULT 'string',
+  `dependiente_campo` varchar(64) DEFAULT NULL,
+  `dependiente_valor` varchar(256) DEFAULT NULL,
+  `datos` text,
+  `documento_id` int(10) unsigned DEFAULT NULL,
+  `extra` text,
+  PRIMARY KEY (`id`),
+  KEY `fk_campo_formulario1` (`formulario_id`),
+  KEY `fk_campo_documento1_idx` (`documento_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=8 ;
 
+-- --------------------------------------------------------
 
--- -----------------------------------------------------
--- Table `tramitador`.`grupo_usuarios`
--- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `tramitador`.`grupo_usuarios` (
-  `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT ,
-  `nombre` VARCHAR(128) NOT NULL ,
-  `cuenta_id` INT(10) UNSIGNED NOT NULL ,
-  PRIMARY KEY (`id`) ,
-  UNIQUE INDEX `grupo_usuarios_UNIQUE` (`cuenta_id` ASC, `nombre` ASC) ,
-  INDEX `fk_grupo_usuarios_cuenta1_idx` (`cuenta_id` ASC) ,
-  CONSTRAINT `fk_grupo_usuarios_cuenta1`
-    FOREIGN KEY (`cuenta_id` )
-    REFERENCES `tramitador`.`cuenta` (`id` )
-    ON DELETE CASCADE
-    ON UPDATE CASCADE)
-ENGINE = InnoDB
-AUTO_INCREMENT = 11
-DEFAULT CHARACTER SET = utf8
-COLLATE = utf8_general_ci;
+--
+-- Estructura de tabla para la tabla `conexion`
+--
 
+CREATE TABLE IF NOT EXISTS `conexion` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `tarea_id_origen` int(10) unsigned NOT NULL,
+  `tarea_id_destino` int(10) unsigned DEFAULT NULL,
+  `tipo` enum('secuencial','evaluacion','paralelo','paralelo_evaluacion','union') NOT NULL,
+  `regla` varchar(256) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `tarea_origen_destino` (`tarea_id_origen`,`tarea_id_destino`),
+  KEY `fk_ruta_tarea` (`tarea_id_origen`),
+  KEY `fk_ruta_tarea1` (`tarea_id_destino`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=28 ;
 
--- -----------------------------------------------------
--- Table `tramitador`.`usuario`
--- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `tramitador`.`usuario` (
-  `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT ,
-  `usuario` VARCHAR(128) NOT NULL ,
-  `password` VARCHAR(256) NULL DEFAULT NULL ,
-  `rut` VARCHAR(16) NULL DEFAULT NULL ,
-  `nombres` VARCHAR(128) NULL DEFAULT NULL ,
-  `apellido_paterno` VARCHAR(128) NULL DEFAULT NULL ,
-  `apellido_materno` VARCHAR(128) NULL DEFAULT NULL ,
-  `email` VARCHAR(255) NULL DEFAULT NULL ,
-  `registrado` TINYINT(1) NOT NULL DEFAULT '1' ,
-  `vacaciones` TINYINT(1) NOT NULL DEFAULT '0' ,
-  `cuenta_id` INT(10) UNSIGNED NULL DEFAULT NULL ,
-  `salt` VARCHAR(32) NOT NULL ,
-  `open_id` TINYINT(1) NOT NULL DEFAULT '0' ,
-  `reset_token` VARCHAR(40) NULL ,
-  `created_at` DATETIME NULL DEFAULT NULL ,
-  `updated_at` DATETIME NULL DEFAULT NULL ,
-  PRIMARY KEY (`id`) ,
-  UNIQUE INDEX `usuario_unique` (`usuario` ASC, `open_id` ASC) ,
-  INDEX `fk_usuario_cuenta1_idx` (`cuenta_id` ASC) ,
-  CONSTRAINT `fk_usuario_cuenta1`
-    FOREIGN KEY (`cuenta_id` )
-    REFERENCES `tramitador`.`cuenta` (`id` )
-    ON DELETE CASCADE
-    ON UPDATE CASCADE)
-ENGINE = InnoDB
-AUTO_INCREMENT = 307
-DEFAULT CHARACTER SET = utf8
-COLLATE = utf8_general_ci;
+-- --------------------------------------------------------
 
+--
+-- Estructura de tabla para la tabla `cuenta`
+--
 
--- -----------------------------------------------------
--- Table `tramitador`.`tarea_has_grupo_usuarios`
--- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `tramitador`.`tarea_has_grupo_usuarios` (
-  `tarea_id` INT(10) UNSIGNED NOT NULL ,
-  `grupo_usuarios_id` INT(10) UNSIGNED NOT NULL ,
-  PRIMARY KEY (`tarea_id`, `grupo_usuarios_id`) ,
-  INDEX `fk_tarea_has_grupo_usuarios_grupo_usuarios1_idx` (`grupo_usuarios_id` ASC) ,
-  INDEX `fk_tarea_has_grupo_usuarios_tarea1_idx` (`tarea_id` ASC) ,
-  CONSTRAINT `fk_tarea_has_grupo_usuarios_grupo_usuarios1`
-    FOREIGN KEY (`grupo_usuarios_id` )
-    REFERENCES `tramitador`.`grupo_usuarios` (`id` )
-    ON DELETE CASCADE
-    ON UPDATE CASCADE,
-  CONSTRAINT `fk_tarea_has_grupo_usuarios_tarea1`
-    FOREIGN KEY (`tarea_id` )
-    REFERENCES `tramitador`.`tarea` (`id` )
-    ON DELETE CASCADE
-    ON UPDATE CASCADE)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8
-COLLATE = utf8_general_ci;
+CREATE TABLE IF NOT EXISTS `cuenta` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(128) NOT NULL,
+  `nombre_largo` varchar(256) NOT NULL,
+  `mensaje` text NOT NULL,
+  `logo` varchar(128) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `nombre` (`nombre`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
+-- --------------------------------------------------------
 
--- -----------------------------------------------------
--- Table `tramitador`.`grupo_usuarios_has_usuario`
--- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `tramitador`.`grupo_usuarios_has_usuario` (
-  `grupo_usuarios_id` INT UNSIGNED NOT NULL ,
-  `usuario_id` INT UNSIGNED NOT NULL ,
-  PRIMARY KEY (`grupo_usuarios_id`, `usuario_id`) ,
-  INDEX `fk_grupo_usuarios_has_usuario_usuario1_idx` (`usuario_id` ASC) ,
-  INDEX `fk_grupo_usuarios_has_usuario_grupo_usuarios1_idx` (`grupo_usuarios_id` ASC) ,
-  CONSTRAINT `fk_grupo_usuarios_has_usuario_grupo_usuarios1`
-    FOREIGN KEY (`grupo_usuarios_id` )
-    REFERENCES `tramitador`.`grupo_usuarios` (`id` )
-    ON DELETE CASCADE
-    ON UPDATE CASCADE,
-  CONSTRAINT `fk_grupo_usuarios_has_usuario_usuario1`
-    FOREIGN KEY (`usuario_id` )
-    REFERENCES `tramitador`.`usuario` (`id` )
-    ON DELETE CASCADE
-    ON UPDATE CASCADE)
-ENGINE = InnoDB;
+--
+-- Estructura de tabla para la tabla `dato_seguimiento`
+--
 
+CREATE TABLE IF NOT EXISTS `dato_seguimiento` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(128) NOT NULL,
+  `valor` text NOT NULL,
+  `etapa_id` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `nombre_etapa` (`nombre`,`etapa_id`),
+  KEY `fk_dato_seguimiento_etapa1_idx` (`etapa_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
--- -----------------------------------------------------
--- Table `tramitador`.`tramite`
--- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `tramitador`.`tramite` (
-  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
-  `proceso_id` INT UNSIGNED NOT NULL ,
-  `pendiente` TINYINT(1) NOT NULL ,
-  `created_at` DATETIME NULL ,
-  `updated_at` DATETIME NULL ,
-  `ended_at` DATETIME NULL ,
-  PRIMARY KEY (`id`) ,
-  INDEX `fk_tramite_proceso1_idx` (`proceso_id` ASC) ,
-  CONSTRAINT `fk_tramite_proceso1`
-    FOREIGN KEY (`proceso_id` )
-    REFERENCES `tramitador`.`proceso` (`id` )
-    ON DELETE CASCADE
-    ON UPDATE CASCADE)
-ENGINE = InnoDB;
+-- --------------------------------------------------------
 
+--
+-- Estructura de tabla para la tabla `documento`
+--
 
--- -----------------------------------------------------
--- Table `tramitador`.`etapa`
--- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `tramitador`.`etapa` (
-  `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT ,
-  `tarea_id` INT(10) UNSIGNED NOT NULL ,
-  `usuario_id` INT(10) UNSIGNED NULL DEFAULT NULL ,
-  `pendiente` TINYINT(1) NOT NULL ,
-  `etapa_ancestro_split_id` INT(10) UNSIGNED NULL DEFAULT NULL ,
-  `vencimiento_at` DATE NULL DEFAULT NULL ,
-  `created_at` DATETIME NULL DEFAULT NULL ,
-  `updated_at` DATETIME NULL DEFAULT NULL ,
-  `ended_at` DATETIME NULL DEFAULT NULL ,
-  `tramite_id` INT(10) UNSIGNED NOT NULL ,
-  PRIMARY KEY (`id`) ,
-  INDEX `fk_etapa_tarea1_idx` (`tarea_id` ASC) ,
-  INDEX `fk_etapa_usuario1_idx` (`usuario_id` ASC) ,
-  INDEX `fk_etapa_tramite1` (`tramite_id` ASC) ,
-  INDEX `fk_etapa_etapa1_idx` (`etapa_ancestro_split_id` ASC) ,
-  CONSTRAINT `etapa_ibfk_1`
-    FOREIGN KEY (`tramite_id` )
-    REFERENCES `tramitador`.`tramite` (`id` )
-    ON DELETE CASCADE
-    ON UPDATE CASCADE,
-  CONSTRAINT `fk_etapa_tarea1`
-    FOREIGN KEY (`tarea_id` )
-    REFERENCES `tramitador`.`tarea` (`id` )
-    ON DELETE CASCADE
-    ON UPDATE CASCADE,
-  CONSTRAINT `fk_etapa_usuario1`
-    FOREIGN KEY (`usuario_id` )
-    REFERENCES `tramitador`.`usuario` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_etapa_etapa1`
-    FOREIGN KEY (`etapa_ancestro_split_id` )
-    REFERENCES `tramitador`.`etapa` (`id` )
-    ON DELETE SET NULL
-    ON UPDATE CASCADE)
-ENGINE = InnoDB
-AUTO_INCREMENT = 57
-DEFAULT CHARACTER SET = utf8
-COLLATE = utf8_general_ci;
+CREATE TABLE IF NOT EXISTS `documento` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `tipo` enum('blanco','certificado') NOT NULL DEFAULT 'blanco',
+  `nombre` varchar(128) NOT NULL,
+  `contenido` text NOT NULL,
+  `servicio` varchar(128) NOT NULL,
+  `servicio_url` varchar(256) NOT NULL,
+  `logo` varchar(256) NOT NULL,
+  `timbre` varchar(256) NOT NULL,
+  `firmador_nombre` varchar(128) NOT NULL,
+  `firmador_cargo` varchar(128) NOT NULL,
+  `firmador_servicio` varchar(128) NOT NULL,
+  `firmador_imagen` varchar(256) NOT NULL,
+  `validez` int(10) unsigned DEFAULT NULL,
+  `hsm_configuracion_id` int(10) unsigned DEFAULT NULL,
+  `proceso_id` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_documento_proceso1_idx` (`proceso_id`),
+  KEY `fk_documento_hsm_configuracion1_idx` (`hsm_configuracion_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
+-- --------------------------------------------------------
 
--- -----------------------------------------------------
--- Table `tramitador`.`formulario`
--- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `tramitador`.`formulario` (
-  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
-  `nombre` VARCHAR(128) NOT NULL ,
-  `proceso_id` INT UNSIGNED NOT NULL ,
-  PRIMARY KEY (`id`) ,
-  INDEX `fk_formulario_proceso1_idx` (`proceso_id` ASC) ,
-  CONSTRAINT `fk_formulario_proceso1`
-    FOREIGN KEY (`proceso_id` )
-    REFERENCES `tramitador`.`proceso` (`id` )
-    ON DELETE CASCADE
-    ON UPDATE CASCADE)
-ENGINE = InnoDB;
+--
+-- Estructura de tabla para la tabla `etapa`
+--
 
+CREATE TABLE IF NOT EXISTS `etapa` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `tarea_id` int(10) unsigned NOT NULL,
+  `usuario_id` int(10) unsigned DEFAULT NULL,
+  `pendiente` tinyint(1) NOT NULL,
+  `etapa_ancestro_split_id` int(10) unsigned DEFAULT NULL,
+  `vencimiento_at` date DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `ended_at` datetime DEFAULT NULL,
+  `tramite_id` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_etapa_tarea1_idx` (`tarea_id`),
+  KEY `fk_etapa_usuario1_idx` (`usuario_id`),
+  KEY `fk_etapa_tramite1` (`tramite_id`),
+  KEY `fk_etapa_etapa1_idx` (`etapa_ancestro_split_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=57 ;
 
--- -----------------------------------------------------
--- Table `tramitador`.`hsm_configuracion`
--- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `tramitador`.`hsm_configuracion` (
-  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
-  `nombre` VARCHAR(128) NOT NULL ,
-  `cuenta_id` INT UNSIGNED NOT NULL ,
-  PRIMARY KEY (`id`) ,
-  UNIQUE INDEX `nombre_UNIQUE` (`nombre` ASC) ,
-  INDEX `fk_hsm_configuracion_cuenta1_idx` (`cuenta_id` ASC) ,
-  CONSTRAINT `fk_hsm_configuracion_cuenta1`
-    FOREIGN KEY (`cuenta_id` )
-    REFERENCES `tramitador`.`cuenta` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+-- --------------------------------------------------------
 
+--
+-- Estructura de tabla para la tabla `evento`
+--
 
--- -----------------------------------------------------
--- Table `tramitador`.`documento`
--- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `tramitador`.`documento` (
-  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
-  `tipo` ENUM('blanco','certificado') NOT NULL DEFAULT 'blanco' ,
-  `nombre` VARCHAR(128) NOT NULL ,
-  `contenido` TEXT NOT NULL ,
-  `servicio` VARCHAR(128) NOT NULL ,
-  `servicio_url` VARCHAR(256) NOT NULL ,
-  `logo` VARCHAR(256) NOT NULL ,
-  `timbre` VARCHAR(256) NOT NULL ,
-  `firmador_nombre` VARCHAR(128) NOT NULL ,
-  `firmador_cargo` VARCHAR(128) NOT NULL ,
-  `firmador_servicio` VARCHAR(128) NOT NULL ,
-  `firmador_imagen` VARCHAR(256) NOT NULL ,
-  `validez` INT UNSIGNED NULL ,
-  `hsm_configuracion_id` INT UNSIGNED NULL ,
-  `proceso_id` INT UNSIGNED NOT NULL ,
-  PRIMARY KEY (`id`) ,
-  INDEX `fk_documento_proceso1_idx` (`proceso_id` ASC) ,
-  INDEX `fk_documento_hsm_configuracion1_idx` (`hsm_configuracion_id` ASC) ,
-  CONSTRAINT `fk_documento_proceso1`
-    FOREIGN KEY (`proceso_id` )
-    REFERENCES `tramitador`.`proceso` (`id` )
-    ON DELETE CASCADE
-    ON UPDATE CASCADE,
-  CONSTRAINT `fk_documento_hsm_configuracion1`
-    FOREIGN KEY (`hsm_configuracion_id` )
-    REFERENCES `tramitador`.`hsm_configuracion` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+CREATE TABLE IF NOT EXISTS `evento` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `regla` varchar(256) NOT NULL,
+  `instante` enum('antes','despues') NOT NULL,
+  `tarea_id` int(10) unsigned NOT NULL,
+  `accion_id` int(10) unsigned NOT NULL,
+  `paso_id` int(10) unsigned DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_evento_tarea1_idx` (`tarea_id`),
+  KEY `fk_evento_accion1_idx` (`accion_id`),
+  KEY `fk_evento_paso1_idx` (`paso_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
+-- --------------------------------------------------------
 
--- -----------------------------------------------------
--- Table `tramitador`.`campo`
--- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `tramitador`.`campo` (
-  `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT ,
-  `nombre` VARCHAR(32) NOT NULL ,
-  `readonly` TINYINT(1) NOT NULL DEFAULT 0 ,
-  `valor_default` TEXT NOT NULL ,
-  `posicion` INT(10) UNSIGNED NOT NULL ,
-  `tipo` VARCHAR(32) NOT NULL ,
-  `formulario_id` INT(10) UNSIGNED NOT NULL ,
-  `etiqueta` TEXT NOT NULL ,
-  `validacion` VARCHAR(128) NOT NULL ,
-  `ayuda` TEXT NOT NULL ,
-  `dependiente_tipo` ENUM('string','regex') NULL DEFAULT 'string' ,
-  `dependiente_campo` VARCHAR(64) NULL ,
-  `dependiente_valor` VARCHAR(256) NULL ,
-  `datos` TEXT NULL ,
-  `documento_id` INT UNSIGNED NULL ,
-  `extra` TEXT NULL ,
-  PRIMARY KEY (`id`) ,
-  INDEX `fk_campo_formulario1` (`formulario_id` ASC) ,
-  INDEX `fk_campo_documento1_idx` (`documento_id` ASC) ,
-  CONSTRAINT `campo_ibfk_1`
-    FOREIGN KEY (`formulario_id` )
-    REFERENCES `tramitador`.`formulario` (`id` )
-    ON DELETE CASCADE
-    ON UPDATE CASCADE,
-  CONSTRAINT `fk_campo_documento1`
-    FOREIGN KEY (`documento_id` )
-    REFERENCES `tramitador`.`documento` (`id` )
-    ON DELETE CASCADE
-    ON UPDATE CASCADE)
-ENGINE = InnoDB
-AUTO_INCREMENT = 8
-DEFAULT CHARACTER SET = utf8
-COLLATE = utf8_general_ci;
+--
+-- Estructura de tabla para la tabla `feriado`
+--
 
+CREATE TABLE IF NOT EXISTS `feriado` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `fecha` date NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `fecha_UNIQUE` (`fecha`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
--- -----------------------------------------------------
--- Table `tramitador`.`paso`
--- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `tramitador`.`paso` (
-  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
-  `orden` INT UNSIGNED NOT NULL ,
-  `modo` ENUM('edicion','visualizacion') NOT NULL ,
-  `regla` VARCHAR(256) NOT NULL ,
-  `formulario_id` INT UNSIGNED NOT NULL ,
-  `tarea_id` INT UNSIGNED NOT NULL ,
-  PRIMARY KEY (`id`) ,
-  INDEX `fk_paso_formulario1_idx` (`formulario_id` ASC) ,
-  INDEX `fk_paso_tarea1_idx` (`tarea_id` ASC) ,
-  CONSTRAINT `fk_paso_formulario1`
-    FOREIGN KEY (`formulario_id` )
-    REFERENCES `tramitador`.`formulario` (`id` )
-    ON DELETE CASCADE
-    ON UPDATE CASCADE,
-  CONSTRAINT `fk_paso_tarea1`
-    FOREIGN KEY (`tarea_id` )
-    REFERENCES `tramitador`.`tarea` (`id` )
-    ON DELETE CASCADE
-    ON UPDATE CASCADE)
-ENGINE = InnoDB;
+-- --------------------------------------------------------
 
+--
+-- Estructura de tabla para la tabla `file`
+--
 
--- -----------------------------------------------------
--- Table `tramitador`.`usuario_backend`
--- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `tramitador`.`usuario_backend` (
-  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
-  `email` VARCHAR(128) NOT NULL ,
-  `password` VARCHAR(255) NOT NULL ,
-  `nombre` VARCHAR(128) NOT NULL ,
-  `apellidos` VARCHAR(128) NOT NULL ,
-  `rol` ENUM('super','modelamiento','operacion','gestion') NOT NULL DEFAULT 'super' ,
-  `salt` VARCHAR(32) NOT NULL ,
-  `cuenta_id` INT UNSIGNED NOT NULL ,
-  `reset_token` VARCHAR(40) NULL ,
-  PRIMARY KEY (`id`) ,
-  INDEX `fk_usuario_backend_cuenta1_idx` (`cuenta_id` ASC) ,
-  CONSTRAINT `fk_usuario_backend_cuenta1`
-    FOREIGN KEY (`cuenta_id` )
-    REFERENCES `tramitador`.`cuenta` (`id` )
-    ON DELETE CASCADE
-    ON UPDATE CASCADE)
-ENGINE = InnoDB;
+CREATE TABLE IF NOT EXISTS `file` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `filename` varchar(255) NOT NULL,
+  `tipo` enum('dato','documento') NOT NULL,
+  `llave` varchar(12) NOT NULL,
+  `llave_copia` varchar(40) DEFAULT NULL,
+  `llave_firma` varchar(12) DEFAULT NULL,
+  `validez` int(10) unsigned DEFAULT NULL,
+  `tramite_id` int(10) unsigned NOT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `filename_tipo` (`filename`,`tipo`),
+  KEY `fk_file_tramite1_idx` (`tramite_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
+-- --------------------------------------------------------
 
--- -----------------------------------------------------
--- Table `tramitador`.`accion`
--- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `tramitador`.`accion` (
-  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
-  `nombre` VARCHAR(128) NOT NULL ,
-  `tipo` VARCHAR(32) NOT NULL ,
-  `extra` TEXT NULL ,
-  `proceso_id` INT UNSIGNED NOT NULL ,
-  PRIMARY KEY (`id`) ,
-  INDEX `fk_trigger_proceso1_idx` (`proceso_id` ASC) ,
-  CONSTRAINT `fk_trigger_proceso1`
-    FOREIGN KEY (`proceso_id` )
-    REFERENCES `tramitador`.`proceso` (`id` )
-    ON DELETE CASCADE
-    ON UPDATE CASCADE)
-ENGINE = InnoDB;
+--
+-- Estructura de tabla para la tabla `formulario`
+--
 
+CREATE TABLE IF NOT EXISTS `formulario` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(128) NOT NULL,
+  `proceso_id` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_formulario_proceso1_idx` (`proceso_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
--- -----------------------------------------------------
--- Table `tramitador`.`widget`
--- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `tramitador`.`widget` (
-  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
-  `tipo` VARCHAR(32) NOT NULL ,
-  `nombre` VARCHAR(128) NOT NULL ,
-  `posicion` INT UNSIGNED NOT NULL ,
-  `config` TEXT NULL ,
-  `cuenta_id` INT UNSIGNED NOT NULL ,
-  PRIMARY KEY (`id`) ,
-  INDEX `fk_widget_cuenta1_idx` (`cuenta_id` ASC) ,
-  CONSTRAINT `fk_widget_cuenta1`
-    FOREIGN KEY (`cuenta_id` )
-    REFERENCES `tramitador`.`cuenta` (`id` )
-    ON DELETE CASCADE
-    ON UPDATE CASCADE)
-ENGINE = InnoDB;
+-- --------------------------------------------------------
 
+--
+-- Estructura de tabla para la tabla `grupo_usuarios`
+--
 
--- -----------------------------------------------------
--- Table `tramitador`.`evento`
--- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `tramitador`.`evento` (
-  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
-  `regla` VARCHAR(256) NOT NULL ,
-  `instante` ENUM('antes','despues') NOT NULL ,
-  `tarea_id` INT(10) UNSIGNED NOT NULL ,
-  `accion_id` INT UNSIGNED NOT NULL ,
-  `paso_id` INT UNSIGNED NULL ,
-  PRIMARY KEY (`id`) ,
-  INDEX `fk_evento_tarea1_idx` (`tarea_id` ASC) ,
-  INDEX `fk_evento_accion1_idx` (`accion_id` ASC) ,
-  INDEX `fk_evento_paso1_idx` (`paso_id` ASC) ,
-  CONSTRAINT `fk_evento_tarea1`
-    FOREIGN KEY (`tarea_id` )
-    REFERENCES `tramitador`.`tarea` (`id` )
-    ON DELETE CASCADE
-    ON UPDATE CASCADE,
-  CONSTRAINT `fk_evento_accion1`
-    FOREIGN KEY (`accion_id` )
-    REFERENCES `tramitador`.`accion` (`id` )
-    ON DELETE CASCADE
-    ON UPDATE CASCADE,
-  CONSTRAINT `fk_evento_paso1`
-    FOREIGN KEY (`paso_id` )
-    REFERENCES `tramitador`.`paso` (`id` )
-    ON DELETE CASCADE
-    ON UPDATE CASCADE)
-ENGINE = InnoDB;
+CREATE TABLE IF NOT EXISTS `grupo_usuarios` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(128) NOT NULL,
+  `cuenta_id` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `grupo_usuarios_UNIQUE` (`cuenta_id`,`nombre`),
+  KEY `fk_grupo_usuarios_cuenta1_idx` (`cuenta_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=11 ;
 
+-- --------------------------------------------------------
 
--- -----------------------------------------------------
--- Table `tramitador`.`dato_seguimiento`
--- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `tramitador`.`dato_seguimiento` (
-  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
-  `nombre` VARCHAR(128) NOT NULL ,
-  `valor` TEXT NOT NULL ,
-  `etapa_id` INT(10) UNSIGNED NOT NULL ,
-  PRIMARY KEY (`id`) ,
-  INDEX `fk_dato_seguimiento_etapa1_idx` (`etapa_id` ASC) ,
-  UNIQUE INDEX `nombre_etapa` (`nombre` ASC, `etapa_id` ASC) ,
-  CONSTRAINT `fk_dato_seguimiento_etapa1`
-    FOREIGN KEY (`etapa_id` )
-    REFERENCES `tramitador`.`etapa` (`id` )
-    ON DELETE CASCADE
-    ON UPDATE CASCADE)
-ENGINE = InnoDB;
+--
+-- Estructura de tabla para la tabla `grupo_usuarios_has_usuario`
+--
 
+CREATE TABLE IF NOT EXISTS `grupo_usuarios_has_usuario` (
+  `grupo_usuarios_id` int(10) unsigned NOT NULL,
+  `usuario_id` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`grupo_usuarios_id`,`usuario_id`),
+  KEY `fk_grupo_usuarios_has_usuario_usuario1_idx` (`usuario_id`),
+  KEY `fk_grupo_usuarios_has_usuario_grupo_usuarios1_idx` (`grupo_usuarios_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- -----------------------------------------------------
--- Table `tramitador`.`file`
--- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `tramitador`.`file` (
-  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
-  `filename` VARCHAR(255) NOT NULL ,
-  `tipo` ENUM('dato','documento') NOT NULL ,
-  `llave` VARCHAR(12) NOT NULL ,
-  `llave_copia` VARCHAR(40) NULL ,
-  `llave_firma` VARCHAR(12) NULL ,
-  `validez` INT UNSIGNED NULL ,
-  `tramite_id` INT UNSIGNED NOT NULL ,
-  `created_at` DATETIME NULL ,
-  `updated_at` DATETIME NULL ,
-  PRIMARY KEY (`id`) ,
-  UNIQUE INDEX `filename_tipo` (`filename` ASC, `tipo` ASC) ,
-  INDEX `fk_file_tramite1_idx` (`tramite_id` ASC) ,
-  CONSTRAINT `fk_file_tramite1`
-    FOREIGN KEY (`tramite_id` )
-    REFERENCES `tramitador`.`tramite` (`id` )
-    ON DELETE CASCADE
-    ON UPDATE CASCADE)
-ENGINE = InnoDB;
+-- --------------------------------------------------------
 
+--
+-- Estructura de tabla para la tabla `hsm_configuracion`
+--
 
--- -----------------------------------------------------
--- Table `tramitador`.`reporte`
--- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `tramitador`.`reporte` (
-  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
-  `nombre` VARCHAR(128) NOT NULL ,
-  `campos` TEXT NOT NULL ,
-  `proceso_id` INT UNSIGNED NOT NULL ,
-  PRIMARY KEY (`id`) ,
-  INDEX `fk_reporte_proceso1_idx` (`proceso_id` ASC) ,
-  CONSTRAINT `fk_reporte_proceso1`
-    FOREIGN KEY (`proceso_id` )
-    REFERENCES `tramitador`.`proceso` (`id` )
-    ON DELETE CASCADE
-    ON UPDATE CASCADE)
-ENGINE = InnoDB;
+CREATE TABLE IF NOT EXISTS `hsm_configuracion` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(128) NOT NULL,
+  `cuenta_id` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `nombre_UNIQUE` (`nombre`),
+  KEY `fk_hsm_configuracion_cuenta1_idx` (`cuenta_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
+-- --------------------------------------------------------
 
--- -----------------------------------------------------
--- Table `tramitador`.`usuario_manager`
--- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `tramitador`.`usuario_manager` (
-  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
-  `usuario` VARCHAR(128) NOT NULL ,
-  `password` VARCHAR(255) NOT NULL ,
-  `nombre` VARCHAR(128) NOT NULL ,
-  `apellidos` VARCHAR(128) NOT NULL ,
-  `salt` VARCHAR(32) NOT NULL ,
-  PRIMARY KEY (`id`) )
-ENGINE = InnoDB;
+--
+-- Estructura de tabla para la tabla `paso`
+--
 
+CREATE TABLE IF NOT EXISTS `paso` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `orden` int(10) unsigned NOT NULL,
+  `modo` enum('edicion','visualizacion') NOT NULL,
+  `regla` varchar(256) NOT NULL,
+  `formulario_id` int(10) unsigned NOT NULL,
+  `tarea_id` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_paso_formulario1_idx` (`formulario_id`),
+  KEY `fk_paso_tarea1_idx` (`tarea_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
--- -----------------------------------------------------
--- Table `tramitador`.`feriado`
--- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `tramitador`.`feriado` (
-  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
-  `fecha` DATE NOT NULL ,
-  PRIMARY KEY (`id`) ,
-  UNIQUE INDEX `fecha_UNIQUE` (`fecha` ASC) )
-ENGINE = InnoDB;
+-- --------------------------------------------------------
 
-USE `tramitador` ;
+--
+-- Estructura de tabla para la tabla `proceso`
+--
 
+CREATE TABLE IF NOT EXISTS `proceso` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(128) NOT NULL,
+  `width` varchar(8) NOT NULL DEFAULT '100%',
+  `height` varchar(8) NOT NULL DEFAULT '800px',
+  `cuenta_id` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_proceso_cuenta1_idx` (`cuenta_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
-SET SQL_MODE=@OLD_SQL_MODE;
-SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
-SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `reporte`
+--
+
+CREATE TABLE IF NOT EXISTS `reporte` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(128) NOT NULL,
+  `campos` text NOT NULL,
+  `proceso_id` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_reporte_proceso1_idx` (`proceso_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `tarea`
+--
+
+CREATE TABLE IF NOT EXISTS `tarea` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `identificador` varchar(32) NOT NULL,
+  `inicial` tinyint(1) NOT NULL DEFAULT '0',
+  `nombre` varchar(128) NOT NULL,
+  `posx` int(10) unsigned NOT NULL DEFAULT '0',
+  `posy` int(10) unsigned NOT NULL DEFAULT '0',
+  `asignacion` enum('ciclica','manual','autoservicio','usuario') NOT NULL DEFAULT 'ciclica',
+  `asignacion_usuario` varchar(128) DEFAULT NULL,
+  `asignacion_notificar` tinyint(1) NOT NULL DEFAULT '0',
+  `proceso_id` int(10) unsigned NOT NULL,
+  `almacenar_usuario` tinyint(1) NOT NULL DEFAULT '0',
+  `almacenar_usuario_variable` varchar(128) DEFAULT NULL,
+  `acceso_modo` enum('grupos_usuarios','publico','registrados','claveunica') NOT NULL DEFAULT 'grupos_usuarios',
+  `activacion` enum('si','entre_fechas','no') NOT NULL DEFAULT 'si',
+  `activacion_inicio` date DEFAULT NULL,
+  `activacion_fin` date DEFAULT NULL,
+  `vencimiento` tinyint(1) NOT NULL DEFAULT '0',
+  `vencimiento_valor` int(10) unsigned NOT NULL DEFAULT '5',
+  `vencimiento_unidad` enum('D','W','M') NOT NULL DEFAULT 'D',
+  `vencimiento_habiles` tinyint(1) NOT NULL DEFAULT '0',
+  `vencimiento_notificar` tinyint(1) NOT NULL DEFAULT '0',
+  `vencimiento_notificar_email` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `identificador_proceso` (`identificador`,`proceso_id`),
+  KEY `fk_tarea_proceso1` (`proceso_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=51 ;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `tarea_has_grupo_usuarios`
+--
+
+CREATE TABLE IF NOT EXISTS `tarea_has_grupo_usuarios` (
+  `tarea_id` int(10) unsigned NOT NULL,
+  `grupo_usuarios_id` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`tarea_id`,`grupo_usuarios_id`),
+  KEY `fk_tarea_has_grupo_usuarios_grupo_usuarios1_idx` (`grupo_usuarios_id`),
+  KEY `fk_tarea_has_grupo_usuarios_tarea1_idx` (`tarea_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `tramite`
+--
+
+CREATE TABLE IF NOT EXISTS `tramite` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `proceso_id` int(10) unsigned NOT NULL,
+  `pendiente` tinyint(1) NOT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `ended_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_tramite_proceso1_idx` (`proceso_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `usuario`
+--
+
+CREATE TABLE IF NOT EXISTS `usuario` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `usuario` varchar(128) NOT NULL,
+  `password` varchar(256) DEFAULT NULL,
+  `rut` varchar(16) DEFAULT NULL,
+  `nombres` varchar(128) DEFAULT NULL,
+  `apellido_paterno` varchar(128) DEFAULT NULL,
+  `apellido_materno` varchar(128) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `registrado` tinyint(1) NOT NULL DEFAULT '1',
+  `vacaciones` tinyint(1) NOT NULL DEFAULT '0',
+  `cuenta_id` int(10) unsigned DEFAULT NULL,
+  `salt` varchar(32) NOT NULL,
+  `open_id` tinyint(1) NOT NULL DEFAULT '0',
+  `reset_token` varchar(40) DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `usuario_unique` (`usuario`,`open_id`),
+  KEY `fk_usuario_cuenta1_idx` (`cuenta_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=307 ;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `usuario_backend`
+--
+
+CREATE TABLE IF NOT EXISTS `usuario_backend` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `email` varchar(128) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `nombre` varchar(128) NOT NULL,
+  `apellidos` varchar(128) NOT NULL,
+  `rol` enum('super','modelamiento','operacion','gestion') NOT NULL DEFAULT 'super',
+  `salt` varchar(32) NOT NULL,
+  `cuenta_id` int(10) unsigned NOT NULL,
+  `reset_token` varchar(40) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_usuario_backend_cuenta1_idx` (`cuenta_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `usuario_manager`
+--
+
+CREATE TABLE IF NOT EXISTS `usuario_manager` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `usuario` varchar(128) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `nombre` varchar(128) NOT NULL,
+  `apellidos` varchar(128) NOT NULL,
+  `salt` varchar(32) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `widget`
+--
+
+CREATE TABLE IF NOT EXISTS `widget` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `tipo` varchar(32) NOT NULL,
+  `nombre` varchar(128) NOT NULL,
+  `posicion` int(10) unsigned NOT NULL,
+  `config` text,
+  `cuenta_id` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_widget_cuenta1_idx` (`cuenta_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+--
+-- Restricciones para tablas volcadas
+--
+
+--
+-- Filtros para la tabla `accion`
+--
+ALTER TABLE `accion`
+  ADD CONSTRAINT `fk_trigger_proceso1` FOREIGN KEY (`proceso_id`) REFERENCES `proceso` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `campo`
+--
+ALTER TABLE `campo`
+  ADD CONSTRAINT `campo_ibfk_1` FOREIGN KEY (`formulario_id`) REFERENCES `formulario` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_campo_documento1` FOREIGN KEY (`documento_id`) REFERENCES `documento` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `conexion`
+--
+ALTER TABLE `conexion`
+  ADD CONSTRAINT `conexion_ibfk_1` FOREIGN KEY (`tarea_id_origen`) REFERENCES `tarea` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `conexion_ibfk_2` FOREIGN KEY (`tarea_id_destino`) REFERENCES `tarea` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `dato_seguimiento`
+--
+ALTER TABLE `dato_seguimiento`
+  ADD CONSTRAINT `fk_dato_seguimiento_etapa1` FOREIGN KEY (`etapa_id`) REFERENCES `etapa` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `documento`
+--
+ALTER TABLE `documento`
+  ADD CONSTRAINT `fk_documento_proceso1` FOREIGN KEY (`proceso_id`) REFERENCES `proceso` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_documento_hsm_configuracion1` FOREIGN KEY (`hsm_configuracion_id`) REFERENCES `hsm_configuracion` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Filtros para la tabla `etapa`
+--
+ALTER TABLE `etapa`
+  ADD CONSTRAINT `etapa_ibfk_1` FOREIGN KEY (`tramite_id`) REFERENCES `tramite` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_etapa_tarea1` FOREIGN KEY (`tarea_id`) REFERENCES `tarea` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_etapa_usuario1` FOREIGN KEY (`usuario_id`) REFERENCES `usuario` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `fk_etapa_etapa1` FOREIGN KEY (`etapa_ancestro_split_id`) REFERENCES `etapa` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `evento`
+--
+ALTER TABLE `evento`
+  ADD CONSTRAINT `fk_evento_tarea1` FOREIGN KEY (`tarea_id`) REFERENCES `tarea` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_evento_accion1` FOREIGN KEY (`accion_id`) REFERENCES `accion` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_evento_paso1` FOREIGN KEY (`paso_id`) REFERENCES `paso` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `file`
+--
+ALTER TABLE `file`
+  ADD CONSTRAINT `fk_file_tramite1` FOREIGN KEY (`tramite_id`) REFERENCES `tramite` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `formulario`
+--
+ALTER TABLE `formulario`
+  ADD CONSTRAINT `fk_formulario_proceso1` FOREIGN KEY (`proceso_id`) REFERENCES `proceso` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `grupo_usuarios`
+--
+ALTER TABLE `grupo_usuarios`
+  ADD CONSTRAINT `fk_grupo_usuarios_cuenta1` FOREIGN KEY (`cuenta_id`) REFERENCES `cuenta` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `grupo_usuarios_has_usuario`
+--
+ALTER TABLE `grupo_usuarios_has_usuario`
+  ADD CONSTRAINT `fk_grupo_usuarios_has_usuario_grupo_usuarios1` FOREIGN KEY (`grupo_usuarios_id`) REFERENCES `grupo_usuarios` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_grupo_usuarios_has_usuario_usuario1` FOREIGN KEY (`usuario_id`) REFERENCES `usuario` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `hsm_configuracion`
+--
+ALTER TABLE `hsm_configuracion`
+  ADD CONSTRAINT `fk_hsm_configuracion_cuenta1` FOREIGN KEY (`cuenta_id`) REFERENCES `cuenta` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Filtros para la tabla `paso`
+--
+ALTER TABLE `paso`
+  ADD CONSTRAINT `fk_paso_formulario1` FOREIGN KEY (`formulario_id`) REFERENCES `formulario` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_paso_tarea1` FOREIGN KEY (`tarea_id`) REFERENCES `tarea` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `proceso`
+--
+ALTER TABLE `proceso`
+  ADD CONSTRAINT `fk_proceso_cuenta1` FOREIGN KEY (`cuenta_id`) REFERENCES `cuenta` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `reporte`
+--
+ALTER TABLE `reporte`
+  ADD CONSTRAINT `fk_reporte_proceso1` FOREIGN KEY (`proceso_id`) REFERENCES `proceso` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `tarea`
+--
+ALTER TABLE `tarea`
+  ADD CONSTRAINT `tarea_ibfk_1` FOREIGN KEY (`proceso_id`) REFERENCES `proceso` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `tarea_has_grupo_usuarios`
+--
+ALTER TABLE `tarea_has_grupo_usuarios`
+  ADD CONSTRAINT `fk_tarea_has_grupo_usuarios_grupo_usuarios1` FOREIGN KEY (`grupo_usuarios_id`) REFERENCES `grupo_usuarios` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_tarea_has_grupo_usuarios_tarea1` FOREIGN KEY (`tarea_id`) REFERENCES `tarea` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `tramite`
+--
+ALTER TABLE `tramite`
+  ADD CONSTRAINT `fk_tramite_proceso1` FOREIGN KEY (`proceso_id`) REFERENCES `proceso` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `usuario`
+--
+ALTER TABLE `usuario`
+  ADD CONSTRAINT `fk_usuario_cuenta1` FOREIGN KEY (`cuenta_id`) REFERENCES `cuenta` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `usuario_backend`
+--
+ALTER TABLE `usuario_backend`
+  ADD CONSTRAINT `fk_usuario_backend_cuenta1` FOREIGN KEY (`cuenta_id`) REFERENCES `cuenta` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `widget`
+--
+ALTER TABLE `widget`
+  ADD CONSTRAINT `fk_widget_cuenta1` FOREIGN KEY (`cuenta_id`) REFERENCES `cuenta` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
