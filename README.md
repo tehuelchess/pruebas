@@ -38,3 +38,8 @@ jQuery 1.7.2
 - Acceder a http://nombrededominio/backend
     Usuario: admin@admin.com
     Contraseña: 123456
+
+### Administración de multiples cuentas:
+- Acceder a http://nombrededominio/manager
+    Usuario: admin@admin.com
+    Contraseña: 123456
