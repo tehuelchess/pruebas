@@ -7,14 +7,8 @@ class Migration_6 extends Doctrine_Migration_Base {
     }
 
     public function postUp() {
-        $documentos=Doctrine::getTable('Documento')->findAll();
-        
-        foreach($documentos as $d){
-            if($d->tipo=='certificado'){
-                $d->titulo=$d->nombre;
-                $d->save();
-            }
-        }
+        $q = Doctrine_Manager::getInstance()->getCurrentConnection();
+        $q->execute("UPDATE documento SET titulo=nombre WHERE tipo='certificado'");
     }
 
     public function down() {
