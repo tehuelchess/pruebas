@@ -1,3 +1,4 @@
+<!--
 <link rel="stylesheet" type="text/css" href="<?= base_url() ?>assets/js/clippy/clippy.css" media="all">
 <script src="<?= base_url() ?>assets/js/clippy/clippy.js"></script>
 <script type="text/javascript">
@@ -84,6 +85,7 @@
         */
     }
 </script>
+-->
 <div id="modalClip" class="modal hide fade">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
