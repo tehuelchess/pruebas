@@ -92,4 +92,13 @@ class Cuenta extends Doctrine_Record {
             return base_url('assets/img/logo.png');
     }
 
+    public function usesClaveUnicaOnly(){
+        foreach($this->Procesos as $p){
+            if($p->getTareaInicial()->acceso_modo!='claveunica')
+                return false;
+        }
+
+        return true;
+    }
+
 }
