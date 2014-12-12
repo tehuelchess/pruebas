@@ -25,16 +25,9 @@
                 <label>Nombre</label>
                 <input type="text" name="nombre" value="<?=isset($grupo_usuarios)?$grupo_usuarios->nombre:''?>"/>
                 <label>Este grupo lo componen</label>
-                <!--            
-                <select multiple readonly>
-                    <?php foreach($grupo_usuarios->Usuarios as $u): ?>
-                    <option><?=$u->usuario?></option>
-                    <?php endforeach; ?>
-                </select>
-                -->
                 <select class="chosen" name="usuarios[]" data-placeholder="Seleccione los usuarios" multiple>
                     <?php foreach($usuarios as $g): ?>
-                    <option value="<?=$g->id?>" <?=isset($grupo_usuarios) && $grupo_usuarios->hasUsuario($g->id)?'selected':''?>><?=$g->usuario?> (<?=$g->nombres?> <?=$g->apellido_paterno?>)</option>
+                    <option value="<?=$g->id?>" <?=isset($grupo_usuarios) && $grupo_usuarios->hasUsuario($g->id)?'selected':''?>><?=$g->displayUsername(true)?></option>
                     <?php endforeach; ?>
                 </select>
                 <div class="form-actions">

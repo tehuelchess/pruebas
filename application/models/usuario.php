@@ -81,11 +81,17 @@ class Usuario extends Doctrine_Record {
         return $this->usuario;
     }
     
-    public function displayUsername(){
+    public function displayUsername($extended=false){
+        $display='';
         if($this->open_id)
-            return $this->rut;
-        
-        return $this->usuario;
+            $display=$this->rut;
+        else
+            $display = $this->usuario;
+
+        if($this->email)
+            $display.=' ('.$this->email.')';
+
+        return $display;
     }
     
     public function displayInfo(){
