@@ -82,14 +82,15 @@ class Usuario extends Doctrine_Record {
     }
     
     public function displayUsername($extended=false){
-        $display='';
         if($this->open_id)
             $display=$this->rut;
         else
             $display = $this->usuario;
 
-        if($this->email)
-            $display.=' ('.$this->email.')';
+        if($extended){
+            if($this->email)
+                $display.=' ('.$this->email.')';
+        }
 
         return $display;
     }
