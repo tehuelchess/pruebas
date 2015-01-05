@@ -1,7 +1,8 @@
 <?php if($etapa->Tarea->vencimiento):?>
 <div class="alert alert-warning">Atención. Esta etapa <?=$etapa->getFechaVencimientoAsString()?>.</div>
 <?php endif ?>
-<form method="POST" class="ajaxForm dynaForm form-horizontal" action="<?=site_url('etapas/ejecutar_form/'.$etapa->id.'/'.$secuencia.($qs?'?'.$qs:''))?>">  
+<form method="POST" class="ajaxForm dynaForm form-horizontal" action="<?=site_url('etapas/ejecutar_form/'.$etapa->id.'/'.$secuencia.($qs?'?'.$qs:''))?>">
+    <input type="hidden" name="_method" value="post">
     <fieldset>
         <div class="validacion"></div>
         <legend><?=$paso->Formulario->nombre?></legend>
