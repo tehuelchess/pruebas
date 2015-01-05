@@ -5,6 +5,8 @@ class CampoComunas extends Campo{
     public $requiere_datos=false;
     
     protected function display($modo, $dato) {
+        $valor_default=json_decode($this->valor_default);
+
         $display = '<label class="control-label">' . $this->etiqueta . (in_array('required', $this->validacion) ? '' : ' (Opcional)') . '</label>';
         $display.='<div class="controls">';
         $display.='<select class="regiones" data-id="'.$this->id.'" name="' . $this->nombre . '[region]" ' . ($modo == 'visualizacion' ? 'readonly' : '') . '>';
@@ -23,8 +25,8 @@ class CampoComunas extends Campo{
                 $(document).ready(function(){
                     var justLoadedRegion=true;
                     var justLoadedComuna=true;
-                    var defaultRegion="'.($dato && $dato->valor?$dato->valor->region:'').'";
-                    var defaultComuna="'.($dato && $dato->valor?$dato->valor->comuna:'').'";
+                    var defaultRegion="'.($dato && $dato->valor?$dato->valor->region:$valor_default->region).'";
+                    var defaultComuna="'.($dato && $dato->valor?$dato->valor->comuna:$valor_default->comuna).'";
                         
                     updateRegiones();
                     

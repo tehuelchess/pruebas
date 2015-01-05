@@ -139,7 +139,7 @@
                <?php endif; ?>
             <?php if(!$campo->estatico):?>
             <label>Valor por defecto</label>
-            <input type="text" name="valor_default" value="<?=$campo->valor_default?>" />
+            <input type="text" name="valor_default" value="<?=htmlspecialchars($campo->valor_default)?>" />
             <?php endif ?>
             <div class="campoDependientes">                
                 <label>Visible solo si</label>
