@@ -14,31 +14,35 @@ class WidgetTramitesCantidad extends Widget {
 
         foreach($this->config->procesos as $proceso_id){
             $p=Doctrine::getTable('Proceso')->find($proceso_id);
-            $conteo = Doctrine_Query::create()
-                ->from('Tramite t, t.Etapas e, e.DatosSeguimiento d, t.Proceso p ,p.Cuenta c')
-                ->where('c.id = ?', $this->cuenta_id)
-                ->andWhere('p.id = ?', $p->id)
-                ->andWhere('t.pendiente=1')
-                ->having('COUNT(d.id) > 0 OR COUNT(e.id) > 1')  //Mostramos solo los que se han avanzado o tienen datos
-                ->groupBy('t.id')
-                ->count();
-            
-            $datos[$p->nombre]['pendientes'] = $conteo;
+            if($p){
+                $conteo = Doctrine_Query::create()
+                    ->from('Tramite t, t.Etapas e, e.DatosSeguimiento d, t.Proceso p ,p.Cuenta c')
+                    ->where('c.id = ?', $this->cuenta_id)
+                    ->andWhere('p.id = ?', $p->id)
+                    ->andWhere('t.pendiente=1')
+                    ->having('COUNT(d.id) > 0 OR COUNT(e.id) > 1')  //Mostramos solo los que se han avanzado o tienen datos
+                    ->groupBy('t.id')
+                    ->count();
+
+                $datos[$p->nombre]['pendientes'] = $conteo;
+            }
         }
 
         
         foreach($this->config->procesos as $proceso_id){
             $p=Doctrine::getTable('Proceso')->find($proceso_id);
-            $conteo = Doctrine_Query::create()
-                ->from('Tramite t, t.Etapas e, e.DatosSeguimiento d, t.Proceso p ,p.Cuenta c')
-                ->where('c.id = ?', $this->cuenta_id)
-                ->andWhere('p.id = ?', $p->id)
-                ->andWhere('t.pendiente=0')
-                ->having('COUNT(d.id) > 0 OR COUNT(e.id) > 1')  //Mostramos solo los que se han avanzado o tienen datos
-                ->groupBy('t.id')
-                ->count();
-            
-            $datos[$p->nombre]['completados'] = $conteo;
+            if($p){
+                $conteo = Doctrine_Query::create()
+                    ->from('Tramite t, t.Etapas e, e.DatosSeguimiento d, t.Proceso p ,p.Cuenta c')
+                    ->where('c.id = ?', $this->cuenta_id)
+                    ->andWhere('p.id = ?', $p->id)
+                    ->andWhere('t.pendiente=0')
+                    ->having('COUNT(d.id) > 0 OR COUNT(e.id) > 1')  //Mostramos solo los que se han avanzado o tienen datos
+                    ->groupBy('t.id')
+                    ->count();
+
+                $datos[$p->nombre]['completados'] = $conteo;
+            }
         }
         
         
