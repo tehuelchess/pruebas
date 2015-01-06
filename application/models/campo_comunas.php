@@ -6,6 +6,11 @@ class CampoComunas extends Campo{
     
     protected function display($modo, $dato) {
         $valor_default=json_decode($this->valor_default);
+        if(!$valor_default){
+            $valor_default = new stdClass();
+            $valor_default->region='';
+            $valor_default->comuna='';
+        }
 
         $display = '<label class="control-label">' . $this->etiqueta . (in_array('required', $this->validacion) ? '' : ' (Opcional)') . '</label>';
         $display.='<div class="controls">';
