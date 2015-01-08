@@ -95,33 +95,7 @@
         <footer>
             <div class="area1">
                 <div class="container">
-                    <div class="row">
-                        <div class="span2">
-                            <div class="col">
-                                <h3>Otros proyectos</h3>
-                            </div>
-                        </div>
-                        <div class="offset6 span4">
-
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="span4">
-                            <ul>
-                                <li><a href="http://www.chileatiende.cl" target="_blank">ChileAtiende</a></li>
-                            </ul>
-                        </div>
-                        <div class="span4">
-                            <ul>
-                                <li><a href="http://www.chilesinpapeleo.cl" target="_blank">Chile sin papeleo</a></li>
-                            </ul>
-                        </div>
-                        <div class="span4">
-                            <ul>
-                                <li><a href="http://www.gobiernoabierto.cl" target="_blank">Gobierno Abierto</a></li>
-                            </ul>
-                        </div>
-                    </div>
+                    
                 </div>
             </div>
             <div class="area2">
