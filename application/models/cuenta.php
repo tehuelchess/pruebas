@@ -93,10 +93,9 @@ class Cuenta extends Doctrine_Record {
     }
 
     public function usesClaveUnicaOnly(){
-        $procesos=Doctrine::getTable('Proceso')->findProcesosDisponiblesParaIniciar(UsuarioSesion::usuario()->id, Cuenta::cuentaSegunDominio());
-
-        foreach($procesos as $p){
-            if($p->getTareaInicial()->acceso_modo!='claveunica')
+        foreach($this->Procesos as $p){
+            $tareaInicial=$p->getTareaInicial();
+            if($tareaInicial && $tareaInicial->acceso_modo!='claveunica')
                 return false;
         }
 
