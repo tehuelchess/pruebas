@@ -144,7 +144,7 @@ class Proceso extends Doctrine_Record {
         foreach($json->Documentos as $f){
             $proceso->Documentos[$f->id]=new Documento();
             foreach($f as $keyf => $f_attr){
-                if($keyf != 'id' && $keyf != 'proceso_id' && $keyf != 'Proceso'){
+                if($keyf != 'id' && $keyf != 'proceso_id' && $keyf != 'Proceso' && $keyf != 'hsm_configuracion_id'){
                     $proceso->Documentos[$f->id]->{$keyf}=$f_attr;
                 }
             }
@@ -209,7 +209,7 @@ class Proceso extends Doctrine_Record {
                                 $evento->Accion=$proceso->Acciones[$ev->accion_id];
                                 $tarea->Eventos[]=$evento;
                             }
-                        }elseif($keyt != 'id' && $keyt != 'proceso_id' && $keyt != 'Proceso'){
+                        }elseif($keyt != 'id' && $keyt != 'proceso_id' && $keyt != 'Proceso' && $keyt != 'grupos_usuarios'){
                             $tarea->{$keyt}=$t_attr;
                         }
                     }
