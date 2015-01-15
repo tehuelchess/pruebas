@@ -194,7 +194,7 @@ class Campo extends Doctrine_Record {
         if($validacion)
             $this->_set('validacion',  implode ('|', $validacion));
         else
-            $this->_set('validacion',NULL);
+            $this->_set('validacion','');
     }
     
     public function getValidacion(){

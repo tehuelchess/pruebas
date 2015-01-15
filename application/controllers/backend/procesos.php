@@ -308,6 +308,37 @@ class Procesos extends CI_Controller {
         
     }
 
+    public function exportar($proceso_id){
+
+        $proceso=Doctrine::getTable('Proceso')->find($proceso_id);
+
+        $json=$proceso->exportComplete();
+
+        header("Content-Disposition: attachment; filename=\"".mb_convert_case(str_replace(' ','-',$proceso->nombre),MB_CASE_LOWER).".simple\"");
+        header('Content-Type: application/json');
+        echo $json;
+
+    }
+
+    public function importar(){
+
+        $file_path=$_FILES['archivo']['tmp_name'];
+
+        if($file_path){
+            $input=file_get_contents($_FILES['archivo']['tmp_name']);
+
+            $proceso=Proceso::importComplete($input);
+
+            $proceso->save();
+
+
+        }
+
+        redirect($_SERVER['HTTP_REFERER']);
+
+
+    }
+
 }
 
 /* End of file welcome.php */
