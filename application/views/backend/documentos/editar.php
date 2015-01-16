@@ -130,6 +130,11 @@
 
         </div>
 
+        <label>Tamaño de la Página</label>
+        <label class="radio"><input type="radio" name="tamano" value="letter" <?= !$edit || ($edit && $documento->tamano) == 'letter' ? 'checked' : '' ?> /> Carta</label>
+        <label class="radio"><input type="radio" name="tamano" value="legal" <?= $edit && $documento->tamano == 'legal' ? 'checked' : '' ?> /> Oficio</label>
+
+
         <label>Contenido</label>
         <textarea name="contenido" class="input-xxlarge" rows="20"><?= $edit ? $documento->contenido : '' ?></textarea>
         <div class="help-block">
