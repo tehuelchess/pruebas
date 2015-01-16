@@ -101,6 +101,7 @@ class Documentos extends CI_Controller {
             $documento->nombre=$this->input->post('nombre');
             $documento->tipo=$this->input->post('tipo');
             $documento->contenido=$this->input->post('contenido',false);
+            $documento->tamano=$this->input->post('tamano');
             $documento->hsm_configuracion_id=$this->input->post('hsm_configuracion_id');
             
             if($documento->tipo=='certificado'){

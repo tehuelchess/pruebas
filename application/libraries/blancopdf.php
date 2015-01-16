@@ -9,8 +9,8 @@ class BlancoPDF extends TCPDF {
     public $content='';
     
 
-    function __construct() {
-        parent::__construct('P', 'mm', 'LETTER', true, 'UTF-8', false, false);
+    function __construct($size = 'letter') {
+        parent::__construct('P', 'mm', $size, true, 'UTF-8', false, false);
 
         $this->SetMargins(PAGE_MARGIN, PAGE_MARGIN, PAGE_MARGIN);
     }

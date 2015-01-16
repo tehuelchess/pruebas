@@ -21,6 +21,7 @@ class Documento extends Doctrine_Record {
         $this->hasColumn('timbre');
         $this->hasColumn('logo');
         $this->hasColumn('hsm_configuracion_id');
+        $this->hasColumn('tamano');
     }
 
     function setUp() {
@@ -96,7 +97,7 @@ class Documento extends Doctrine_Record {
 
         if ($this->tipo == 'certificado') {
             $CI->load->library('certificadopdf');
-            $obj = new $CI->certificadopdf;
+            $obj = new $CI->certificadopdf($this->tamano);
             
             $contenido=$this->contenido;
             $titulo=$this->titulo;
@@ -141,7 +142,7 @@ class Documento extends Doctrine_Record {
             $obj->copia = $copia;
         }else {
             $CI->load->library('blancopdf');
-            $obj = new $CI->blancopdf;
+            $obj = new $CI->blancopdf($this->tamano);
             
             $contenido=$this->contenido;
             if($etapa_id){
