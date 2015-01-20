@@ -116,10 +116,20 @@ class Proceso extends Doctrine_Record {
     }
 
     public function exportComplete(){
-        $proceso=Doctrine_Query::create()
-            ->from('Proceso p, p.Tareas t, t.Pasos, t.Eventos, p.Formularios f, f.Campos, p.Acciones, p.Documentos')
-            ->where('p.id = ?',$this->id)
-            ->fetchOne();
+        $proceso=$this;
+        $proceso->Tareas;
+        foreach($proceso->Tareas as $t){
+            $t->Pasos;
+            $t->Eventos;
+        }
+
+        $proceso->Formularios;
+        foreach ($proceso->Formularios as $f) {
+            $f->Campos;
+        }
+
+        $proceso->Acciones;
+        $proceso->Documentos;
 
         $object=$proceso->toArray();
 
