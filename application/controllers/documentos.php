@@ -41,9 +41,12 @@ class Documentos extends MY_Controller {
             echo 'Archivo no existe';
             exit;
         }
+
+        $friendlyName=str_replace(' ','-',convert_accented_characters(mb_convert_case($file->Tramite->Proceso->Cuenta->nombre.' '.$file->Tramite->Proceso->nombre,MB_CASE_LOWER).'-'.$file->id)).'.'.pathinfo($path,PATHINFO_EXTENSION);
   
         header('Content-Type: '. get_mime_by_extension($path));
         header('Content-Length: ' . filesize($path));
+        header('Content-Disposition: attachment; filename="'.$friendlyName.'"');
         readfile($path);
     }
     
