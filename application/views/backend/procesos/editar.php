@@ -85,7 +85,7 @@
         */
     }
 </script>
--->
+
 <div id="modalClip" class="modal hide fade">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -104,7 +104,7 @@
         <button class="btn btn-primary" onclick="javascript:$('#captchaResult').show()">Validar Captcha</button>
     </div>
 </div>
-
+-->
 
 
 <?php if($this->config->item('js_diagram')=='gojs'):?>
