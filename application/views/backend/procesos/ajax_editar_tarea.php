@@ -9,41 +9,7 @@
                 .replace(/'/g, "&#039;");
         }
 
-        $("#selectGruposUsuarios").select2({
-            multiple: true,
-            query: function (query) {
-                var data = {results: []};
-                var options=$(query.element).data("options");
-                
-                for(i in options)
-                    if(options[i].nombre.toUpperCase().indexOf(query.term.toUpperCase())==0)
-                        data.results.push({id: options[i].id, text: options[i].nombre});
-                
-                if(/@@\w/.test(query.term))
-                    data.results.push({id: query.term, text: query.term});
-            
-            
-                query.callback(data);
-            },
-            initSelection : function (element, callback) {
-                var options=$(element).data("options");
-                var data = [];
-                $(element.val().split(",")).each(function (i,term) {
-                    console.log(term);
-                    for(i in options){
-                        if(options[i].id==term){
-                            data.push({id: options[i].id, text: options[i].nombre});
-                            return;
-                        }
-                    }
-                    data.push({id: term, text: term});
-                    return;
-                
-                });
-                callback(data);
-            }
-
-        });
+        $("#selectGruposUsuarios").select2();
         
         $("[rel=tooltip]").tooltip();
         
@@ -244,7 +210,11 @@
                     <label class='radio'><input type="radio" name="acceso_modo" value="claveunica" <?= $tarea->acceso_modo == 'claveunica' ? 'checked' : '' ?> /> Sólo los usuarios registrados con ClaveUnica.</label>
                     <label class='radio'><input type="radio" name="acceso_modo" value="grupos_usuarios" <?= $tarea->acceso_modo == 'grupos_usuarios' ? 'checked' : '' ?> /> Sólo los siguientes grupos de usuarios pueden acceder.</label>
                     <div id="optionalGruposUsuarios" style="height: 300px;" class="<?= $tarea->acceso_modo == 'grupos_usuarios' ? '' : 'hide' ?>">
-                        <input id="selectGruposUsuarios" type="hidden" name="grupos_usuarios" class="input-xlarge" value="<?=$tarea->grupos_usuarios?>" data-options='<?=json_encode($tarea->Proceso->Cuenta->GruposUsuarios->toArray(false),JSON_HEX_APOS)?>' />
+                        <select id="selectGruposUsuarios" class="input-xlarge" name="grupos_usuarios[]" multiple>
+                            <?php foreach($tarea->Proceso->Cuenta->GruposUsuarios as $g):?>
+                                <option value="<?=$g->id?>" <?=in_array($g->id,explode(',',$tarea->grupos_usuarios))?'selected':''?>><?=$g->nombre?></option>
+                            <?php endforeach ?>
+                        </select>
                         <div class='help-block'>Puede incluir variables usando @@. Las variables deben contener el numero id del grupo de usuarios.</div>
                     </div>
                 </div>

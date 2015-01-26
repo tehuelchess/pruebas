@@ -20,16 +20,35 @@
                 <div class="validacion"></div>
                 <?php if(isset($grupo_usuarios)):?>
                 <label>Id</label>
-                <input type='text' value='<?=$grupo_usuarios->id?>' disabled />
+                <input type='text' class="input-small" value='<?=$grupo_usuarios->id?>' disabled />
                 <?php endif ?>
                 <label>Nombre</label>
-                <input type="text" name="nombre" value="<?=isset($grupo_usuarios)?$grupo_usuarios->nombre:''?>"/>
+                <input type="text" class="input-xlarge" name="nombre" value="<?=isset($grupo_usuarios)?$grupo_usuarios->nombre:''?>"/>
                 <label>Este grupo lo componen</label>
-                <select class="chosen" name="usuarios[]" data-placeholder="Seleccione los usuarios" multiple>
-                    <?php foreach($usuarios as $g): ?>
-                    <option value="<?=$g->id?>" <?=isset($grupo_usuarios) && $grupo_usuarios->hasUsuario($g->id)?'selected':''?>><?=$g->displayUsername(true)?></option>
+                <select id="select-usuarios" class="input-xlarge" name="usuarios[]" data-placeholder="Seleccione los usuarios" multiple>
+                    <?php foreach($grupo_usuarios->Usuarios as $g): ?>
+                        <option value="<?=$g->id?>" selected><?=$g->displayUsername(true)?></option>
                     <?php endforeach; ?>
                 </select>
+                <script>
+                    $(document).ready(function(){
+                        $("#select-usuarios").select2({
+                            ajax: {
+                                url: site_url+"backend/configuracion/ajax_get_usuarios",
+                                cache: true,
+                                data: function(params) {
+                                    return {query: params.term};
+                                },
+                                processResults: function(data,page){
+                                    return {
+                                        results: data
+                                    }
+                                }
+                            }
+
+                        });
+                    })
+                </script>
                 <div class="form-actions">
                     <button class="btn btn-primary" type="submit">Guardar</button>
                     <a class="btn" href="<?=site_url('backend/configuracion/grupos_usuarios')?>">Cancelar</a>
