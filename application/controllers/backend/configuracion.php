@@ -42,8 +42,6 @@ class Configuracion extends CI_Controller {
             $data['grupo_usuarios'] = $grupo_usuarios;
         }
 
-        $data['usuarios']=Doctrine::getTable('Usuario')->findByCuentaId(UsuarioBackendSesion::usuario()->cuenta_id);
-        
         $data['title'] = 'Configuración de Grupo de Usuarios';
         $data['content'] = 'backend/configuracion/grupo_usuarios_editar';
 
@@ -341,6 +339,27 @@ class Configuracion extends CI_Controller {
         $this->form_validation->set_message('check_existe_usuario_backend','%s ya existe en cuenta: '.$u->Cuenta->nombre);
         return FALSE;
              
+    }
+
+    function ajax_get_usuarios(){
+        $query=$this->input->get('query');
+
+        $doctrineQuery=Doctrine_Query::create()
+            ->from('Usuario u')
+            ->select('u.id, CONCAT(IF(u.open_id,u.rut,u.usuario),IF(u.email IS NOT NULL,CONCAT(" - ",u.email),"")) as text');
+
+        if(strlen($query) >= 3){
+            $doctrineQuery->having('text LIKE ?','%'.$query.'%')
+                ->where('u.registrado = 1');
+        }else{
+            $doctrineQuery->where('u.cuenta_id = ?',UsuarioBackendSesion::usuario()->cuenta_id);
+        }
+
+        $usuarios=$doctrineQuery->execute();
+
+        header('Content-Type: application/json');
+        echo json_encode($usuarios->toArray());
+
     }
 
 
