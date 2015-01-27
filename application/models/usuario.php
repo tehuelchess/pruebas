@@ -89,7 +89,7 @@ class Usuario extends Doctrine_Record {
 
         if($extended){
             if($this->email)
-                $display.=' ('.$this->email.')';
+                $display.=' - '.$this->email;
         }
 
         return $display;
