@@ -7,7 +7,7 @@ class CampoMoneda extends Campo{
     protected function display($modo, $dato) {
         $display = '<label class="control-label">' . $this->etiqueta . (in_array('required', $this->validacion) ? '' : ' (Opcional)') . '</label>';
         $display.='<div class="controls">';
-        $display.='<select name="' . $this->nombre . '" ' . ($modo == 'visualizacion' ? 'readonly' : '') . '>';
+        $display.='<select name="' . $this->nombre . '" ' . ($modo == 'visualizacion' ? 'disabled' : '') . '>';
         $display.='<option value="">Seleccione moneda</option>';
         $display.='<optgroup label="Comunes">';
         $display.='<option value="CLP">Peso Chileno</option><option value="USD">Dolar Estadounidense</option><option value="EUR">Euro</option>';
