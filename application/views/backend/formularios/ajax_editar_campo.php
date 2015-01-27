@@ -73,7 +73,7 @@
         
         function ellipsize(campoOrigen,campoDestino){
             if($(campoDestino).val()==""){
-                var string=$(campoOrigen).val();
+                var string=$(campoOrigen).val().trim();
                 string=string.toLowerCase();
                 string=string.replace(/\s/g,"_");
                 string=string.replace(/á/g,"a");
