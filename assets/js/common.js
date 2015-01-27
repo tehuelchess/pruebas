@@ -13,10 +13,10 @@ $(document).ready(function(){
         language: "es"
     });
     
-    $("input[type=checkbox][readonly],input[type=radio][readonly]").click(function(e){e.preventDefault();});
+    //$("input[type=checkbox][readonly],input[type=radio][readonly]").click(function(e){e.preventDefault();});
     
-    $("select[readonly]").focus(function(){$(this).blur();});
-    
+    //$("select[readonly]").focus(function(){$(this).blur();});
+
     $(".file-uploader").each(function(i,el){
         var $parentDiv=$(el).parent();
         new qq.FileUploader({

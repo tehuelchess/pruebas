@@ -7,7 +7,7 @@ class CampoCheckbox extends Campo {
         $display .= '<div class="controls">';
         foreach ($this->datos as $d) {
             $display.='<label class="checkbox">';
-            $display.='<input ' . ($modo == 'visualizacion' ? 'readonly' : '') . ' type="checkbox" name="' . $this->nombre . '[]" value="' . $d->valor . '" ' . ($dato && $dato->valor && in_array($d->valor, $dato->valor) ? 'checked' : '') . ' />';
+            $display.='<input ' . ($modo == 'visualizacion' ? 'disabled' : '') . ' type="checkbox" name="' . $this->nombre . '[]" value="' . $d->valor . '" ' . ($dato && $dato->valor && in_array($d->valor, $dato->valor) ? 'checked' : '') . ' />';
             $display.=$d->etiqueta . '</label>';
         }
         if($this->ayuda)
