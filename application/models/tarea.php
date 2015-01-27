@@ -204,6 +204,13 @@ class Tarea extends Doctrine_Record {
         }
     }
 
+    public function setGruposUsuariosFromArray($grupos_array){
+        if(is_array($grupos_array))
+            $this->grupos_usuarios=implode(',',$grupos_array);
+        else
+            $this->grupos_usuarios='';
+    }
+
     public function setEventosFromArray($eventos_array) {
         //Limpiamos la lista antigua
         foreach ($this->Eventos as $key => $val)
