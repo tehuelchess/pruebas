@@ -58,7 +58,7 @@
         <!-- Le javascript
         ================================================== -->
         <!-- Placed at the end of the document so the pages load faster -->
-        <script src="assets/js/jquery-ui/js/jquery-1.7.2.min.js"></script>
+        <script src="assets/js/jquery/jquery-1.8.3.min.js"></script>
         <script src="assets/js/bootstrap.min.js"></script>
         <script src="assets/js/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
         <script src="assets/js/bootstrap-datepicker/js/locales/bootstrap-datepicker.es.js"></script>
