@@ -12,6 +12,7 @@ $lang['exact_length'] = 'El campo "<strong>%s</strong>" debe tener exactamente %
 $lang['alpha'] = 'El campo "<strong>%s</strong>" debe contener sólamente letras.';
 $lang['alpha_numeric'] = 'El campo "<strong>%s</strong>" debe contener sólamente letras y números.';
 $lang['alpha_dash'] = 'El campo "<strong>%s</strong>" debe contener sólamente letras, números y guiones';
+$lang['alpha_space'] = 'El campo "<strong>%s</strong>" debe contener sólamente letras, números y espacios.';
 $lang['numeric'] = 'El campo "<strong>%s</strong>" debe contener sólamente caracteres numericos.';
 $lang['is_numeric'] = 'El campo "<strong>%s</strong>" debe contener sólamente números.';
 $lang['integer'] = 'El campo "<strong>%s</strong>" debe contener un número entero.';
