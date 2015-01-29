@@ -59,7 +59,6 @@ Class MY_Form_validation extends CI_Form_validation {
             /* Por ultimo comprobamos si el resultado que obtuvimos es el mismo que ingreso la persona, de ser así se muestra el mensaje “Valido”, de no ser así se muestra el mensaje “No Valido” */
         }
 
-        $this->set_message('rut', 'El campo %s no es válido');
         return FALSE;
     }
     

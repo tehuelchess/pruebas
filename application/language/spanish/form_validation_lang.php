@@ -21,4 +21,5 @@ $lang['is_natural'] = 'El campo "<strong>%s</strong>" debe contener sólamente n
 $lang['is_natural_no_zero'] = 'El campo "<strong>%s</strong>" debe contener un número positivo mayor que cero.';
 $lang['less_than'] = 'El campo "<strong>%s</strong>" debe contener un número menor que %s.';
 $lang['greater_than'] = 'El campo "<strong>%s</strong>" debe contener un número mayor que %s.';
+$lang['rut'] = 'El campo "<strong>%s</strong>" no es un RUN válido.'
 ?>
