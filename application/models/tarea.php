@@ -306,5 +306,31 @@ class Tarea extends Doctrine_Record {
         else
             $this->_set('activacion_fin', NULL);
     }
+
+    public function canUsuarioIniciarla($usuario_id){
+        $usuario=Doctrine::getTable('Usuario')->find($usuario_id);
+
+        if($this->acceso_modo=='publico')
+            return true;
+
+        if ($this->acceso_modo == 'claveunica' && $usuario->open_id)
+            return true;
+
+        if ($this->acceso_modo == 'registrados' && $usuario->registrado)
+            return true;
+
+        if ($this->acceso_modo == 'grupos_usuarios') {
+            $grupos_arr = explode(',', $this->grupos_usuarios);
+            $u = Doctrine_Query::create()
+                ->from('Usuario u, u.GruposUsuarios g')
+                ->where('u.id = ?', $usuario->id)
+                ->andWhereIn('g.id', $grupos_arr)
+                ->fetchOne();
+            if ($u)
+                return true;
+        }
+
+        return false;
+    }
     
 }
