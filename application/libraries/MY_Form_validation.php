@@ -68,4 +68,16 @@ Class MY_Form_validation extends CI_Form_validation {
         return strftime('%Y-%m-%d',strtotime($string));
     }
 
+    /**
+     * Alpha-numeric with spaces
+     *
+     * @access	public
+     * @param	string
+     * @return	bool
+     */
+    public function alpha_space($str)
+    {
+        return ( ! preg_match('/^([-a-z0-9\s])+$/i', $str)) ? FALSE : TRUE;
+    }
+
 }
