@@ -67,6 +67,7 @@ class Seguimiento extends CI_Controller {
       
         if ($query) {
             $this->load->library('sphinxclient');
+            $this->sphinxclient->setServer($this->config->item('sphinx_host'),$this->config->item('sphinx_port'));
             $this->sphinxclient->setFilter('proceso_id', array($proceso_id));
             $result = $this->sphinxclient->query($query, 'tramites');
             if($result['total']>0){
