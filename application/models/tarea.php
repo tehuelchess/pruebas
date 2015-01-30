@@ -28,6 +28,7 @@ class Tarea extends Doctrine_Record {
         $this->hasColumn('vencimiento_notificar');          //Indica si se debe notificar en caso de que se acerque la fecha de vencimiento
         $this->hasColumn('vencimiento_notificar_dias');     //Indica desde cuantos dias de anticipacion se debe notificar la fecha de vencimiento
         $this->hasColumn('vencimiento_notificar_email');    //Cual es el email donde se debe notificar
+        $this->hasColumn('paso_confirmacion');              //Boolean que indica si se debe incorporar una ultima pantalla de confirmacion antes de avanzar la tarea
         
     }
 
