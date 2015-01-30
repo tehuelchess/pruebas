@@ -373,6 +373,12 @@ $config['js_diagram']='jsplumb';
 $config['https'] = false;
 
 /*
+ * Configuracion de Sphinx
+ */
+$config['sphinx_host'] = 'localhost';
+$config['sphinx_port'] = 9312;
+
+/*
  * Configuracion de backups
  */
 $config['awsAccessKey']='';
