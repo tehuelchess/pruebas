@@ -39,7 +39,7 @@ class Tramite extends Doctrine_Record {
         $this->pendiente = 1;
 
         $etapa = new Etapa();
-        $etapa->tarea_id = $proceso->getTareaInicial()->id;
+        $etapa->tarea_id = $proceso->getTareaInicial(UsuarioSesion::usuario()->id)->id;
         $etapa->pendiente = 1;
 
         $this->Etapas[] = $etapa;

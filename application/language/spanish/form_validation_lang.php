@@ -12,6 +12,7 @@ $lang['exact_length'] = 'El campo "<strong>%s</strong>" debe tener exactamente %
 $lang['alpha'] = 'El campo "<strong>%s</strong>" debe contener sólamente letras.';
 $lang['alpha_numeric'] = 'El campo "<strong>%s</strong>" debe contener sólamente letras y números.';
 $lang['alpha_dash'] = 'El campo "<strong>%s</strong>" debe contener sólamente letras, números y guiones';
+$lang['alpha_space'] = 'El campo "<strong>%s</strong>" debe contener sólamente letras, números y espacios.';
 $lang['numeric'] = 'El campo "<strong>%s</strong>" debe contener sólamente caracteres numericos.';
 $lang['is_numeric'] = 'El campo "<strong>%s</strong>" debe contener sólamente números.';
 $lang['integer'] = 'El campo "<strong>%s</strong>" debe contener un número entero.';
@@ -20,4 +21,5 @@ $lang['is_natural'] = 'El campo "<strong>%s</strong>" debe contener sólamente n
 $lang['is_natural_no_zero'] = 'El campo "<strong>%s</strong>" debe contener un número positivo mayor que cero.';
 $lang['less_than'] = 'El campo "<strong>%s</strong>" debe contener un número menor que %s.';
 $lang['greater_than'] = 'El campo "<strong>%s</strong>" debe contener un número mayor que %s.';
+$lang['rut'] = 'El campo "<strong>%s</strong>" no es un RUN válido.'
 ?>

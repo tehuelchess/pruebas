@@ -59,13 +59,24 @@ Class MY_Form_validation extends CI_Form_validation {
             /* Por ultimo comprobamos si el resultado que obtuvimos es el mismo que ingreso la persona, de ser así se muestra el mensaje “Valido”, de no ser así se muestra el mensaje “No Valido” */
         }
 
-        $this->set_message('rut', 'El campo %s no es válido');
         return FALSE;
     }
     
     //Convierte una fecha en humano al formato mysql.
     function date_prep($string){
         return strftime('%Y-%m-%d',strtotime($string));
+    }
+
+    /**
+     * Alpha-numeric with spaces
+     *
+     * @access	public
+     * @param	string
+     * @return	bool
+     */
+    public function alpha_space($str)
+    {
+        return ( ! preg_match('/^([-a-z0-9\s])+$/i', $str)) ? FALSE : TRUE;
     }
 
 }

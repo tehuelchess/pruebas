@@ -270,6 +270,7 @@
                             <?php endforeach; ?>
                         </tbody>
                     </table>
+                    <label class="checkbox"><input type="checkbox" name="paso_confirmacion" value="1" <?=$tarea->paso_confirmacion?'checked':''?> > Incluir último paso de confirmación antes de avanzar la tarea.</label>
                 </div>
                 <div class="tab-eventos tab-pane" id="tab5">
                     <table class="table">

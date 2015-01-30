@@ -36,7 +36,7 @@
         <script src="<?= base_url() ?>assets/js/jquery.select2/dist/js/select2.min.js"></script> <?php //Soporte para selects con multiple choices     ?>
         <script src="<?= base_url() ?>assets/js/jquery.select2/dist/js/i18n/es.js"></script> <?php //Soporte para selects con multiple choices     ?>
         <script src="<?= base_url() ?>assets/js/file-uploader/fileuploader.js"></script> <?php //Soporte para subir archivos con ajax     ?>
-        <script src="<?= base_url() ?>assets/js/jquery-ui/js/jquery-ui-1.8.21.custom.min.js" type="text/javascript"></script>
+        <script src="<?= base_url() ?>assets/js/jquery-ui/js/jquery-ui-1.9.2.custom.min.js" type="text/javascript"></script>
         <script src="<?= base_url() ?>assets/js/jquery.ui.touch-punch/jquery.ui.touch-punch.min.js" type="text/javascript"></script> <?php //JS para soportar drag & drop en iPad     ?>
         <script src="<?= base_url() ?>assets/js/jquery.ui.livedraggable/jquery.ui.livedraggable.js" type="text/javascript"></script> <?php //JS para que evento draggable sea live     ?>
         <script src="<?= base_url() ?>assets/js/jquery.doubletap/jquery.doubletap.js" type="text/javascript"></script> <?php //JS para soportar dobleclick en iPad     ?>
