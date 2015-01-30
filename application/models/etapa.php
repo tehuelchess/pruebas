@@ -366,7 +366,7 @@ class Etapa extends Doctrine_Record {
         if($interval->invert)
             return 'vencida';
         else
-            return 'vence en '. (1+$interval->d) . ' días';
+            return 'vence en '. (1+$interval->days) . ' días';
     }
      
 

@@ -252,12 +252,25 @@ class Proceso extends Doctrine_Record {
 
 
     }
-    
-    public function getTareaInicial(){
-        return Doctrine_Query::create()
+
+
+    //Entrega la tarea inicial del proceso. Si se entrega $usuario_id, muestra cual seria la tarea inicial para
+    //ese usuario en particular.
+    public function getTareaInicial($usuario_id=null){
+        $tareas=Doctrine_Query::create()
                 ->from('Tarea t, t.Proceso p')
                 ->where('t.inicial = 1 AND p.id = ?',$this->id)
-                ->fetchOne();
+                ->orderBy('FIELD(acceso_modo, "grupos_usuarios", "claveunica", "registrados", "publico")')
+                ->execute();
+
+        if($usuario_id){
+            foreach($tareas as $key=>$t)
+                if ($t->canUsuarioIniciarla($usuario_id))
+                    return $t;
+        }
+
+        return $tareas[0];
+
     }
     
     //Obtiene todos los campos asociados a este proceso
@@ -303,34 +316,15 @@ class Proceso extends Doctrine_Record {
     
     //Verifica si el usuario_id tiene permisos para iniciar este proceso como tramite.
     public function canUsuarioIniciarlo($usuario_id){
-        $usuario=Doctrine::getTable('Usuario')->find($usuario_id);
-        
+
         $tareas = Doctrine_Query::create()
                 ->from('Tarea t, t.Proceso p')
                 ->where('p.id = ? AND t.inicial = 1',$this->id)
                 ->execute();
 
         foreach ($tareas as $t) {
-            if($t->acceso_modo=='publico')
+            if($t->canUsuarioIniciarla($usuario_id))
                 return true;
-
-            if ($t->acceso_modo == 'claveunica' && $usuario->open_id)
-                return true;
-
-            if ($t->acceso_modo == 'registrados' && $usuario->registrado)
-                return true;
-
-            if ($t->acceso_modo == 'grupos_usuarios') {
-                $grupos_arr = explode(',', $t->grupos_usuarios);
-                $u = Doctrine_Query::create()
-                        ->from('Usuario u, u.GruposUsuarios g')
-                        ->where('u.id = ?', $usuario->id)
-                        ->andWhereIn('g.id', $grupos_arr)
-                        ->fetchOne();
-                if ($u)
-                    return true;
-            }
-            
         }
         
         

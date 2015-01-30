@@ -3,7 +3,7 @@
         $('.validacion').typeahead({
             mode: "multiple",
             delimiter: "|",
-            source: ["required","rut","min_length[num]","max_length[num]","exact_length[num]","greater_than[num]","less_than[num]","alpha","alpha_numeric","alpha_dash","numeric","integer","decimal","is_natural","is_natural_no_zero","valid_email","valid_emails","valid_ip","valid_base64","trim"]
+            source: ["required","rut","min_length[num]","max_length[num]","exact_length[num]","greater_than[num]","less_than[num]","alpha","alpha_numeric","alpha_dash","alpha_space","numeric","integer","decimal","is_natural","is_natural_no_zero","valid_email","valid_emails","valid_ip","valid_base64","trim"]
         });
         
         //Funcionalidad del llenado de nombre usando el boton de asistencia
@@ -73,7 +73,7 @@
         
         function ellipsize(campoOrigen,campoDestino){
             if($(campoDestino).val()==""){
-                var string=$(campoOrigen).val();
+                var string=$(campoOrigen).val().trim();
                 string=string.toLowerCase();
                 string=string.replace(/\s/g,"_");
                 string=string.replace(/á/g,"a");

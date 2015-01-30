@@ -21,7 +21,7 @@
         <!-- Le fav and touch icons -->
         <link rel="shortcut icon" href="<?= base_url() ?>assets/img/favicon.png">
         
-        <script src="<?= base_url() ?>assets/js/jquery-ui/js/jquery-1.7.2.min.js"></script>
+        <script src="<?= base_url() ?>assets/js/jquery/jquery-1.8.3.min.js"></script>
         <script src="<?= base_url() ?>assets/js/bootstrap.min.js"></script>
         <script src="<?= base_url() ?>assets/js/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
         <script src="<?= base_url() ?>assets/js/bootstrap-datepicker/js/locales/bootstrap-datepicker.es.js"></script>

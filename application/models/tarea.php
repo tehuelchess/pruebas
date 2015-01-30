@@ -28,6 +28,7 @@ class Tarea extends Doctrine_Record {
         $this->hasColumn('vencimiento_notificar');          //Indica si se debe notificar en caso de que se acerque la fecha de vencimiento
         $this->hasColumn('vencimiento_notificar_dias');     //Indica desde cuantos dias de anticipacion se debe notificar la fecha de vencimiento
         $this->hasColumn('vencimiento_notificar_email');    //Cual es el email donde se debe notificar
+        $this->hasColumn('paso_confirmacion');              //Boolean que indica si se debe incorporar una ultima pantalla de confirmacion antes de avanzar la tarea
         
     }
 
@@ -204,6 +205,13 @@ class Tarea extends Doctrine_Record {
         }
     }
 
+    public function setGruposUsuariosFromArray($grupos_array){
+        if(is_array($grupos_array))
+            $this->grupos_usuarios=implode(',',$grupos_array);
+        else
+            $this->grupos_usuarios='';
+    }
+
     public function setEventosFromArray($eventos_array) {
         //Limpiamos la lista antigua
         foreach ($this->Eventos as $key => $val)
@@ -298,6 +306,32 @@ class Tarea extends Doctrine_Record {
             $this->_set('activacion_fin', date('Y-m-d', $date));
         else
             $this->_set('activacion_fin', NULL);
+    }
+
+    public function canUsuarioIniciarla($usuario_id){
+        $usuario=Doctrine::getTable('Usuario')->find($usuario_id);
+
+        if($this->acceso_modo=='publico')
+            return true;
+
+        if ($this->acceso_modo == 'claveunica' && $usuario->open_id)
+            return true;
+
+        if ($this->acceso_modo == 'registrados' && $usuario->registrado)
+            return true;
+
+        if ($this->acceso_modo == 'grupos_usuarios') {
+            $grupos_arr = explode(',', $this->grupos_usuarios);
+            $u = Doctrine_Query::create()
+                ->from('Usuario u, u.GruposUsuarios g')
+                ->where('u.id = ?', $usuario->id)
+                ->andWhereIn('g.id', $grupos_arr)
+                ->fetchOne();
+            if ($u)
+                return true;
+        }
+
+        return false;
     }
     
 }

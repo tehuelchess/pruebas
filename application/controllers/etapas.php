@@ -64,7 +64,7 @@ class Etapas extends MY_Controller {
         $paso = $etapa->getPasoEjecutable($secuencia);
         if (!$paso) {
             redirect('etapas/ejecutar_fin/' . $etapa->id . ($qs ? '?' . $qs : ''));
-        } else if ($etapa->Tarea->final && $paso->getReadonly() && end($etapa->getPasosEjecutables()) == $paso) { //Cerrado automatico
+        } else if (($etapa->Tarea->final || !$etapa->Tarea->paso_confirmacion) && $paso->getReadonly() && end($etapa->getPasosEjecutables()) == $paso) { //No se requiere mas input
             $etapa->iniciarPaso($paso);
             $etapa->finalizarPaso($paso);
             $etapa->avanzar();
