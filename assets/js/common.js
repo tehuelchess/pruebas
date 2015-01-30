@@ -12,11 +12,8 @@ $(document).ready(function(){
         autoclose: true,
         language: "es"
     });
-    
-    $("input[type=checkbox][readonly],input[type=radio][readonly]").click(function(e){e.preventDefault();});
-    
-    $("select[readonly]").focus(function(){$(this).blur();});
-    
+
+
     $(".file-uploader").each(function(i,el){
         var $parentDiv=$(el).parent();
         new qq.FileUploader({
@@ -88,6 +85,8 @@ $(document).ready(function(){
     
     //Para manejar los input dependientes en dynaforms
     function prepareDynaForm(form){
+        $(form).find(":input[readonly]").prop("disabled",false);
+
         $(form).find(".campo[data-dependiente-campo]").each(function(i,el){   
             var tipo=$(el).data("dependiente-tipo");
             var relacion=$(el).data("dependiente-relacion");
@@ -129,7 +128,11 @@ $(document).ready(function(){
                 
                 $(el).find(":input").prop("disabled",true);
             }
+
+
         });
+
+        $(form).find(":input[readonly]").prop("disabled",true);
     }
     prepareDynaForm(".dynaForm");
     $(".dynaForm").on("change",":input",function(event){
