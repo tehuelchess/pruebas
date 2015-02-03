@@ -45,7 +45,7 @@ class AccionEnviarCorreo extends Accion {
         
         $CI = & get_instance();
         $cuenta=$etapa->Tramite->Proceso->Cuenta;
-        $CI->email->from($cuenta->nombre.'@'.$this->config->item('main_domain'), $cuenta->nombre_largo);
+        $CI->email->from($cuenta->nombre.'@'.$CI->config->item('main_domain'), $cuenta->nombre_largo);
         $CI->email->to($to);
         if(isset($cc))$CI->email->cc($cc);
         if(isset($bcc))$CI->email->bcc($bcc);      
