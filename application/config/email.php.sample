@@ -4,5 +4,5 @@ $config['mailtype']='html';
 $config['protocol'] = 'mail';   //mail, sendmail o smtp
 $config['smtp_host'] = '';
 $config['smtp_user'] = '';
-$config['smpt_pass'] = '';
+$config['smtp_pass'] = '';
 $config['smtp_port'] = '25';
