@@ -21,7 +21,7 @@
         <script>
             var uploader = new qq.FileUploader({
                 element: document.getElementById('file-uploader'),
-                action: site_url + 'backend/uploader/logo',
+                action: site_url + 'manager/uploader/logo',
                 onComplete: function(id, filename, respuesta) {
                     $("input[name=logo]").val(respuesta.file_name);
                     $("img.logo").attr("src", base_url + "uploads/logos/" + respuesta.file_name);
