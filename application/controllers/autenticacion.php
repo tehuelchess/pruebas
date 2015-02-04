@@ -72,9 +72,9 @@ class Autenticacion extends MY_Controller {
             
             $cuenta=Cuenta::cuentaSegunDominio();
             if(is_a($cuenta, 'Cuenta'))
-                $this->email->from($cuenta->nombre.'@chilesinpapeleo.cl', $cuenta->nombre_largo);
+                $this->email->from($cuenta->nombre.'@'.$this->config->item('main_domain'), $cuenta->nombre_largo);
             else
-                $this->email->from('simple@chilesinpapeleo.cl', 'Simple');
+                $this->email->from('simple@'.$this->config->item('main_domain'), 'Simple');
             $this->email->to($usuario->email);
             $this->email->subject('Bienvenido');
             $this->email->message('<p>Usted ya es parte de la plataforma para hacer trámites en línea "Chile Sin Papeleo".</p><p>Su nombre de usuario es: '.$usuario->usuario.'</p>');
