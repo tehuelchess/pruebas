@@ -174,9 +174,17 @@ class Campo extends Doctrine_Record {
         return $resultado;
     }
     
-    public function formValidate(){
+    public function formValidate($etapa_id = null){
         $CI=& get_instance();
-        $CI->form_validation->set_rules($this->nombre, $this->etiqueta, implode('|', $this->validacion));
+
+        $validacion=$this->validacion;
+        if($etapa_id){
+            $regla = new Regla($this->validacion);
+            $validacion = $regla->getExpresionParaOutput($etapa_id);
+        }
+
+
+        $CI->form_validation->set_rules($this->nombre, $this->etiqueta, implode('|', $validacion));
     }
     
     

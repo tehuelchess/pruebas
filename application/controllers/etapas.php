@@ -117,7 +117,7 @@ class Etapas extends MY_Controller {
             foreach ($formulario->Campos as $c) {
                 //Validamos los campos que no sean readonly y que esten disponibles (que su campo dependiente se cumpla)
                 if ($c->isEditableWithCurrentPOST()) {
-                    $c->formValidate();
+                    $c->formValidate($etapa->id);
                     $validar_formulario = TRUE;
                 }
             }

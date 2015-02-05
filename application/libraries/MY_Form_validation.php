@@ -79,4 +79,12 @@ Class MY_Form_validation extends CI_Form_validation {
         return ( ! preg_match('/^([-a-z0-9\s])+$/i', $str)) ? FALSE : TRUE;
     }
 
+
+    public function is_unique($value,$expression){
+        $expression=json_decode($expression);
+
+
+        return !in_array($value,$expression);
+    }
+
 }
