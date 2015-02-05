@@ -79,4 +79,15 @@ Class MY_Form_validation extends CI_Form_validation {
         return ( ! preg_match('/^([-a-z0-9\s])+$/i', $str)) ? FALSE : TRUE;
     }
 
+
+    /**
+     * Funcion que chequea si el valor es unico. Es decir, no se encuentra dentro del conjunto json.
+     *
+     */
+    public function is_unique($value,$json){
+        $array=json_decode($json);
+
+        return !in_array($value,$array);
+    }
+
 }
