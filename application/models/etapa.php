@@ -144,8 +144,7 @@ class Etapa extends Doctrine_Record {
                         
                         if($usuario_asignado_id)
                             $etapa->asignar($usuario_asignado_id);
-
-                        $etapa->notificarTareaPendiente();
+                        //$this->Tramite->Etapas[] = $etapa;     
                     }
                     $this->Tramite->updated_at = date("Y-m-d H:i:s");
                     $this->Tramite->save();
@@ -241,6 +240,20 @@ class Etapa extends Doctrine_Record {
         $this->usuario_id = $usuario_id;
         $this->save();
 
+        if ($this->Tarea->asignacion_notificar) {
+            $usuario = Doctrine::getTable('Usuario')->find($usuario_id);
+            if ($usuario->email) {
+                $CI = & get_instance();
+                $cuenta=$this->Tramite->Proceso->Cuenta;
+                $CI->email->from($cuenta->nombre.'@'.$CI->config->item('main_domain'), $cuenta->nombre_largo);
+                $CI->email->to($usuario->email);
+                $CI->email->subject('SIMPLE - Tiene una tarea pendiente');
+                $CI->email->message('<p>' . $this->Tramite->Proceso->nombre . '</p><p>Tiene una tarea pendiente por realizar: ' . $this->Tarea->nombre . '</p><p>Podra realizarla en: ' . site_url('etapas/ejecutar/' . $this->id) . '</p>');
+                $CI->email->send();
+            }
+        }
+
+
         //Ejecutamos los eventos
         $eventos=Doctrine_Query::create()->from('Evento e')
                 ->where('e.tarea_id = ? AND e.instante = ? AND e.paso_id IS NULL',array($this->Tarea->id,'antes'))
@@ -249,31 +262,6 @@ class Etapa extends Doctrine_Record {
                 $r = new Regla($e->regla);
                 if ($r->evaluar($this->id))
                     $e->Accion->ejecutar($this);           
-        }
-    }
-
-    public function notificarTareaPendiente(){
-        if ($this->Tarea->asignacion_notificar) {
-
-            if($this->usuario_id)
-                $usuarios = Doctrine::getTable('Usuario')->findById($this->usuario_id);
-            else
-                $usuarios = Doctrine_Query::create()->from('Usuario u, u.GruposUsuarios g, g.Tareas t, t.Etapas e')
-                            ->where('e.id = ?',$this->id)
-                            ->execute();
-
-            foreach($usuarios as $usuario){
-                if ($usuario->email) {
-                    $CI = & get_instance();
-                    $cuenta=$this->Tramite->Proceso->Cuenta;
-                    $CI->email->from($cuenta->nombre.'@'.$CI->config->item('main_domain'), $cuenta->nombre_largo);
-                    $CI->email->to($usuario->email);
-                    $CI->email->subject('SIMPLE - Tiene una tarea pendiente');
-                    $CI->email->message('<p>' . $this->Tramite->Proceso->nombre . '</p><p>Tiene una tarea pendiente por realizar: ' . $this->Tarea->nombre . '</p><p>Podra realizarla en: ' . site_url('etapas/ejecutar/' . $this->id) . '</p>');
-                    $CI->email->send();
-                }
-            }
-
         }
     }
 
