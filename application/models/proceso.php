@@ -217,7 +217,7 @@ class Proceso extends Doctrine_Record {
                                         $evento->{$keyev}=$ev_attr;
                                 }
                                 $evento->Accion=$proceso->Acciones[$ev->accion_id];
-                                $evento->Paso=$tarea->Pasos[$ev->paso_id];
+                                if($ev->paso_id)$evento->Paso=$tarea->Pasos[$ev->paso_id];
                                 $tarea->Eventos[]=$evento;
                             }
                         }elseif($keyt != 'id' && $keyt != 'proceso_id' && $keyt != 'Proceso' && $keyt != 'grupos_usuarios'){
