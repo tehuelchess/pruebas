@@ -255,7 +255,10 @@ class Etapa extends Doctrine_Record {
     public function notificarTareaPendiente(){
         if ($this->Tarea->asignacion_notificar) {
 
-            $usuarios = $this->getUsuarios();
+            if($this->usuario_id)
+                $usuarios = Doctrine::getTable('Usuario')->findById($this->usuario_id);
+            else
+                $usuarios = $this->getUsuarios();
 
             foreach($usuarios as $usuario){
                 if ($usuario->email) {
