@@ -207,16 +207,17 @@ class Proceso extends Doctrine_Record {
                                         $paso->{$keypa}=$pa_attr;
                                 }
                                 $paso->Formulario=$proceso->Formularios[$pa->formulario_id];
-                                $tarea->Pasos[]=$paso;
+                                $tarea->Pasos[$pa->id]=$paso;
                             }
                         }elseif($keyt=='Eventos'){
                             foreach($t_attr as $ev){
                                 $evento = new Evento();
                                 foreach($ev as $keyev => $ev_attr){
-                                    if($keyev != 'id' && $keyev != 'tarea_id' && $keyev != 'Tarea' && $keyev != 'accion_id')
+                                    if($keyev != 'id' && $keyev != 'tarea_id' && $keyev != 'Tarea' && $keyev != 'accion_id' && $keyev != 'paso_id')
                                         $evento->{$keyev}=$ev_attr;
                                 }
                                 $evento->Accion=$proceso->Acciones[$ev->accion_id];
+                                $evento->Paso=$tarea->Pasos[$ev->paso_id];
                                 $tarea->Eventos[]=$evento;
                             }
                         }elseif($keyt != 'id' && $keyt != 'proceso_id' && $keyt != 'Proceso' && $keyt != 'grupos_usuarios'){
