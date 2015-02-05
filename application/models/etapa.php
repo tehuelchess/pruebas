@@ -258,8 +258,8 @@ class Etapa extends Doctrine_Record {
             if($this->usuario_id)
                 $usuarios = Doctrine::getTable('Usuario')->findById($this->usuario_id);
             else
-                $usuarios = Doctrine_Query::create()->from('Usuario u, u.GruposUsuarios g, g.Tareas t, t.Etapas e')
-                            ->where('e.id = ?',$this->id)
+                $usuarios = Doctrine_Query::create()->from('Usuario u, u.GruposUsuarios g')
+                            ->whereIn('g.id',explode(',',$this->Tarea->grupos_usuarios))
                             ->execute();
 
             foreach($usuarios as $usuario){
