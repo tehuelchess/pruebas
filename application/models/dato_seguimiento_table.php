@@ -27,11 +27,14 @@ class DatoSeguimientoTable extends Doctrine_Table{
     }
     
     //Devuelve un arreglo con los valores del dato recopilados durante todo el proceso
-    public function findGlobalByNombreAndProceso($nombre,$proceso_id){        
+    public function findGlobalByNombreAndProceso($nombre,$tramite_id){
+        $tramite=Doctrine_Core::getTable('Tramite')->find($tramite_id);
+
         $datos= Doctrine_Query::create()
                 ->from('DatoSeguimiento d, d.Etapa.Tramite t,t.Proceso p')
                 ->where('d.nombre = ?',$nombre)
-                ->andWhere('p.id = ?',$proceso_id)
+                ->andWhere('p.id = ?',$tramite->proceso_id)
+                ->andWhere('t.id != ?',$tramite->id)
                 ->having('d.id = MAX(d.id)')
                 ->groupBy('t.id')
                 ->execute();
