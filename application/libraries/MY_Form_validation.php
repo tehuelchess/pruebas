@@ -80,11 +80,14 @@ Class MY_Form_validation extends CI_Form_validation {
     }
 
 
-    public function is_unique($value,$expression){
-        $expression=json_decode($expression);
+    /**
+     * Funcion que chequea si el valor es unico. Es decir, no se encuentra dentro del conjunto json.
+     *
+     */
+    public function is_unique($value,$json){
+        $array=json_decode($json);
 
-
-        return !in_array($value,$expression);
+        return !in_array($value,$array);
     }
 
 }
