@@ -52,7 +52,7 @@ class Regla {
                     $nombre_dato = $match[1];
                     
                     $etapa=Doctrine::getTable('Etapa')->find($etapa_id);
-                    $dato = Doctrine::getTable('DatoSeguimiento')->findGlobalByNombreAndProceso($nombre_dato,$etapa->Tramite->proceso_id);
+                    $dato = Doctrine::getTable('DatoSeguimiento')->findGlobalByNombreAndProceso($nombre_dato,$etapa->Tramite->id);
                     $valor_dato=var_export($dato,true);
 
                     return $valor_dato;
