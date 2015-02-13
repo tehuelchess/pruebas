@@ -9,7 +9,7 @@
                 .replace(/'/g, "&#039;");
         }
 
-        $("#selectGruposUsuarios").select2();
+        $("#selectGruposUsuarios").select2({tags: true});
         
         $("[rel=tooltip]").tooltip();
         
@@ -213,6 +213,11 @@
                         <select id="selectGruposUsuarios" class="input-xlarge" name="grupos_usuarios[]" multiple>
                             <?php foreach($tarea->Proceso->Cuenta->GruposUsuarios as $g):?>
                                 <option value="<?=$g->id?>" <?=in_array($g->id,explode(',',$tarea->grupos_usuarios))?'selected':''?>><?=$g->nombre?></option>
+                            <?php endforeach ?>
+                            <?php foreach(explode(',',$tarea->grupos_usuarios) as $g): ?>
+                                <?php if(!is_numeric($g)): ?>
+                                <option selected><?=$g?></option>
+                                <?php endif ?>
                             <?php endforeach ?>
                         </select>
                         <div class='help-block'>Puede incluir variables usando @@. Las variables deben contener el numero id del grupo de usuarios.</div>
