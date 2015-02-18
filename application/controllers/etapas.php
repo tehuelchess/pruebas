@@ -24,6 +24,11 @@ class Etapas extends MY_Controller {
     }
 
     public function sinasignar() {
+        if (!UsuarioSesion::usuario()->registrado) {
+            $this->session->set_flashdata('redirect', current_url());
+            redirect('autenticacion/login');
+        }
+
         $data['etapas'] = Doctrine::getTable('Etapa')->findSinAsignar(UsuarioSesion::usuario()->id, Cuenta::cuentaSegunDominio());
 
         $data['sidebar'] = 'sinasignar';
