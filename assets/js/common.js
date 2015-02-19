@@ -1,4 +1,6 @@
 $(document).ready(function(){
+    $("[data-toggle=popover]").popover();
+
     $(".chosen").chosen();
 
     $(".preventDoubleRequest").one("click", function() {

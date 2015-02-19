@@ -138,10 +138,16 @@
             </ul>
             <div class="tab-content">
                 <div class="tab-pane active" id="tab1">
+                    <label><strong>Nombre</strong></label>
+                    <div class="row-fluid">
+                        <div class="span12">
+                            <input class="span12" name="nombre" type="text" value="<?= $tarea->nombre ?>" />
+                        </div>
+                    </div>
+                    <br />
+                    <label><strong>Activación</strong></label>
                     <div class="row-fluid">
                         <div class="span6">
-                            <label>Nombre</label>
-                            <input name="nombre" type="text" value="<?= $tarea->nombre ?>" />
                             <label class="checkbox"><input name="inicial" value="1" type="checkbox" <?= $tarea->inicial ? 'checked' : '' ?>> Tarea Inicial</label>
                             <label class="checkbox"><input name="final" value="1" type="checkbox" <?= $tarea->final ? 'checked' : '' ?>> Tarea Final</label>
                         </div>
@@ -166,6 +172,14 @@
                                 <input class="datepicker" rel="tooltip" title="Deje el campo en blanco para no considerar una fecha final" type="text" name="activacion_fin" value="<?= $tarea->activacion_fin ? date('d-m-Y', $tarea->activacion_fin) : '' ?>" placeholder="DD-MM-AAAA" />
                             </div>
                             <label class="radio"><input name="activacion" value="no" type="radio" <?= $tarea->activacion == 'no' ? 'checked' : '' ?>>Tarea desactivada</label>
+                        </div>
+                    </div>
+                    <br />
+                    <label><strong>Información para previsualización</strong></label>
+                    <div class="row-fluid">
+                        <div class="span12">
+                            <textarea class="span12" rows="5" name="previsualizacion"><?=$tarea->previsualizacion?></textarea>
+                            <div class="help-block">Información que aparecera en la bandeja de entrada al pasar el cursor por encima.</div>
                         </div>
                     </div>
 

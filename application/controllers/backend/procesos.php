@@ -182,6 +182,7 @@ class Procesos extends CI_Controller {
             $tarea->vencimiento_notificar=$this->input->post('vencimiento_notificar');
             $tarea->vencimiento_notificar_dias=$this->input->post('vencimiento_notificar_dias');
             $tarea->vencimiento_notificar_email=$this->input->post('vencimiento_notificar_email');
+            $tarea->previsualizacion=$this->input->post('previsualizacion');
             $tarea->save();
             
             $respuesta->validacion=TRUE;
