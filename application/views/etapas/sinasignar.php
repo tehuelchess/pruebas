@@ -15,7 +15,7 @@
     </thead>
     <tbody>
         <?php foreach ($etapas as $e): ?>
-            <tr>
+            <tr <?=$e->getPrevisualizacion()?'data-toggle="popover" data-html="true" data-title="<h4>Previsualización</h4>" data-content="'.htmlspecialchars($e->getPrevisualizacion()).'" data-trigger="hover" data-placement="top"':''?>>
                 <td><?=$e->Tramite->id?></td>
                 <td class="name"><?= $e->Tramite->Proceso->nombre ?></td>
                 <td><?=$e->Tarea->nombre ?></td>

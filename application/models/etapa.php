@@ -442,4 +442,13 @@ class Etapa extends Doctrine_Record {
     public function getUsuariosFromGruposDeUsuarioDeCuenta() {
         return $this->Tarea->getUsuariosFromGruposDeUsuarioDeCuenta($this->id);
     }
+
+    public function getPrevisualizacion(){
+        if(!$this->Tarea->previsualizacion)
+            return '';
+
+        $r = new Regla($this->Tarea->previsualizacion);
+
+        return $r->getExpresionParaOutput($this->id);
+    }
 }
