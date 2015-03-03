@@ -17,13 +17,26 @@ class DatoSeguimientoTable extends Doctrine_Table{
     
     //Busca todos los dato hasta la ultima etapa del $tramite_id
     public function findByTramite($tramite_id){
-        
-        return Doctrine_Query::create()
-                ->from('DatoSeguimiento d, d.Etapa e, e.Tramite t')
-                ->where('t.id = ?',$tramite_id)
-                ->having('d.id = MAX(d.id)')
-                ->groupBy('d.nombre')
-                ->execute();
+
+        $datos_actuales=Doctrine_Query::create()
+            ->select('d.id, MAX(d.id) as max_id')
+            ->from('DatoSeguimiento d, d.Etapa.Tramite t')
+            ->andWhere('t.id = ?',$tramite_id)
+            ->groupBy('d.nombre')
+            ->execute(array(),Doctrine_Core::HYDRATE_ARRAY);
+
+        $datos_actuales_ids=array();
+        foreach($datos_actuales as $d)
+            $datos_actuales_ids[]=$d['max_id'];
+
+        $datos=Doctrine_Query::create()
+            ->from('DatoSeguimiento d, d.Etapa.Tramite t')
+            ->andWhere('t.id = ?',$tramite_id)
+            ->andWhereIn('d.id',$datos_actuales_ids)
+            ->groupBy('d.nombre')
+            ->execute();
+
+        return $datos;
     }
     
     //Devuelve un arreglo con los valores del dato recopilados durante todo el proceso
