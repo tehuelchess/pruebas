@@ -57,19 +57,14 @@ class Reporte extends Doctrine_Record {
                 $etapas_actuales_arr[]=$e->Tarea->nombre;
             $etapas_actuales_str=implode(',', $etapas_actuales_arr);
             $row=array($t->id,$t->pendiente?'pendiente':'completado',$etapas_actuales_str,$t->created_at,$t->updated_at,$t->ended_at);
-                 
-            $datos=Doctrine_Query::create()
-                ->select('d.*')
-                ->from('DatoSeguimiento d, d.Etapa e, e.Tramite t')
-                ->andWhere('t.id = ?',$t->id)
-                ->andWhereIn('d.nombre',$this->campos)
-                ->having('d.id = MAX(d.id)')
-                ->groupBy('d.nombre')
-                ->execute(array(),Doctrine_Core::HYDRATE_ARRAY);
+
+            $datos = Doctrine_Core::getTable('DatoSeguimiento')->findByTramite($t->id);
             
             foreach($datos as $d){
-                $colindex=array_search($d['nombre'],$header);
-                $row[$colindex]=is_string(json_decode($d['valor']))?json_decode($d['valor']):decode_unicode($d['valor']);
+                if(in_array($d['nombre'],$this->campos)){
+                    $colindex=array_search($d->nombre,$header);
+                    $row[$colindex]=is_string(json_decode($d->valor))?json_decode($d->valor):decode_unicode($d->valor);
+                }
             }    
                      
             //Rellenamos con espacios en blanco los campos que no existen.
