@@ -128,6 +128,7 @@ class API extends CI_Controller {
         if($cuenta->api_token!=$api_token)
             show_error ('No tiene permisos para acceder a este recurso.', 401);
 
+        $respuesta = new stdClass();
         if ($tramite_id) {
             $tramite = Doctrine::getTable('Tramite')->find($tramite_id);
 
@@ -137,7 +138,7 @@ class API extends CI_Controller {
             if ($tramite->Proceso->Cuenta != $cuenta)
                 show_error('No tiene permisos para acceder a este recurso.', 401);
 
-            $respuesta = new stdClass();
+            
             $respuesta->tramite = $tramite->toPublicArray();
         } else {
             $offset = $this->input->get('pageToken') ? 1 * base64_decode(urldecode($this->input->get('pageToken'))) : null;
@@ -159,7 +160,7 @@ class API extends CI_Controller {
             if ($ntramites_restantes > 0)
                 $nextPageToken = urlencode(base64_encode($tramites[count($tramites) - 1]->id));
 
-            $respuesta = new stdClass();
+            $respuesta->tramites = new stdClass();
             $respuesta->tramites->titulo = 'Listado de Trámites';
             $respuesta->tramites->tipo = '#tramitesFeed';
             $respuesta->tramites->nextPageToken = $nextPageToken;
