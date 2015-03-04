@@ -36,7 +36,7 @@ class Regla {
                     
                     $dato = Doctrine::getTable('DatoSeguimiento')->findByNombreHastaEtapa($nombre_dato,$etapa_id);                    
                     if ($dato) {
-                        $dato_almacenado=eval('$x=json_decode(\''.json_encode($dato->valor).'\'); return $x'.$accesor.';');
+                        $dato_almacenado=eval('$x=json_decode(\''.json_encode($dato->valor,JSON_HEX_APOS).'\'); return $x'.$accesor.';');
                         $valor_dato='json_decode(\''.json_encode($dato_almacenado).'\')';                        
                     }
                     else {
@@ -102,7 +102,7 @@ class Regla {
                     
                     $dato = Doctrine::getTable('DatoSeguimiento')->findByNombreHastaEtapa($nombre_dato,$etapa_id);
                     if ($dato) {
-                        $dato_almacenado=eval('$x=json_decode(\''.json_encode($dato->valor).'\'); return $x'.$accesor.';');
+                        $dato_almacenado=eval('$x=json_decode(\''.json_encode($dato->valor,JSON_HEX_APOS).'\'); return $x'.$accesor.';');
                         
                         if(!is_string($dato_almacenado))
                             $valor_dato= json_encode($dato_almacenado);
