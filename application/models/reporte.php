@@ -62,8 +62,12 @@ class Reporte extends Doctrine_Record {
             
             foreach($datos as $d){
                 if(in_array($d['nombre'],$this->campos)){
+                    $val=$d->valor;
+                    if(!is_string($val))
+                        $val=json_encode($val,JSON_UNESCAPED_UNICODE);
+
                     $colindex=array_search($d->nombre,$header);
-                    $row[$colindex]=is_string(json_decode($d->valor))?json_decode($d->valor):decode_unicode($d->valor);
+                    $row[$colindex]=$val;
                 }
             }    
                      
