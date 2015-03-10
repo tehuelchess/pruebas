@@ -7,7 +7,7 @@ class Migration_5 extends Doctrine_Migration_Base {
     }
 
     public function postUp() {
-        $tareas = Doctrine::getTable('Tarea')->findAll();
+        $tareas = Doctrine_Query::create()->from('Tarea t, t.GruposUsuarios g')->select('t.id,g.id')->execute();
 
         foreach ($tareas as $t) {
             $grupos = array();

@@ -23,11 +23,13 @@ jQuery 1.7.2
 
 ### Configuración de la plataforma
 #### Framework
-- Cambiar el nombre del archivo de configuración del framework que se encuentra dentro de la carpeta "application/config" de "config.sample.php" a "config.php"
+- Cambiar el nombre del archivo de configuración del framework que se encuentra dentro de la carpeta "application/config" de "config.php.sample" a "config.php"
+- Setear el parametro encryption_key dentro del archivo config.php. Utiliza cualquier string aleatorio.
+- Cambiar el nombre del archivo de configuración del envío de correos que se encuentra dentro de la carpeta "application/config" de "email.php.sample" a "email.php"
 #### Base de datos
 - Crear una base de datos para la plataforma
 - Cargar la estructura inicial del archivo "sql/estructura.sql"
-- Cambiar el nombre del archivo de configuración de base de datos que se encuentra dentro de la carpeta "application/config" de "database.sample.php" a "database.php"
+- Cambiar el nombre del archivo de configuración de base de datos que se encuentra dentro de la carpeta "application/config" de "database.php.sample" a "database.php"
 - Editar el archivo "database.php" y actualizar los valores con los de su configuración, normalmente se deben editar sólo los campos "username, password, database"
 #### Aplicación de parches
 - Aplicar los últimos parches a base de datos situandose en la raiz de la aplicación y ejecutando el comando: php index.php migration migrate
