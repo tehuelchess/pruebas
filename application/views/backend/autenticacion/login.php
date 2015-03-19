@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
     <head>
         <base href="<?= base_url() ?>" />
         <meta charset="utf-8">
