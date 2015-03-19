@@ -425,7 +425,8 @@ class Etapa extends Doctrine_Record {
             'fecha_inicio' => $this->created_at,
             'fecha_modificacion' => $this->updated_at,
             'fecha_termino' => $this->ended_at,
-            'fecha_vencimiento'=>$this->vencimiento_at
+            'fecha_vencimiento'=>$this->vencimiento_at,
+            'tarea'=>$this->Tarea->toPublicArray()
         );
         
         return $publicArray;

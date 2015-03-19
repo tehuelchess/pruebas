@@ -333,5 +333,14 @@ class Tarea extends Doctrine_Record {
 
         return false;
     }
+
+    public function toPublicArray(){
+        $publicArray=array(
+            'id'=>(int)$this->id,
+            'nombre'=>$this->nombre,
+        );
+
+        return $publicArray;
+    }
     
 }
