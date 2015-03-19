@@ -14,10 +14,10 @@
                             <legend>Autenticación</legend>
                             <?php $this->load->view('messages') ?>
                             <div class="validacion"></div>
-                            <label>Usuario o Correo electrónico</label>
-                            <input name="usuario" type="text" class="input-xlarge">
-                            <label>Contraseña</label>
-                            <input name="password" type="password" class="input-xlarge">
+                            <label for="name">Usuario o Correo electrónico</label>
+                            <input name="usuario" id="name" type="text" class="input-xlarge">
+                            <label for="password">Contraseña</label>
+                            <input name="password" id="password" type="password" class="input-xlarge">
                             <input type="hidden" name="redirect" value="<?=$redirect?>" />
                             
                             <p><a href="<?=site_url('autenticacion/olvido')?>">¿Olvidaste tu contraseña?</a> - <a href="<?= site_url('autenticacion/registrar') ?>">¿No estas registrado?</a></p>

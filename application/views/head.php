@@ -1,8 +1,6 @@
 <meta charset="utf-8">
         <title><?=Cuenta::cuentaSegunDominio()!='localhost'?Cuenta::cuentaSegunDominio()->nombre_largo:'SIMPLE'?> - <?= $title ?></title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="description" content="">
-        <meta name="author" content="">
 
         <!-- Le styles -->
         <link href="<?= base_url() ?>assets/css/bootstrap.css" rel="stylesheet">
