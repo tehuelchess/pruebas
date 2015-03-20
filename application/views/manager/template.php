@@ -39,7 +39,7 @@
                         <div class="span12">
                             <ul id="userMenu" class="nav nav-pills pull-right">
                                 <li class="dropdown">
-                                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">Bienvenido <?= UsuarioManagerSesion::usuario()->usuario ?><b class="caret"></b></a>
+                                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">Bienvenido <?= UsuarioManagerSesion::usuario()->usuario ?><span class="caret"></span></a>
                                     <ul class="dropdown-menu">
                                         <li><a href="<?= site_url('manager/autenticacion/logout') ?>">Cerrar sesión</a></li>
                                     </ul>

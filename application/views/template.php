@@ -5,6 +5,10 @@
     </head>
 
     <body>
+    <ul class="saltar">
+    <li><a href="#contenido" tabindex="1">Ir al contenido</a>
+    </li>
+</ul>
 
         <header>
             <div class="container">
@@ -13,14 +17,14 @@
                         <h1 id="logo"><a href="<?= site_url() ?>"><img src="<?= Cuenta::cuentaSegunDominio()!='localhost' ? Cuenta::cuentaSegunDominio()->logoADesplegar : base_url('assets/img/logo.png') ?>" alt="<?= Cuenta::cuentaSegunDominio()!='localhost' ? Cuenta::cuentaSegunDominio()->nombre_largo : 'Simple' ?>" /></a></h1>
                     </div>
                     <div class="span3">
-                        <h1><?= Cuenta::cuentaSegunDominio()!='localhost' ? Cuenta::cuentaSegunDominio()->nombre_largo : '' ?></h1>
+                        <h2><?= Cuenta::cuentaSegunDominio()!='localhost' ? Cuenta::cuentaSegunDominio()->nombre_largo : '' ?></h2>
                         <p><?= Cuenta::cuentaSegunDominio()!='localhost' ? Cuenta::cuentaSegunDominio()->mensaje : '' ?></p>
                     </div>
                     <div class="offset4 span3">
                         <ul id="userMenu" class="nav nav-pills pull-right">
                             <?php if (!UsuarioSesion::usuario()->registrado): ?>
                                 <li class="dropdown">
-                                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">Iniciar sesión<b class="caret"></b></a>
+                                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">Iniciar sesión<span class="caret"></span></a>
                                     <ul class="dropdown-menu pull-right">
                                         <li id="loginView">
                                             <?php if(!$claveunicaOnly=Cuenta::cuentaSegunDominio()->usesClaveUnicaOnly()):?>
@@ -34,7 +38,7 @@
                                                     <input name="usuario" id="usuario" type="text" class="input-xlarge">
                                                     <label for="password">Contraseña</label>
                                                     <input name="password" id="password" type="password" class="input-xlarge">
-                                                    <p style="font-size: 11px;"><a href="<?= site_url('autenticacion/olvido') ?>">¿Olvidaste tu contraseña?</a> - <a href="<?= site_url('autenticacion/registrar') ?>">Registrate aquí</a></p>
+                                                    <p class="olvido"><a href="<?= site_url('autenticacion/olvido') ?>">¿Olvidaste tu contraseña?</a> - <a href="<?= site_url('autenticacion/registrar') ?>">Registrate aquí</a></p>
                                                     <button class="btn btn-primary pull-right" type="submit">Ingresar</button>
                                                 </fieldset>
                                             </form>
@@ -51,7 +55,7 @@
                                 </li>
                             <?php else: ?>
                                 <li class="dropdown">
-                                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">Bienvenido <?= UsuarioSesion::usuario()->displayName() ?><b class="caret"></b></a>
+                                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">Bienvenido <?= UsuarioSesion::usuario()->displayName() ?><span class="caret"></span></a>
                                     <ul class="dropdown-menu">
                                         <li><a href="<?= site_url('cuentas/editar') ?>"><i class="icon-user"></i> Mi cuenta</a></li>
                                         <?php if (!UsuarioSesion::usuario()->open_id): ?><li><a href="<?= site_url('cuentas/editar_password') ?>"><i class="icon-lock"></i> Cambiar contraseña</a></li><?php endif; ?>
@@ -68,6 +72,7 @@
 
         <div id="main">
             <div class="container">
+            <span id="contenido"></span>
                 <div class="row">
                     <div class="span3">
                         <ul id="sideMenu" class="nav nav-list">    
