@@ -106,6 +106,8 @@ class SaferEval {
             'shuffle', // Shuffle an array
             'sizeof', // Alias of count
             'sort', // Sort an array
+            'max', //Maximum element of array
+            'min', //Minimum element of array
             // Strings Functions
             'chop', // Alias of rtrim
             'count_chars', // Return information about characters used in a string
