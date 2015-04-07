@@ -6,10 +6,9 @@
 
     <body>
     <ul class="saltar">
-    <li><a href="#contenido" tabindex="1">Ir al contenido</a>
+    <li><a href="#main" tabindex="1">Ir al contenido</a>
     </li>
 </ul>
-
         <header>
             <div class="container">
                 <div class="row">
@@ -72,7 +71,6 @@
 
         <div id="main">
             <div class="container">
-            <span id="contenido"></span>
                 <div class="row">
                     <div class="span3">
                         <ul id="sideMenu" class="nav nav-list">    
