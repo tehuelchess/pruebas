@@ -134,7 +134,7 @@ class CampoDocumento extends Campo {
             <label>Seleccione la firma</label>      
             <div style="float: left;">
             <applet code="'.($isMac?'cl.agile.pdf.applet.SignerAppletMinSegPressMAC':'cl.agile.pdf.applet.SignerAppletMinSegPress').'" width="350" height="25" name="SignerApplet">
-                <param name="jnlp_href" value="'.base_url().'assets/applets/signer/'.($isMac?'SignerApplet_0_7_mac.jnlp':'SignerApplet_0_8_win.jnlp').'" />
+                <param name="jnlp_href" value="'.base_url().'assets/applets/signer/'.($isMac?'SignerApplet_0_7_mac.jnlp':'SignerApplet_0_9_win.jnlp').'" />
                 <param name="documentosPdf" value="'.  htmlspecialchars('<PorFirmar><documento id=\''.$file->id.'\' token=\''.$file->llave_firma.'\' comentario=\'Firmado Digitalmente\' lugar=\'Santiago\' tipoFirma=\'TIPO_DOC\'/></PorFirmar>').'" />
                 <param name="urlBaseGet" value="'.site_url('documentos/firma_get').'" />
                 <param name="urlBasePost" value="'.site_url('documentos/firma_post').'" />
