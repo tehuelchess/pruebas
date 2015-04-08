@@ -88,9 +88,10 @@ h2 {
 .olvido {
   font-size: 11px;
 }
-.saltar .saltar li {
+.saltar li {
   margin: 0;
   padding: 0;
+  list-style-type: none;
 }
 .saltar a {
   position: absolute;
