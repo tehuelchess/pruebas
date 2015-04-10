@@ -64,7 +64,7 @@
                             <div class="span12">
                                 <ul id="userMenu" class="nav nav-pills pull-right">
                                     <li class="dropdown">
-                                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Bienvenido <?= UsuarioBackendSesion::usuario()->email ?><b class="caret"></b></a>
+                                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Bienvenido <?= UsuarioBackendSesion::usuario()->email ?><span class="caret"></span></a>
                                         <ul class="dropdown-menu">
                                             <li><a href="<?= site_url('backend/cuentas') ?>">Mi Cuenta</a></li>
                                             <li><a href="<?= site_url('backend/autenticacion/logout') ?>">Cerrar sesión</a></li>
