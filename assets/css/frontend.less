@@ -111,25 +111,23 @@ h2{
     padding:0;
     list-style-type: none;
     }
+    a {
+      position:absolute;
+      left:-10000px;
+      top:auto;
+      width:1px;
+      height:1px;
+      overflow:hidden;
+      z-index: 9999;
+      list-style-type:none; 
+      &:focus {
+        position:absolute;
+        top:0;
+        left:40%;
+        background:#fff;
+        width:auto;
+        height:auto;
+        padding:10px;
+     } 
+  } 
 }
-
-.saltar a {
-    position:absolute;
-    left:-10000px;
-    top:auto;
-    width:1px;
-    height:1px;
-    overflow:hidden;
-    z-index: 9999;
-    list-style-type:none;  
-} 
-
-.saltar a:focus {
-    position:absolute;
-    top:0;
-    left:40%;
-    background:#fff;
-    width:auto;
-    height:auto;
-    padding:10px;
- } 
