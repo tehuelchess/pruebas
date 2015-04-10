@@ -4,8 +4,6 @@ class EtapaTable extends Doctrine_Table {
     
     //busca las etapas que no han sido asignadas y que usuario_id se podria asignar
     public function findSinAsignar($usuario_id, $cuenta='localhost'){
-        $usuario=Doctrine::getTable('Usuario')->find($usuario_id);
-        
         $query=Doctrine_Query::create()
                 ->from('Etapa e, e.Tarea tar, e.Tramite.Proceso.Cuenta c')
                 //Si la etapa no se encuentra asignada
