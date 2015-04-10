@@ -53,8 +53,12 @@ class Etapa extends Doctrine_Record {
 
     //Verifica si el usuario_id tiene permisos para asignarse esta etapa del tramite.
     public function canUsuarioAsignarsela($usuario_id) {
-        $usuario=Doctrine::getTable('Usuario')->find($usuario_id);
-        
+        static $usuario;
+
+        if(!$usuario || ($usuario->id != $usuario_id)){
+            $usuario=Doctrine::getTable('Usuario')->find($usuario_id);
+        }
+
 
         if ($this->Tarea->acceso_modo == 'publico')
             return true;
