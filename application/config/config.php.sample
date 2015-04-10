@@ -379,13 +379,6 @@ $config['sphinx_host'] = 'localhost';
 $config['sphinx_port'] = 9312;
 
 /*
- * Configuracion de backups
- */
-$config['awsAccessKey']='';
-$config['awsSecretKey']='';
-
-
-/*
  * Configuracion del servidor HSM
  */
 $config['hsm_url']='';
