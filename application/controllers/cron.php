@@ -38,16 +38,6 @@ class Cron extends CI_Controller {
             $this->email->message('La etapa "' . $e->Tarea->nombre . '" se encuentra '.($dias_por_vencer>0?'a '.$dias_por_vencer.' días por vencer':'vencida').'.' . "\n\n" . 'Usuario asignado: ' . $e->Usuario->usuario);
             $this->email->send();
         }
-
-
-        //Hacemos un respaldo de la base de datos
-        $this->load->database();
-        $backupName = $this->db->database . '_' . date("Ymd-His") . '.gz';
-        $command = 'mysqldump -h '.$this->db->hostname.' -u '.$this->db->username.' -p'.$this->db->password.' '.$this->db->database.' | gzip > '.$backupName;
-        system($command);
-        $this->load->library('s3wrapper');
-        $this->s3wrapper->putObject($this->s3wrapper->inputFile($backupName, false), 'chilesinpapeleo.cl', $backupName);   
-        system('rm ' . $backupName);
         
         //Limpia los tramites que que llevan mas de 1 dia sin modificarse, sin avanzar de etapa y sin datos ingresados (En blanco).
         $tramites_en_blanco=Doctrine_Query::create()
@@ -57,17 +47,6 @@ class Cron extends CI_Controller {
                 ->having('COUNT(e.id) = 1 AND COUNT(d.id) = 0')
                 ->execute();
         $tramites_en_blanco->delete();
-        
-        //Limpia los tramites que han sido iniciados por usuarios no registrados, y que llevan mas de 1 dia sin modificarse, y sin avanzar de etapa.
-        $tramites_en_primera_etapa=Doctrine_Query::create()
-                ->from('Tramite t, t.Etapas e, e.Usuario u')
-                ->where('t.updated_at < DATE_SUB(NOW(),INTERVAL 1 DAY) AND t.pendiente = 1')
-                ->groupBy('t.id')
-                ->having('COUNT(e.id) = 1')
-                ->execute();
-        foreach($tramites_en_primera_etapa as $t)
-            if($t->Etapas[0]->Usuario->registrado == 0)
-                $t->delete();
         
         //Elimino los registros no registrados con mas de 1 dia de antiguedad y que no hayan iniciado etapas
         $noregistrados=Doctrine_Query::create()
