@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Autenticacion extends CI_Controller {
+class Autenticacion extends MY_BackendController {
     public function  __construct() {
         parent::__construct();
     }
@@ -162,8 +162,13 @@ class Autenticacion extends CI_Controller {
     function check_usuario_existe($usuario) {
         $usuario = Doctrine::getTable('UsuarioBackend')->findOneByEmail($usuario);
 
-        if ($usuario)
-            return TRUE;
+        if ($usuario){
+            $cuenta = Cuenta::cuentaSegunDominio();
+
+            if($usuario->cuenta->id == $cuenta->id)
+                return TRUE;
+        }
+
 
         $this->form_validation->set_message('check_usuario_existe', 'Usuario no existe.');
         return FALSE;

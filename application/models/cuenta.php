@@ -69,10 +69,8 @@ class Cuenta extends Doctrine_Record {
             $main_domain=$CI->config->item('main_domain');
             if($main_domain){
                 $main_domain=addcslashes($main_domain,'.');
-                $is_valid=preg_match('/(.+)\.'.$main_domain.'/', $host, $matches);
-                if(!$is_valid){
-                    $cuentaSegunDominio=Doctrine_Query::create()->from('Cuenta c')->limit(1)->fetchOne();
-                }else if (isset ($matches[1])){
+                preg_match('/(.+)\.'.$main_domain.'/', $host, $matches);
+                if (isset ($matches[1])){
                     $cuentaSegunDominio = Doctrine::getTable('Cuenta')->findOneByNombre($matches[1]);
                 }
             }else{

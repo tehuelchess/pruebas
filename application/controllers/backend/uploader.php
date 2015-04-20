@@ -2,7 +2,7 @@
 
 require_once 'application/third_party/file-uploader.php';
 
-class Uploader extends CI_Controller {
+class Uploader extends MY_BackendController {
 
     function __construct() {
         parent::__construct();

@@ -3,7 +3,7 @@
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
-class Procesos extends CI_Controller {
+class Procesos extends MY_BackendController {
     
     public function __construct() {
         parent::__construct();
