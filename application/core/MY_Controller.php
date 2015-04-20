@@ -37,3 +37,30 @@ class MY_Controller extends CI_Controller {
         }
     }
 }
+
+class MY_BackendController extends CI_Controller {
+
+    function __construct(){
+        parent::__construct();
+
+        $this->force_cuenta();
+
+        if($this->config->item('https'))
+            $this->force_ssl();
+
+    }
+
+    //Fuerza a que se este ingresando en un dominio con una cuenta valida
+    private function force_cuenta(){
+        if(!Cuenta::cuentaSegunDominio())
+            exit;
+    }
+
+    private function force_ssl(){
+        if (!isset($_SERVER['HTTPS']) || $_SERVER['HTTPS'] != "on") {
+            $url = "https://". $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
+            redirect($url);
+        }
+    }
+
+}

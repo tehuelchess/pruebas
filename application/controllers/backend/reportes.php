@@ -3,7 +3,7 @@
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
-class Reportes extends CI_Controller {
+class Reportes extends MY_BackendController {
 
     public function __construct() {
         parent::__construct();
