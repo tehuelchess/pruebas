@@ -3,7 +3,7 @@
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
-class Formularios extends CI_Controller {
+class Formularios extends MY_BackendController {
     
     public function __construct() {
         parent::__construct();

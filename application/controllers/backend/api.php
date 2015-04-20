@@ -1,6 +1,6 @@
 <?php
 
-class API extends CI_Controller {
+class API extends MY_BackendController {
     
     public function _auth(){
         UsuarioBackendSesion::force_login();
