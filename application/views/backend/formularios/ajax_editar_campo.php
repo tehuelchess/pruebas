@@ -188,13 +188,17 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php if ($campo->datos) foreach ($campo->datos as $key => $d): ?>
-                                <tr>
-                                    <td><input type="text" name="datos[<?= $key ?>][etiqueta]" value="<?= $d->etiqueta ?>" /></td>
-                                    <td><input class="input-small" type="text" name="datos[<?= $key ?>][valor]" value="<?= $d->valor ?>" /></td>           
-                                    <td><button type="button" class="btn eliminar"><i class="icon-remove"></i> Eliminar</button></td>
-                                </tr>
+                        <?php if($campo->datos):?>
+                            <?php $i=0 ?>
+                            <?php foreach ($campo->datos as $key => $d): ?>
+                                    <tr>
+                                        <td><input type="text" name="datos[<?= $i ?>][etiqueta]" value="<?= $d->etiqueta ?>" /></td>
+                                        <td><input class="input-small" type="text" name="datos[<?= $i ?>][valor]" value="<?= $d->valor ?>" /></td>
+                                        <td><button type="button" class="btn eliminar"><i class="icon-remove"></i> Eliminar</button></td>
+                                    </tr>
+                                <?php $i++ ?>
                             <?php endforeach; ?>
+                        <?php endif ?>
                     </tbody>
                 </table>
             </div>
