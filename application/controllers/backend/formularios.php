@@ -169,7 +169,7 @@ class Formularios extends MY_BackendController {
                 
             }
             $campo->nombre=$this->input->post('nombre');
-            $campo->etiqueta=$this->input->post('etiqueta');
+            $campo->etiqueta=$this->input->post('etiqueta',false);
             $campo->readonly=$this->input->post('readonly');
             $campo->valor_default=$this->input->post('valor_default',false);
             $campo->ayuda=$this->input->post('ayuda');
