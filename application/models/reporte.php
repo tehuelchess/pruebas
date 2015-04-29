@@ -34,6 +34,8 @@ class Reporte extends Doctrine_Record {
     }
     
     public function generar(){
+        set_time_limit(600);
+
         $CI=& get_instance();
         
         $CI->load->library('Excel_XML');
