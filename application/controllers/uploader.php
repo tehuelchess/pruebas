@@ -63,12 +63,10 @@ class Uploader extends MY_Controller {
         
         if(!$file){
             //Chequeamos permisos en el backend
-            if(UsuarioBackendSesion::usuario()) {
-                $file = Doctrine_Query::create()
-                    ->from('File f, f.Tramite.Proceso.Cuenta.UsuariosBackend u')
-                    ->where('f.id = ? AND u.id = ? AND (u.rol="super" OR u.rol="operacion" OR u.rol="seguimiento")', array($id, UsuarioBackendSesion::usuario()->id))
-                    ->fetchOne();
-            }
+            $file=Doctrine_Query::create()
+                ->from('File f, f.Tramite.Proceso.Cuenta.UsuariosBackend u')
+                ->where('f.id = ? AND f.llave = ? AND u.id = ? AND (u.rol="super" OR u.rol="operacion" OR u.rol="seguimiento")',array($id,$token,UsuarioBackendSesion::usuario()->id))
+                ->fetchOne();
             
             if(!$file){
                 echo 'Usuario no tiene permisos para ver este archivo.';
