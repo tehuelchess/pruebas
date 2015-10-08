@@ -8,7 +8,16 @@
         <legend><?=$paso->Formulario->nombre?></legend>
         <?php foreach($paso->Formulario->Campos as $c):?>
             <div class="campo control-group" data-id="<?=$c->id?>" <?= $c->dependiente_campo ? 'data-dependiente-campo="' . $c->dependiente_campo.'" data-dependiente-valor="' . $c->dependiente_valor .'" data-dependiente-tipo="' . $c->dependiente_tipo.'" data-dependiente-relacion="'.$c->dependiente_relacion.'"' : '' ?> data-readonly="<?=$paso->modo=='visualizacion' || $c->readonly?>" >
-            <?=$c->displayConDatoSeguimiento($etapa->id,$paso->modo)?>
+                <?php
+                    if($c->getExtra()){
+                        if(preg_match('(@{2}\w+)',$c->getExtra()->ws,$matches)) {
+                            $urlInnerVar = $matches[0];
+                            $simpleVarValue = Doctrine::getTable('DatoSeguimiento')->findOneByNombreAndEtapaId(substr($matches[0],2), $etapa->id);
+                            $c->setExtra(array("ws" => str_replace($matches[0], $simpleVarValue->valor,$c->getExtra()->ws)));
+                        }
+                    }
+                ?>
+                <?=$c->displayConDatoSeguimiento($etapa->id,$paso->modo)?>
             </div>
         <?php endforeach ?>
         <div class="form-actions">
