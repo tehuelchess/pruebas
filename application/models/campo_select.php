@@ -17,7 +17,6 @@ class CampoSelect extends Campo {
             $display.='<span class="help-block">'.$this->ayuda.'</span>';
         $display.='</div>';
 
-
         if($this->extra && $this->extra->ws){
             $display.='
             <script>
@@ -29,12 +28,14 @@ class CampoSelect extends Campo {
                         dataType: "jsonp",
                         jsonpCallback: "callback",
                         success: function(data){
-                            var html="";
-                            $(data).each(function(i,el){
-                                html+="<option value=\""+el.valor+"\">"+el.etiqueta+"</option>";
-                            });
+                            if(data.error === undefined){
+                                var html="";
+                                $(data).each(function(i,el){
+                                    html+="<option value=\""+el.valor+"\">"+el.etiqueta+"</option>";
+                                });
 
-                            $("#'.$this->id.'").append(html).val(defaultValue).change();
+                                $("#'.$this->id.'").append(html).val(defaultValue).change();
+                            }
                         }
                     });
                 });
