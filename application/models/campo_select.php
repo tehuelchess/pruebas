@@ -15,6 +15,11 @@ class CampoSelect extends Campo {
         $display.='</select>';
         if($this->ayuda)
             $display.='<span class="help-block">'.$this->ayuda.'</span>';
+
+        if($this->extra && $this->extra->ws){
+            $display.='<div class="smallLoading">&nbsp;&nbsp;&nbsp;&nbsp;</div>';
+        }
+
         $display.='</div>';
 
         if($this->extra && $this->extra->ws){
@@ -35,6 +40,7 @@ class CampoSelect extends Campo {
                                 });
 
                                 $("#'.$this->id.'").append(html).val(defaultValue).change();
+                                $(".smallLoading").hide();
                             }
                         }
                     });
