@@ -26,6 +26,7 @@ class CampoSelect extends Campo {
             $display.='
             <script>
                 $(document).ready(function(){
+                    $("#'.$this->id.'").prop("disabled", true);
                     var defaultValue = "'.($dato && $dato->valor?$dato->valor:$this->valor_default).'";
                     console.log(defaultValue);
                     $.ajax({
@@ -41,6 +42,7 @@ class CampoSelect extends Campo {
 
                                 $("#'.$this->id.'").append(html).val(defaultValue).change();
                                 $(".smallLoading").hide();
+                                $("#'.$this->id.'").prop("disabled", false);
                             }
                         }
                     });
