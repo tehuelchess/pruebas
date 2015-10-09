@@ -41,9 +41,11 @@ class CampoSelect extends Campo {
                                 });
 
                                 $("#'.$this->id.'").append(html).val(defaultValue).change();
-                                $(".smallLoading").hide();
-                                $("#'.$this->id.'").prop("disabled", false);
                             }
+
+                            $(".smallLoading").hide();
+                            $("#'.$this->id.'").prop("disabled", false);
+
                         }
                     });
                 });
