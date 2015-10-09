@@ -12,8 +12,8 @@
                     if($c->getExtra()){
                         if(preg_match('(@{2}\w+)',$c->getExtra()->ws,$matches)) {
                             $urlInnerVar = $matches[0];
-                            $simpleVarValue = Doctrine::getTable('DatoSeguimiento')->findOneByNombreAndEtapaId(substr($matches[0],2), $etapa->id);
-                            $c->setExtra(array("ws" => str_replace($matches[0], $simpleVarValue->valor,$c->getExtra()->ws)));
+                            $simpleVarValue = Doctrine::getTable('DatoSeguimiento')->findOneByNombreAndEtapaId(substr($urlInnerVar,2), $etapa->id);
+                            $c->setExtra(array("ws" => str_replace($urlInnerVar, $simpleVarValue->valor,$c->getExtra()->ws)));
                         }
                     }
                 ?>
