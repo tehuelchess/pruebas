@@ -9,7 +9,7 @@
         <?php foreach($paso->Formulario->Campos as $c):?>
             <div class="campo control-group" data-id="<?=$c->id?>" <?= $c->dependiente_campo ? 'data-dependiente-campo="' . $c->dependiente_campo.'" data-dependiente-valor="' . $c->dependiente_valor .'" data-dependiente-tipo="' . $c->dependiente_tipo.'" data-dependiente-relacion="'.$c->dependiente_relacion.'"' : '' ?> data-readonly="<?=$paso->modo=='visualizacion' || $c->readonly?>" >
                 <?php
-                    if($c->getExtra()){
+                    if($c->getExtra() && isset($c->getExtra()->ws)){
                         if(preg_match('(@{2}\w+)',$c->getExtra()->ws,$matches)) {
                             $urlInnerVar = $matches[0];
                             $simpleVarValue = Doctrine::getTable('DatoSeguimiento')->findOneByNombreAndEtapaId(substr($urlInnerVar,2), $etapa->id);
