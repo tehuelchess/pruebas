@@ -113,7 +113,7 @@
                 });
                 
             </script>          
-            <label>Numero de dias de validez (Dejar en blanco para periodo ilimitado)</label>
+            <label>Numero de dias de validez (Dejar en blanco para periodo ilimitado, 0 para no mostrar validez)</label>
             <input class="input-mini" type="text" name="validez" value="<?= $edit ? $documento->validez : '' ?>" placeholder="Ej: 90" />
             <label style="display: inline-block" class="checkbox"><input type="checkbox" name="validez_habiles" value="1" <?=$edit && $documento->validez_habiles ? 'checked':''?> /> Hábiles</label>
             <script>

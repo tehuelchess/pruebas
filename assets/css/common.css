@@ -60,7 +60,7 @@ footer a {
   color: #59758D;
 }
 footer a:hover {
-  color: #fff;
+  color: #465f6e;
 }
 footer ul {
   color: white;
@@ -87,7 +87,7 @@ footer .area1 {
   padding: 10px 0;
 }
 footer .area2 {
-  background: #000;
+  background: #fff;
   padding: 10px 0;
 }
 footer .area2 .container,
@@ -106,7 +106,7 @@ footer .area2 .container-fluid .footerGob {
 .ajaxForm .ajaxLoader {
   width: 80px;
   height: 24px;
-  background: #000 url("../img/ajax-loader.gif") 25px 16px no-repeat;
+  background: #000000 url("../img/ajax-loader.gif") 25px 16px no-repeat;
   color: #fff;
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
@@ -118,7 +118,7 @@ footer .area2 .container-fluid .footerGob {
 .dynaForm legend {
   border: none;
   margin: 0;
-  color: #005181;
+  color: #8C0505;
   font-weight: bold;
 }
 .dynaForm label {
@@ -131,10 +131,15 @@ footer .area2 .container-fluid .footerGob {
   background: none;
   border: none;
 }
-.smallLoading {
-  background: #FFFFFF url("../img/ajax-loader.gif") no-repeat;
-  background-position: center;
-  background-size: contain;
-  display: inline;
-  width: 31px;
+.dl-horizontal dd {
+  *zoom: 1;
+}
+.dl-horizontal dd:before,
+.dl-horizontal dd:after {
+  display: table;
+  content: "";
+  line-height: 0;
+}
+.dl-horizontal dd:after {
+  clear: both;
 }

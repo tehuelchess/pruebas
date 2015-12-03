@@ -121,7 +121,7 @@ class Excel_XML
          * 
          * @param array $array One-dimensional array with row content
          */
-        private function addRow ($array)
+        /*private function addRow ($array)
         {
         	$cells = "";
                 foreach ($array as $k => $v):
@@ -133,7 +133,58 @@ class Excel_XML
                         $cells .= "<Cell><Data ss:Type=\"$type\">" . $v . "</Data></Cell>\n"; 
                 endforeach;
                 $this->lines[] = "<Row>\n" . $cells . "</Row>\n";
+        }*/
+
+        private function addRow ($array){
+            // initialize all cells for this row
+            $cells = "";
+            // foreach key -> write value into cells
+            foreach ($array as $k => $v):
+                if ($this->bConvertTypes === true && is_numeric($v)) {
+                        //if is numeric and starts with zero, and is not zero and is not zero-decimal:
+                        if (substr($v, 0, 1) == "0" && $v != 0 && substr($v, 0, 2) !== "0.") {
+                                $type = "String";
+                        } else {
+                                $type = "Number";
+                        }
+                } else {
+                        $type = "String";
+                }   
+                
+                $v= $this->limpiarCaracteresNoValidos($v);                
+                $cells .= "<Cell><Data ss:Type=\"$type\">" . $this->_utf8_decode($v). "</Data></Cell>\n";
+
+            endforeach;
+            // transform $cells content into one row
+           $this->lines[] = "<Row>\n" . $cells . "</Row>\n";
         }
+
+        public function _utf8_decode($string){
+          $tmp = $string;
+          $count = 0;
+          while (mb_detect_encoding($tmp)=="UTF-8"){
+            $tmp = utf8_decode($tmp);
+            $count++;
+          }         
+          for ($i = 0; $i < $count-1 ; $i++){
+            $string = utf8_decode($string);           
+          }
+          return $string;         
+        }
+              
+        public function limpiarCaracteresNoValidos($cadena){
+            $cadena = trim($cadena);
+            $cadena = str_replace(array('á', 'à', 'ä', 'â', 'ª', 'Á', 'À', 'Â', 'Ä'), array('á', 'a', 'a', 'a', 'a', 'Á', 'A', 'A', 'A'),$cadena);
+            $cadena = str_replace(array('é', 'è', 'ë', 'ê', 'É', 'È', 'Ê', 'Ë'), array('é', 'e', 'e', 'e', 'É', 'E', 'E', 'E'),$cadena);
+            $cadena = str_replace(array('í', 'ì', 'ï', 'î', 'Í', 'Ì', 'Ï', 'Î'), array('í', 'i', 'i', 'i', 'Í', 'I', 'I', 'I'),$cadena);
+            $cadena = str_replace(array('ó', 'ò', 'ö', 'ô', 'Ó', 'Ò', 'Ö', 'Ô'), array('ó', 'o', 'o', 'o', 'Ó', 'O', 'O', 'O'), $cadena);
+            $cadena = str_replace(array('ú', 'ù', 'ü', 'û', 'Ú', 'Ù', 'Û', 'Ü'), array('ú', 'u', 'u', 'u', 'Ú', 'U', 'U', 'U'),$cadena);
+            $cadena = str_replace(array('ñ', 'Ñ', 'ç', 'Ç'), array('ñ', 'Ñ', 'c', 'C',), $cadena);           
+            $cadena = str_replace(array("\\","¨","º","~","#","@","|","!","\"","·","$","%","&","/","(", ")","?","'","¡","¿","[","^","`","]","+","}","{","¨","´",">","< ",";"," "),' ',$cadena);
+            return $cadena;
+        }
+
+
 
         /**
          * Add an array to the document
@@ -156,6 +207,8 @@ class Excel_XML
                 $filename = preg_replace('/[^aA-zZ0-9\_\-]/', '', $filename);
     	
                 // deliver header (as recommended in php manual)
+
+                header('Content-Type: text/html; charset=utf-8');
                 header("Content-Type: application/vnd.ms-excel; charset=" . $this->sEncoding);
                 header("Content-Disposition: inline; filename=\"" . $filename . ".xls\"");
 
@@ -163,9 +216,10 @@ class Excel_XML
                 // need to use stripslashes for the damn ">"
                 echo stripslashes (sprintf($this->header, $this->sEncoding));
                 echo "\n<Worksheet ss:Name=\"" . $this->sWorksheetTitle . "\">\n<Table>\n";
-                foreach ($this->lines as $line)
-                        echo $line;
-
+                
+                foreach ($this->lines as $line)  
+                        echo utf8_encode(html_entity_decode($line));
+                        //echo $line;                  
                 echo "</Table>\n</Worksheet>\n";
                 echo $this->footer;
         }

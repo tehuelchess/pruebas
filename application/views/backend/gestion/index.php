@@ -9,6 +9,7 @@
                 <li><a href="<?=site_url('backend/gestion/widget_create/tramite_etapas')?>">Tramite por etapas</a></li>
                 <li><a href="<?=site_url('backend/gestion/widget_create/tramites_cantidad')?>">Tramites realizados</a></li>
                 <li><a href="<?=site_url('backend/gestion/widget_create/etapa_usuarios')?>">Carga de Usuarios por Etapa</a></li>
+                <li><a href="<?=site_url('backend/gestion/widget_create/etapa_grupo_usuarios')?>">Carga de Grupos de Usuarios por Etapa</a></li>
             </ul>
         </div>
         </p>

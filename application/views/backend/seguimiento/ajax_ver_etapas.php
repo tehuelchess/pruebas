@@ -1,11 +1,15 @@
-<?php foreach($etapas as $e):?>
+<?php foreach($etapas as $etapa):?>
 <ol>
     <li>
-        <p>Estado: <?=$e->pendiente==0?'Completado':'Pendiente'?></p>
-        <p><?=$e->created_at?'Inicio: '.strftime('%c',mysql_to_unix($e->created_at)):''?></p>
-        <p><?=$e->ended_at?'Término: '.strftime('%c',mysql_to_unix($e->ended_at)):''?></p>
-        <p>Asignado a: <?=!$e->usuario_id?'Ninguno':!$e->Usuario->registrado?'No registrado':'<abbr class="tt" title="'.$e->Usuario->displayInfo().'">'.$e->Usuario->displayUsername().'</abbr>'?></p>
-        <p><a href="<?=site_url('backend/seguimiento/ver_etapa/'.$e->id)?>">Revisar detalle</a></p> 
+        <p>Estado: <?= $etapa->pendiente == 0 ? 'Completado' : ($etapa->vencida() ? 'Vencida' :'Pendiente') ?></p>
+        <p><?=$etapa->created_at?'Inicio: '.strftime('%c',mysql_to_unix($etapa->created_at)):''?></p>
+        <p><?=$etapa->ended_at?'Término: '.strftime('%c',mysql_to_unix($etapa->ended_at)):''?></p>
+        <p>Asignado a: <?=!$etapa->usuario_id?'Ninguno':!$etapa->Usuario->registrado?'No registrado':'<abbr class="tt" title="'.$etapa->Usuario->displayInfo().'">'.$etapa->Usuario->displayUsername().'</abbr>'?></p>
+        <p><a href="<?=site_url('backend/seguimiento/ver_etapa/'.$etapa->id)?>">Revisar detalle</a></p>
+		<?php if (!in_array( 'seguimiento',explode(',',UsuarioBackendSesion::usuario()->rol)) && 
+		((count($etapa->Tramite->Etapas)>1  && $etapa->pendiente) || $etapa->isFinal())):?> 
+        <p><a href="#" onclick ="return auditarRetrocesoEtapa(<?php echo $etapa->id; ?>)">Retroceder etapa</a></p>
+        <?php endif?>
     </li>
 </ol>
 <?php endforeach; ?>

@@ -10,7 +10,9 @@ class Gestion extends MY_BackendController {
 
         UsuarioBackendSesion::force_login();
         
-        if(UsuarioBackendSesion::usuario()->rol!='super' && UsuarioBackendSesion::usuario()->rol!='gestion'){
+//        if(UsuarioBackendSesion::usuario()->rol!='super' && UsuarioBackendSesion::usuario()->rol!='gestion'){
+        if(!in_array('super', explode(',',UsuarioBackendSesion::usuario()->rol) ) && !in_array( 'gestion',explode(',',UsuarioBackendSesion::usuario()->rol))
+                 && !in_array( 'reportes',explode(',',UsuarioBackendSesion::usuario()->rol))){
             echo 'No tiene permisos para acceder a esta seccion.';
             exit;
         }

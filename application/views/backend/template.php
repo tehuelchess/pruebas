@@ -1,7 +1,11 @@
 <!DOCTYPE html>
 <html lang="es">
     <head>
+<<<<<<< HEAD
         <meta charset="utf-8">
+=======
+        <meta  http-equiv="content-type" content="text/html; charset=UTF-8">
+>>>>>>> 1e8c1971a8bb5b2077cd03019a62a6e29b1ce547
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title><?=Cuenta::cuentaSegunDominio()!='localhost'?Cuenta::cuentaSegunDominio()->nombre_largo:'SIMPLE'?> - <?= $title ?></title>
 
@@ -48,6 +52,10 @@
         </script>
         <script src="<?= base_url() ?>assets/js/common.js" type="text/javascript"></script>
         <script src="<?= base_url() ?>assets/js/backend.js" type="text/javascript"></script>
+<<<<<<< HEAD
+=======
+        <script src="<?= base_url() ?>assets/js/nikEditor/nikEditor.js" type="text/javascript"></script>
+>>>>>>> 1e8c1971a8bb5b2077cd03019a62a6e29b1ce547
 
 
     </head>
@@ -76,6 +84,7 @@
                         <div class="row-fluid">
                             <div class="span12">
                                 <ul id="menu" class="nav nav-pills pull-right">
+<<<<<<< HEAD
                                     <?php if (UsuarioBackendSesion::usuario()->rol == 'super' || UsuarioBackendSesion::usuario()->rol == 'gestion'): ?>
                                         <li <?= $this->uri->segment(2) == 'gestion' || !$this->uri->segment(2) ? 'class="active"' : '' ?>><a href="<?= site_url('backend/gestion') ?>">Inicio</a></li>
                                     <?php endif ?>
@@ -95,6 +104,34 @@
                                         <li <?= $this->uri->segment(2) == 'configuracion' ? 'class="active"' : '' ?>><a href="<?= site_url('backend/configuracion') ?>">Configuración</a></li>
                                     <?php endif ?>
                                     <li><a href="http://ayuda.chilesinpapeleo.cl/simple" target="_blank">Ayuda</a></li>
+=======
+                                    <?php if (in_array('super', explode(',',UsuarioBackendSesion::usuario()->rol)) || in_array('gestion', explode(',',UsuarioBackendSesion::usuario()->rol))
+                                            || in_array('reportes', explode(',',UsuarioBackendSesion::usuario()->rol))): ?>
+                                        <li <?= $this->uri->segment(2) == 'gestion' || !$this->uri->segment(2) ? 'class="active"' : '' ?>><a href="<?= site_url('backend/gestion') ?>">Inicio</a></li>
+                                    <?php endif ?>
+                                    <?php if (in_array('super', explode(',',UsuarioBackendSesion::usuario()->rol))  || in_array('modelamiento', explode(',',UsuarioBackendSesion::usuario()->rol))): ?>
+                                        <li <?= $this->uri->segment(2) == 'procesos' || $this->uri->segment(2) == 'formularios' ? 'class="active"' : '' ?>><a href="<?= site_url('backend/procesos') ?>">Modelador de Procesos</a></li>
+                                    <?php endif ?>
+                                    <?php if (in_array('super', explode(',',UsuarioBackendSesion::usuario()->rol)) || in_array('operacion', explode(',',UsuarioBackendSesion::usuario()->rol)) 
+                                    || in_array('seguimiento', explode(',',UsuarioBackendSesion::usuario()->rol))): ?>
+                                        <li <?= $this->uri->segment(2) == 'seguimiento' ? 'class="active"' : '' ?>><a href="<?= site_url('backend/seguimiento') ?>">Seguimiento</a></li>
+                                    <?php endif ?>
+                                    <?php if (in_array('super', explode(',',UsuarioBackendSesion::usuario()->rol)) || in_array('gestion', explode(',',UsuarioBackendSesion::usuario()->rol))
+                                              || in_array('reportes', explode(',',UsuarioBackendSesion::usuario()->rol))): ?>
+                                        <li <?= $this->uri->segment(2) == 'reportes' || !$this->uri->segment(2) ? 'class="active"' : '' ?>><a href="<?= site_url('backend/reportes') ?>">Gestión</a></li>
+                                    <?php endif ?>
+									<?php if (in_array('super', explode(',',UsuarioBackendSesion::usuario()->rol))): ?>
+                                        <li <?= $this->uri->segment(2) == 'auditoria' ? 'class="active"' : '' ?>><a href="<?= site_url('backend/auditoria') ?>">Auditoría</a></li>
+                                    <?php endif ?>
+                                    <?php if (in_array('super', explode(',',UsuarioBackendSesion::usuario()->rol)) || in_array('desarrollo', explode(',',UsuarioBackendSesion::usuario()->rol))): ?>
+                                        <li <?= $this->uri->segment(2) == 'api' || !$this->uri->segment(2) ? 'class="active"' : '' ?>><a href="<?= site_url('backend/api') ?>">API</a></li>
+                                    <?php endif ?>
+                                    <?php if (in_array('super', explode(',',UsuarioBackendSesion::usuario()->rol))
+                                    		|| in_array('configuracion', explode(',',UsuarioBackendSesion::usuario()->rol))): ?>
+                                        <li <?= $this->uri->segment(2) == 'configuracion' ? 'class="active"' : '' ?>><a href="<?= site_url('backend/configuracion') ?>">Configuración</a></li>
+                                    <?php endif ?>
+                                    <li><a href="/simple/assets/ayuda/simple/" target="_blank">Ayuda</a></li>
+>>>>>>> 1e8c1971a8bb5b2077cd03019a62a6e29b1ce547
                                 </ul>
                             </div>
                         </div>
@@ -110,6 +147,7 @@
         </div>
 
         <footer>
+<<<<<<< HEAD
             <div class="area1">
                 <div class="container-fluid">
                     <div class="row-fluid">
@@ -171,6 +209,35 @@
                 </div>
             </div>
 
+=======
+            <div class="area2">
+                <div class="container-fluid">
+                    <div class="row-fluid">
+                        <div class="span3 align-center">
+                            <img src="<?= base_url() ?>assets/img/secretaria_nacional_de_tecnologias_de_la_informacion_y_comunicacion.png" alt=""/>
+                            <br>
+                            <br>
+                            <div class="align-center">
+                                <a href="<?= base_url() ?>assets/license.txt" target="_blank">
+                                    <img class="media-object" src="<?= base_url() ?>assets/img/ico_cc.png" alt="CC" />
+                                </a>
+                            </div>
+                            <br>
+                            <div class="">
+                                <p><a href="http://instituciones.chilesinpapeleo.cl/page/view/simple" target="_blank">Powered by SIMPLE</a></p>
+                            </div>
+
+                        </div>
+                        <div class="span6 align-center">
+
+                        </div>
+                        <div class="span3">                            
+                            <a href="http://www.presidencia.gov.py" target="_blank"><img src="<?= base_url() ?>assets/img/gobierno_nacional2.png" alt="Gobierno Nacional" /></a>
+                        </div>
+                    </div>                    
+                </div>
+            </div>
+>>>>>>> 1e8c1971a8bb5b2077cd03019a62a6e29b1ce547
         </footer>
 
     </body>

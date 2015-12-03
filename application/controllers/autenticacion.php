@@ -13,7 +13,7 @@ class Autenticacion extends MY_Controller {
         $this->load->library('LightOpenID');
         $redirect = $this->input->get('redirect') ? $this->input->get('redirect') : site_url();
         $this->lightopenid->returnUrl = $redirect;
-        $this->lightopenid->required = array('person/guid');
+        $this->lightopenid->required = array('person/guid', 'namePerson/first', 'namePerson/last', 'namePerson/secondLast', 'contact/email');
         redirect($this->lightopenid->authUrl());
     }
 
@@ -77,7 +77,7 @@ class Autenticacion extends MY_Controller {
                 $this->email->from('simple@'.$this->config->item('main_domain'), 'Simple');
             $this->email->to($usuario->email);
             $this->email->subject('Bienvenido');
-            $this->email->message('<p>Usted ya es parte de la plataforma para hacer trámites en línea "Chile Sin Papeleo".</p><p>Su nombre de usuario es: '.$usuario->usuario.'</p>');
+            $this->email->message('<p>Usted ya es parte de la plataforma para hacer trámites en línea.</p><p>Su nombre de usuario es: '.$usuario->usuario.'</p>');
             $this->email->send();
 
             UsuarioSesion::login($this->input->post('usuario'), $this->input->post('password'));

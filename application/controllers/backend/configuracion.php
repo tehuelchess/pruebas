@@ -10,7 +10,8 @@ class Configuracion extends MY_BackendController {
 
         UsuarioBackendSesion::force_login();
         
-        if(UsuarioBackendSesion::usuario()->rol!='super' && UsuarioBackendSesion::usuario()->rol!='configuracion'){
+//        if(UsuarioBackendSesion::usuario()->rol!='super' && UsuarioBackendSesion::usuario()->rol!='configuracion'){
+        if(!in_array('super', explode(',',UsuarioBackendSesion::usuario()->rol) ) && !in_array( 'configuracion',explode(',',UsuarioBackendSesion::usuario()->rol))){
             echo 'No tiene permisos para acceder a esta seccion.';
             exit;
         }
@@ -250,13 +251,14 @@ class Configuracion extends MY_BackendController {
             }
 
             
-            if($this->input->post('password')) $usuario->setPasswordWithSalt($this->input->post('password'));
+            if($this->input->post('password')) $usuario->setPasswordWithSalt($this->input->post('password'));            
             $usuario->nombre = $this->input->post('nombre');
-            $usuario->apellidos = $this->input->post('apellidos');
-            $usuario->rol = $this->input->post('rol');
+            $usuario->apellidos =  $this->input->post('apellidos');            
+            /*se agrega con el fin de cubrir la necesidad de tener un usuario con muchos roles*/
+            $usuario->rol =  implode("," , $this->input->post('rol'));
+            
             $usuario->cuenta_id = UsuarioBackendSesion::usuario()->cuenta_id;
             $usuario->save();
-
             $respuesta->validacion = TRUE;
             $respuesta->redirect = site_url('backend/configuracion/backend_usuarios');
         }else {

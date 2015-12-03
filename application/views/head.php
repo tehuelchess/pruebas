@@ -30,3 +30,4 @@
             var base_url="<?= base_url() ?>";
         </script>
         <script src="<?= base_url() ?>assets/js/common.js"></script>
+        <script src="<?= base_url() ?>assets/js/nikEditor/nikEditor.js" type="text/javascript"></script>

@@ -1,3 +1,13 @@
+<script>
+
+function eliminarProceso(procesoId) {
+    $("#modal").load(site_url + "backend/procesos/ajax_auditar_eliminar_proceso/" + procesoId);
+    $("#modal").modal();
+    return false;
+}
+
+</script>
+
 <ul class="breadcrumb">
     <li>
         Listado de Procesos
@@ -22,7 +32,7 @@
             <td>
                 <a class="btn btn-primary" href="<?=site_url('backend/procesos/editar/'.$p->id)?>"><i class="icon-white icon-edit"></i> Editar</a>
                 <a class="btn btn-default" href="<?=site_url('backend/procesos/exportar/'.$p->id)?>"><i class="icon icon-share"></i> Exportar</a>
-                <a class="btn btn-danger" href="<?=site_url('backend/procesos/eliminar/'.$p->id)?>" onclick="return confirm('¿Esta seguro que desea eliminar?')"><i class="icon-white icon-remove"></i> Eliminar</a>
+                <a class="btn btn-danger" href="#" onclick="return eliminarProceso(<?=$p->id?>);"><i class="icon-white icon-remove"></i> Eliminar</a>
             </td>
         </tr>
         <?php endforeach; ?>
@@ -45,3 +55,5 @@
     </div>
     </form>
 </div>
+
+<div id="modal" class="modal hide fade"></div>

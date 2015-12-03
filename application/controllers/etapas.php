@@ -10,11 +10,34 @@ class Etapas extends MY_Controller {
     }
 
     public function inbox() {
+        $buscar = $this->input->get('buscar');
         $orderby=$this->input->get('orderby')?$this->input->get('orderby'):'updated_at';
         $direction=$this->input->get('direction')?$this->input->get('direction'):'desc';
+                        
+        $matches="";
+        $rowetapas="";
+        $resultotal="";
         
-        $data['etapas'] = Doctrine::getTable('Etapa')->findPendientes(UsuarioSesion::usuario()->id, Cuenta::cuentaSegunDominio(),$orderby,$direction);
+        if ($buscar) { 
+            $this->load->library('sphinxclient');            
+            $this->sphinxclient->SetLimits(0, 10000);
+            $result = $this->sphinxclient->query(json_encode($buscar), 'tramites');             
+            if($result['total'] > 0 ){            
+                $resultotal="true";          
+            }else{               
+                $resultotal="false";
+            }
+        }
 
+        if($resultotal=="true"){
+            $matches = array_keys($result['matches']); 
+            $rowetapas=Doctrine::getTable('Etapa')->findPendientes(UsuarioSesion::usuario()->id, Cuenta::cuentaSegunDominio(),$orderby,$direction, $matches, $buscar);
+        }else{
+            $rowetapas=Doctrine::getTable('Etapa')->findPendientes(UsuarioSesion::usuario()->id, Cuenta::cuentaSegunDominio(),$orderby,$direction, "0", $buscar);
+        }
+        
+        $data['etapas'] =$rowetapas;
+        $data['buscar']= $buscar;
         $data['orderby']=$orderby;
         $data['direction']=$direction;
         $data['sidebar'] = 'inbox';
@@ -22,18 +45,76 @@ class Etapas extends MY_Controller {
         $data['title'] = 'Bandeja de Entrada';
         $this->load->view('template', $data);
     }
-
-    public function sinasignar() {
+    
+    public function sinasignar($offset=0) {                
         if (!UsuarioSesion::usuario()->registrado) {
             $this->session->set_flashdata('redirect', current_url());
             redirect('autenticacion/login');
         }
+        
+        $this->load->library('pagination');        
+        $buscar = $this->input->get('query');        
+        
+        $matches="";
+        $rowetapas="";
+        $resultotal=false;
+        $contador="0";        
+        $perpage=50;
+        
+        if ($buscar) { 
+            $this->load->library('sphinxclient');                        
+            $this->sphinxclient->SetLimits($offset, 10000);
+            $result = $this->sphinxclient->query(json_encode($buscar), 'tramites');             
+            if($result['total'] > 0 ){            
+                $resultotal=true;
+            }else{               
+                $resultotal=false;
+            }
+        }
 
-        $data['etapas'] = Doctrine::getTable('Etapa')->findSinAsignar(UsuarioSesion::usuario()->id, Cuenta::cuentaSegunDominio());
-
+        if($resultotal==true){
+            $matches = array_keys($result['matches']); 
+            $contador = Doctrine::getTable('Etapa')->findSinAsignar(UsuarioSesion::usuario()->id, Cuenta::cuentaSegunDominio(),$matches,$buscar,0,$perpage)->count();
+            $rowetapas=Doctrine::getTable('Etapa')->findSinAsignar(UsuarioSesion::usuario()->id, Cuenta::cuentaSegunDominio(),$matches,$buscar,0,$perpage);
+            error_log("true" . " cantidad " .$contador);
+            
+        }else{            
+            $contador = Doctrine::getTable('Etapa')->findAllSinAsignar(UsuarioSesion::usuario()->id, Cuenta::cuentaSegunDominio())->count();
+            $rowetapas= Doctrine::getTable('Etapa')->findSinAsignar(UsuarioSesion::usuario()->id, Cuenta::cuentaSegunDominio(),"0",$buscar,$offset,$perpage);
+            error_log("false" . " cantidad " .$contador);
+        }
+        
+        $config['base_url'] = site_url('etapas/sinasignar');
+        $config['total_rows'] = $contador;  
+        $config['per_page'] = $perpage;       
+        $config['full_tag_open'] = '<div class="pagination pagination-centered"><ul>';
+        $config['full_tag_close'] = '</ul></div>';
+        $config['page_query_string']=false;
+        $config['query_string_segment']='offset';
+        $config['first_link'] = 'Primero';
+        $config['first_tag_open'] = '<li>';
+        $config['first_tag_close'] = '</li>';
+        $config['last_link'] = 'Último';
+        $config['last_tag_open'] = '<li>';
+        $config['last_tag_close'] = '</li>';
+        $config['next_link'] = '»';
+        $config['next_tag_open'] = '<li>';
+        $config['next_tag_close'] = '</li>';
+        $config['prev_link'] = '«';
+        $config['prev_tag_open'] = '<li>';
+        $config['prev_tag_close'] = '</li>';
+        $config['cur_tag_open'] = '<li class="active"><a href="#">';
+        $config['cur_tag_close'] = '</a></li>';
+        $config['num_tag_open'] = '<li>';
+        $config['num_tag_close'] = '</li>';     
+        $this->pagination->initialize($config);        
+        //$data['etapas'] = Doctrine::getTable('Etapa')->findSinAsignar(UsuarioSesion::usuario()->id, Cuenta::cuentaSegunDominio());
+        $data['links'] = $this->pagination->create_links(); 
+        $data['etapas'] =$rowetapas;        
+        $data['query'] = $buscar;
         $data['sidebar'] = 'sinasignar';
         $data['content'] = 'etapas/sinasignar';
-        $data['title'] = 'Sin Asignar';
+        $data['title'] = 'Sin Asignar';        
         $this->load->view('template', $data);
     }
 
@@ -116,26 +197,34 @@ class Etapas extends MY_Controller {
         $modo = $paso->modo;
 
         $respuesta = new stdClass();
-
+        
         if ($modo == 'edicion') {
             $validar_formulario = FALSE;
-            foreach ($formulario->Campos as $c) {
+            foreach ($formulario->Campos as $c) {                
                 //Validamos los campos que no sean readonly y que esten disponibles (que su campo dependiente se cumpla)
-                if ($c->isEditableWithCurrentPOST()) {
+                if ($c->isEditableWithCurrentPOST($etapa_id)) {
                     $c->formValidate($etapa->id);
-                    $validar_formulario = TRUE;
+                    $validar_formulario = TRUE;                    
                 }
             }
             if (!$validar_formulario || $this->form_validation->run() == TRUE) {
                 //Almacenamos los campos
                 foreach ($formulario->Campos as $c) {
                     //Almacenamos los campos que no sean readonly y que esten disponibles (que su campo dependiente se cumpla)
-                    if ($c->isEditableWithCurrentPOST()) {
+
+                    if ($c->isEditableWithCurrentPOST($etapa_id)) {
                         $dato = Doctrine::getTable('DatoSeguimiento')->findOneByNombreAndEtapaId($c->nombre, $etapa->id);
                         if (!$dato)
                             $dato = new DatoSeguimiento();
                         $dato->nombre = $c->nombre;
-                        $dato->valor = $this->input->post($c->nombre);
+                        $dato->valor = $this->input->post($c->nombre)=== false?'' :  $this->input->post($c->nombre);
+                        
+                        if(!is_object($dato->valor) && !is_array($dato->valor)){                            
+                                if(preg_match('/^\d{4}[\/\-]\d{2}[\/\-]\d{2}$/', $dato->valor)){
+                                    $dato->valor=preg_replace("/^(\d{4})[\/\-](\d{2})[\/\-](\d{2})/i","$3-$2-$1",$dato->valor);
+                                }
+                            }
+                        
                         $dato->etapa_id = $etapa->id;
                         $dato->save();
                     }

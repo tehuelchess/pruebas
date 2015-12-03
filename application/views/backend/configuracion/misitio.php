@@ -16,7 +16,7 @@
                 <legend>Editar información de mi sitio</legend>
                 <div class="validacion"></div>
                 <label>Nombre</label>
-                <input disabled type="text" name="nombre" value="<?=$cuenta->nombre?>"/>
+                <input disabled type="text" name="nombre" class="input-xxlarge" value="<?=$cuenta->nombre?>"/>
                 <label>Nombre largo</label>
                 <input class="input-xxlarge" type="text" name="nombre_largo" value="<?=$cuenta->nombre_largo?>"/>
                 <label>Mensaje de bienvenida (Puede contener HTML)</label>

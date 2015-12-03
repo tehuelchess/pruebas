@@ -7,7 +7,7 @@ class CampoSelect extends Campo {
 
         $display = '<label class="control-label" for="'.$this->id.'">' . $this->etiqueta . (in_array('required', $this->validacion) ? '' : ' (Opcional)') . '</label>';
         $display.= '<div class="controls">';
-        $display.='<select id="'.$this->id.'" name="' . $this->nombre . '" ' . ($modo == 'visualizacion' ? 'readonly' : '') . ' data-modo="'.$modo.'">';
+        $display.='<select id="'.$this->id.'" class="select-semi-large" name="' . $this->nombre . '" ' . ($modo == 'visualizacion' ? 'readonly' : '') . ' data-modo="'.$modo.'">';
         $display.='<option value="">Seleccionar</option>';
         if($this->datos) foreach ($this->datos as $d) {
             $display.='<option value="' . $d->valor . '" ' . ($dato && $d->valor == $dato->valor ? 'selected' : '') . '>' . $d->etiqueta . '</option>';
@@ -15,18 +15,13 @@ class CampoSelect extends Campo {
         $display.='</select>';
         if($this->ayuda)
             $display.='<span class="help-block">'.$this->ayuda.'</span>';
-
-        if($this->extra && $this->extra->ws){
-            $display.='<div class="smallLoading">&nbsp;&nbsp;&nbsp;&nbsp;</div>';
-        }
-
         $display.='</div>';
+
 
         if($this->extra && $this->extra->ws){
             $display.='
             <script>
                 $(document).ready(function(){
-                    $("#'.$this->id.'").prop("disabled", true);
                     var defaultValue = "'.($dato && $dato->valor?$dato->valor:$this->valor_default).'";
                     console.log(defaultValue);
                     $.ajax({
@@ -34,18 +29,12 @@ class CampoSelect extends Campo {
                         dataType: "jsonp",
                         jsonpCallback: "callback",
                         success: function(data){
-                            if(data.error === undefined){
-                                var html="";
-                                $(data).each(function(i,el){
-                                    html+="<option value=\""+el.valor+"\">"+el.etiqueta+"</option>";
-                                });
+                            var html="";
+                            $(data).each(function(i,el){
+                                html+="<option value=\""+el.valor+"\">"+el.etiqueta+"</option>";
+                            });
 
-                                $("#'.$this->id.'").append(html).val(defaultValue).change();
-                            }
-
-                            $(".smallLoading").hide();
-                            $("#'.$this->id.'").prop("disabled", false);
-
+                            $("#'.$this->id.'").append(html).val(defaultValue).change();
                         }
                     });
                 });

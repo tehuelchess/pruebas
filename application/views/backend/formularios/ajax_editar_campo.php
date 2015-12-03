@@ -11,20 +11,13 @@
             var nombre=$(this).text();
             $("#formEditarCampo input[name=nombre]").val(nombre);
         });
-        
-        //Llenamos el select box de dependientes
-        var selected=$("#formEditarCampo select[name=dependiente_campo]").val();
-        var html='<option></option>';
-        var names=new Array();
-        $("#formEditarFormulario :input[name]").each(function(i,el){
-            var name=$(el).attr("name");
-            if($.inArray(name, names)==-1){
-                names.push(name);
-                html+='<option>'+name+'</option>';
-            }
+
+      //Funcionalidad del llenado de dependiente usando el boton de asistencia
+        $("#formEditarCampo .dependiente .dropdown-menu a").click(function(){
+            var nombre=$(this).text();
+            $("#formEditarCampo input[name=dependiente_campo]").val(nombre);
         });
-        $("#formEditarCampo select[name=dependiente_campo]").html(html);
-        $("#formEditarCampo select[name=dependiente_campo]").val(selected);
+        
         
         //Funcionalidad en campo dependientes para seleccionar entre tipo regex y string
         $buttonRegex=$("#formEditarCampo .campoDependientes .buttonRegex");
@@ -143,9 +136,23 @@
             <?php endif ?>
             <div class="campoDependientes">                
                 <label>Visible solo si</label>
-                <select class="input-medium" name="dependiente_campo">
-                    <option value="<?=$campo->dependiente_campo?>"><?=$campo->dependiente_campo?></option>
-                </select>
+                <input type="text" name="dependiente_campo" value="<?=$campo->dependiente_campo?>"/>
+		        <div class="btn-group dependiente" style="display: inline-block; vertical-align: top;">
+		            <a class="btn dropdown-toggle" data-toggle="dropdown" href="#"><i class="icon-th-list"></i><span class="caret"></span></a>
+		            <ul class="dropdown-menu">
+		            	<li><b>Campos</b></li>
+		                <?php foreach ($formulario->Proceso->getCampos() as $c): ?>
+		                    <li><a href="#"><?= $c->nombre ?></a></li>
+		                <?php endforeach; ?>
+		                <li><b>Variables</b></li>
+		                <?php foreach ($formulario->Proceso->getVariables() as $v): ?>
+		                    <li><a href="#"><?= $v->extra->variable ?></a></li>
+		                <?php endforeach; ?>
+		            </ul>
+		        </div>
+<!--                 <select class="input-medium" name="dependiente_campo"> -->
+                	
+<!--                 </select> -->
                 <div class="btn-group" style="margin-bottom: 9px;">
                     <button type="button" class="buttonIgualdad btn">=</button><button type="button" class="buttonDesigualdad btn">!=</button>
                 </div>

@@ -1,13 +1,23 @@
-<h2>Trámites en que ha participado</h2>
-
-
+<h2 style="line-height: 28px;">
+    Solicitudes en que ha participado
+    <!--buscador-->   
+    <div class='pull-right'>
+        <form class="form-search" method="POST" action="<?= preg_replace('/\/\d+/', '', current_url()) ?>">            
+            <div class="input-append">
+                <input name="query" value="<?= $query ?>" type="text" class="search-query" />
+                <button type="submit" class="btn">Buscar</button>
+            </div>
+        </form>
+    </div>
+</h2>
 <?php if (count($tramites) > 0): ?>
     <table id="mainTable" class="table">
         <thead>
             <tr>
-                <th>Id</th>
+                <th>Nro</th>
+                <th>Ref.</th>
                 <th>Nombre</th>
-                <th>Etapa actual</th>
+                <th>Etapa</th>
                 <th>Fecha Modificación</th>
                 <th>Estado</th>
                 <th>Acciones</th>
@@ -16,8 +26,29 @@
         <tbody>
             <?php foreach ($tramites as $t): ?>
                 <tr>
-                    <td><?= $t->id ?></td>
-                    <td class="name"><?= $t->Proceso->nombre ?></td>
+                   <td><?= $t->id ?></td>                   
+                    <td class="name"><?//= $t->Proceso->nombre ?>
+                        <?php 
+                            $tramite_nro ='';
+                            foreach ($t->getValorDatoSeguimiento() as $tra_nro){
+                               if($tra_nro->nombre == 'tramite_ref'){
+                                    $tramite_nro = $tra_nro->valor;
+                                }                              
+                            }                         
+                            echo $tramite_nro;
+                        ?>
+                    </td>
+                    <td class="name">  
+                        <?php 
+                            $tramite_descripcion ='';
+                            foreach ($t->getValorDatoSeguimiento() as $tra){
+                                if($tra->nombre == 'tramite_descripcion'){
+                                    $tramite_descripcion = $tra->valor;
+                                }  
+                            }
+                            echo $tramite_descripcion != '' ? $tramite_descripcion : $t->Proceso->nombre;
+                        ?>
+                    </td>
                     <td>
                         <?php
                         $etapas_array = array();
@@ -50,6 +81,7 @@
             <?php endforeach; ?>
         </tbody>
     </table>
+    <p><?= $links ?></p>   
 <?php else: ?>
     <p>Ud no ha participado en trámites.</p>
 <?php endif; ?>

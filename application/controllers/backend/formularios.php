@@ -10,7 +10,8 @@ class Formularios extends MY_BackendController {
 
         UsuarioBackendSesion::force_login();
         
-        if(UsuarioBackendSesion::usuario()->rol!='super' && UsuarioBackendSesion::usuario()->rol!='modelamiento'){
+//        if(UsuarioBackendSesion::usuario()->rol!='super' && UsuarioBackendSesion::usuario()->rol!='modelamiento'){
+        if(!in_array('super', explode(',',UsuarioBackendSesion::usuario()->rol) ) && !in_array( 'modelamiento',explode(',',UsuarioBackendSesion::usuario()->rol))){
             echo 'No tiene permisos para acceder a esta seccion.';
             exit;
         }
@@ -58,6 +59,39 @@ class Formularios extends MY_BackendController {
         }
         
         $proceso=$formulario->Proceso;
+        
+        $fecha = new DateTime ();
+         
+        // Auditar
+        $registro_auditoria = new AuditoriaOperaciones ();
+        $registro_auditoria->fecha = $fecha->format ( "Y-m-d H:i:s" );
+        $registro_auditoria->operacion = 'Eliminación de Formulario';
+        $usuario = UsuarioBackendSesion::usuario ();
+        $registro_auditoria->usuario = $usuario->nombre . ' ' . $usuario->apellidos . ' <' . $usuario->email . '>';
+        $registro_auditoria->proceso = $proceso->nombre;
+        
+        
+        // Detalles
+        $formulario_array['proceso'] = $proceso ->toArray(false);
+        $formulario_array['formulario'] = $formulario->toArray(false);
+        unset($formulario_array['formulario']['proceso_id']);
+
+        foreach($formulario->Campos as $campo){
+        	
+        	$campo_array = $campo->toArray(false);
+        	if ($campo->documento_id != null)
+        		$campo_array['documento'] = $campo->Documento->nombre;
+        	unset($campo_array['documento_id']);
+        	$formulario_array['campos'][] = $campo_array;
+        	
+        	
+        }
+        
+        $registro_auditoria->detalles = json_encode($formulario_array);
+        $registro_auditoria->save();
+         
+        
+        
         $formulario->delete();
         
         redirect('backend/formularios/listar/'.$proceso->id);
@@ -154,7 +188,7 @@ class Formularios extends MY_BackendController {
                 exit;
             }
         
-        $this->form_validation->set_rules('nombre','Nombre','required');
+        $this->form_validation->set_rules('nombre','Nombre','trim|required');
         $this->form_validation->set_rules('etiqueta','Etiqueta','required');
         $this->form_validation->set_rules('validacion','Validación','callback_clean_validacion');
         if(!$campo_id){
@@ -168,14 +202,22 @@ class Formularios extends MY_BackendController {
             if(!$campo){
                 
             }
-            $campo->nombre=$this->input->post('nombre');
+            $campo->nombre=trim($this->input->post('nombre'));
             $campo->etiqueta=$this->input->post('etiqueta',false);
             $campo->readonly=$this->input->post('readonly');
             $campo->valor_default=$this->input->post('valor_default',false);
             $campo->ayuda=$this->input->post('ayuda');
             $campo->validacion=explode('|',$this->input->post('validacion'));
             $campo->dependiente_tipo=$this->input->post('dependiente_tipo');
-            $campo->dependiente_campo=$this->input->post('dependiente_campo');
+            
+            // Si es checkbox, agregar corchetes al final
+            $campo_dependiente = Doctrine_Query::create()
+            	->from("Campo c, c.Formulario f")
+            	->where("c.nombre = ?", $this->input->post('dependiente_campo'))
+            	->andWhere("f.proceso_id = ?", $campo->Formulario->Proceso->id)
+            	->fetchOne();
+            $campo->dependiente_campo = $campo_dependiente && $campo_dependiente->tipo == 'checkbox' ? $this->input->post('dependiente_campo') .'[]':$this->input->post('dependiente_campo');
+            
             $campo->dependiente_valor=$this->input->post('dependiente_valor');
             $campo->dependiente_relacion=$this->input->post('dependiente_relacion');
             $campo->datos=$this->input->post('datos');

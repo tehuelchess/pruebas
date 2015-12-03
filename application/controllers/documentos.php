@@ -20,7 +20,7 @@ class Documentos extends MY_Controller {
             //Chequeamos permisos en el backend
             $file=Doctrine_Query::create()
                 ->from('File f, f.Tramite.Proceso.Cuenta.UsuariosBackend u')
-                ->where('f.id = ? AND f.llave = ? AND u.id = ? AND (u.rol="super" OR u.rol="operacion" OR u.rol="seguimiento")',array($id,$token,UsuarioBackendSesion::usuario()->id))
+                ->where('f.id = ? AND f.llave = ? AND u.id = ? AND (u.rol like "%super%" OR u.rol like "%operacion%" OR u.rol like "%seguimiento%")',array($id,$token,UsuarioBackendSesion::usuario()->id))
                 ->fetchOne();
             
             if(!$file){

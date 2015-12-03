@@ -126,36 +126,48 @@ class Campo extends Doctrine_Record {
     }
     
     //Funcion que retorna si este campo debiera poderse editar de acuerdo al input POST del usuario
-    public function isEditableWithCurrentPOST(){
+    public function isEditableWithCurrentPOST($etapa_id){
         $CI=& get_instance();
 
         $resultado=true;
 
-        if($this->readonly){
+        if($this->readonly){            
            $resultado=false;
         }else if($this->dependiente_campo){
             $nombre_campo=preg_replace('/\[\w*\]$/', '', $this->dependiente_campo);
             $variable=$CI->input->post($nombre_campo);
-
+            
             //Parche para el caso de campos dependientes con accesores. Ej: ubicacion[comuna]!='Las Condes|Santiago'
             if(preg_match('/\[(\w+)\]$/',$this->dependiente_campo,$matches))
                 $variable=$variable[$matches[1]];
-
-            if($variable===false){    //Si la variable dependiente no existe
+            
+            if($variable===false){                
+                //buscar en este tramite la ultima aparición de la variable buscada
+                $dato_dependiente =  Doctrine::getTable('DatoSeguimiento')->findByNombreHastaEtapa($this->dependiente_campo,$etapa_id);
+                 
+                // Si no se encuentra, volvemos a buscar eliminando los corchetes(agregados para el checkbox) si existen
+                $dato_dependiente = substr($this->dependiente_campo, abs(strlen($this->dependiente_campo)-2), 2)!='[]' && !is_null($dato_dependiente) ? 
+                    $dato_dependiente : Doctrine::getTable('DatoSeguimiento')->findByNombreHastaEtapa(substr($this->dependiente_campo,0, strlen($this->dependiente_campo)-2)
+                                                    ,$etapa_id);            
+                if ($dato_dependiente)
+                    $variable = is_array($dato_dependiente->valor) ? $dato_dependiente->valor :  array($dato_dependiente->valor);
+            }                         
+            
+            if($variable===false){    //Si la variable dependiente no existe                                
                 $resultado=false;
             }else{
-                if(is_array($variable)){ //Es un arreglo
-                    if($this->dependiente_tipo=='regex'){
+                if(is_array($variable)){ //Es un arreglo                    
+                    if($this->dependiente_tipo=='regex'){                        
                         foreach($variable as $x){
                             if(!preg_match('/'.$this->dependiente_valor.'/', $x))
                                 $resultado= false;
                         }
-                    }else{
-                        if(!in_array($this->dependiente_valor, $variable))
+                    }else{                         
+                        if(!in_array($this->dependiente_valor, $variable))                            
                             $resultado= false;
                     }
-                }else{
-                    if($this->dependiente_tipo=='regex'){
+                }else{                    
+                    if($this->dependiente_tipo=='regex'){                        
                         if(!preg_match('/'.$this->dependiente_valor.'/', $variable))
                             $resultado= false;
                     }else{
@@ -245,4 +257,39 @@ class Campo extends Doctrine_Record {
         return json_decode($this->_get('extra'));
     }
 
+    public function isCurrentlyVisible($etapa_id){
+        if (strlen($this->dependiente_campo) == 0)
+                return true;
+    	
+        $visible = false;
+        $dato_dependiente =  Doctrine::getTable('DatoSeguimiento')->findByNombreHastaEtapa($this->dependiente_campo,$etapa_id);
+		
+        // Si no se encuentra, volvemos a buscar eliminando los corchetes(agregados para el checkbox) si existen
+        $dato_dependiente = substr($this->dependiente_campo, abs(strlen($this->dependiente_campo)-2), 2)!='[]' && !is_null($dato_dependiente) ? 
+                $dato_dependiente : Doctrine::getTable('DatoSeguimiento')->findByNombreHastaEtapa(substr($this->dependiente_campo,0, strlen($this->dependiente_campo)-2)
+                                                ,$etapa_id);
+		
+        if ($dato_dependiente){
+
+            $valores = is_array($dato_dependiente->valor) ? $dato_dependiente->valor :  array($dato_dependiente->valor);
+            foreach($valores as $valor){
+                if ($this->dependiente_tipo == "regex") {
+                    if (preg_match('/'.$this->dependiente_valor.'/', $valor) == 1){
+                            $visible = true;
+                    }
+
+                } else {
+                    $visible = $this->dependiente_valor == $valor
+                    || $this->dependiente_valor  == '"'. $valor. '"';                                        
+                }
+                if ($this->dependiente_relacion == "!=")
+                    $visible = !$visible;
+
+                if ($visible)
+                    break;
+            }
+        }
+
+        return $visible;
+    }
 }
