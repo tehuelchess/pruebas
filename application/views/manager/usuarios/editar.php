@@ -24,13 +24,33 @@
             <?php endforeach ?>
         </select>
         <label>Rol</label>
-        <select name="rol">
-            <option value="super" <?= $usuario->rol == 'super' ? 'selected' : '' ?>>super</option>
-            <option value="modelamiento" <?= $usuario->rol == 'modelamiento' ? 'selected' : '' ?>>modelamiento</option>
-            <option value="operacion" <?= $usuario->rol == 'operacion' ? 'selected' : '' ?>>operacion</option>
-            <option value="gestion" <?= $usuario->rol == 'gestion' ? 'selected' : '' ?>>gestion</option>
-            <option value="gestion" <?= $usuario->rol == 'reportes' ? 'selected' : '' ?>>gestion</option>
+	<?php
+        $roles = array("super", "modelamiento", "seguimiento", "operacion", "gestion", "desarrollo", "configuracion", "reportes");
+        $longitud = count($roles);
+
+        $valores = isset($usuario->rol) ? explode(",", $usuario->rol) : '';
+        ?>
+        <select name="rol[]"  class="input-xxlarge" multiple>
+            <?php  
+                for($o=0; $o<$longitud; $o++){ 
+            ?>
+                    <option value="<?= $roles[$o] ?>" <?=  isset($usuario) && in_array($roles[$o], $valores) ? 'selected':''?> > <?= $roles[$o] ?> </option>                    
+            <?php  
+                } 
+            ?>
         </select>
+        <div class="help-block">
+            <ul>
+                <li>super: Tiene todos los privilegios del sistema.</li>
+                <li>modelamiento: Permite modelar y diseñar el funcionamiento del trámite.</li>
+                <li>seguimiento: Permite hacer seguimiento de los tramites.</li>
+                <li>operacion: Permite hacer seguimiento y operaciones sobre los tramites como eliminacion y edición.</li>
+                <li>gestion: Permite acceder a reportes de gestion con privilegio de visualiación.</li>
+                <li>reportes: Permite acceder y configurar reportes de gestion y uso de la plataforma.</li>
+                <li>desarrollo: Permite acceder a la API de desarrollo, para la ingtegracion con plataformas externas.</li>
+                <li>configuracion: Permite configurar los usuarios y grupos de usuarios que tienen acceso al sistema.</li>
+            </ul>
+        </div>
         <div class="form-actions">
             <button class="btn btn-primary" type="submit">Guardar</button>
             <a class="btn" href="<?= site_url('manager/usuarios') ?>">Cancelar</a>
