@@ -56,7 +56,7 @@ class Usuarios extends CI_Controller{
             $usuario->nombre=$this->input->post('nombre');
             $usuario->apellidos=$this->input->post('apellidos');
             $usuario->Cuenta=Doctrine::getTable('Cuenta')->find($this->input->post('cuenta_id'));
-            $usuario->rol=$this->input->post('rol');
+            $usuario->rol = implode("," , $this->input->post('rol'));
             if($this->input->post('password'))
                 $usuario->setPasswordWithSalt ($this->input->post('password'));
             
@@ -83,3 +83,5 @@ class Usuarios extends CI_Controller{
     }
     
 }
+
+
