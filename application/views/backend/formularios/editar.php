@@ -35,6 +35,7 @@
             <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'checkbox')">Checkbox</button>
             <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'file')">File</button>
             <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'date')">Date</button>
+            <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'grid')">Grilla</button>
         </div>
         <div class="btn-group">
             <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'instituciones_gob')">Instituciones</button>

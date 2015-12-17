@@ -60,7 +60,7 @@ footer a {
   color: #59758D;
 }
 footer a:hover {
-  color: #465f6e;
+  color: #fff;
 }
 footer ul {
   color: white;
@@ -118,7 +118,7 @@ footer .area2 .container-fluid .footerGob {
 .dynaForm legend {
   border: none;
   margin: 0;
-  color: #8C0505;
+  color: #005181;
   font-weight: bold;
 }
 .dynaForm label {
@@ -131,6 +131,12 @@ footer .area2 .container-fluid .footerGob {
   background: none;
   border: none;
 }
+.dynaForm .grid table th,
+.dynaForm .grid table td {
+  white-space: pre-line;
+  max-width: 100px;
+
+
 .dl-horizontal dd {
   *zoom: 1;
 }
