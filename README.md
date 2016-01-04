@@ -18,7 +18,7 @@ jQuery 1.7.2
 
 ### Requisitos Técnicos
 - Apache 2.x con modulo mod_rewrite instalado y activado.
-- PHP >= 5.3.x
+- PHP >= 5.4.x
 - MySQL >= 5.5.x
 
 ### Configuración de la plataforma
@@ -45,3 +45,6 @@ jQuery 1.7.2
 - Acceder a http://nombrededominio/manager
     Usuario: admin@admin.com
     Contraseña: 123456
+
+### Acerca de
+Fue creado por la Unidad de Modernización y Gobierno digital del Ministerio de Secretaría General de Presidencia, de Chile. Actualmente está siendo adaptado por varios países de la región en el marco del proyecto de Red Gealc "Mecanismo colaborativo regional de software público", que cuenta con el apoyo de la Iniciativa de Bienes Públicos Regionales del BID.
