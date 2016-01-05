@@ -47,4 +47,4 @@ jQuery 1.7.2
     Contraseña: 123456
 
 ### Acerca de
-Fue creado por la Unidad de Modernización y Gobierno digital del Ministerio de Secretaría General de Presidencia, de Chile. Actualmente está siendo adaptado por varios países de la región en el marco del proyecto de Red Gealc "Mecanismo colaborativo regional de software público", que cuenta con el apoyo de la Iniciativa de Bienes Públicos Regionales del BID.
+La primera versión de SIMPLE fue creada por la Unidad de Modernización y Gobierno digital del Ministerio de Secretaría General de Presidencia, de Chile. Actualmente está siendo adaptado y enriquecido por varios países de la región en el marco del proyecto de Red Gealc "Mecanismo colaborativo regional de software público", que cuenta con el apoyo de la Iniciativa de Bienes Públicos Regionales del BID.
