@@ -18,19 +18,19 @@
   border-bottom: none;
 }
 #sideMenu li a {
-  color: #8C0505;
+  color: #005181;
   border-right: 10px solid #ddd;
   border-bottom: 1px solid #ddd;
   text-shadow: none;
 }
 #sideMenu li.iniciar a {
-  color: #8C0505;
+  color: #005181;
   font-size: 18px;
   background: #e2f0f8;
 }
 #sideMenu li.active a {
   color: #fff;
-  background: #8c0505;;
+  background: #005181;;
   position: relative;
 }
 #sideMenu li.active a:after {
@@ -38,13 +38,13 @@
   position: absolute;
   top: 0;
   right: -20px;
-  background: url(../img/triangle_red.png);
+  background: url(../img/triangle.png);
   width: 20px;
   height: 36px;
 }
 h2 {
   font-size: 21px;
-  color: #8C0505;
+  color: #005181;
 }
 #mainTable tr:hover {
   background: #f0f7fb;
