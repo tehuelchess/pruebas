@@ -29,7 +29,7 @@ class Portada extends CI_Controller{
         }
 
         if(is_numeric($nrotramite) && is_numeric($fecha)){	
-            $query=$this->consultas->listDatoSeguimiento($nrotramite,$fecha);        	
+            $query=$this->consultas->listDatoSeguimiento($nrotramite,$fecha,Cuenta::cuentaSegunDominio());        	
             $data['vacio']= $resp;
         }
 

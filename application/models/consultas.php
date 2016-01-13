@@ -6,7 +6,7 @@ class Consultas extends CI_Model {
         parent::__construct();
     }
     
-    public function listDatoSeguimiento($tra_id, $fecha){
+    public function listDatoSeguimiento($tra_id, $fecha, $cuenta){
         $statement = Doctrine_Manager::getInstance()->connection();
         $query="select 
                     nro_tramite, 
@@ -30,12 +30,15 @@ class Consultas extends CI_Model {
                        concat(u.nombres,' ',u.apellido_paterno) as usuario,
                        DATE_FORMAT(t.created_at,'%Y') as inicio_filtro,
                        e.id as etapa_id
-                    from etapa e,tarea ta,tramite t, usuario u
+                    from etapa e,tarea ta,tramite t, usuario u, proceso p, cuenta c
                     where e.tarea_id=ta.id 
                       and e.tramite_id= t.id 
-                      and e.usuario_id=u.id                              
+                      and e.usuario_id=u.id    
+                      and t.proceso_id=p.id
+                      and p.cuenta_id=c.id
+                      and c.id = $cuenta->id                    
                     ) d
-                where filtro=$tra_id and inicio_filtro=DATE_FORMAT(STR_TO_DATE('$fecha','%Y'),'%Y')
+                where nro_tramite=$tra_id and inicio_filtro=DATE_FORMAT(STR_TO_DATE('$fecha','%Y'),'%Y')
                 order by 4,2 asc";
         $results = $statement->execute($query);
         return $results->fetchAll();    
