@@ -96,11 +96,11 @@ class Regla {
     
     //Obtiene la expresion con los reemplazos de variables ya hechos de acuerdo a los datos capturados en el tramite tramite_id.
     //Esta es una representacion con las variables reemplazadas. No es una expresion evaluable. (Los arrays y strings no estan definidos como tal)
-    public function getExpresionParaOutput($etapa_id){
+    public function getExpresionParaOutput($etapa_id, $evaluar=false){
         //print_r( stdClass::__set_state(array( 'region' => 'Antofagasta', 'comuna' => 'San Pedro de Atacama' )));
         //exit;
         $new_regla=$this->regla;     
-        $new_regla=preg_replace_callback('/@@(\w+)((->\w+|\[\w+\])*)/', function($match) use ($etapa_id) {
+        $new_regla=preg_replace_callback('/@@(\w+)((->\w+|\[\w+\])*)/', function($match) use ($etapa_id,$evaluar) {
                     $nombre_dato = $match[1];
                     $accesor=isset($match[2])?$match[2]:'';
                     
@@ -108,10 +108,40 @@ class Regla {
                     if ($dato) {
                         $dato_almacenado=eval('$x=json_decode(\''.json_encode($dato->valor,JSON_HEX_APOS).'\'); return $x'.$accesor.';');
                         
-                        if(!is_string($dato_almacenado))
+                        if(!is_string($dato_almacenado)){
                             $valor_dato= json_encode($dato_almacenado);
-                        else
+                            if($evaluar == true){
+                                $result = Doctrine_Query::create()
+                                                    ->from("Campo")
+                                                    ->where('nombre=?',$nombre_dato)
+                                                    ->andWhere('tipo = "grid"')
+                                                    ->execute();
+                                if($result[0]->tipo){
+                                    $valor_dato = json_decode($valor_dato);
+                                    $tabla = '<table border="1" cellpadding="2" cellspacing="2"><thead>';
+                                    foreach ($valor_dato as $key => $array) {
+                                        if($key == 1){
+                                            $tabla .= '</thead><tbody><tr>';
+                                        }else{
+                                            $tabla .= '<tr>';    
+                                        }
+                                        foreach($array as $llave => $value){
+                                            if($key==0){
+                                                $tabla .= '<td><strong>'.$value.'</strong></td>';
+                                            }else{
+                                                $tabla .= '<td>'.$value.'</td>';
+                                            }
+                                        }
+                                        $tabla .= '</tr>';
+                                    }
+                                    $tabla .= '</tbody></table>';
+                                    $valor_dato = $tabla;
+                                }
+                            }
+                        }
+                        else{
                             $valor_dato=$dato_almacenado;
+                        }
                     }
                     else {
                         //Entregamos vacio
