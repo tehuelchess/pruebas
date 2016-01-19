@@ -36,7 +36,7 @@ class Consultas extends CI_Model {
                       and e.usuario_id=u.id    
                       and t.proceso_id=p.id
                       and p.cuenta_id=c.id
-                      and c.id = $cuenta->id                    
+                      and c.id=$cuenta->id                    
                     ) d
                 where nro_tramite=$tra_id and inicio_filtro=DATE_FORMAT(STR_TO_DATE('$fecha','%Y'),'%Y')
                 order by 4,2 asc";

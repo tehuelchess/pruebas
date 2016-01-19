@@ -284,12 +284,20 @@ class Etapa extends Doctrine_Record {
 
             foreach($usuarios as $usuario){
                 if ($usuario->email) {
+                    $varurl = '';
+                    if ($this->usuario_id) {
+                         $varurl=site_url('etapas/ejecutar/'.$this->id);
+                    }else{
+                         $varurl=site_url('etapas/sinasignar');
+                    }
                     $CI = & get_instance();
                     $cuenta=$this->Tramite->Proceso->Cuenta;
                     $CI->email->from($cuenta->nombre.'@'.$CI->config->item('main_domain'), $cuenta->nombre_largo);
                     $CI->email->to($usuario->email);
-                    $CI->email->subject('Tiene una tarea pendiente');
-                    $CI->email->message('<p>' . $this->Tramite->Proceso->nombre . '</p><p>Tiene una tarea pendiente por realizar: ' . $this->Tarea->nombre . '</p><p>Podra realizarla en: ' . ($this->usuario_id?site_url('etapas/ejecutar/' . $this->id):site_url('etapas/sinasignar')) . '</p>');
+                    $CI->email->subject('SIMPLE - Tiene una tarea pendiente');
+                    $url = ' Podra realizarla en: ' . $varurl. ' ';
+                    $url = str_replace("..", ".", $url);
+                    $CI->email->message('<p>' . $this->Tramite->Proceso->nombre . '</p><p>Tiene una tarea pendiente por realizar: ' . $this->Tarea->nombre . '</p><p>' .$url . '</p>');
                     $CI->email->send();
                 }
             }

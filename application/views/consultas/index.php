@@ -18,6 +18,7 @@
         <link href="<?= base_url() ?>assets/js/helpdoc/introjs.css" rel="stylesheet">
         <link href="<?= base_url() ?>assets/js/helpdoc/demo.css" rel="stylesheet">
         <link href="<?= base_url() ?>assets/js/helpdoc/datepicker/bootstrap-datetimepicker.min.css" rel="stylesheet">
+        <link rel="shortcut icon" href="<?= base_url() ?>assets/img/favicon.png">
         <script src="<?= base_url() ?>assets/js/jquery.jsplumb/jquery.jsPlumb-1.3.16-all-min.js" type="text/javascript"></script>
         <script src="<?= base_url() ?>assets/js/grafico-consulta.js"></script>
         <style>
@@ -65,18 +66,20 @@
                     <div class="container">
                         <div class="row">
                             <div class="span2">
-                                <h1 id="logo"><img src="<?= base_url()?>assets/js/helpdoc/logo.png"/></h1>
+                                <h1 id="logo"><a href="<?= site_url() ?>"><img src="<?= Cuenta::cuentaSegunDominio()!='localhost' ? Cuenta::cuentaSegunDominio()->logoADesplegar : base_url('assets/img/logo.png') ?>" alt="<?= Cuenta::cuentaSegunDominio()!='localhost' ? Cuenta::cuentaSegunDominio()->nombre_largo : 'Simple' ?>" /></a></h1>
                             </div>
                             <div class="span10">
-                                <h1 style="color:#990000; font-size:22px;"><?= $titulo ?></h1>
+                                <h1 style="font-size:22px;"><?= $titulo ?></h1>
                                 <p style="font-size:14px;">
-                                    <i class="icon icon-home"></i> Secretaría Nacional de Tecnologías de la Información y Comunicación
+                                    <i class="icon icon-home"></i> <?= Cuenta::cuentaSegunDominio()->nombre_largo ?>
                                 </p>
+                                <!--
                                 <p style="font-size:14px;">
                                     <i class="icon icon-random"></i> Trámites: Seguimiento de Expedientes oficiales (Notas y documentos ingresados por mesa de entrada)
-                                </p>    
+                                </p>
+                                -->
                                 <p style="font-size:10px; text-shadown:#CCCCCC 2px 2px 2px 2px;">
-                                    <i class="icon icon-info-sign"></i> A través de esta pequeña y simple aplicación podés dar seguimiento a cualquier documento que se ha ingresado en la Senatics
+                                    <i class="icon icon-info-sign"></i> A través de esta pequeña y simple aplicación puedes dar seguimiento a cualquier trámite que se ha ingresado
                                 </p>                                  
                             </div>
                             <div class="offset3 span3"></div>
@@ -88,21 +91,23 @@
                     <div class="container">
                         <div class="row">
                             <div class="span12">
-                                <p></p>                    
-                                <p style="font-size:14px; color:#990000;">Ingrese los datos de tu documento recepcionado    
+                                <p></p>
+                                <!--
+                                <p style="font-size:14px;">Ingrese los datos de tu documento recepcionado    
                                     <a href="javascript:void(0);" title="Ayuda" class="btn" onclick="javascript:introJs().start();"><i class="icon icon-question-sign"></i></a>                                           
                                 </p> 
+                                -->
                 		<form  method="POST" action="<?= current_url() ?>">
                                     <?=form_error('fecha')?>
                                     <?=form_error('nrotramite')?>
                                     <div class="campo control-group">
-                                        <label class="control-label" style="color:#465f6e;"><i class="icon icon-chevron-right"></i>Nro. de Mesa de Entrada</label>
+                                        <label class="control-label" style="color:#465f6e;"><i class="icon icon-chevron-right"></i>Nro. de Trámite</label>
                                         <div class="controls" > 
                                             <input name="nrotramite" id="nrotramite" type="text" value="<?= $nrotramite ?>"
                                                 data-step="1" data-intro="Ingresá el Nro. de la Mesa de Entrada  <img src='<?= base_url() ?>assets/js/helpdoc/ayu1.png'/>" data-position='center'>
                                         </div>
                 			
-                                        <label class="control-label" style="color:#465f6e;"><i class="icon icon-chevron-right"></i>Ingrese el año de la Mesa de Entrada</label>
+                                        <label class="control-label" style="color:#465f6e;"><i class="icon icon-chevron-right"></i>Ingrese el año que fue ingresado el trámite</label>
                                         
                                         <div class="controls input-append date form_date" data-date="" data-date-format="yyyy" data-link-field="fecha1" data-link-format="yyyy">
                                             <input type="text" placeholder="aaaa" value="<?=$fecha?>" name="fecha" id="fecha" onkeypress="validarDatos(event,'#fecha','#buscar');"
@@ -175,30 +180,34 @@
 
         <footer>
             <div class="area2">
-                    <hr>
-                    <div class="container">
-                        <div class="row">
-                            <div class="span3 align-center" align="center">
-                                <a href="http://www.paraguay.gov.py/" target="_blank">
-                                    <img src="<?= base_url()?>assets/js/helpdoc/banner_externo_portalunicogobierno.gif" alt=""/>
-                                </a>    
-                            </div>
-                            <div class="span6 align-center" align="center">
-                                 <a href="http://www.datos.gov.py" target="_blank">
-                                    <img src="<?= base_url()?>assets/js/helpdoc/banner_opendatagovpy.png" alt=""/>
-                                </a>
-                            </div>
-                            <div class="span3" align="center">
-                                <a href="http://www.presidencia.gov.py" target="_blank">
-                                    <img src="<?= base_url() ?>assets/img/gobierno_nacional2.png" alt="Gobierno Nacional"/>
-                                </a>
-                            </div>
-                            <div class="span3 align-center">
-                                <p><a href="http://instituciones.chilesinpapeleo.cl/page/view/simple" target="_blank">Powered by SIMPLE</a></p>
+                <div class="container">
+                    <div class="row">
+                        <div class="span5">
+                            <div class="col">
+                                <div class="media">
+                                    <div class="pull-left">
+                                        <img class="media-object" src="<?= base_url() ?>assets/img/ico_cc.png" alt="CC" />
+                                    </div>
+                                    <div class="media-body">
+                                        <p class="modernizacion"><a href="http://www.modernizacion.gob.cl" target="_blank">Iniciativa de la Unidad de Modernización y Gobierno Digital</a><br/>
+                                            <a class="ministerio" href="http://www.minsegpres.gob.cl" target="_blank">Ministerio Secretaría General de la Presidencia</a></p>
+                                        <br />
+                                        <p><a href="http://instituciones.chilesinpapeleo.cl/page/view/simple" target="_blank">Powered by SIMPLE</a></p>
+                                    </div>
+                                </div>
+
                             </div>
                         </div>
+                        <div class="span3">
+                            <div class="col"></div>
+                        </div>
+                        <div class="span4">
+                            &nbsp;
+                        </div>
                     </div>
+                    <a href="http://www.gob.cl" target="_blank"><img class="footerGob" src="<?= base_url() ?>assets/img/gobierno_chile.png" alt="Gobierno de Chile" /></a>
                 </div>
+            </div>
         </footer>
         <script type="text/javascript" src="<?= base_url() ?>assets/js/helpdoc/datepicker/bootstrap-datetimepicker.js" charset="UTF-8"></script>
         <script type="text/javascript" src="<?= base_url() ?>assets/js/helpdoc/datepicker/bootstrap-datetimepicker.es.js" charset="UTF-8"></script> 
