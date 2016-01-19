@@ -49,9 +49,9 @@ class Autenticacion extends MY_BackendController {
 
             $cuenta=Cuenta::cuentaSegunDominio();
             if(is_a($cuenta, 'Cuenta'))
-                $this->email->from($cuenta->nombre.'@chilesinpapeleo.cl', $cuenta->nombre_largo);
+                $this->email->from($cuenta->nombre.'@'. $this->config->item('main_domain'), $cuenta->nombre_largo);
             else
-                $this->email->from('simple@chilesinpapeleo.cl', 'Simple');
+                $this->email->from('simple@'. $this->config->item('main_domain'), 'Simple');
             $this->email->to($usuario->email);
             $this->email->subject('Reestablecer contraseña');
             $this->email->message('<p>Haga click en el siguiente link para reestablecer su contraseña:</p><p><a href="'.site_url('backend/autenticacion/reestablecer?id='.$usuario->id.'&reset_token='.$random).'">'.site_url('autenticacion/reestablecer?id='.$usuario->id.'&reset_token='.$random).'</a></p>');

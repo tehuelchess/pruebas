@@ -51,6 +51,14 @@ class Etapa extends Doctrine_Record {
         ));
     }
 
+    public function getDatosSeguimiento() {
+         return Doctrine_Query::create()
+                ->from("DatoSeguimiento d, d.Etapa e, e.Tramite t")
+                ->where('e.pendiente = 1')
+                ->andWhere('e.id=?',$this->id)
+                ->execute();
+    }
+
     //Verifica si el usuario_id tiene permisos para asignarse esta etapa del tramite.
     public function canUsuarioAsignarsela($usuario_id) {
         static $usuario;
@@ -144,8 +152,8 @@ class Etapa extends Doctrine_Record {
                         
                         if($usuario_asignado_id)
                             $etapa->asignar($usuario_asignado_id);
-
-                        $etapa->notificarTareaPendiente();
+                        else
+                       		$etapa->notificarTareaPendiente();
                     }
                     $this->Tramite->updated_at = date("Y-m-d H:i:s");
                     $this->Tramite->save();
@@ -241,6 +249,20 @@ class Etapa extends Doctrine_Record {
         $this->usuario_id = $usuario_id;
         $this->save();
 
+        if ($this->Tarea->asignacion_notificar) {
+            $usuario = Doctrine::getTable('Usuario')->find($usuario_id);
+            if ($usuario->email) {
+                $CI = & get_instance();
+                $cuenta=$this->Tramite->Proceso->Cuenta;
+                $CI->email->from($cuenta->nombre.'@'.$CI->config->item('main_domain'), $cuenta->nombre_largo);
+                $CI->email->to($usuario->email);
+                $CI->email->subject('Tiene una tarea pendiente');
+                $CI->email->message('<p>' . $this->Tramite->Proceso->nombre . '</p><p>Se le ha asignado la tarea: ' . $this->Tarea->nombre . '</p><p>Podra realizarla en: ' . site_url('etapas/ejecutar/' . $this->id) . '</p>');
+                $CI->email->send();
+            }
+        }
+
+
         //Ejecutamos los eventos
         $eventos=Doctrine_Query::create()->from('Evento e')
                 ->where('e.tarea_id = ? AND e.instante = ? AND e.paso_id IS NULL',array($this->Tarea->id,'antes'))
@@ -266,7 +288,7 @@ class Etapa extends Doctrine_Record {
                     $cuenta=$this->Tramite->Proceso->Cuenta;
                     $CI->email->from($cuenta->nombre.'@'.$CI->config->item('main_domain'), $cuenta->nombre_largo);
                     $CI->email->to($usuario->email);
-                    $CI->email->subject('SIMPLE - Tiene una tarea pendiente');
+                    $CI->email->subject('Tiene una tarea pendiente');
                     $CI->email->message('<p>' . $this->Tramite->Proceso->nombre . '</p><p>Tiene una tarea pendiente por realizar: ' . $this->Tarea->nombre . '</p><p>Podra realizarla en: ' . ($this->usuario_id?site_url('etapas/ejecutar/' . $this->id):site_url('etapas/sinasignar')) . '</p>');
                     $CI->email->send();
                 }
@@ -336,22 +358,14 @@ class Etapa extends Doctrine_Record {
             return NULL;
         
         $fecha=NULL;
-        if($this->Tarea->vencimiento_unidad=='D')
-            if($this->Tarea->vencimiento_habiles){
-                $fecha=add_working_days($this->created_at,$this->Tarea->vencimiento_valor);
-            }else{
-                $temp = new DateTime($this->created_at);
-                $fecha= $temp->add(new DateInterval('P' . $this->Tarea->vencimiento_valor . 'D'))->format('Y-m-d');
-            }
-        else if($this->Tarea->vencimiento_unidad=='W'){
-            $temp = new DateTime($this->created_at);
-            $fecha= $temp->add(new DateInterval('P' . $this->Tarea->vencimiento_valor . 'W'))->format('Y-m-d');
-        }else if($this->Tarea->vencimiento_unidad=='M'){
-            $temp = new DateTime($this->created_at);
-            $fecha= $temp->add(new DateInterval('P' . $this->Tarea->vencimiento_valor . 'M'))->format('Y-m-d');
-        }
         
-        return $fecha;
+       	if ($this->Tarea->vencimiento_unidad == 'D' && $this->Tarea->vencimiento_habiles)
+       		 return add_working_days($this->created_at,$this->Tarea->vencimiento_valor);
+       	else {
+       		$tmp = new DateTime($this->created_at);
+       		return $tmp->add(new DateInterval('P' . $this->Tarea->vencimiento_valor . $this->Tarea->vencimiento_unidad))->format('Y-m-d');
+       		
+       	}
     }
 
     /*
@@ -374,9 +388,9 @@ class Etapa extends Doctrine_Record {
         $interval = $now->diff(new DateTime($this->vencimiento_at));
         
         if($interval->invert)
-            return 'vencida';
+            return 'vencida hace ' . ($interval->days) . ($interval->days == 1 ? ' dia' :' días');
         else
-            return 'vence en '. (1+$interval->days) . ' días';
+            return 'vence '. ($interval->days == 0 ? 'hoy' : 'en '.  ($interval->days) .($interval->days == 1 ? ' dia' :' días'));
     }
      
 
@@ -452,4 +466,19 @@ class Etapa extends Doctrine_Record {
 
         return $r->getExpresionParaOutput($this->id);
     }
+    
+    
+
+    /**
+     * Retorna true si es la etapa con que se completó el tramite
+     */
+    public function isFinal(){
+    	 
+    	return $this->pendiente==0 && 
+    		$this->Tramite->pendiente==0 && 
+    		$this->Tramite->getUltimaEtapa()->id == $this->id;
+    		 
+    }
+    
+    
 }

@@ -15,7 +15,7 @@ class CampoTextArea extends Campo{
         
         $display='<label class="control-label" for="'.$this->id.'">' . $this->etiqueta . (!in_array('required', $this->validacion) ? ' (Opcional)' : '') . '</label>';
         $display.='<div class="controls">';
-        $display.='<textarea id="'.$this->id.'" rows="5" class="input-xxlarge" ' . ($modo == 'visualizacion' ? 'readonly' : '') . ' name="' . $this->nombre . '">' . ($dato?htmlspecialchars($dato->valor):htmlspecialchars($valor_default)) . '</textarea>';
+        $display.='<textarea id="'.$this->id.'" rows="5" class="input-semi-large" ' . ($modo == 'visualizacion' ? 'readonly' : '') . ' name="' . $this->nombre . '">' . ($dato?htmlspecialchars($dato->valor):htmlspecialchars($valor_default)) . '</textarea>';
         if($this->ayuda)
             $display.='<span class="help-block">'.$this->ayuda.'</span>';
         $display.='</div>';

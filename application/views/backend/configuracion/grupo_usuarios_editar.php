@@ -20,7 +20,7 @@
                 <div class="validacion"></div>
                 <?php if(isset($grupo_usuarios)):?>
                 <label>Id</label>
-                <input type='text' class="input-small" value='<?=$grupo_usuarios->id?>' disabled />
+                <input type='text' class="input-xxlarge" value='<?=$grupo_usuarios->id?>' disabled />
                 <?php endif ?>
                 <label>Nombre</label>
                 <input type="text" class="input-xlarge" name="nombre" value="<?=isset($grupo_usuarios)?$grupo_usuarios->nombre:''?>"/>

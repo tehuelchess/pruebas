@@ -14,7 +14,8 @@ class Widget extends Doctrine_Record {
         $this->setSubclasses(array(
                 'WidgetTramiteEtapas'  => array('tipo' => 'tramite_etapas'),
                 'WidgetTramitesCantidad'  => array('tipo' => 'tramites_cantidad'),
-                'WidgetEtapaUsuarios'  => array('tipo' => 'etapa_usuarios')
+                'WidgetEtapaUsuarios'  => array('tipo' => 'etapa_usuarios'),
+                'WidgetEtapaGrupoUsuarios' => array('tipo' => 'etapa_grupo_usuarios')
             )
         );
     }

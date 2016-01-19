@@ -10,7 +10,8 @@ class Acciones extends MY_BackendController {
 
         UsuarioBackendSesion::force_login();
         
-        if(UsuarioBackendSesion::usuario()->rol!='super' && UsuarioBackendSesion::usuario()->rol!='modelamiento'){
+//        if(UsuarioBackendSesion::usuario()->rol!='super' && UsuarioBackendSesion::usuario()->rol!='modelamiento'){
+        if( !in_array('super', explode(',',UsuarioBackendSesion::usuario()->rol) ) && !in_array( 'modelamiento',explode(',',UsuarioBackendSesion::usuario()->rol))){
             echo 'No tiene permisos para acceder a esta seccion.';
             exit;
         }
@@ -166,6 +167,25 @@ class Acciones extends MY_BackendController {
         }
         
         $proceso=$accion->Proceso;
+        $fecha = new DateTime ();
+         
+        // Auditar
+        $registro_auditoria = new AuditoriaOperaciones ();
+        $registro_auditoria->fecha = $fecha->format ( "Y-m-d H:i:s" );
+        $registro_auditoria->operacion = 'Eliminación de Acción';
+        $usuario = UsuarioBackendSesion::usuario ();
+        $registro_auditoria->usuario = $usuario->nombre . ' ' . $usuario->apellidos . ' <' . $usuario->email . '>';
+        $registro_auditoria->proceso = $proceso->nombre;
+        
+        //Detalles
+
+        $accion_array['proceso'] = $proceso->toArray(false);
+        $accion_array['accion'] = $accion->toArray(false);
+        unset($accion_array['accion']['proceso_id']);
+        
+        $registro_auditoria->detalles=  json_encode($accion_array);
+        $registro_auditoria->save();
+        
         $accion->delete();
         
         redirect('backend/acciones/listar/'.$proceso->id);

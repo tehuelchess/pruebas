@@ -73,9 +73,33 @@
 
 
             <footer class="row-fluid">
-                <div class="span12">
-                    <p style="text-align: center;"><a class="label label-info" href="http://instituciones.chilesinpapeleo.cl/page/view/simple">Powered by SIMPLE</a></p>
+                 <div class="area2">
+                <div class="container-fluid">
+                    <div class="row-fluid">
+                        <div class="span3 align-center">
+                            <img src="<?= base_url() ?>assets/img/logo.png" alt=""/>
+                            <br>
+                            <br>
+                            <div class="align-center">
+                                <a href="<?= base_url() ?>assets/license.txt" target="_blank">
+                                    <img class="media-object" src="<?= base_url() ?>assets/img/ico_cc.png" alt="CC" />
+                                </a>
+                            </div>
+                            <br>
+                            <div class="">
+                                <p><a href="http://instituciones.chilesinpapeleo.cl/page/view/simple" target="_blank">Powered by SIMPLE</a></p>
+                            </div>
+
+                        </div>
+                        <div class="span6 align-center">
+
+                        </div>
+                        <div class="span3">                            
+                            <a href="http://www.gob.cl" target="_blank"><img src="<?= base_url() ?>assets/img/gobierno_chile.png" alt="Gobierno de Chile" /></a>
+                        </div>
+                    </div>                    
                 </div>
+            </div>
             </footer>
         </div>
 

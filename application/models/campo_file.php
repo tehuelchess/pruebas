@@ -8,7 +8,9 @@ class CampoFile extends Campo {
         if(!$etapa_id){
             $display='<label class="control-label">' . $this->etiqueta . (in_array('required', $this->validacion) ? '' : ' (Opcional)') . '</label>';
             $display.='<div class="controls">';
+            $display.='<input id="'.$this->id.'" type="hidden" name="' . $this->nombre . '" value="" />';
             $display.='<button type="button" class="btn">Subir archivo</button>';
+            
             if($this->ayuda)
                 $display.='<span class="help-block">'.$this->ayuda.'</span>';
             $display.='</div>';
@@ -19,9 +21,9 @@ class CampoFile extends Campo {
         
         $display='<label class="control-label">' . $this->etiqueta . (in_array('required', $this->validacion) ? '' : ' (Opcional)') . '</label>';
         $display.='<div class="controls">';
-        if($modo!='visualizacion')
-            $display.='<div class="file-uploader" data-action="'.site_url('uploader/datos/'.$this->id.'/'.$etapa->id).'"></div>';
-        $display.='<input type="hidden" name="' . $this->nombre . '" value="' . ($dato ? htmlspecialchars($dato->valor) : '') . '" />';
+        $display.='<div class="file-uploader" data-action="'.site_url('uploader/datos/'.$this->id.'/'.$etapa->id).'" '. ($modo=='visualizacion'?' hidden':'') .' "></div>';
+        $display.='<input id="'.$this->id.'" type="hidden" name="' . $this->nombre . '" value="' . ($dato ? htmlspecialchars($dato->valor) : '') . '" />';
+        
         if ($dato){
             $file=Doctrine::getTable('File')->findOneByTipoAndFilename('dato',$dato->valor);
             if($file){
@@ -64,6 +66,10 @@ class CampoFile extends Campo {
         $output.='<option name="pptx" '.(in_array('pptx', $filetypes)?'selected':'').'>pptx</option>';
         $output.='<option name="zip" '.(in_array('zip', $filetypes)?'selected':'').'>zip</option>';
         $output.='<option name="rar" '.(in_array('rar', $filetypes)?'selected':'').'>rar</option>';
+        $output.='<option name="odt" '.(in_array('odt', $filetypes)?'selected':'').'>odt</option>';
+        $output.='<option name="odp" '.(in_array('odp', $filetypes)?'selected':'').'>odp</option>';
+        $output.='<option name="ods" '.(in_array('ods', $filetypes)?'selected':'').'>ods</option>';
+        $output.='<option name="odg" '.(in_array('odg', $filetypes)?'selected':'').'>odg</option>';
         $output.='</select>';
         
         return $output;

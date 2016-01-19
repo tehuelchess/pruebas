@@ -10,7 +10,6 @@
         }
 
         $("#selectGruposUsuarios").select2({tags: true});
-        
         $("[rel=tooltip]").tooltip();
         
         $(".datepicker")
@@ -376,9 +375,10 @@
                         La etapa se vencera
                         <input type="text" name="vencimiento_valor" class="input-mini" value="<?= $tarea->vencimiento_valor?$tarea->vencimiento_valor:5 ?>" />
                         <select name="vencimiento_unidad" class="input-small">
-                            <option value="D" <?= $tarea->vencimiento_unidad == 'D' ? 'selected' : '' ?>>días</option>
-                            <option value="W" <?= $tarea->vencimiento_unidad == 'W' ? 'selected' : '' ?>>meses</option>
-                            <option value="M" <?= $tarea->vencimiento_unidad == 'M' ? 'selected' : '' ?>>años</option>
+                            <option value="D" <?= $tarea->vencimiento_unidad == 'D' ? 'selected' : '' ?>>día/s</option>
+                            <option value="W" <?= $tarea->vencimiento_unidad == 'W' ? 'selected' : '' ?>>semana/s</option>
+                            <option value="M" <?= $tarea->vencimiento_unidad == 'M' ? 'selected' : '' ?>>mes/es</option>
+                            <option value="Y" <?= $tarea->vencimiento_unidad == 'Y' ? 'selected' : '' ?>>año/s</option>
                         </select>
                         despues de completada la etapa anterior.
                         <br />

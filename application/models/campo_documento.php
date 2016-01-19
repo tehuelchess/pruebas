@@ -54,7 +54,7 @@ class CampoDocumento extends Campo {
             }
         }
 
-        $display = '<p><a class="btn btn-success" href="' . site_url('documentos/get/' . $file->filename) . '?id='.$file->id.'&amp;token='.$file->llave.'"><i class="icon-download-alt icon-white"></i> ' . $this->etiqueta . '</a></p>';
+        $display = '<p><a class="btn btn-success" target="_blank" href="' . site_url('documentos/get/' . $file->filename) . '?id='.$file->id.'&amp;token='.$file->llave.'"><i class="icon-download-alt icon-white"></i> ' . $this->etiqueta . '</a></p>';
 
         return $display;
     }

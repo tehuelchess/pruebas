@@ -81,6 +81,10 @@ class Regla {
                     else if($nombre_dato=='tramite_id'){
                         return "'".Doctrine::getTable('Etapa')->find($etapa_id)->tramite_id."'";
                     }
+                    else if ($nombre_dato=='tramite_proc_cont'){
+                    	return Doctrine::getTable('Tramite')->find(Doctrine::getTable('Etapa')->find($etapa_id)->tramite_id)->tramite_proc_cont;
+                    }
+                    
                 }, $new_regla);
                 
          //Si quedaron variables sin reemplazar, la evaluacion deberia ser siempre falsa.
@@ -150,6 +154,9 @@ class Regla {
                         return $usuario->email;
                     else if($nombre_dato=='tramite_id'){
                         return Doctrine::getTable('Etapa')->find($etapa_id)->tramite_id;
+                    }
+                    else if ($nombre_dato=='tramite_proc_cont'){
+                    	return	Doctrine::getTable('Tramite')->find(Doctrine::getTable('Etapa')->find($etapa_id)->tramite_id)->tramite_proc_cont;
                     }
                 }, $new_regla);
           

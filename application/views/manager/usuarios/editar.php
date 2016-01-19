@@ -29,6 +29,7 @@
             <option value="modelamiento" <?= $usuario->rol == 'modelamiento' ? 'selected' : '' ?>>modelamiento</option>
             <option value="operacion" <?= $usuario->rol == 'operacion' ? 'selected' : '' ?>>operacion</option>
             <option value="gestion" <?= $usuario->rol == 'gestion' ? 'selected' : '' ?>>gestion</option>
+            <option value="gestion" <?= $usuario->rol == 'reportes' ? 'selected' : '' ?>>gestion</option>
         </select>
         <div class="form-actions">
             <button class="btn btn-primary" type="submit">Guardar</button>

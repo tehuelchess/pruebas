@@ -14,8 +14,14 @@
     $(document).ready(function(){
         tramiteId=<?= $tramite->id ?>;
         drawFromModel(<?= $tramite->Proceso->getJSONFromModel() ?>,"<?=$tramite->Proceso->width?>","<?=$tramite->Proceso->height?>");
-        drawSeguimiento(<?= json_encode($tramite->getTareasActuales()->toArray()) ?>,<?= json_encode($tramite->getTareasCompletadas()->toArray()) ?>);
+        drawSeguimiento(<?= json_encode($tramite->getTareasActuales()->toArray()) ?>,<?= json_encode($tramite->getTareasCompletadas()->toArray()) ?>, <?= json_encode($tramite->getTareasVencidas()->toArray()) ?>, <?= json_encode($tramite->getTareasVencenHoy()->toArray()) ?>);
     });
+
+	function auditarRetrocesoEtapa(etapaId) {
+	    $("#auditar").load(site_url + "backend/seguimiento/ajax_auditar_retroceder_etapa/" + etapaId);
+	    $("#auditar").modal();
+	    return false;
+	}
 </script>
 
 <ul class="breadcrumb">
@@ -28,14 +34,18 @@
     <h3>Registro de eventos</h3>
     <hr />
     <ul>
-        <?php foreach ($etapas as $e): ?>
+        <?php foreach ($etapas as $etapa): ?>
             <li>
-                <h4><?= $e->Tarea->nombre ?></h4>
-                <p>Estado: <?= $e->pendiente == 0 ? 'Completado' : 'Pendiente' ?></p>
-                <p><?= $e->created_at ? 'Inicio: ' . strftime('%c', mysql_to_unix($e->created_at)) : '' ?></p>
-                <p><?= $e->ended_at ? 'Término: ' . strftime('%c', mysql_to_unix($e->ended_at)) : '' ?></p>
-                <p>Asignado a: <?= !$e->usuario_id ? 'Ninguno' : !$e->Usuario->registrado ? 'No registrado' : '<abbr class="tt" title="'.$e->Usuario->displayInfo().'">'.$e->Usuario->displayUsername().'</abbr>' ?></p>
-                <p><a href="<?= site_url('backend/seguimiento/ver_etapa/' . $e->id) ?>">Revisar detalle</a></p> 
+                <h4><?= $etapa->Tarea->nombre ?></h4>
+                <p>Estado: <?= $etapa->pendiente == 0 ? 'Completado' : ($etapa->vencida() ? 'Vencida' :'Pendiente') ?></p>
+                <p><?= $etapa->created_at ? 'Inicio: ' . strftime('%c', mysql_to_unix($etapa->created_at)) : '' ?></p>
+                <p><?= $etapa->ended_at ? 'Término: ' . strftime('%c', mysql_to_unix($etapa->ended_at)) : '' ?></p>
+                <p>Asignado a: <?= !$etapa->usuario_id ? 'Ninguno' : !$etapa->Usuario->registrado ? 'No registrado' : '<abbr class="tt" title="'.$etapa->Usuario->displayInfo().'">'.$etapa->Usuario->displayUsername().'</abbr>' ?></p>
+                <p><a href="<?= site_url('backend/seguimiento/ver_etapa/' . $etapa->id) ?>">Revisar detalle</a></p>
+                <?php if (!in_array( 'seguimiento',explode(',',UsuarioBackendSesion::usuario()->rol)) && 
+				((count($etapa->Tramite->Etapas)>1  && $etapa->pendiente) || $etapa->isFinal())):?>
+                <p><a href="#" onclick ="return auditarRetrocesoEtapa(<?php echo $etapa->id; ?>)">Retroceder etapa</a></p>
+                <?php endif?>
             </li>
         <?php endforeach; ?>
     </ul>
@@ -47,4 +57,7 @@
 <div id="drawWrapper"><div id="draw"></div></div>
 </div>
 
+<div id="auditar" class="modal hide fade" >
+
+</div>
 

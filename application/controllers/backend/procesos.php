@@ -10,7 +10,8 @@ class Procesos extends MY_BackendController {
 
         UsuarioBackendSesion::force_login();
         
-        if(UsuarioBackendSesion::usuario()->rol!='super' && UsuarioBackendSesion::usuario()->rol!='modelamiento'){
+//        if(UsuarioBackendSesion::usuario()->rol!='super' && UsuarioBackendSesion::usuario()->rol!='modelamiento'){
+        if(!in_array('super', explode(',',UsuarioBackendSesion::usuario()->rol) ) && !in_array( 'modelamiento',explode(',',UsuarioBackendSesion::usuario()->rol))){
             echo 'No tiene permisos para acceder a esta seccion.';
             exit;
         }
@@ -39,16 +40,47 @@ class Procesos extends MY_BackendController {
     }
     
     public function eliminar($proceso_id){
-        $proceso=Doctrine::getTable('Proceso')->find($proceso_id);
+    	
+    	$this->form_validation->set_rules ( 'descripcion', 'Razón', 'required' );
+    	$respuesta = new stdClass ();
+    	if ($this->form_validation->run () == TRUE) {
+    			
+    	
+	        $proceso=Doctrine::getTable('Proceso')->find($proceso_id);
+	        
+	        if($proceso->cuenta_id!=UsuarioBackendSesion::usuario()->cuenta_id){
+	            echo 'Usuario no tiene permisos para eliminar este proceso';
+	            exit;
+	        }
+	        $fecha = new DateTime ();
+	         
+	        // Auditar
+	        $registro_auditoria = new AuditoriaOperaciones ();
+	        $registro_auditoria->fecha = $fecha->format ( "Y-m-d H:i:s" );
+	        $registro_auditoria->operacion = 'Eliminación de Proceso';
+	        $registro_auditoria->motivo = $this->input->post('descripcion');
+	        $usuario = UsuarioBackendSesion::usuario ();
+	        $registro_auditoria->usuario = $usuario->nombre . ' ' . $usuario->apellidos . ' <' . $usuario->email . '>';
+	        $registro_auditoria->proceso = $proceso->nombre;
+	         
+	        	
+	        // Detalles
+	        $proceso_array['proceso'] = $proceso->toArray(false);
+	        
+	        $registro_auditoria->detalles = json_encode($proceso_array);
+	        $registro_auditoria->save();
+        	$proceso->delete();
         
-        if($proceso->cuenta_id!=UsuarioBackendSesion::usuario()->cuenta_id){
-            echo 'Usuario no tiene permisos para eliminar este proceso';
-            exit;
-        }
-        
-        $proceso->delete();
-        
-        redirect('backend/procesos/index/');
+        	$respuesta->validacion = TRUE;
+        	$respuesta->redirect = site_url('backend/procesos/index/');
+    	} else {
+    		
+    		$respuesta->validacion = FALSE;
+    		$respuesta->errores = validation_errors();
+    		
+    	}
+    	
+    	echo json_encode($respuesta);
     }
 
     public function editar($proceso_id) {
@@ -205,6 +237,30 @@ class Procesos extends MY_BackendController {
         }
         
         $proceso=$tarea->Proceso;
+        
+        $fecha = new DateTime ();
+        	
+        // Auditar
+        $registro_auditoria = new AuditoriaOperaciones ();
+        $registro_auditoria->fecha = $fecha->format ( "Y-m-d H:i:s" );
+        $registro_auditoria->operacion = 'Eliminación de Tarea';
+        $usuario = UsuarioBackendSesion::usuario ();
+        $registro_auditoria->usuario = $usuario->nombre . ' ' . $usuario->apellidos . ' <' . $usuario->email . '>';
+        $registro_auditoria->proceso = $proceso->nombre;
+        
+        
+        // Detalles
+        $tarea_array['proceso'] = $proceso ->toArray(false);
+        
+        $tarea_array['tarea'] = $tarea->toArray(false);
+        unset($tarea_array['tarea']['posx']);
+        unset($tarea_array['tarea']['posy']);
+        unset($tarea_array['tarea']['proceso_id']);
+        
+        
+        $registro_auditoria->detalles = json_encode($tarea_array);
+        $registro_auditoria->save();
+        
         $tarea->delete();
     
         redirect('backend/procesos/editar/'.$proceso->id);
@@ -340,6 +396,18 @@ class Procesos extends MY_BackendController {
 
 
     }
+    
+    public function ajax_auditar_eliminar_proceso($proceso_id){
+    	if (! in_array ( 'super', explode ( ",", UsuarioBackendSesion::usuario ()->rol ) ))
+    		show_error ( 'No tiene permisos', 401 );
+    	
+    	$proceso = Doctrine::getTable("Proceso")->find($proceso_id);
+    	$data['proceso'] = $proceso;
+    	$this->load->view ( 'backend/procesos/ajax_auditar_eliminar_proceso', $data );
+    	
+    	
+    }
+    
 
 }
 

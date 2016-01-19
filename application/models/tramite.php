@@ -9,6 +9,7 @@ class Tramite extends Doctrine_Record {
         $this->hasColumn('created_at');
         $this->hasColumn('updated_at');
         $this->hasColumn('ended_at');
+        $this->hasColumn('tramite_proc_cont');
     }
 
     function setUp() {
@@ -33,10 +34,19 @@ class Tramite extends Doctrine_Record {
     }
 
     public function iniciar($proceso_id) {
+    	
+    	// Aumentar el contador de Proceso
+    	Doctrine_Query::create()
+    	->update('Proceso p')
+    	->set("proc_cont","proc_cont + 1")
+    	->where("p.id = ?",$proceso_id)
+    	->execute();
+    	
         $proceso = Doctrine::getTable('Proceso')->find($proceso_id);
 
         $this->proceso_id = $proceso->id;
         $this->pendiente = 1;
+        $this->tramite_proc_cont = $proceso->proc_cont;
 
         $etapa = new Etapa();
         $etapa->tarea_id = $proceso->getTareaInicial(UsuarioSesion::usuario()->id)->id;
@@ -45,6 +55,8 @@ class Tramite extends Doctrine_Record {
         $this->Etapas[] = $etapa;
 
         $this->save();
+        
+
 
         $etapa->asignar(UsuarioSesion::usuario()->id);
     }
@@ -83,6 +95,29 @@ class Tramite extends Doctrine_Record {
         return Doctrine_Query::create()
                         ->from('Tarea tar, tar.Etapas e, e.Tramite t')
                         ->where('t.id = ? AND e.pendiente=0', $this->id)
+                        ->execute();
+    }
+    
+    public function getTareasVencidas() {
+    	
+    	return Doctrine_Query::create()
+    	->from('Tarea tar, tar.Etapas e, e.Tramite t')
+    	->where('t.id = ? AND e.pendiente=1 AND DATEDIFF(e.vencimiento_at,NOW()) < 0', $this->id)
+    	->execute();
+    }
+    
+    public function getTareasVencenHoy(){
+    	return Doctrine_Query::create()
+    	->from('Tarea tar, tar.Etapas e, e.Tramite t')
+    	->where('t.id = ? AND e.pendiente=1 AND DATEDIFF(e.vencimiento_at,NOW()) = 0', $this->id)
+    	->execute();
+    	
+    }
+    
+    public function getValorDatoSeguimiento() {
+        return Doctrine_Query::create()
+                        ->from("DatoSeguimiento d, d.Etapa e, e.Tramite t")
+                        ->where("t.id = ?   AND e.pendiente=0  ",$this->id)
                         ->execute();
     }
     /*
@@ -156,5 +191,19 @@ class Tramite extends Doctrine_Record {
         return $publicArray;
         
     }
-
+	
+    static public function getReporteHeaders(){
+    	
+    	return array(
+    			'pendiente - Estado del Trámite',
+    			'proceso_id - Proceso ID',
+    			'created_at - Fecha de Inicio del Trámite',
+    			'updated_at - Fecha de Modificación del Trámite',
+    			'ended_at - Fecha de Finalización del Trámite',
+    			'etapa_actual - Etapas actuales del Trámite',
+    			'vencimiento_at - Vencimiento de etapas actuales del Trámite',
+    			'dias_vencidos - Dias vencidos de etapas actuales del Trámite'
+    	);
+    }
+    
 }

@@ -9,14 +9,15 @@ $(document).ready(function(){
     
     jsPlumb.Defaults.PaintStyle={
         strokeStyle:"#333", 
-        lineWidth:2
+        lineWidth:1.6
     };
-    jsPlumb.Defaults.Endpoint="Blank";
-    jsPlumb.Defaults.Connector="Flowchart";
+    jsPlumb.Defaults.Endpoint= "Blank";
+    jsPlumb.Defaults.Connector=[ "Bezier", { curviness: 100 } ];
+    jsPlumb.Defaults.HoverPaintStyle= {strokeStyle: "#FF00FF", lineWidth:3};
     jsPlumb.Defaults.ConnectionOverlays = [[ "Arrow", {
         location:1, 
-        width:8 ,
-        length:8
+        width:6 ,
+        length:6
     } ]];
 });
 

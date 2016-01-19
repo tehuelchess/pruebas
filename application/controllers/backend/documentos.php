@@ -10,7 +10,8 @@ class Documentos extends MY_BackendController {
 
         UsuarioBackendSesion::force_login();
         
-        if(UsuarioBackendSesion::usuario()->rol!='super' && UsuarioBackendSesion::usuario()->rol!='modelamiento'){
+//        if(UsuarioBackendSesion::usuario()->rol!='super' && UsuarioBackendSesion::usuario()->rol!='modelamiento'){
+        if(!in_array('super', explode(',',UsuarioBackendSesion::usuario()->rol) ) && !in_array( 'modelamiento',explode(',',UsuarioBackendSesion::usuario()->rol))){
             echo 'No tiene permisos para acceder a esta seccion.';
             exit;
         }
@@ -92,7 +93,7 @@ class Documentos extends MY_BackendController {
             $this->form_validation->set_rules('firmador_cargo','Cargo del firmador');
             $this->form_validation->set_rules('firmador_servicio','Servicio del firmador');
             $this->form_validation->set_rules('firmador_imagen','Imagen de la firmas');
-            $this->form_validation->set_rules('validez','Dias de validez','is_natural_no_zero');
+            $this->form_validation->set_rules('validez','Dias de validez','is_natural');
             $this->form_validation->set_rules('validez_habiles','Habiles');
         }
 
@@ -115,7 +116,7 @@ class Documentos extends MY_BackendController {
                 $documento->firmador_cargo=$this->input->post('firmador_cargo');
                 $documento->firmador_servicio=$this->input->post('firmador_servicio');
                 $documento->firmador_imagen=$this->input->post('firmador_imagen');
-                $documento->validez=$this->input->post('validez');
+                $documento->validez=$this->input->post('validez') == '' ? null : $this->input->post('validez');
                 $documento->validez_habiles=$this->input->post('validez_habiles');
             }
             
@@ -152,6 +153,31 @@ class Documentos extends MY_BackendController {
         }
         
         $proceso=$documento->Proceso;
+        $fecha = new DateTime ();
+        
+        // Auditar
+        $registro_auditoria = new AuditoriaOperaciones ();
+        $registro_auditoria->fecha = $fecha->format ( "Y-m-d H:i:s" );
+        $registro_auditoria->operacion = 'Eliminación de Documento';
+        $usuario = UsuarioBackendSesion::usuario ();
+        $registro_auditoria->usuario = $usuario->nombre . ' ' . $usuario->apellidos . ' <' . $usuario->email . '>';
+        $registro_auditoria->proceso = $proceso->nombre;
+        
+        
+        // Detalles
+        $documento_array['proceso'] = $proceso ->toArray(false);
+        
+        $documento_array['documento'] = $documento->toArray(false);
+        unset($documento_array['documento']['proceso_id']);
+        if ($documento->hsm_configuracion_id)
+        	$documento_array['hsm_configuracion'] = $documento->HsmConfiguracion->toArray(false);
+        
+        unset($documento_array['hsm_configuracion_id']);
+        
+        $registro_auditoria->detalles = json_encode($documento_array);
+        $registro_auditoria->save();
+         
+        
         $documento->delete();
         
         redirect('backend/documentos/listar/'.$proceso->id);

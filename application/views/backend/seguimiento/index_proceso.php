@@ -5,6 +5,19 @@
         return false;
     }
 
+    function eliminarTramite(tramiteId){
+        $("#modal").load(site_url + "backend/seguimiento/ajax_auditar_eliminar_tramite/" + tramiteId);
+        $("#modal").modal();
+        return false;
+
+    }
+
+    function borrarProceso(procesoId){
+        $("#modal").load(site_url + "backend/seguimiento/ajax_auditar_limpiar_proceso/" + procesoId);
+        $("#modal").modal();
+        return false;
+    }
+
     function toggleBusquedaAvanzada() {
         $("#busquedaAvanzada").slideToggle();
         return false;
@@ -27,18 +40,18 @@
         <div style='text-align: right;'><a href='#' onclick='toggleBusquedaAvanzada()'>Busqueda avanzada</a></div>
     </div>
 
-    <?php if(UsuarioBackendSesion::usuario()->rol!='seguimiento'): ?>
+    <?php // if(UsuarioBackendSesion::usuario()->rol!='seguimiento'): 
+        if(in_array( 'super',explode(',',UsuarioBackendSesion::usuario()->rol))):
+    ?>
     <div class="btn-group pull-left">
         <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
             Operaciones
             <span class="caret"></span>
         </a>
 
-        <ul class="dropdown-menu">
-            <li><a href="<?= site_url('backend/seguimiento/borrar_proceso/' . $proceso->id) ?>" onclick="if (confirm('¿Esta seguro que desea eliminar todos los tramites de este proceso?'))
-            return confirm('Atención. Esta operación no se podra deshacer y borrara todos los tramites en curso de este proceso. ¿Esta seguro que desea continuar?');
-        else
-            return false;">Borrar todo</a></li>
+		<ul class="dropdown-menu">
+            <li><a href="<?= site_url('backend/seguimiento/reset_proc_cont/' . $proceso->id) ?>" onclick="return confirm('¿Esta seguro que desea reiniciar el contador de Proceso?');">Reiniciar contador de Proceso</a></li>
+            <li><a href="<?= site_url('backend/seguimiento/borrar_proceso/' . $proceso->id) ?>" onclick="return borrarProceso(<?=$proceso->id?>);">Borrar todo</a></li>
         </ul>
     </div>
     <?php endif ?>
@@ -99,6 +112,8 @@
     <thead>
         <tr>
             <th><a href="<?= current_url() . '?query=' . $query . '&pendiente=' . $pendiente . '&created_at_desde=' . $created_at_desde . '&created_at_hasta=' . $created_at_hasta . '&updated_at_desde=' . $updated_at_desde . '&updated_at_hasta=' . $updated_at_hasta . '&order=id&direction=' . ($direction == 'asc' ? 'desc' : 'asc') ?>">Id <?= $order == 'id' ? $direction == 'asc' ? '<i class="icon-chevron-down"></i>' : '<i class="icon-chevron-up"></i>'  : '' ?></a></th>
+            <th>Ref.</th>
+            <th>Nombre</th>
             <th><a href="<?= current_url() . '?query=' . $query . '&pendiente=' . $pendiente . '&created_at_desde=' . $created_at_desde . '&created_at_hasta=' . $created_at_hasta . '&updated_at_desde=' . $updated_at_desde . '&updated_at_hasta=' . $updated_at_hasta . '&order=pendiente&direction=' . ($direction == 'asc' ? 'desc' : 'asc') ?>">Estado <?= $order == 'pendiente' ? $direction == 'asc' ? '<i class="icon-chevron-down"></i>' : '<i class="icon-chevron-up"></i>'  : '' ?></a></th>
             <th>Etapa actual</th>
             <th><a href="<?= current_url() . '?query=' . $query . '&pendiente=' . $pendiente . '&created_at_desde=' . $created_at_desde . '&created_at_hasta=' . $created_at_hasta . '&updated_at_desde=' . $updated_at_desde . '&updated_at_hasta=' . $updated_at_hasta . '&order=created_at&direction=' . ($direction == 'asc' ? 'desc' : 'asc') ?>">Fecha de creación <?= $order == 'created_at' ? $direction == 'asc' ? '<i class="icon-chevron-down"></i>' : '<i class="icon-chevron-up"></i>'  : '' ?></th>
@@ -110,6 +125,30 @@
         <?php foreach ($tramites as $t): ?>
             <tr>
                 <td><?= $t->id ?></td>
+                
+               <td class="name">  
+                 <?php 
+                      $tramite_nro ='';
+                      foreach ($t->getValorDatoSeguimiento() as $tra_nro){
+                        if($tra_nro->nombre == 'tramite_ref'){
+                              $tramite_nro = $tra_nro->valor;
+                         }                              
+                      }                         
+                      echo $tramite_nro != '' ? $tramite_nro : 'N/A';
+                ?>
+                </td>
+                <td class="name">  
+                 <?php 
+                      $tramite_descripcion ='';
+                      foreach ($t->getValorDatoSeguimiento() as $tra){
+                         if($tra->nombre == 'tramite_descripcion'){
+                              $tramite_descripcion = $tra->valor;
+                         }  
+                      }
+                     echo $tramite_descripcion != '' ? $tramite_descripcion : 'N/A';
+                ?>
+                </td>  
+
                 <td><?= $t->pendiente ? 'En curso' : 'Completado' ?></td>
                 <td>
                     <?php
@@ -123,7 +162,9 @@
                 <td><?= strftime('%c', mysql_to_unix($t->updated_at)) ?></td>
                 <td style="text-align: right;">
                     <a class="btn btn-primary" href="<?= site_url('backend/seguimiento/ver/' . $t->id) ?>"><i class="icon-white icon-eye-open"></i> Seguimiento</a>
-                    <?php if(UsuarioBackendSesion::usuario()->rol!='seguimiento'): ?><a class="btn btn-danger" href="<?= site_url('backend/seguimiento/borrar_tramite/' . $t->id) ?>" onclick="return confirm('¿Esta seguro que desea borrar estre trámite?')"><i class="icon-white icon-trash"></i> Borrar</a><?php endif ?>
+                    <?php // if(UsuarioBackendSesion::usuario()->rol!='seguimiento'): 
+                        if(in_array( 'super',explode(',',UsuarioBackendSesion::usuario()->rol))):
+                    ?><a class="btn btn-danger" href="#" onclick="return eliminarTramite(<?=$t->id?>);"><i class="icon-white icon-trash"></i> Borrar</a><?php endif ?>
                 </td>
             </tr>
         <?php endforeach; ?>

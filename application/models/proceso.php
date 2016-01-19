@@ -8,6 +8,7 @@ class Proceso extends Doctrine_Record {
         $this->hasColumn('width');      //ancho de la grilla
         $this->hasColumn('height');     //alto de la grilla
         $this->hasColumn('cuenta_id');
+        $this->hasColumn('proc_cont');
     }
 
     function setUp() {
@@ -300,19 +301,33 @@ class Proceso extends Doctrine_Record {
         return array_keys($nombres);
     }
     
-    //Retorna una arreglo con todos los nombres de datos usados durante el proceso
+    // Obtiene las variables asociadas a este proceso
+    public function getVariables(){
+    	return  Doctrine_Query::create()
+    	->from('Accion a, a.Proceso p')
+    	->where('p.id=?', $this->id)
+    	->andWhere("tipo = 'variable'")
+    	->execute();
+    	
+    	
+    }
+    
+    
+    //Retorna una arreglo con todos los nombres de datos
     public function getNombresDeDatos(){
-        $campos=Doctrine_Query::create()
-                ->select('d.nombre')
-                ->from('DatoSeguimiento d, d.Etapa.Tramite.Proceso p')
-                ->andWhere('p.id = ?',$this->id)
-                ->groupBy('d.nombre')
-                ->execute();
-        
-        foreach($campos as $c)
-            $result[]=$c->nombre;
-        
-        return $result;
+    	
+    		$campos=Doctrine_Query::create()
+    		->select('d.nombre')
+    		->from('DatoSeguimiento d, d.Etapa.Tramite.Proceso p')
+    		->andWhere('p.id = ?',$this->id)
+    		->groupBy('d.nombre')
+    		->execute();
+    	
+    		foreach($campos as $c)
+    			$result[]=$c->nombre;
+    	
+    		return $result;
+
     }
     
     //Verifica si el usuario_id tiene permisos para iniciar este proceso como tramite.
@@ -375,6 +390,54 @@ class Proceso extends Doctrine_Record {
         );
         
         return $publicArray;
+    }
+    
+    
+    public function getVariablesReporteHeaders(){
+    	
+
+    	$variables = $this->getVariables();
+    	
+    	foreach($variables as $v){
+    		 
+    		 
+    		$result[]=$v->extra->variable . ' - '.$v->nombre;
+    		 
+    	}
+    	return $result;
+    }
+    
+    public function getCamposReporteHeaders(){
+    	
+    	$campos = $this->getCampos();
+    	
+    	foreach($campos as $c)
+    		$result[]=$c->nombre.' - '.$c->etiqueta;
+    	
+    	return $result;
+    	
+    }
+    
+    public function getTramitesCompletos(){
+    	
+    	return Doctrine_Query::create()
+    		->from("Tramite t")
+    		->where("t.proceso_id = ?", $this->id)
+    		->andWhere("t.ended_at IS NOT NULL")
+    		->fetchOne(null, Doctrine::HYDRATE_ARRAY);
+    	
+    	
+    }
+   
+    
+    public function getDiasPorTramitesAvg(){
+    	
+    	return Doctrine_Query::create()
+    		->select("AVG(DATEDIFF(ended_at,created_at)) as avg")
+    		->from("Tramite t")
+    		->where("t.proceso_id = ?", $this->id)
+    		->andWhere("t.ended_at IS NOT NULL")
+    		->execute();
     }
 
 }

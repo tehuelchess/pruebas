@@ -29,13 +29,14 @@
 }
 
 #draw .box{
-    padding: 10px 30px;
+    padding: 5px 10px;
     background: #006699;
     color: #fff;
     position: absolute;
     border-radius: 5px;
     cursor: move;
     z-index: 100;
+    font-size: 12px;
 }
 #draw .box.actual{
     background: goldenrod;
@@ -43,6 +44,14 @@
 #draw .box.completado{
     background: green;
 }
+#draw .box.vencido{
+	background: red;
+}
+
+#draw .box.venceHoy {
+	background: #FF4000;
+}
+
 #draw .box.selected{
     background: #666;
 }
@@ -67,7 +76,7 @@
     margin-left: -12px;
 }
 #draw .box .final{
-    background: url(../img/final.jpg);
+    background: url(../img/final.png);
     width: 38px;
     height: 38px;
     position: absolute;
@@ -98,7 +107,7 @@
 }
 
 #draw .box .conector.secuencial{
-    background: url(../img/secuencial-bar.gif);
+   /* background: url(../img/secuencial-bar.gif); */
 }
 
 #draw .box .union{
