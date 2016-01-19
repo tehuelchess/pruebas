@@ -40,6 +40,8 @@ class Campo extends Doctrine_Record {
             $campo=new CampoDocumento();
         else if($tipo=='javascript')
             $campo=new CampoJavascript();
+        else if($tipo=='grid')
+            $campo=new CampoGrid();
         
         $campo->assignInheritanceValues();
         
@@ -81,7 +83,8 @@ class Campo extends Doctrine_Record {
                 'CampoSubtitle'  => array('tipo' => 'subtitle'),
                 'CampoParagraph'  => array('tipo' => 'paragraph'),
                 'CampoDocumento'  => array('tipo' => 'documento'),
-                'CampoJavascript'  => array('tipo' => 'javascript')
+                'CampoJavascript'  => array('tipo' => 'javascript'),
+                'CampoGrid'  => array('tipo' => 'grid')
             ));
     }
 
