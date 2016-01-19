@@ -1,11 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
     <head>
-<<<<<<< HEAD
-        <meta charset="utf-8">
-=======
         <meta  http-equiv="content-type" content="text/html; charset=UTF-8">
->>>>>>> 1e8c1971a8bb5b2077cd03019a62a6e29b1ce547
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title><?=Cuenta::cuentaSegunDominio()!='localhost'?Cuenta::cuentaSegunDominio()->nombre_largo:'SIMPLE'?> - <?= $title ?></title>
 
@@ -52,10 +48,7 @@
         </script>
         <script src="<?= base_url() ?>assets/js/common.js" type="text/javascript"></script>
         <script src="<?= base_url() ?>assets/js/backend.js" type="text/javascript"></script>
-<<<<<<< HEAD
-=======
         <script src="<?= base_url() ?>assets/js/nikEditor/nikEditor.js" type="text/javascript"></script>
->>>>>>> 1e8c1971a8bb5b2077cd03019a62a6e29b1ce547
 
 
     </head>
@@ -84,27 +77,6 @@
                         <div class="row-fluid">
                             <div class="span12">
                                 <ul id="menu" class="nav nav-pills pull-right">
-<<<<<<< HEAD
-                                    <?php if (UsuarioBackendSesion::usuario()->rol == 'super' || UsuarioBackendSesion::usuario()->rol == 'gestion'): ?>
-                                        <li <?= $this->uri->segment(2) == 'gestion' || !$this->uri->segment(2) ? 'class="active"' : '' ?>><a href="<?= site_url('backend/gestion') ?>">Inicio</a></li>
-                                    <?php endif ?>
-                                    <?php if (UsuarioBackendSesion::usuario()->rol == 'super' || UsuarioBackendSesion::usuario()->rol == 'modelamiento'): ?>
-                                        <li <?= $this->uri->segment(2) == 'procesos' || $this->uri->segment(2) == 'formularios' ? 'class="active"' : '' ?>><a href="<?= site_url('backend/procesos') ?>">Modelador de Procesos</a></li>
-                                    <?php endif ?>
-                                    <?php if (UsuarioBackendSesion::usuario()->rol == 'super' || UsuarioBackendSesion::usuario()->rol == 'operacion'): ?>
-                                        <li <?= $this->uri->segment(2) == 'seguimiento' ? 'class="active"' : '' ?>><a href="<?= site_url('backend/seguimiento') ?>">Seguimiento</a></li>
-                                    <?php endif ?>
-                                    <?php if (UsuarioBackendSesion::usuario()->rol == 'super' || UsuarioBackendSesion::usuario()->rol == 'gestion'): ?>
-                                        <li <?= $this->uri->segment(2) == 'reportes' || !$this->uri->segment(2) ? 'class="active"' : '' ?>><a href="<?= site_url('backend/reportes') ?>">Gestión</a></li>
-                                    <?php endif ?>
-                                    <?php if (UsuarioBackendSesion::usuario()->rol == 'super' || UsuarioBackendSesion::usuario()->rol == 'desarrollo'): ?>
-                                        <li <?= $this->uri->segment(2) == 'api' || !$this->uri->segment(2) ? 'class="active"' : '' ?>><a href="<?= site_url('backend/api') ?>">API</a></li>
-                                    <?php endif ?>
-                                    <?php if (UsuarioBackendSesion::usuario()->rol == 'super'): ?>
-                                        <li <?= $this->uri->segment(2) == 'configuracion' ? 'class="active"' : '' ?>><a href="<?= site_url('backend/configuracion') ?>">Configuración</a></li>
-                                    <?php endif ?>
-                                    <li><a href="http://ayuda.chilesinpapeleo.cl/simple" target="_blank">Ayuda</a></li>
-=======
                                     <?php if (in_array('super', explode(',',UsuarioBackendSesion::usuario()->rol)) || in_array('gestion', explode(',',UsuarioBackendSesion::usuario()->rol))
                                             || in_array('reportes', explode(',',UsuarioBackendSesion::usuario()->rol))): ?>
                                         <li <?= $this->uri->segment(2) == 'gestion' || !$this->uri->segment(2) ? 'class="active"' : '' ?>><a href="<?= site_url('backend/gestion') ?>">Inicio</a></li>
@@ -131,7 +103,6 @@
                                         <li <?= $this->uri->segment(2) == 'configuracion' ? 'class="active"' : '' ?>><a href="<?= site_url('backend/configuracion') ?>">Configuración</a></li>
                                     <?php endif ?>
                                     <li><a href="/simple/assets/ayuda/simple/" target="_blank">Ayuda</a></li>
->>>>>>> 1e8c1971a8bb5b2077cd03019a62a6e29b1ce547
                                 </ul>
                             </div>
                         </div>
@@ -147,74 +118,11 @@
         </div>
 
         <footer>
-<<<<<<< HEAD
-            <div class="area1">
-                <div class="container-fluid">
-                    <div class="row-fluid">
-                        <div class="span2">
-                            <div class="col">
-                                <h3>Otros proyectos</h3>
-                            </div>
-                        </div>
-                        <div class="offset6 span4">
-
-                        </div>
-                    </div>
-                    <div class="row-fluid">
-                        <div class="span4">
-                            <ul>
-                                <li><a href="http://www.chileatiende.cl" target="_blank">ChileAtiende</a></li>
-                            </ul>
-                        </div>
-                        <div class="span4">
-                            <ul>
-                                <li><a href="http://www.chilesinpapeleo.cl" target="_blank">Chile sin papeleo</a></li>
-                            </ul>
-                        </div>
-                        <div class="span4">
-                            <ul>
-                                <li><a href="http://www.gobiernoabierto.cl" target="_blank">Gobierno Abierto</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="area2">
-                <div class="container-fluid">
-                    <div class="row-fluid">
-                        <div class="span5">
-                            <div class="col">
-                                <div class="media">
-                                    <div class="pull-left">
-                                        <img class="media-object" src="<?= base_url() ?>assets/img/ico_cc.png" alt="CC" />
-                                    </div>
-                                    <div class="media-body">
-                                        <p class="modernizacion"><a href="http://www.modernizacion.gob.cl" target="_blank">Iniciativa de la Unidad de Modernización y Gobierno Digital</a><br/>
-                                            <a class="ministerio" href="http://www.minsegpres.gob.cl" target="_blank">Ministerio Secretaría General de la Presidencia</a></p>
-                                        <br />
-                                        <p><a href="http://instituciones.chilesinpapeleo.cl/page/view/simple" target="_blank">Powered by SIMPLE</a></p>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-                        <div class="span3">
-                            <div class="col"></div>
-                        </div>
-                        <div class="span4">
-                            &nbsp;
-                        </div>
-                    </div>
-                    <a href="http://www.gob.cl" target="_blank"><img class="footerGob" src="<?= base_url() ?>assets/img/gobierno_chile.png" alt="Gobierno de Chile" /></a>
-                </div>
-            </div>
-
-=======
             <div class="area2">
                 <div class="container-fluid">
                     <div class="row-fluid">
                         <div class="span3 align-center">
-                            <img src="<?= base_url() ?>assets/img/secretaria_nacional_de_tecnologias_de_la_informacion_y_comunicacion.png" alt=""/>
+                            <img src="<?= base_url() ?>assets/img/logo.png" alt=""/>
                             <br>
                             <br>
                             <div class="align-center">
@@ -232,12 +140,11 @@
 
                         </div>
                         <div class="span3">                            
-                            <a href="http://www.presidencia.gov.py" target="_blank"><img src="<?= base_url() ?>assets/img/gobierno_nacional2.png" alt="Gobierno Nacional" /></a>
+                            <a href="http://www.gob.cl" target="_blank"><img src="<?= base_url() ?>assets/img/gobierno_chile.png" alt="Gobierno de Chile" /></a>
                         </div>
                     </div>                    
                 </div>
             </div>
->>>>>>> 1e8c1971a8bb5b2077cd03019a62a6e29b1ce547
         </footer>
 
     </body>
