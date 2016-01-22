@@ -10,7 +10,7 @@
 
         <!-- Le styles -->
         <link href="assets/css/bootstrap.css" rel="stylesheet">
-        <link href="assets/css/bootstrap-responsive.css" rel="stylesheet">
+        <!--<link href="assets/css/bootstrap-responsive.css" rel="stylesheet">-->
         <link href="assets/js/bootstrap-datepicker/css/datepicker.css" rel="stylesheet">
         <link href="assets/css/common.css" rel="stylesheet">
 
