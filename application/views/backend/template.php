@@ -104,7 +104,7 @@
                                     		|| in_array('configuracion', explode(',',UsuarioBackendSesion::usuario()->rol))): ?>
                                         <li <?= $this->uri->segment(2) == 'configuracion' ? 'class="active"' : '' ?>><a href="<?= site_url('backend/configuracion') ?>">Configuración</a></li>
                                     <?php endif ?>
-                                    <li><a href="/simple/assets/ayuda/simple/" target="_blank">Ayuda</a></li>
+                                    <li><a href="<?= site_url('assets/ayuda/simple')?>" target="_blank">Ayuda</a></li>
                                 </ul>
                             </div>
                         </div>
