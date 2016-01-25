@@ -27,7 +27,7 @@
             <?php foreach ($tramites as $t): ?>
                 <tr>
                    <td><?= $t->id ?></td>                   
-                    <td class="name"><?//= $t->Proceso->nombre ?>
+                    <td class="name"><?= $t->Proceso->nombre ?>
                         <?php 
                             $tramite_nro ='';
                             foreach ($t->getValorDatoSeguimiento() as $tra_nro){
