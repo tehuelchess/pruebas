@@ -134,7 +134,7 @@ class Reporte extends Doctrine_Record {
     				$val=json_encode($val,JSON_UNESCAPED_UNICODE);
     				 
     				
-    			$t[$d->nombre] = $val; 
+    			$t[$d->nombre] = strip_tags($val); 
     		}
     		 
     		//Rellenamos con espacios en blanco los campos que no existen.
