@@ -29,29 +29,28 @@ Esta guía detalla como contribuir en el proyecto de una manera que sea eficient
 1. Realizar Fork del repositorio https://github.com/e-gob/SIMPLE a tu cuenta GitHub
 
 2. Clonar el proyecto forkeado desde tu cuenta GitHub. Ejemplo:
-   <code>
+   ```console
    https://github.com/nombreusuario/SIMPLE.git
-   </code>
-
+   ```
 3. Agregar el repositorio padre como origen remoto. Ejemplo:
-   <code>
+   ```console
    git remote add upstream https://github.com/e-gob/SIMPLE.git
-   </code>
+   ```
 
 4. Luego de clonado el proyecto, crear la rama beta para empezar a trabajar. Ejemplo:
-   <code>
+   ```console
    git checkout -b beta
-   </code>
+   ```
 
 5. Realizar los commits con una descripción sobre la o las nuevas  funcionalidades
-	<code>
-	git commit -m “ Modifico funcionalidad manager”
-	</code>
+   ```console
+   git commit -m “ Modifico funcionalidad manager”
+   ```
 
 6. Generar un push hacia la rama beta del proyecto forkeado. Ejemplo:
-   <code>
+   ```console
    git push origin beta
-   </code>
+   ```
 
 7. Generar un pull request hacia la rama beta del proyecto origen por la interfaz de Github
 
@@ -85,13 +84,13 @@ Lo principal es primero cumplir con los prerequisitos, luego :
 1. Comentar el Issue y detallar la solución que se entregará.
 
 2. Realizar los commits con una descripción sobre la o las correcciones realizadas"
-   <code>
+ ```console
    git commit -m "Modifico funcionalidad manager"
-   </code>
+   ```
 3. Generar un push hacia la rama beta del proyecto forkeado. Ejemplo:
-   <code>
+ ```console
    git push origin beta
-   </code>
+   ```
 4. Generar un pull request hacia la rama beta del proyecto origen por la interfaz de Github  
 
 [Volver](#contribuir-a-simple)
@@ -103,26 +102,25 @@ Para agregar nuevas caracteristicas, es necesario primero cumplir con los prereq
 
 2. Comentar el Issue, agregar la solución que se entregara.
 
-3. Realizar los commits con una descripción sobre la o las nuevas funcionalidades"
-   <code>
+3. Realizar los commits con una descripción sobre la o las nuevas funcionalidades:
+ ```console
    git commit -m "Modifico funcionalidad manager"
-   </code>
+   ```
 4. Generar un push hacia la rama beta del proyecto forkeado. Ejemplo:
-   <code>
+ ```console
    git push origin beta
-   </code>
+   ```
 5. Generar un pull request hacia la rama beta del proyecto origen por la interfaz de Github 
 
 [Volver](#contribuir-a-simple)
 
 ### Actualizar mi repositorio local
  Si queremos actualizar nuestro repositorio con los cambios del repositorio padre SIMPLE debemos seguir los siguientes pasos
-   <code>
+ ```console
    git fetch upstream
-   </code><br>
-   <code>
+   
    git merge upstream/master
-   </code><br>
+   ```
    Donde master indica la rama del repositorio padre a actualizar
 
 [Volver](#contribuir-a-simple)
