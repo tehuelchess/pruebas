@@ -13,7 +13,7 @@ Esta guía detalla como contribuir en el proyecto de una manera que sea eficient
 6. [¿Dudas, consultas, información?](#dudas-consultas-información)
 
 
-### Prerequisitos
+### Prerequisitos [↺]contribuir-a-simple
 
 1. [Leer el Manual de SIMPLE](/docs/SIMPLE.docx)
 
