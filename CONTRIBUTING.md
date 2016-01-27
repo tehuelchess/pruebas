@@ -15,7 +15,7 @@ Esta guía detalla como contribuir en el proyecto de una manera que sea eficient
 
 ### Prerequisitos
 
-1. [Leer el Manual de SIMPLE](../docs/SIMPLE.docx)
+1. [Leer el Manual de SIMPLE](/docs/SIMPLE.docx)
 
 2. Tener clara la normalización de código fuente
 
