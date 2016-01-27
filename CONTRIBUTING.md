@@ -13,14 +13,14 @@ Esta guía detalla como contribuir en el proyecto de una manera que sea eficient
 6. [¿Dudas, consultas, información?](#dudas-consultas-información)
 
 
-### Prerequisitos [↺]contribuir-a-simple
+### Prerequisitos 
 
 1. [Leer el Manual de SIMPLE](/docs/SIMPLE.docx)
 
 2. Tener clara la normalización de código fuente
 
 3. Documentar y comentarizar correcciones y/o nuevos desarrollos
-
+[↺](#contribuir-a-simple)
 
 
 ### Preparación de ambiente local
