@@ -19,7 +19,8 @@ Esta guía detalla como contribuir en el proyecto de una manera que sea eficient
 
 2. Tener clara la normalización de código fuente
 
-3. Documentar y comentarizar correcciones y/o nuevos desarrollos
+3. Documentar y comentarizar correcciones y/o nuevos desarrollos.
+
 [↺](#contribuir-a-simple)
 
 
@@ -55,7 +56,7 @@ Esta guía detalla como contribuir en el proyecto de una manera que sea eficient
 <li> Generar un pull request hacia la rama beta del proyecto origen por la interfaz de Github</li>
 
 </ol>
-
+[↺](#contribuir-a-simple)
 
 ### Detección y solución de issues
 #### Detección de issues 
@@ -76,6 +77,7 @@ Para ingresar un issue, favor usar la siguiente plantilla en el área de descrip
 <li> En lo posible, capturas de pantalla relevantes</li>
 (Capturas de pantalla que ayuden a reproducir el error)
 </ol>
+[↺](#contribuir-a-simple)
 #### Solución de issues
 Lo principal es primero cumplir con los prerequisitos, luego :
 <ol>
@@ -91,7 +93,7 @@ Lo principal es primero cumplir con los prerequisitos, luego :
    </code>
 <li> Generar un pull request hacia la rama beta del proyecto origen por la interfaz de Github</li>   
 </ol>
-
+[↺](#contribuir-a-simple)
 
 ### Agregar nuevas características
 Para agregar nuevas caracteristicas, es necesario primero cumplir con los prerequisitos
@@ -110,7 +112,7 @@ Para agregar nuevas caracteristicas, es necesario primero cumplir con los prereq
    </code>
 <li> Generar un pull request hacia la rama beta del proyecto origen por la interfaz de Github</li>   
 </ol>
-
+[↺](#contribuir-a-simple)
 ### Actualizar mi repositorio local
 <ol>
 <li> Si queremos actualizar nuestro repositorio con los cambios del repositorio padre SIMPLE debemos seguir los siguientes pasos</li>
@@ -122,7 +124,8 @@ Para agregar nuevas caracteristicas, es necesario primero cumplir con los prereq
    </code><br>
    Donde master indica la rama del repositorio padre a actualizar
 </ol>
-
+[↺](#contribuir-a-simple)
 
 ### ¿Dudas, consultas, información?
 contáctese con nosotros al correo simple@minsegpres.gob.cl
+[↺](#contribuir-a-simple)
