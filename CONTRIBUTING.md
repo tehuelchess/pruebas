@@ -6,20 +6,20 @@ Esta guía detalla como contribuir en el proyecto de una manera que sea eficient
 1. [Prerequisitos](#prerequisitos)
 2. [Preparación de ambiente local](#preparación-de-ambiente-local)
 3. [Detección y solución de issues](#detección-y-solución-de-issues)
-4. [Detección de issues](#detección-de-issues)
+  - [Detección de issues](#detección-de-issues)
   - [Solución de issues](#solución-de-issues)
-  - [Agregar nuevas características](#agregar-nuevas-características)
+4. [Agregar nuevas características](#agregar-nuevas-características)
 5. [Actualizar mi repositorio local](#actualizar-mi-repositorio-local)
 6. [¿Dudas, consultas, información?](#dudas-consultas-información)
 
 
-### Prerequisitos 
+1. ### Prerequisitos 
 
-1. [Leer el Manual de SIMPLE](/docs/SIMPLE.docx)
+1.1 [Leer el Manual de SIMPLE](/docs/SIMPLE.docx)
 
-2. Tener clara la normalización de código fuente
+1.2 Tener clara la normalización de código fuente
 
-3. Documentar y comentarizar correcciones y/o nuevos desarrollos.
+1.3 Documentar y comentarizar correcciones y/o nuevos desarrollos.
 
 [Volver](#contribuir-a-simple)
 
