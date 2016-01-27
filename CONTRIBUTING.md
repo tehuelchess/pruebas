@@ -88,9 +88,9 @@ Lo principal es primero cumplir con los prerequisitos, luego :
   git commit -m "Modifico funcionalidad manager"
   ```
 3. Generar un push hacia la rama beta del proyecto forkeado. Ejemplo:
- ```console 
-git push origin beta
-```
+   ```console
+  git push origin beta
+   ```
 4. Generar un pull request hacia la rama beta del proyecto origen por la interfaz de Github  
 
 [Volver](#contribuir-a-simple)
