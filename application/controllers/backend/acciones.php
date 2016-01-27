@@ -176,6 +176,7 @@ class Acciones extends MY_BackendController {
         $usuario = UsuarioBackendSesion::usuario ();
         $registro_auditoria->usuario = $usuario->nombre . ' ' . $usuario->apellidos . ' <' . $usuario->email . '>';
         $registro_auditoria->proceso = $proceso->nombre;
+        $registro_auditoria->cuenta_id = UsuarioBackendSesion::usuario()->cuenta_id;
         
         //Detalles
 

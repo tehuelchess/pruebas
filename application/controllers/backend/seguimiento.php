@@ -199,6 +199,7 @@ groupBy ( 't.id' )->orderBy ( $order . ' ' . $direction )->limit ( $per_page )->
 			$usuario = UsuarioBackendSesion::usuario ();
 			$registro_auditoria->usuario = $usuario->nombre . ' ' . $usuario->apellidos . ' <' . $usuario->email . '>';
 			$registro_auditoria->proceso = $proceso->nombre;
+			$registro_auditoria->cuenta_id = UsuarioBackendSesion::usuario()->cuenta_id;
 			
 			
 			// Detalles
@@ -255,6 +256,7 @@ groupBy ( 't.id' )->orderBy ( $order . ' ' . $direction )->limit ( $per_page )->
 			$usuario = UsuarioBackendSesion::usuario ();
 			$registro_auditoria->usuario = $usuario->nombre . ' ' . $usuario->apellidos . ' <' . $usuario->email . '>';
 			$registro_auditoria->proceso = $proceso->nombre;
+			$registro_auditoria->cuenta_id = UsuarioBackendSesion::usuario()->cuenta_id;
 				
 				
 			// Detalles
@@ -323,6 +325,7 @@ groupBy ( 't.id' )->orderBy ( $order . ' ' . $direction )->limit ( $per_page )->
 			$usuario = UsuarioBackendSesion::usuario ();
 			$registro_auditoria->usuario = $usuario->nombre . ' ' . $usuario->apellidos . ' <' . $usuario->email . '>';
 			$registro_auditoria->proceso = $etapa->Tramite->Proceso->nombre;
+			$registro_auditoria->cuenta_id = UsuarioBackendSesion::usuario()->cuenta_id;
 				
 			
 			/* Formatear detalles */
@@ -407,6 +410,7 @@ groupBy ( 't.id' )->orderBy ( $order . ' ' . $direction )->limit ( $per_page )->
 							$registro_auditoria->motivo = $this->input->post ( 'descripcion' );
 							$registro_auditoria->operacion = 'Retroceso a Etapa';
 							$registro_auditoria->proceso = $etapa_anterior->Tramite->Proceso->nombre;
+							$registro_auditoria->cuenta_id = UsuarioBackendSesion::usuario()->cuenta_id;
 						
 							$usuario = UsuarioBackendSesion::usuario ();
 							$registro_auditoria->usuario = $usuario->nombre . ' ' . $usuario->apellidos . ' <' . $usuario->email . '>';
@@ -460,6 +464,7 @@ groupBy ( 't.id' )->orderBy ( $order . ' ' . $direction )->limit ( $per_page )->
 				$registro_auditoria->motivo = $this->input->post ( 'descripcion' );
 				$registro_auditoria->operacion = 'Retroceso a Etapa';
 				$registro_auditoria->proceso = $etapa->Tramite->Proceso->nombre;
+				$registro_auditoria->cuenta_id = UsuarioBackendSesion::usuario()->cuenta_id;
 				
 				$usuario = UsuarioBackendSesion::usuario ();
 				$registro_auditoria->usuario = $usuario->nombre . ' ' . $usuario->apellidos . ' <' . $usuario->email . '>';
