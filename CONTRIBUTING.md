@@ -4,13 +4,13 @@ Esta guía detalla como contribuir en el proyecto de una manera que sea eficient
 
 
 1. [Prerequisitos](#1-prerequisitos)
-2. [Preparación de ambiente local](#preparación-de-ambiente-local)
-3. [Detección y solución de issues](#detección-y-solución-de-issues)
-  - [Detección de issues](#detección-de-issues)
-  - [Solución de issues](#solución-de-issues)
-4. [Agregar nuevas características](#agregar-nuevas-características)
-5. [Actualizar mi repositorio local](#actualizar-mi-repositorio-local)
-6. [¿Dudas, consultas, información?](#dudas-consultas-información)
+2. [Preparación de ambiente local](#2-preparación-de-ambiente-local)
+3. [Detección y solución de issues](#3-detección-y-solución-de-issues)
+  - [Detección de issues](#3.1-detección-de-issues)
+  - [Solución de issues](#3.2-solución-de-issues)
+4. [Agregar nuevas características](#4-agregar-nuevas-características)
+5. [Actualizar mi repositorio local](#5-actualizar-mi-repositorio-local)
+6. [¿Dudas, consultas, información?](#6-dudas-consultas-información)
 
 
 ### 1. Prerequisitos 
