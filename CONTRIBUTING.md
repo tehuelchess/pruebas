@@ -85,12 +85,12 @@ Lo principal es primero cumplir con los prerequisitos, luego :
 
 2. Realizar los commits con una descripción sobre la o las correcciones realizadas"
  ```console
-   git commit -m "Modifico funcionalidad manager"
-   ```
+  git commit -m "Modifico funcionalidad manager"
+  ```
 3. Generar un push hacia la rama beta del proyecto forkeado. Ejemplo:
- ```console
-   git push origin beta
-   ```
+ ```console 
+git push origin beta
+```
 4. Generar un pull request hacia la rama beta del proyecto origen por la interfaz de Github  
 
 [Volver](#contribuir-a-simple)
@@ -104,12 +104,12 @@ Para agregar nuevas caracteristicas, es necesario primero cumplir con los prereq
 
 3. Realizar los commits con una descripción sobre la o las nuevas funcionalidades:
  ```console
-   git commit -m "Modifico funcionalidad manager"
-   ```
+  git commit -m "Modifico funcionalidad manager"
+  ```
 4. Generar un push hacia la rama beta del proyecto forkeado. Ejemplo:
  ```console
-   git push origin beta
-   ```
+  git push origin beta
+  ```
 5. Generar un pull request hacia la rama beta del proyecto origen por la interfaz de Github 
 
 [Volver](#contribuir-a-simple)
@@ -117,11 +117,11 @@ Para agregar nuevas caracteristicas, es necesario primero cumplir con los prereq
 ### Actualizar mi repositorio local
  Si queremos actualizar nuestro repositorio con los cambios del repositorio padre SIMPLE debemos seguir los siguientes pasos
  ```console
-   git fetch upstream
+  git fetch upstream
    
-   git merge upstream/master
-   ```
-   Donde master indica la rama del repositorio padre a actualizar
+  git merge upstream/master
+  ```
+  Donde master indica la rama del repositorio padre a actualizar
 
 [Volver](#contribuir-a-simple)
 
