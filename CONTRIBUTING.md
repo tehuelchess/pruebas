@@ -10,6 +10,7 @@ Esta guía detalla como contribuir en el proyecto de una manera que sea eficient
   - [Solución de issues](#solución-de-issues)
   - [Agregar nuevas características](#agregar-nuevas-características)
 5. [Actualizar mi repositorio local](#actualizar-mi-repositorio-local)
+6. [¿Dudas, consultas, información?](#dudas-consultas-información)
 
 
 ### Prerequisitos
