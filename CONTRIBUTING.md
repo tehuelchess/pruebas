@@ -36,22 +36,18 @@ https://github.com/nombreusuario/SIMPLE.git
 ```console
 git remote add upstream https://github.com/e-gob/SIMPLE.git
 ```
-
 4. Luego de clonado el proyecto, crear la rama beta para empezar a trabajar. Ejemplo:
 ```console
 git checkout -b beta
 ```
-
 5. Realizar los commits con una descripción sobre la o las nuevas  funcionalidades
 ```console
 git commit -m “ Modifico funcionalidad manager”
 ```
-
 6. Generar un push hacia la rama beta del proyecto forkeado. Ejemplo:
 ```console
 git push origin beta
 ```
-
 7. Generar un pull request hacia la rama beta del proyecto origen por la interfaz de Github
 
 [Volver](#contribuir-a-simple)
