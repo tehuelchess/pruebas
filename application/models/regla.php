@@ -110,7 +110,22 @@ class Regla {
                         
                         if(!is_string($dato_almacenado)){
                             $valor_dato= json_encode($dato_almacenado);
+                            /* Comunas e instituciones */
+                            $valor_dato= json_decode($valor_dato,true);
+                            if(count($valor_dato) > 1){
+                                $i = 0;
+                                foreach ($valor_dato as $key => $value) {
+                                    if($i==1){
+                                        $valor_dato = $value;
+                                    }
+                                    $i++;
+                                }
+                            }else{
+                                $valor_dato= json_encode($dato_almacenado);
+                            }
+                            /* Fin comunas e instituciones */
                             if($evaluar == true){
+                                /* Grilla */
                                 $result = Doctrine_Query::create()
                                                     ->from("Campo")
                                                     ->where('nombre=?',$nombre_dato)
@@ -137,6 +152,7 @@ class Regla {
                                     $tabla .= '</tbody></table>';
                                     $valor_dato = $tabla;
                                 }
+                                /* Fin grilla */
                             }
                         }
                         else{
