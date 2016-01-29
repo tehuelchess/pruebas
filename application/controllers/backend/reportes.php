@@ -57,7 +57,7 @@ class Reportes extends MY_BackendController {
     public function crear($proceso_id) {
         $proceso = Doctrine::getTable('Proceso')->find($proceso_id);
 
-        if ($proceso->cuenta_id != UsuarioBackendSesion::usuario()->cuenta_id) {
+        if ($proceso->cuenta_id != UsuarioBackendSesion::usuario()->cuenta_id || (!in_array('super',explode(",",UsuarioBackendSesion::usuario()->rol)) && !in_array('reportes',explode(",",UsuarioBackendSesion::usuario()->rol))) ) {
             echo 'No tiene permisos para crear este documento';
             exit;
         }
