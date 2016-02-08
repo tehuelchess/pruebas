@@ -51,8 +51,8 @@
                         <li>modelamiento: Permite modelar y diseñar el funcionamiento del trámite.</li>
                         <li>seguimiento: Permite hacer seguimiento de los tramites.</li>
                         <li>operacion: Permite hacer seguimiento y operaciones sobre los tramites como eliminacion y edición.</li>
-                        <li>gestion: Permite acceder a reportes de gestion con privilegio de visualiación.</li>
-                        <li>reportes: Permite acceder y configurar reportes de gestion y uso de la plataforma.</li>
+                        <li>gestión: Permite acceder a reportes de gestion con privilegio de visualización.</li>
+                        <li>reportes: Permite acceder y configurar reportes de gestión y uso de la plataforma.</li>
                         <li>desarrollo: Permite acceder a la API de desarrollo, para la integracion con plataformas externas.</li>
                         <li>configuracion: Permite configurar los usuarios y grupos de usuarios que tienen acceso al sistema.</li>
                     </ul>

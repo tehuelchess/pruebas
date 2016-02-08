@@ -6,8 +6,9 @@
     </li>
     <li class="active"><?=$proceso->nombre?></li>
 </ul>
-
+<? if(!in_array('gestion',explode(",",$rol)) ){ ?>
 <a class="btn btn-success" href="<?=site_url('backend/reportes/crear/'.$proceso->id)?>"><i class="icon-file icon-white"></i> Nuevo</a>
+<?}?>
 
 <table class="table">
     <thead>
