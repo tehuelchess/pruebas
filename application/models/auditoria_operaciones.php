@@ -11,6 +11,7 @@ class AuditoriaOperaciones extends Doctrine_Record {
 		$this->hasColumn('operacion');
 		$this->hasColumn('usuario');
 		$this->hasColumn('proceso');
+		$this->hasColumn('cuenta_id');
 	}
 		
 	
