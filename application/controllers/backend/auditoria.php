@@ -27,6 +27,7 @@ class Auditoria extends MY_BackendController {
 		$query = Doctrine_Query::create()
 			->select('id, fecha, motivo, operacion, usuario, proceso')
 			->from("AuditoriaOperaciones")
+			->where("cuenta_id = ?",UsuarioBackendSesion::usuario()->cuenta_id)
 			->limit($per_page)
 			->offset($offset);
 			
