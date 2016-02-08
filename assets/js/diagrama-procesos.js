@@ -22,6 +22,7 @@ $(document).ready(function(){
 });
 
 function drawFromModel(model,width,height){
+    //alert('dibujo');
     //Modificamos el titulo
     //$("#areaDibujo h1").text(model.nombre);
     
@@ -49,7 +50,31 @@ function drawFromModel(model,width,height){
     
 }
 
+function drawFromModelUpdate(model,width,height){
+    
+    $("#draw").css("width",width).css("height",height);
+    
+    //limpiamos el canvas
+    $("#draw .box").remove();
+    
+    //Creamos los elementos
+    $(model.elements).each(function(i,e){
+        $("#draw").append("<div id='"+e.id+"' class='box' style='top: "+e.top+"px; left: "+e.left+"px;'>"+e.name+(e.start==1?'<div class="inicial"></div>':'')+"</div>");
+    });
+    
+    //Creamos las conexiones
+    $(model.connections).each(function(i,c){
+        drawConnection(c);
+        
+        
+    });
+    jsPlumb.draggable($("#draw .box"));
+    
+}
+
 function drawConnection(c){
+    
+    //console.log(c);
     /*
         var endpoint1, endpoint2;
         if(c.tipo=='evaluacion')
@@ -66,10 +91,15 @@ function drawConnection(c){
             var connection=jsPlumb.connect({
                 source: c.source,
                 target: c.target,
-                anchors: ["BottomCenter", "TopCenter"]
+                anchors: ["BottomCenter", "TopCenter"],
+                paintStyle: {
+                   strokeStyle: "#000000 ", 
+                   lineWidth:1
+               }
                 //endpoints:[endpoint1,endpoint2],
                 //parameters: {"id":c.id}
             });
+            //console.log(connection);
         }
         
         if(c.tipo=="union")

@@ -50,16 +50,16 @@ $(document).ready(function(){
             elements.push(this.id);
             if(elements.length==2){
                 var c=new Object();
-                c.tipo=tipo;
+                
                 c.source=elements[0];
                 c.target=elements[1];
+                c.tipo=tipo;
                 
                 //Validaciones
                 if(tipo=="secuencial" && jsPlumb.getConnections({source:c.source}).length){
                     alert("Las conexiones secuenciales no pueden ir hacia mas de una tarea");
                     return;
                 }
-                
                 
                 drawConnection(c);
                 
@@ -73,7 +73,16 @@ $(document).ready(function(){
                 $("#areaDibujo .box").css("cursor","move")
                 //setJSPlumbEvents();
                 $.post(site_url+"backend/procesos/ajax_crear_conexion/"+procesoId,"tarea_id_origen="+c.source+"&tarea_id_destino="+c.target+"&tipo="+c.tipo);
-                
+
+                var delay=500;
+                setTimeout(function(){
+                   $.getJSON(site_url+"backend/procesos/getJSONFromModelDraw/"+procesoId, function( result ) {
+                        var width = "100%";
+                        var height = "800px";
+                        drawFromModelUpdate(result,width,height);
+                    });
+                }, delay);  
+
             }else{
                 $(this).addClass("selected");
             }

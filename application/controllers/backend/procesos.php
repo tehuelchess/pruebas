@@ -409,6 +409,43 @@ class Procesos extends MY_BackendController {
     	
     	
     }
+
+    public function getJSONFromModelDraw($proceso_id){
+        $proceso = Doctrine::getTable("Proceso")->find($proceso_id);
+        $modelo=new stdClass();
+        $modelo->nombre=$proceso->nombre;
+        $modelo->elements=array();
+        $modelo->connections=array();
+        
+        $tareas=Doctrine::getTable('Tarea')->findByProcesoId($proceso_id);
+        foreach($tareas as $t){
+            $element=new stdClass();
+            $element->id=$t->identificador;
+            $element->name=$t->nombre;
+            $element->left=$t->posx;
+            $element->top=$t->posy;
+            $element->start=$t->inicial;
+            //$element->stop=$t->final;
+            $modelo->elements[]=clone $element;
+        }
+        //$conexiones1=  Doctrine_Query::create()->from('Conexion c, c.TareaOrigen.Proceso p')->where('p.id = ?',$proceso_id);
+        $conexiones=  Doctrine_Query::create()
+                ->from('Conexion c, c.TareaOrigen.Proceso p')
+                ->where('p.id = ?',$proceso_id)
+                ->execute();
+        //echo $conexiones1->getSqlQuery();
+        foreach($conexiones as $c){
+            //$conexion->id=$c->identificador;
+            $conexion=new stdClass();
+            $conexion->source=$c->TareaOrigen->identificador;
+            $conexion->target=$c->TareaDestino->identificador;
+            $conexion->tipo=$c->tipo;
+            $modelo->connections[]=clone $conexion;
+        }
+        //print_r(json_encode($modelo));
+        //exit;
+        echo json_encode($modelo);
+    }
     
 
 }

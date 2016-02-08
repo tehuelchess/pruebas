@@ -78,6 +78,14 @@
                 $(campoDestino).val(string);
             }
         }
+        /* Prevenir espacios en campo nombre y que puedan pegar contenido en el mismo campo */
+        $(document).on('keypress', '#nombre', function(e){
+             return !(e.keyCode == 32);
+        });
+
+        $('#nombre').bind('paste', function (e) {
+            e.preventDefault();
+        });
         
     });
     
@@ -102,7 +110,7 @@
         <?php endif ?>
         <?php if($campo->requiere_nombre):?>
         <label>Nombre</label>
-        <input type="text" name="nombre" value="<?= $campo->nombre ?>" />
+        <input type="text" id="nombre" name="nombre" value="<?= $campo->nombre ?>" />
         <?php $campos_asistencia=$formulario->Proceso->getNombresDeCampos($campo->tipo,false) ?>
         <?php if(count($campos_asistencia)):?>
         <div class="btn-group asistencia" style="display: inline-block; vertical-align: top;">
