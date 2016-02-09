@@ -252,12 +252,15 @@ class Etapa extends Doctrine_Record {
         if ($this->Tarea->asignacion_notificar) {
             $usuario = Doctrine::getTable('Usuario')->find($usuario_id);
             if ($usuario->email) {
+                $varurl = site_url('etapas/ejecutar/' . $this->id);
+                $url = ' Podrá realizarla en: ' . $varurl. ' ';
+                $url = str_replace("..", ".", $url);
                 $CI = & get_instance();
                 $cuenta=$this->Tramite->Proceso->Cuenta;
                 $CI->email->from($cuenta->nombre.'@'.$CI->config->item('main_domain'), $cuenta->nombre_largo);
                 $CI->email->to($usuario->email);
                 $CI->email->subject('Tiene una tarea pendiente');
-                $CI->email->message('<p>' . $this->Tramite->Proceso->nombre . '</p><p>Se le ha asignado la tarea: ' . $this->Tarea->nombre . '</p><p>Podra realizarla en: ' . site_url('etapas/ejecutar/' . $this->id) . '</p>');
+                $CI->email->message('<p>' . $this->Tramite->Proceso->nombre . '</p><p>Se le ha asignado la tarea: ' . $this->Tarea->nombre . '</p><p>' .$url. '</p>');
                 $CI->email->send();
             }
         }
@@ -295,7 +298,7 @@ class Etapa extends Doctrine_Record {
                     $CI->email->from($cuenta->nombre.'@'.$CI->config->item('main_domain'), $cuenta->nombre_largo);
                     $CI->email->to($usuario->email);
                     $CI->email->subject('SIMPLE - Tiene una tarea pendiente');
-                    $url = ' Podra realizarla en: ' . $varurl. ' ';
+                    $url = ' Podrá realizarla en: ' . $varurl. ' ';
                     $url = str_replace("..", ".", $url);
                     $CI->email->message('<p>' . $this->Tramite->Proceso->nombre . '</p><p>Tiene una tarea pendiente por realizar: ' . $this->Tarea->nombre . '</p><p>' .$url . '</p>');
                     $CI->email->send();
