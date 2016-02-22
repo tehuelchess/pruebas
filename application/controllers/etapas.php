@@ -183,7 +183,7 @@ class Etapas extends MY_Controller {
             $data['title'] = $etapa->Tarea->nombre;
             $template = $this->input->get('iframe') ? 'template_iframe' : 'template';
 
-             $config =Doctrine::getTable('CuentaHasConfig')->findOneByIdparAndCuentaId(1,Cuenta::cuentaSegunDominio()->id); 
+            $config =Doctrine::getTable('CuentaHasConfig')->findOneByIdparAndCuentaId(1,Cuenta::cuentaSegunDominio()->id); 
             if($config){
                $config =Doctrine::getTable('Config')->findOneByIdAndIdparAndCuentaIdOrCuentaId($config->config_id,$config->idpar,Cuenta::cuentaSegunDominio()->id,0);
                $nombre = $config->nombre;
@@ -350,12 +350,22 @@ class Etapas extends MY_Controller {
         $data['title'] = $etapa->Tarea->nombre;
         $template = $this->input->get('iframe') ? 'template_iframe' : 'template';
 
-        $config =Doctrine::getTable('CuentaHasConfig')->findOneByIdparAndCuentaId(1,Cuenta::cuentaSegunDominio()->id);
+        $config =Doctrine::getTable('CuentaHasConfig')->findOneByIdparAndCuentaId(1,Cuenta::cuentaSegunDominio()->id); 
         if($config){
-           $config =Doctrine::getTable('Config')->findOneByIdAndIdpar($config->config_id,$config->idpar);
+           $config =Doctrine::getTable('Config')->findOneByIdAndIdparAndCuentaIdOrCuentaId($config->config_id,$config->idpar,Cuenta::cuentaSegunDominio()->id,0);
            $nombre = $config->nombre;
+           if ($nombre=='default'){
+                $data['template_path'] = 'uploads/themes/default/';
+                $this->load->view('themes/default/template', $data);
+           } else {
+                $data['template_path'] = 'uploads/themes/'.Cuenta::cuentaSegunDominio()->id.'/'.$nombre.'/';
+                $this->load->view('themes/'.Cuenta::cuentaSegunDominio()->id.'/'.$nombre.'/template', $data);
+           }
+           
+        }else{
+           $data['template_path'] = 'uploads/themes/default/';
+           $this->load->view('themes/default/template', $data);
         }
-        $this->load->view('themes/'.$nombre.'/template', $data);
     }
 
     public function ejecutar_fin_form($etapa_id) {
