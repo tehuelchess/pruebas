@@ -34,7 +34,8 @@ class Tramites extends MY_Controller {
         $perpage=50;
 
         if ($query) { 
-            $this->load->library('sphinxclient');            
+            $this->load->library('sphinxclient');
+            $this->sphinxclient->setServer ( $this->config->item ( 'sphinx_host' ), $this->config->item ( 'sphinx_port' ) );
             $this->sphinxclient->SetLimits($offset, 10000);
             $result = $this->sphinxclient->query(json_encode($query), 'tramites');                         
            

@@ -19,7 +19,8 @@ class Etapas extends MY_Controller {
         $resultotal="";
         
         if ($buscar) { 
-            $this->load->library('sphinxclient');            
+            $this->load->library('sphinxclient');
+            $this->sphinxclient->setServer ( $this->config->item ( 'sphinx_host' ), $this->config->item ( 'sphinx_port' ) );
             $this->sphinxclient->SetLimits(0, 10000);
             $result = $this->sphinxclient->query(json_encode($buscar), 'tramites');             
             if($result['total'] > 0 ){            
