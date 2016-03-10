@@ -110,7 +110,7 @@ class Regla {
                         
                         if(!is_string($dato_almacenado)){
                             $valor_dato= json_encode($dato_almacenado);
-                            /* Comunas e instituciones */
+                            /* Comunas e instituciones 
                             $valor_dato= json_decode($valor_dato,true);
                             if(count($valor_dato) > 1){
                                 $i = 0;
@@ -123,7 +123,8 @@ class Regla {
                             }else{
                                 $valor_dato= json_encode($dato_almacenado);
                             }
-                            /* Fin comunas e instituciones */
+                            Fin comunas e instituciones */
+
                             if($evaluar == true){
                                 /* Grilla */
                                 $result = Doctrine_Query::create()
