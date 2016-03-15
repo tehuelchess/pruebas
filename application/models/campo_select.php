@@ -10,7 +10,11 @@ class CampoSelect extends Campo {
         $display.='<select id="'.$this->id.'" class="select-semi-large" name="' . $this->nombre . '" ' . ($modo == 'visualizacion' ? 'readonly' : '') . ' data-modo="'.$modo.'">';
         $display.='<option value="">Seleccionar</option>';
         if($this->datos) foreach ($this->datos as $d) {
-            $display.='<option value="' . $d->valor . '" ' . ($dato && $d->valor == $dato->valor ? 'selected' : '') . '>' . $d->etiqueta . '</option>';
+            if($dato){
+                $display.='<option value="' . $d->valor . '" ' . ($dato && $d->valor == $dato->valor ? 'selected' : '') . '>' . $d->etiqueta . '</option>';
+            }else{
+                $display.='<option value="' . $d->valor . '" ' . ($d->valor == $valor_default ? 'selected' : '') . '>' . $d->etiqueta . '</option>';
+            }
         }
         $display.='</select>';
         if($this->ayuda)

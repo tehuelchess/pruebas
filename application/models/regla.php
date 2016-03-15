@@ -126,13 +126,12 @@ class Regla {
                             Fin comunas e instituciones */
 
                             if($evaluar == true){
-                                /* Grilla */
+                                //Grilla
                                 $result = Doctrine_Query::create()
                                                     ->from("Campo")
                                                     ->where('nombre=?',$nombre_dato)
-                                                    ->andWhere('tipo = "grid"')
                                                     ->execute();
-                                if($result[0]->tipo){
+                                if($result[0]->tipo == 'grid'){
                                     $valor_dato = json_decode($valor_dato);
                                     $tabla = '<table border="1" cellpadding="2" cellspacing="2"><thead>';
                                     foreach ($valor_dato as $key => $array) {
@@ -152,8 +151,19 @@ class Regla {
                                     }
                                     $tabla .= '</tbody></table>';
                                     $valor_dato = $tabla;
+                                //Fin grilla
+                                //Instituciones y comunas    
+                                }elseif ($result[0]->tipo == 'comunas' or $result[0]->tipo == 'instituciones_gob') {
+                                    $valor_dato= json_decode($valor_dato,true);
+                                    $i = 0;
+                                    foreach ($valor_dato as $key => $value) {
+                                        if($i==1){
+                                            $valor_dato = $value;
+                                        }
+                                        $i++;
+                                    }
                                 }
-                                /* Fin grilla */
+                                //Fin instituciones y comunas
                             }
                         }
                         else{

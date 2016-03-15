@@ -442,4 +442,106 @@ class Etapas extends MY_Controller {
         }
     }
 
+    public function descargar($tramites){
+        $data['tramites'] = $tramites;
+        $this->load->view ('etapas/descargar',$data);
+    }
+
+    public function descargar_form(){
+        $tramites = $this->input->post('tramites');
+        $opcionesDescarga = $this->input->post('opcionesDescarga');
+        $tramites = explode(",",$tramites);
+        $ruta_documentos = 'uploads/documentos/';
+        $ruta_generados = 'uploads/datos/';
+        $ruta_tmp = 'uploads/tmp/';
+        $fecha = new DateTime ();
+        $fecha = date_format($fecha,"Y-m-d");
+
+        $tipoDocumento = "";
+        switch ($opcionesDescarga) {
+            case 'documento':
+                $tipoDocumento = 'documento';
+                break;
+            case 'dato':
+                $tipoDocumento = 'dato';
+                break;
+        }
+
+        //Recorriendo los trámites
+        $this->load->library('zip');
+        foreach ($tramites as $t){
+
+            if(empty($tipoDocumento)){
+                $files =Doctrine::getTable('File')->findByTramiteId($t);
+            }else{
+                $files =Doctrine::getTable('File')->findByTramiteIdAndTipo($t,$tipoDocumento);
+            }
+            if(count($files) > 0){
+                //Recorriendo los archivos
+                foreach ($files as $f) {
+                    if($f->tipo == 'documento'){
+                        $path = $ruta_documentos.$f->filename;
+                    }else{
+                        $path = $ruta_generados.$f->filename;
+                    }
+                    $this->zip->read_file($path);
+                }
+                if(count($tramites) > 1){
+                    $tr = Doctrine::getTable('Tramite')->find($t);
+                    $tramite_nro ='';
+                    foreach ($tr->getValorDatoSeguimiento() as $tra_nro){
+                       if($tra_nro->nombre == 'tramite_ref'){
+                            $tramite_nro = $tra_nro->valor;
+                        }                              
+                    }                         
+                    $tramite_nro = $tramite_nro != '' ? $tramite_nro : $tr->Proceso->nombre;
+                    $nombre = $fecha."_".$t."_".$tramite_nro;
+                    //creando un zip por cada trámite
+                    $this->zip->archive($ruta_tmp.$nombre.'.zip');
+                    $this->zip->clear_data();
+                }
+            }
+        }
+        if(count($tramites) > 1){
+            foreach ($tramites as $t){
+                $tr = Doctrine::getTable('Tramite')->find($t);
+                $tramite_nro ='';
+                foreach ($tr->getValorDatoSeguimiento() as $tra_nro){
+                   if($tra_nro->nombre == 'tramite_ref'){
+                        $tramite_nro = $tra_nro->valor;
+                    }                              
+                }                         
+                $tramite_nro = $tramite_nro != '' ? $tramite_nro : $tr->Proceso->nombre;
+                $nombre = $fecha."_".$t."_".$tramite_nro;
+                $this->zip->read_file($ruta_tmp.$nombre.'.zip');
+            }
+            
+            //Eliminando los archivos antes de descargar
+            foreach ($tramites as $t){;
+                $tr = Doctrine::getTable('Tramite')->find($t);
+                $tramite_nro ='';
+                foreach ($tr->getValorDatoSeguimiento() as $tra_nro){
+                   if($tra_nro->nombre == 'tramite_ref'){
+                        $tramite_nro = $tra_nro->valor;
+                    }                              
+                }                         
+                $tramite_nro = $tramite_nro != '' ? $tramite_nro : $tr->Proceso->nombre;
+                $nombre = $fecha."_".$t."_".$tramite_nro;
+                unlink($ruta_tmp.$nombre.'.zip');
+            }
+            $this->zip->download('tramites.zip');
+        }else{
+            $tr = Doctrine::getTable('Tramite')->find($tramites);
+            $tramite_nro ='';
+            foreach ($tr->getValorDatoSeguimiento() as $tra_nro){
+               if($tra_nro->nombre == 'tramite_ref'){
+                    $tramite_nro = $tra_nro->valor;
+                }                              
+            }                         
+            $tramite_nro = $tramite_nro != '' ? $tramite_nro : $tr->Proceso->nombre;
+            $nombre = $fecha."_".$t."_".$tramite_nro;
+            $this->zip->download($nombre.'.zip');
+        }
+    } 
+
 }
