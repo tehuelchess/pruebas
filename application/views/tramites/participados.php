@@ -1,5 +1,5 @@
 <script>
-
+/*
 function descargarDocumentos(tramiteId) {
     $("#modal").load(site_url + "etapas/descargar/" +tramiteId);
     $("#modal").modal();
@@ -43,6 +43,7 @@ function descargarSeleccionados() {
       return false;  
     }
 }
+*/
 
 </script>
 
@@ -62,7 +63,7 @@ function descargarSeleccionados() {
     <table id="mainTable" class="table">
         <thead>
             <tr>
-                <th></th>
+                <!--<th></th>-->
                 <th>Nro</th>
                 <th>Ref.</th>
                 <th>Nombre</th>
@@ -77,19 +78,21 @@ function descargarSeleccionados() {
             <?php foreach ($tramites as $t): ?>
 
                 <?php
+                      /*
                       $file = false;
                       if(Doctrine::getTable('File')->findByTramiteId($t->id)->count() > 0){
                           $file = true;
                           $registros=true;
                       }
+                      */
                 ?>
 
                 <tr>
-                    <?php if($file): ?>
-                    <td><div class="checkbox"><label><input type="checkbox" class="checkbox1" name="select[]" value="<?=$t->id?>"></label></div></td>
-                    <?php else: ?>
-                    <td></td>
-                    <?php endif; ?>
+                    <?php //if($file): ?>
+                    <!--<td><div class="checkbox"><label><input type="checkbox" class="checkbox1" name="select[]" value="<?=$t->id?>"></label></div></td>-->
+                    <?php //else: ?>
+                    <!--<td></td>-->
+                    <?php //endif; ?>
                     <td><?= $t->id ?></td>                   
                     <td class="name">
                         <?php 
@@ -141,16 +144,16 @@ function descargarSeleccionados() {
                             </div>
                         <?php endif ?>
 
-                        <?php if($file): ?>
-                        <a href="#" onclick="return descargarDocumentos(<?=$t->id?>);" class="btn btn-success"><i class="icon-download icon-white"></i> Descargar</a>
-                        <?php endif; ?>
+                        <?php //if($file): ?>
+                        <!--<a href="#" onclick="return descargarDocumentos(<?=$t->id?>);" class="btn btn-success"><i class="icon-download icon-white"></i> Descargar</a>-->
+                        <?php //endif; ?>
 
                     </td>
                 </tr>
             <?php endforeach; ?>
         </tbody>
     </table>
-
+    <!--
     <?php if($registros): ?>
     <div class="pull-right">
     <div class="checkbox">
@@ -166,6 +169,7 @@ function descargarSeleccionados() {
 
     </div>
     <?php endif; ?>
+    -->
 
     <p><?= $links ?></p>   
 <?php else: ?>

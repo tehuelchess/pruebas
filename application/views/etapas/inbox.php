@@ -1,5 +1,5 @@
 <script>
-
+/*
 function descargarDocumentos(tramiteId) {
     $("#modal").load(site_url + "etapas/descargar/" +tramiteId);
     $("#modal").modal();
@@ -43,6 +43,7 @@ function descargarSeleccionados() {
       return false;  
     }
 }
+*/
 
 </script>
 
@@ -62,7 +63,7 @@ function descargarSeleccionados() {
 <table id="mainTable" class="table">
     <thead>
         <tr>
-            <th></th>
+            <!--<th></th>-->
             <th><a href="<?=current_url().'?orderby=id&direction='.($direction=='asc'?'desc':'asc')?>">Nro</a></th>
             <th>Ref.</th>
             <th><a href="<?=current_url().'?orderby=proceso_nombre&direction='.($direction=='asc'?'desc':'asc')?>">Nombre</a></th>
@@ -76,23 +77,26 @@ function descargarSeleccionados() {
         <?php $registros=false; ?>
         <?php foreach ($etapas as $e): ?>
             <?php
+                  /*
                   $file = false;
                   if(Doctrine::getTable('File')->findByTramiteId($e->Tramite->id)->count() > 0){
                       $file = true;
                       $registros=true;
                   }
+                  */
             ?>
             <tr <?=$e->getPrevisualizacion()?'data-toggle="popover" data-html="true" data-title="<h4>Previsualización</h4>" data-content="'.htmlspecialchars($e->getPrevisualizacion()).'" data-trigger="hover" data-placement="bottom"':''?>>
-                <?php if($file): ?>
-                <td><div class="checkbox"><label><input type="checkbox" class="checkbox1" name="select[]" value="<?=$e->Tramite->id?>"></label></div></td>
-                <?php else: ?>
-                <td></td>
-                <?php endif; ?>
+                <?php //if($file): ?>
+                <!--<td><div class="checkbox"><label><input type="checkbox" class="checkbox1" name="select[]" value="<?=$e->Tramite->id?>"></label></div></td>-->
+                <?php //else: ?>
+                <!--<td></td>-->
+                <?php //endif; ?>
                 <td><?=$e->Tramite->id?></td>
                 <td class="name">
-                    <?php 
+                    <?php
+                        $t = Doctrine::getTable('Tramite')->find($e->Tramite->id);
                         $tramite_nro ='';
-                        foreach ($e->getDatosSeguimiento() as $tra_nro){
+                        foreach ($t->getValorDatoSeguimiento() as $tra_nro){
                            if($tra_nro->nombre == 'tramite_ref'){
                                 $tramite_nro = $tra_nro->valor;
                             }                              
@@ -104,7 +108,7 @@ function descargarSeleccionados() {
                 <td class="name"><a class="preventDoubleRequest" href="<?=site_url('etapas/ejecutar/'.$e->id)?>">
                      <?php 
                           $tramite_descripcion ='';
-                          foreach ($e->getDatosSeguimiento() as $tra){
+                          foreach ($t->getValorDatoSeguimiento() as $tra){
                              if($tra->nombre == 'tramite_descripcion'){
                                   $tramite_descripcion = $tra->valor;
                              }  
@@ -117,15 +121,16 @@ function descargarSeleccionados() {
                 <td><?=$e->vencimiento_at?strftime('%c',strtotime($e->vencimiento_at)):'N/A'?></td>
                 <td class="actions">
                     <a href="<?=site_url('etapas/ejecutar/'.$e->id)?>" class="btn btn-primary preventDoubleRequest"><i class="icon-edit icon-white"></i> Realizar</a>
-                    <?php if($file): ?>
-                    <a href="#" onclick="return descargarDocumentos(<?=$e->Tramite->id?>);" class="btn btn-success"><i class="icon-download icon-white"></i> Descargar</a>
-                    <?php endif; ?>
+                    <?php //if($file): ?>
+                    <!--<a href="#" onclick="return descargarDocumentos(<?=$e->Tramite->id?>);" class="btn btn-success"><i class="icon-download icon-white"></i> Descargar</a>-->
+                    <?php //endif; ?>
                     <!--<?php if($e->netapas==1):?><a href="<?=site_url('tramites/eliminar/'.$e->tramite_id)?>" class="btn" onclick="return confirm('¿Esta seguro que desea eliminar este tramite?')"><i class="icon-trash"></i></a><?php endif ?>-->
                 </td>
             </tr>
         <?php endforeach; ?>
     </tbody>
 </table>
+<!--
 <?php if($registros): ?>
 <div class="pull-right">
 <div class="checkbox">
@@ -141,6 +146,7 @@ function descargarSeleccionados() {
 
 </div>
 <?php endif; ?>
+-->
 
 <?php else: ?>
 <p>No hay trámites pendientes en su bandeja de entrada.</p>
