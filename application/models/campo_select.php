@@ -2,8 +2,14 @@
 require_once('campo.php');
 class CampoSelect extends Campo {
     
-    protected function display($modo, $dato) {
-        $valor_default=json_decode($this->valor_default);
+    protected function display($modo, $dato, $etapa_id) {
+        if($etapa_id){
+            $etapa=Doctrine::getTable('Etapa')->find($etapa_id);
+            $regla=new Regla($this->valor_default);
+            $valor_default=$regla->getExpresionParaOutput($etapa->id);
+        }else{
+            $valor_default=json_decode($this->valor_default);
+        }
 
         $display = '<label class="control-label" for="'.$this->id.'">' . $this->etiqueta . (in_array('required', $this->validacion) ? '' : ' (Opcional)') . '</label>';
         $display.= '<div class="controls">';

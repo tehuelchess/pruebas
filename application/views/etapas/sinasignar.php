@@ -1,5 +1,5 @@
 <script>
-/*
+
 function descargarDocumentos(tramiteId) {
     $("#modal").load(site_url + "etapas/descargar/" +tramiteId);
     $("#modal").modal();
@@ -43,7 +43,6 @@ function descargarSeleccionados() {
       return false;  
     }
 }
-*/
 
 </script>
 
@@ -64,7 +63,7 @@ function descargarSeleccionados() {
 <table id="mainTable" class="table">
     <thead>
         <tr>
-            <!--<th></th>-->
+            <th></th>
             <th>Nro</th>
             <th>Ref.</th>
             <th>Nombre</th>
@@ -79,21 +78,19 @@ function descargarSeleccionados() {
         <?php foreach ($etapas as $e): ?>
 
             <?php
-                  /*
                   $file = false;
                   if(Doctrine::getTable('File')->findByTramiteId($e->Tramite->id)->count() > 0){
                       $file = true;
                       $registros=true;
                   }
-                  */
             ?>
 
             <tr <?=$e->getPrevisualizacion()?'data-toggle="popover" data-html="true" data-title="<h4>Previsualización</h4>" data-content="'.htmlspecialchars($e->getPrevisualizacion()).'" data-trigger="hover" data-placement="bottom"':''?>>
-                <?php //if($file): ?>
-                <!--<td><div class="checkbox"><label><input type="checkbox" class="checkbox1" name="select[]" value="<?=$e->Tramite->id?>"></label></div></td>-->
-                <?php //else: ?>
-                <!--<td></td>-->
-                <?php //endif; ?>
+                <?php if($file): ?>
+                <td><div class="checkbox"><label><input type="checkbox" class="checkbox1" name="select[]" value="<?=$e->Tramite->id?>"></label></div></td>
+                <?php else: ?>
+                <td></td>
+                <?php endif; ?>
                 <td><?=$e->Tramite->id?></td>
                 <td class="name"><?//= $e->Tramite->Proceso->nombre ?>
                     <?php
@@ -123,15 +120,15 @@ function descargarSeleccionados() {
                 <td><?=$e->vencimiento_at?strftime('%c',strtotime($e->vencimiento_at)):'N/A'?></td>
                 <td class="actions">
                     <a href="<?=site_url('etapas/asignar/'.$e->id)?>" class="btn btn-primary"><i class="icon-check icon-white"></i> Asignármelo</a>
-                    <?php //if($file): ?>
-                    <!--<a href="#" onclick="return descargarDocumentos(<?=$e->Tramite->id?>);" class="btn btn-success"><i class="icon-download icon-white"></i> Descargar</a>-->
-                    <?php //endif; ?>
+                    <?php if($file): ?>
+                    <a href="#" onclick="return descargarDocumentos(<?=$e->Tramite->id?>);" class="btn btn-success"><i class="icon-download icon-white"></i> Descargar</a>
+                    <?php endif; ?>
                 </td>
             </tr>
         <?php endforeach; ?>
     </tbody>
 </table>
-<!--
+
 <?php if($registros): ?>
 <div class="pull-right">
 <div class="checkbox">
@@ -147,7 +144,7 @@ function descargarSeleccionados() {
 
 </div>
 <?php endif; ?>
--->
+
 <p><?= $links ?></p>
 <?php else: ?>
 <p>No hay trámites para ser asignados.</p>

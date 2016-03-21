@@ -479,21 +479,43 @@ class Etapas extends MY_Controller {
             if(count($files) > 0){
                 //Recorriendo los archivos
                 foreach ($files as $f) {
-                    if($f->tipo == 'documento'){
-                        $path = $ruta_documentos.$f->filename;
-                    }else{
-                        $path = $ruta_generados.$f->filename;
+                    $tr = Doctrine::getTable('Tramite')->find($t);
+                    $nombre_documento ='';
+                    $tramite_nro ='';
+                    foreach ($tr->getValorDatoSeguimiento() as $tra_nro){
+                        if($tra_nro->valor == $f->filename){
+                            $nombre_documento = $tra_nro->nombre;
+                        }
+                        if($tra_nro->nombre == 'tramite_ref'){
+                            $tramite_nro = $tra_nro->valor;
+                        }
                     }
-                    $this->zip->read_file($path);
+                    if($f->tipo == 'documento' && !empty($nombre_documento)){
+                        $path = $ruta_documentos.$f->filename;
+                        /* Cambiando nombre del archivo que se lleva a tmp en el caso de los documentos generados */
+                        $tramite_nro = $tramite_nro != '' ? $tramite_nro : $tr->Proceso->nombre;
+                        $tramite_nro = str_replace(" ","",$tramite_nro);
+                        $nombre_archivo = pathinfo($path, PATHINFO_FILENAME);
+                        $ext = pathinfo($path, PATHINFO_EXTENSION);
+                        $new_file = $ruta_tmp.$nombre_documento.".".$nombre_archivo.".".$tramite_nro.".".$ext;
+                        copy($path,$new_file);
+                        /* Fin cambio de nombre */
+                        $this->zip->read_file($new_file);
+                        //Eliminación del archivo para no ocupar espacio en disco
+                        unlink($new_file);
+                    }elseif ($f->tipo == 'dato' && !empty($nombre_documento)){
+                        $path = $ruta_generados.$f->filename;
+                        $this->zip->read_file($path);
+                    }
                 }
                 if(count($tramites) > 1){
                     $tr = Doctrine::getTable('Tramite')->find($t);
                     $tramite_nro ='';
                     foreach ($tr->getValorDatoSeguimiento() as $tra_nro){
-                       if($tra_nro->nombre == 'tramite_ref'){
+                        if($tra_nro->nombre == 'tramite_ref'){
                             $tramite_nro = $tra_nro->valor;
-                        }                              
-                    }                         
+                        }
+                    }
                     $tramite_nro = $tramite_nro != '' ? $tramite_nro : $tr->Proceso->nombre;
                     $nombre = $fecha."_".$t."_".$tramite_nro;
                     //creando un zip por cada trámite
