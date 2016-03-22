@@ -243,6 +243,15 @@ class Etapa extends Doctrine_Record {
     }
 
     public function asignar($usuario_id) {
+
+        if($this->Tarea->acceso_modo == 'claveunica'){
+            $usuario = Doctrine::getTable('Usuario')->findOneByRut($usuario_id);
+            if(!$usuario){
+                $usuario = Doctrine::getTable('Usuario')->find($usuario_id);
+            }
+            $usuario_id = $usuario->id;
+        }
+        
         if (!$this->canUsuarioAsignarsela($usuario_id))
             return;
 
