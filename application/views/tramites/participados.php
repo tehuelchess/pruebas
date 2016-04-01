@@ -86,7 +86,7 @@ function descargarSeleccionados() {
                 ?>
 
                 <tr>
-                    <?php if($file): ?>
+                    <?php if($file && Cuenta::cuentaSegunDominio()->id == 3): ?>
                     <td><div class="checkbox"><label><input type="checkbox" class="checkbox1" name="select[]" value="<?=$t->id?>"></label></div></td>
                     <?php else: ?>
                     <td></td>
@@ -142,7 +142,7 @@ function descargarSeleccionados() {
                             </div>
                         <?php endif ?>
 
-                        <?php if($file): ?>
+                        <?php if($file && Cuenta::cuentaSegunDominio()->id == 3): ?>
                         <a href="#" onclick="return descargarDocumentos(<?=$t->id?>);" class="btn btn-success"><i class="icon-download icon-white"></i> Descargar</a>
                         <?php endif; ?>
 
@@ -152,7 +152,7 @@ function descargarSeleccionados() {
         </tbody>
     </table>
     
-    <?php if($registros): ?>
+    <?php if($registros && Cuenta::cuentaSegunDominio()->id == 3): ?>
     <div class="pull-right">
     <div class="checkbox">
     <input type="hidden" id="tramites" name="tramites" />
