@@ -446,8 +446,12 @@ class Etapas extends MY_Controller {
         $data['tramites'] = $tramites;
         $this->load->view ('etapas/descargar',$data);
     }
-    /*
+    
     public function descargar_form(){
+        if(!UsuarioSesion::usuario()->registrado){
+            echo 'Usuario no tiene permisos para descargar.';
+            exit;
+        }
         $tramites = $this->input->post('tramites');
         $opcionesDescarga = $this->input->post('opcionesDescarga');
         $tramites = explode(",",$tramites);
@@ -480,6 +484,11 @@ class Etapas extends MY_Controller {
                 //Recorriendo los archivos
                 foreach ($files as $f) {
                     $tr = Doctrine::getTable('Tramite')->find($t);
+                    $etapas = $tr->getEtapasParticipadas(UsuarioSesion::usuario()->id);
+                    if(count($etapas) == 0){
+                        echo 'Usuario no ha participado en el trámite.';
+                        exit;
+                    }
                     $nombre_documento ='';
                     $tramite_nro ='';
                     foreach ($tr->getValorDatoSeguimiento() as $tra_nro){
@@ -563,6 +572,5 @@ class Etapas extends MY_Controller {
             $this->zip->download($nombre.'.zip');
         }
     }
-    */
 
 }

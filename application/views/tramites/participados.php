@@ -1,3 +1,45 @@
+<script>
+function descargarDocumentos(tramiteId) {
+    $("#modal").load(site_url + "etapas/descargar/" +tramiteId);
+    $("#modal").modal();
+    return false;
+}
+$(document).ready(function() {
+  $('#select_all').click(function(event) {
+      var checked = [];
+      $('#tramites').val();
+      if(this.checked) {
+          $('.checkbox1').each(function() {
+              this.checked = true;
+          });
+      }else{
+          $('.checkbox1').each(function() {
+              this.checked = false;
+          });
+      }
+      $('#tramites').val(checked);
+  });
+});
+function descargarSeleccionados() {
+    var numberOfChecked = $('.checkbox1:checked').length;
+    if(numberOfChecked == 0){
+      alert('Debe seleccionar al menos un trámite');
+      return false;
+    }else{
+      var checked = [];
+      $('.checkbox1').each(function() {
+          if($(this).is(':checked')){
+            checked.push(parseInt($(this).val()));  
+          }
+      });
+      $('#tramites').val(checked);
+      var tramites = $('#tramites').val();
+      $("#modal").load(site_url + "etapas/descargar/" +tramites);
+      $("#modal").modal();
+      return false;  
+    }
+}
+</script>
 
 <h2 style="line-height: 28px;">
     Solicitudes en que ha participado
@@ -26,10 +68,24 @@
             </tr>
         </thead>
         <tbody>
+            <?php $registros=false; ?>
             <?php foreach ($tramites as $t): ?>
 
+                <?php
+                      
+                      $file = false;
+                      if(Doctrine::getTable('File')->findByTramiteId($t->id)->count() > 0){
+                          $file = true;
+                          $registros=true;
+                      }
+                ?>
+
                 <tr>
+                    <?php if($file): ?>
+                    <td><div class="checkbox"><label><input type="checkbox" class="checkbox1" name="select[]" value="<?=$t->id?>"></label></div></td>
+                    <?php else: ?>
                     <td></td>
+                    <?php endif; ?>
                     <td><?= $t->id ?></td>                   
                     <td class="name">
                         <?php 
@@ -81,11 +137,31 @@
                             </div>
                         <?php endif ?>
 
+                        <?php if($file): ?>
+                        <a href="#" onclick="return descargarDocumentos(<?=$t->id?>);" class="btn btn-success"><i class="icon-download icon-white"></i> Descargar</a>
+                        <?php endif; ?>
+
                     </td>
                 </tr>
             <?php endforeach; ?>
         </tbody>
     </table>
+
+    <?php if($registros): ?>
+    <div class="pull-right">
+    <div class="checkbox">
+    <input type="hidden" id="tramites" name="tramites" />
+    <label>
+     <input type="checkbox" id="select_all" name="select_all" /> Seleccionar todos
+     <a href="#" onclick="return descargarSeleccionados();" class="btn btn-success preventDoubleRequest"><i class="icon-download icon-white"></i> Descargar seleccionados</a>
+    </label>
+
+    </div>
+    </div>
+    <div class="modal hide fade" id="modal">
+
+    </div>
+    <?php endif; ?>
 
     <p><?= $links ?></p>   
 <?php else: ?>
