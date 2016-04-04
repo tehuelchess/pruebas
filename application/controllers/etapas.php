@@ -446,7 +446,7 @@ class Etapas extends MY_Controller {
         $data['tramites'] = $tramites;
         $this->load->view ('etapas/descargar',$data);
     }
-
+    /*
     public function descargar_form(){
         $tramites = $this->input->post('tramites');
         $opcionesDescarga = $this->input->post('opcionesDescarga');
@@ -492,14 +492,12 @@ class Etapas extends MY_Controller {
                     }
                     if($f->tipo == 'documento' && !empty($nombre_documento)){
                         $path = $ruta_documentos.$f->filename;
-                        /* Cambiando nombre del archivo que se lleva a tmp en el caso de los documentos generados */
                         $tramite_nro = $tramite_nro != '' ? $tramite_nro : $tr->Proceso->nombre;
                         $tramite_nro = str_replace(" ","",$tramite_nro);
                         $nombre_archivo = pathinfo($path, PATHINFO_FILENAME);
                         $ext = pathinfo($path, PATHINFO_EXTENSION);
                         $new_file = $ruta_tmp.$nombre_documento.".".$nombre_archivo.".".$tramite_nro.".".$ext;
                         copy($path,$new_file);
-                        /* Fin cambio de nombre */
                         $this->zip->read_file($new_file);
                         //Eliminación del archivo para no ocupar espacio en disco
                         unlink($new_file);
@@ -564,6 +562,7 @@ class Etapas extends MY_Controller {
             $nombre = $fecha."_".$t."_".$tramite_nro;
             $this->zip->download($nombre.'.zip');
         }
-    } 
+    }
+    */
 
 }
