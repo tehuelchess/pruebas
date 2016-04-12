@@ -85,7 +85,7 @@ function descargarSeleccionados() {
             ?>
             <tr <?=$e->getPrevisualizacion()?'data-toggle="popover" data-html="true" data-title="<h4>Previsualización</h4>" data-content="'.htmlspecialchars($e->getPrevisualizacion()).'" data-trigger="hover" data-placement="bottom"':''?>>
                 <?php if($file): ?>
-                <td><div class="checkbox"><label><input type="checkbox" class="checkbox1" name="select[]" value="<?=$e->Tramite->id?>"></label></div></td>
+                <td><!--<div class="checkbox"><label><input type="checkbox" class="checkbox1" name="select[]" value="<?=$e->Tramite->id?>"></label></div>--></td>
                 <?php else: ?>
                 <td></td>
                 <?php endif; ?>
@@ -120,7 +120,7 @@ function descargarSeleccionados() {
                 <td class="actions">
                     <a href="<?=site_url('etapas/ejecutar/'.$e->id)?>" class="btn btn-primary preventDoubleRequest"><i class="icon-edit icon-white"></i> Realizar</a>
                     <?php if($file): ?>
-                    <a href="#" onclick="return descargarDocumentos(<?=$e->Tramite->id?>);" class="btn btn-success"><i class="icon-download icon-white"></i> Descargar</a>
+                    <!--<a href="#" onclick="return descargarDocumentos(<?=$e->Tramite->id?>);" class="btn btn-success"><i class="icon-download icon-white"></i> Descargar</a>-->
                     <?php endif; ?>
                     <!--<?php if($e->netapas==1):?><a href="<?=site_url('tramites/eliminar/'.$e->tramite_id)?>" class="btn" onclick="return confirm('¿Esta seguro que desea eliminar este tramite?')"><i class="icon-trash"></i></a><?php endif ?>-->
                 </td>
@@ -130,6 +130,7 @@ function descargarSeleccionados() {
 </table>
 
 <?php if($registros): ?>
+<!--
 <div class="pull-right">
 <div class="checkbox">
 <input type="hidden" id="tramites" name="tramites" />
@@ -143,6 +144,7 @@ function descargarSeleccionados() {
 <div class="modal hide fade" id="modal">
 
 </div>
+-->
 <?php endif; ?>
 
 <?php else: ?>
