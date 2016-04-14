@@ -42,13 +42,14 @@ class Documento extends Doctrine_Record {
             'foreign' => 'id'
         ));
     }
-
+    /*
     public function setValidez($validez) {
         if (!$validez)
             $validez = null;
 
         $this->_set('validez', $validez);
     }
+    */
 
     public function setHsmConfiguracionId($hsm_configuracion_id) {
         if (!$hsm_configuracion_id)
