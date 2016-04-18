@@ -133,7 +133,7 @@ class Regla {
                                                     ->execute();
                                 if($result[0]->tipo == 'grid'){
                                     $valor_dato = json_decode($valor_dato);
-                                    $tabla = '<table border="1" cellpadding="2" cellspacing="2"><thead>';
+                                    $tabla = '<table border="1" cellpadding="1" cellspacing="1"><thead>';
                                     foreach ($valor_dato as $key => $array) {
                                         if($key == 1){
                                             $tabla .= '</thead><tbody><tr>';
