@@ -484,12 +484,12 @@ class Etapas extends MY_Controller {
                 //Recorriendo los archivos
                 foreach ($files as $f) {
                     $tr = Doctrine::getTable('Tramite')->find($t);
-                    $etapas = $tr->getEtapasParticipadas(UsuarioSesion::usuario()->id);
-                    if(count($etapas) == 0){
+                    $participado = $tr->usuarioHaParticipado(UsuarioSesion::usuario()->id);
+                    if(!$participado){
                         echo 'Usuario no ha participado en el trámite.';
                         exit;
                     }
-                    $nombre_documento ='';
+                    $nombre_documento = $tr->id;
                     $tramite_nro ='';
                     foreach ($tr->getValorDatoSeguimiento() as $tra_nro){
                         if($tra_nro->valor == $f->filename){

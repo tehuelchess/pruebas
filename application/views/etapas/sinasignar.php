@@ -87,7 +87,7 @@ function descargarSeleccionados() {
 
             <tr <?=$e->getPrevisualizacion()?'data-toggle="popover" data-html="true" data-title="<h4>Previsualización</h4>" data-content="'.htmlspecialchars($e->getPrevisualizacion()).'" data-trigger="hover" data-placement="bottom"':''?>>
                 <?php if($file): ?>
-                <td><!--<div class="checkbox"><label><input type="checkbox" class="checkbox1" name="select[]" value="<?=$e->Tramite->id?>"></label></div>--></td>
+                <td><div class="checkbox"><label><input type="checkbox" class="checkbox1" name="select[]" value="<?=$e->Tramite->id?>"></label></div></td>
                 <?php else: ?>
                 <td></td>
                 <?php endif; ?>
@@ -121,7 +121,7 @@ function descargarSeleccionados() {
                 <td class="actions">
                     <a href="<?=site_url('etapas/asignar/'.$e->id)?>" class="btn btn-primary"><i class="icon-check icon-white"></i> Asignármelo</a>
                     <?php if($file): ?>
-                    <!--<a href="#" onclick="return descargarDocumentos(<?=$e->Tramite->id?>);" class="btn btn-success"><i class="icon-download icon-white"></i> Descargar</a>-->
+                    <a href="#" onclick="return descargarDocumentos(<?=$e->Tramite->id?>);" class="btn btn-success"><i class="icon-download icon-white"></i> Descargar</a>
                     <?php endif; ?>
                 </td>
             </tr>
@@ -130,7 +130,6 @@ function descargarSeleccionados() {
 </table>
 
 <?php if($registros): ?>
-  <!--
 <div class="pull-right">
 <div class="checkbox">
 <input type="hidden" id="tramites" name="tramites" />
@@ -144,7 +143,6 @@ function descargarSeleccionados() {
 <div class="modal hide fade" id="modal">
 
 </div>
--->
 <?php endif; ?>
 
 <p><?= $links ?></p>

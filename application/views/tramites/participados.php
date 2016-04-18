@@ -82,7 +82,7 @@ function descargarSeleccionados() {
 
                 <tr>
                     <?php if($file): ?>
-                    <td><!--<div class="checkbox"><label><input type="checkbox" class="checkbox1" name="select[]" value="<?=$t->id?>"></label></div>--></td>
+                    <td><div class="checkbox"><label><input type="checkbox" class="checkbox1" name="select[]" value="<?=$t->id?>"></label></div></td>
                     <?php else: ?>
                     <td></td>
                     <?php endif; ?>
@@ -138,7 +138,7 @@ function descargarSeleccionados() {
                         <?php endif ?>
 
                         <?php if($file): ?>
-                        <!--<a href="#" onclick="return descargarDocumentos(<?=$t->id?>);" class="btn btn-success"><i class="icon-download icon-white"></i> Descargar</a>-->
+                        <a href="#" onclick="return descargarDocumentos(<?=$t->id?>);" class="btn btn-success"><i class="icon-download icon-white"></i> Descargar</a>
                         <?php endif; ?>
 
                     </td>
@@ -148,7 +148,6 @@ function descargarSeleccionados() {
     </table>
 
     <?php if($registros): ?>
-      <!--
     <div class="pull-right">
     <div class="checkbox">
     <input type="hidden" id="tramites" name="tramites" />
@@ -162,7 +161,6 @@ function descargarSeleccionados() {
     <div class="modal hide fade" id="modal">
 
     </div>
-    -->
     <?php endif; ?>
 
     <p><?= $links ?></p>   
