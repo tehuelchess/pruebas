@@ -9,19 +9,19 @@
         <div class="radio">
           <label>
             <input type="radio" name="opcionesDescarga" id="opcionesDescarga1" value="documento">
-            Generados
+            Generados: Documentación que el sistema genera al usuario.
           </label>
         </div>
         <div class="radio">
           <label>
             <input type="radio" name="opcionesDescarga" id="opcionesDescarga2" value="dato">
-            Subidos
+            Subidos: Documentación que el usuario adjuntó en el trámite.
           </label>
         </div>
         <div class="radio">
           <label>
             <input type="radio" name="opcionesDescarga" id="opcionesDescarga3" value="all" checked>
-            Todos
+            Todos: Recopila toda la documentación.
           </label>
         </div>
         <input type="hidden" id="tramites" name="tramites" value="<?= $tramites ?>">
