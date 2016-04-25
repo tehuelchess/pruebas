@@ -449,6 +449,11 @@ class Etapas extends MY_Controller {
     }
     
     public function descargar_form(){
+        if(!Cuenta::cuentaSegunDominio()->descarga_masiva){
+            echo 'Servicio no tiene permisos para descargar.';
+            exit;
+        }
+
         if(!UsuarioSesion::usuario()->registrado){
             echo 'Usuario no tiene permisos para descargar.';
             exit;

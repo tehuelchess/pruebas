@@ -81,10 +81,14 @@ function descargarSeleccionados() {
                 ?>
 
                 <tr>
-                    <?php if($file): ?>
-                    <td><div class="checkbox"><label><input type="checkbox" class="checkbox1" name="select[]" value="<?=$t->id?>"></label></div></td>
-                    <?php else: ?>
-                    <td></td>
+                    <?php if(Cuenta::cuentaSegunDominio()->descarga_masiva): ?>
+                      <?php if($file): ?>
+                      <td><div class="checkbox"><label><input type="checkbox" class="checkbox1" name="select[]" value="<?=$t->id?>"></label></div></td>
+                      <?php else: ?>
+                      <td></td>
+                      <?php endif; ?>
+                      <?php else: ?>
+                      <td></td>
                     <?php endif; ?>
                     <td><?= $t->id ?></td>                   
                     <td class="name">
@@ -136,9 +140,10 @@ function descargarSeleccionados() {
                                 </ul>
                             </div>
                         <?php endif ?>
-
-                        <?php if($file): ?>
-                        <a href="#" onclick="return descargarDocumentos(<?=$t->id?>);" class="btn btn-success"><i class="icon-download icon-white"></i> Descargar</a>
+                        <?php if(Cuenta::cuentaSegunDominio()->descarga_masiva): ?>
+                          <?php if($file): ?>
+                          <a href="#" onclick="return descargarDocumentos(<?=$t->id?>);" class="btn btn-success"><i class="icon-download icon-white"></i> Descargar</a>
+                          <?php endif; ?>
                         <?php endif; ?>
 
                     </td>
@@ -147,20 +152,22 @@ function descargarSeleccionados() {
         </tbody>
     </table>
 
-    <?php if($registros): ?>
-    <div class="pull-right">
-    <div class="checkbox">
-    <input type="hidden" id="tramites" name="tramites" />
-    <label>
-     <input type="checkbox" id="select_all" name="select_all" /> Seleccionar todos
-     <a href="#" onclick="return descargarSeleccionados();" class="btn btn-success preventDoubleRequest"><i class="icon-download icon-white"></i> Descargar seleccionados</a>
-    </label>
+    <?php if(Cuenta::cuentaSegunDominio()->descarga_masiva): ?>
+      <?php if($registros): ?>
+      <div class="pull-right">
+      <div class="checkbox">
+      <input type="hidden" id="tramites" name="tramites" />
+      <label>
+       <input type="checkbox" id="select_all" name="select_all" /> Seleccionar todos
+       <a href="#" onclick="return descargarSeleccionados();" class="btn btn-success preventDoubleRequest"><i class="icon-download icon-white"></i> Descargar seleccionados</a>
+      </label>
 
-    </div>
-    </div>
-    <div class="modal hide fade" id="modal">
+      </div>
+      </div>
+      <div class="modal hide fade" id="modal">
 
-    </div>
+      </div>
+      <?php endif; ?>
     <?php endif; ?>
 
     <p><?= $links ?></p>   
