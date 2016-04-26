@@ -300,6 +300,7 @@ class Configuracion extends MY_BackendController {
             $cuenta->nombre_largo=$this->input->post('nombre_largo');
             $cuenta->mensaje=$this->input->post('mensaje');
             $cuenta->logo=$this->input->post('logo');
+            $cuenta->descarga_masiva=$this->input->post('descarga_masiva');
             $cuenta->save();
 
             $respuesta->validacion = TRUE;

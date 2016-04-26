@@ -48,7 +48,6 @@ class Cuentas extends CI_Controller {
             $cuenta->nombre_largo=$this->input->post('nombre_largo');
             $cuenta->mensaje=$this->input->post('mensaje');
             $cuenta->logo=$this->input->post('logo');
-            $cuenta->descarga_masiva=$this->input->post('descarga_masiva');
             $cuenta->save();
             
             $this->session->set_flashdata('message','Cuenta guardada con éxito.');
