@@ -215,6 +215,12 @@ class Configuracion extends MY_BackendController {
             $data['usuario'] = $usuario;
         }
 
+        $data['procesos'] = Doctrine_Query::create()
+                            ->from('Proceso p, p.Cuenta c')
+                            ->where('c.id = ?',UsuarioBackendSesion::usuario()->cuenta_id)
+                            ->orderBy('p.nombre asc')
+                            ->execute();
+
         $data['title'] = 'Configuración de Usuarios';
         $data['content'] = 'backend/configuracion/backend_usuario_editar';
 
@@ -256,8 +262,8 @@ class Configuracion extends MY_BackendController {
             $usuario->apellidos =  $this->input->post('apellidos');            
             /*se agrega con el fin de cubrir la necesidad de tener un usuario con muchos roles*/
             $usuario->rol =  implode("," , $this->input->post('rol'));
-            
             $usuario->cuenta_id = UsuarioBackendSesion::usuario()->cuenta_id;
+            $usuario->procesos = $this->input->post('procesos') ? implode("," , $this->input->post('procesos')) : NULL;
             $usuario->save();
             $respuesta->validacion = TRUE;
             $respuesta->redirect = site_url('backend/configuracion/backend_usuarios');
