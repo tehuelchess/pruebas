@@ -20,6 +20,8 @@
                     return true
                 }else if(haystack[i] == "gestion"){
                     return true
+                }else if(haystack[i] == "seguimiento"){
+                    return true
                 }
             }
             return false;
