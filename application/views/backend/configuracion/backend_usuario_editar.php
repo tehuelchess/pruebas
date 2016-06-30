@@ -77,7 +77,7 @@
                     ?>
                 </select>
 
-                <?php if(isset($usuario) && (count(explode(",",$usuario->procesos)) > 1 or in_array('gestion', explode(",", $usuario->rol)) or in_array('reportes', explode(",", $usuario->rol)) )): ?>
+                <?php if(isset($usuario) && (count(explode(",",$usuario->procesos)) > 1 or in_array('seguimiento', explode(",", $usuario->rol)) or in_array('gestion', explode(",", $usuario->rol)) or in_array('reportes', explode(",", $usuario->rol)) )): ?>
                 <div id="div_procesos" style="display: block">
                 <?php else: ?>
                 <div id="div_procesos" style="display: none">
