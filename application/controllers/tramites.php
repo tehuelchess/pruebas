@@ -113,13 +113,13 @@ class Tramites extends MY_Controller {
 
     public function disponibles() {
 
-        $orderby=$this->input->get('orderby')?$this->input->get('orderby'):'nombre';
-        $direction=$this->input->get('direction')?$this->input->get('direction'):'asc';
+        //$orderby=$this->input->get('orderby')?$this->input->get('orderby'):'nombre';
+        //$direction=$this->input->get('direction')?$this->input->get('direction'):'asc';
         
-        $data['procesos']=Doctrine::getTable('Proceso')->findProcesosDisponiblesParaIniciar(UsuarioSesion::usuario()->id, Cuenta::cuentaSegunDominio(),$orderby,$direction);
+        $data['procesos']=Doctrine::getTable('Proceso')->findProcesosDisponiblesParaIniciar(UsuarioSesion::usuario()->id, Cuenta::cuentaSegunDominio(),'nombre','asc');
         
-        $data['orderby']=$orderby;
-        $data['direction']=$direction;
+        //$data['orderby']=$orderby;
+        //$data['direction']=$direction;
         $data['sidebar']='disponibles';
         $data['content'] = 'tramites/disponibles';
         $data['title'] = 'Trámites disponibles a iniciar';
