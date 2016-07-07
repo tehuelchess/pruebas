@@ -151,7 +151,7 @@ class Autenticacion extends MY_Controller {
         $usuario_input=new Usuario();
         $usuario_input->reset_token=$reset_token;
         
-        if($usuario->reset_token!=$usuario_input->reset_token){
+        if($usuario->reset_token!=$usuario_input->reset_token or is_array($reset_token)){
             echo 'Token incorrecto';
             exit;
         }
@@ -179,7 +179,7 @@ class Autenticacion extends MY_Controller {
         $usuario_input=new Usuario();
         $usuario_input->reset_token=$reset_token;
         
-        if($usuario->reset_token!=$usuario_input->reset_token){
+        if($usuario->reset_token!=$usuario_input->reset_token or is_array($reset_token)){
             echo 'Token incorrecto';
             exit;
         }
