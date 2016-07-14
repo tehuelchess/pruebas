@@ -413,19 +413,11 @@ class Configuracion extends MY_BackendController {
             }
             $source = 'uploads/themes/'.$cuenta_id.'/'. $nombre_eliminar . '/';
             $filedestino = 'application/views/themes/'.$cuenta_id.'/'. $nombre_eliminar . '/';
-
-            if (PHP_OS === 'Windows')
-            {
-                exec("rd /s /q {$source}");
-                exec("rd /s /q {$filedestino}");
-
-            }
-            else
-            {
-                exec("rm -rf {$source}");
-                exec("rm -rf {$filedestino}");
-            }
-            
+            $this->load->helper("file");
+            delete_files($source, true);
+            delete_files($filedestino, true);
+            rmdir($source);
+            rmdir($filedestino);
         }
             
         $cuenta_id=UsuarioBackendSesion::usuario()->cuenta_id;
