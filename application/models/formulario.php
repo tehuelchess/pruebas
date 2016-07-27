@@ -52,4 +52,41 @@ class Formulario extends Doctrine_Record {
         }
         return $max;
     }
+    
+    public function exportComplete()
+    {        
+        $formulario = $this;
+        $formulario->Campos;        
+        $object = $formulario->toArray();
+
+        return json_encode($object);
+    }
+    
+    /**
+     * @param $input
+     * @return Proceso
+     */
+    public static function importComplete($input)
+    {
+        $json = json_decode($input);                
+        $formulario = new Formulario();
+        
+        foreach ($json->Campos as $c) {
+            $campo = new Campo();
+            foreach ($c as $keyc => $c_attr) {                
+                if ($keyc != 'id' && $keyc != 'formulario_id' && $keyc != 'Formulario') {
+                    $campo->{$keyc} = $c_attr;
+                }
+            }
+            $formulario->Campos[] = $campo;
+        }
+                
+        //Asignamos los valores a las propiedades del Formulario
+        foreach ($json as $keyp => $p_attr) {
+            if ($keyp != 'id' && $keyp != 'Campos')
+                $formulario->{$keyp} = $p_attr;
+        }        
+
+        return $formulario;
+    }
 }
