@@ -64,7 +64,7 @@ class Formulario extends Doctrine_Record {
     
     /**
      * @param $input
-     * @return Proceso
+     * @return Formulario
      */
     public static function importComplete($input)
     {
@@ -83,7 +83,7 @@ class Formulario extends Doctrine_Record {
                 
         //Asignamos los valores a las propiedades del Formulario
         foreach ($json as $keyp => $p_attr) {
-            if ($keyp != 'id' && $keyp != 'Campos')
+            if ($keyp != 'id' && $keyp != 'proceso_id' && $keyp != 'Campos')
                 $formulario->{$keyp} = $p_attr;
         }        
 

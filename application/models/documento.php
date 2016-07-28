@@ -183,5 +183,31 @@ class Documento extends Doctrine_Record {
 
         return;
     }
+    
+    public function exportComplete()
+    {        
+        $documento = $this;                
+        $object = $documento->toArray();
+
+        return json_encode($object);
+    }
+    
+    /**
+     * @param $input
+     * @return Documento
+     */
+    public static function importComplete($input)
+    {
+        $json = json_decode($input);                
+        $documento = new Documento();
+                
+        //Asignamos los valores a las propiedades del Documento
+        foreach ($json as $keyp => $p_attr) {
+            if ($keyp != 'id' && $keyp != 'proceso_id')
+                $documento->{$keyp} = $p_attr;
+        }        
+
+        return $documento;
+    }
 
 }
