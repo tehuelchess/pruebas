@@ -314,16 +314,22 @@ class Formularios extends MY_BackendController {
     
     public function importar()
     {
-        $file_path = $_FILES['archivo']['tmp_name'];
-        $proceso_id = $this->input->post('proceso_id');
-        
-        if ($file_path && $proceso_id) {
-            $input = file_get_contents($_FILES['archivo']['tmp_name']);
-            $formulario = Formulario::importComplete($input, $proceso_id);
-            $formulario->proceso_id = $proceso_id;            
-            $formulario->save();            
-        }
+        try {
+            $file_path = $_FILES['archivo']['tmp_name'];
+            $proceso_id = $this->input->post('proceso_id');
 
+            if ($file_path && $proceso_id) {
+                $input = file_get_contents($_FILES['archivo']['tmp_name']);
+                $formulario = Formulario::importComplete($input, $proceso_id);
+                $formulario->proceso_id = $proceso_id;            
+                $formulario->save();            
+            } else {
+                die('No se especificó archivo o ID proceso');
+            }
+        } catch (Exception $ex) {
+            die('Código: '.$ex->getCode().' Mensaje: '.$ex->getMessage());
+        }
+        
         redirect($_SERVER['HTTP_REFERER']);
     }
 }

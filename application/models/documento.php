@@ -200,13 +200,18 @@ class Documento extends Doctrine_Record {
     {
         $json = json_decode($input);                
         $documento = new Documento();
-                
-        //Asignamos los valores a las propiedades del Documento
-        foreach ($json as $keyp => $p_attr) {
-            if ($keyp != 'id' && $keyp != 'proceso_id')
-                $documento->{$keyp} = $p_attr;
-        }        
-
+        
+        try {
+            
+            //Asignamos los valores a las propiedades del Documento
+            foreach ($json as $keyp => $p_attr) {
+                if ($keyp != 'id' && $keyp != 'proceso_id')
+                    $documento->{$keyp} = $p_attr;
+            }
+        } catch (Exception $ex) {
+            throw new Exception($ex->getMessage(), $ex->getCode());
+        }
+        
         return $documento;
     }
 

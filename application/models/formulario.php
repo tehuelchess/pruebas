@@ -71,22 +71,28 @@ class Formulario extends Doctrine_Record {
         $json = json_decode($input);                
         $formulario = new Formulario();
         
-        foreach ($json->Campos as $c) {
-            $campo = new Campo();
-            foreach ($c as $keyc => $c_attr) {                
-                if ($keyc != 'id' && $keyc != 'formulario_id' && $keyc != 'Formulario') {
-                    $campo->{$keyc} = $c_attr;
+        try {
+            
+            foreach ($json->Campos as $c) {
+                $campo = new Campo();
+                foreach ($c as $keyc => $c_attr) {                
+                    if ($keyc != 'id' && $keyc != 'formulario_id' && $keyc != 'Formulario') {
+                        $campo->{$keyc} = $c_attr;
+                    }
                 }
+                $formulario->Campos[] = $campo;
             }
-            $formulario->Campos[] = $campo;
-        }
-                
-        //Asignamos los valores a las propiedades del Formulario
-        foreach ($json as $keyp => $p_attr) {
-            if ($keyp != 'id' && $keyp != 'proceso_id' && $keyp != 'Campos')
-                $formulario->{$keyp} = $p_attr;
-        }        
 
+            //Asignamos los valores a las propiedades del Formulario
+            foreach ($json as $keyp => $p_attr) {
+                if ($keyp != 'id' && $keyp != 'proceso_id' && $keyp != 'Campos')
+                    $formulario->{$keyp} = $p_attr;
+            }
+        
+        } catch (Exception $ex) {
+            throw new Exception($ex->getMessage(), $ex->getCode());
+        }
+        
         return $formulario;
     }
 }
