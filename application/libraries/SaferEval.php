@@ -166,6 +166,8 @@ class SaferEval {
             'date_create',
             'strftime',
             'strtotime',
+            'date',
+            'mktime',
             //Serializacion
             'json_encode',
             'json_decode',
