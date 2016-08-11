@@ -57,3 +57,4 @@
     </div>
     </form>
 </div>
+<div id="modal" class="modal hide fade"></div>
