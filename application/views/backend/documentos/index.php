@@ -14,7 +14,7 @@
     <li><a href="<?=site_url('backend/acciones/listar/'.$proceso->id)?>">Acciones</a></li>
 </ul>
 
-<a class="btn" href="<?=site_url('backend/documentos/crear/'.$proceso->id)?>"><i class="icon-file"></i> Nuevo</a>
+<a class="btn btn-success" href="<?=site_url('backend/documentos/crear/'.$proceso->id)?>"><i class="icon-white icon-file"></i> Nuevo</a>
 <a class="btn btn-default" href="#modalImportarDocumento" data-toggle="modal" ><i class="icon-upload icon"></i> Importar</a>
 
 <table class="table">
