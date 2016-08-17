@@ -162,6 +162,7 @@ class SaferEval {
             'ucfirst', // Make a string's first character uppercase
             'ucwords', // Uppercase the first character of each word in a string
             'wordwrap', // Wraps a string to a given number of characters
+            'mb_strtoupper',
             //Date functions
             'date_create',
             'strftime',
@@ -176,7 +177,8 @@ class SaferEval {
             'false',
             'NULL',
             //Helpers
-            'matrix_to_html'
+            'matrix_to_html',
+            'numtoletras'
         );
         $this->allowedTokens = array(
             'T_AND_EQUAL', // assignment operators
