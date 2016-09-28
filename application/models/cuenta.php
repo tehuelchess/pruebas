@@ -10,6 +10,8 @@ class Cuenta extends Doctrine_Record {
         $this->hasColumn('logo');
         $this->hasColumn('api_token');
         $this->hasColumn('descarga_masiva');
+        $this->hasColumn('client_id');
+        $this->hasColumn('client_secret');
     }
 
     function setUp() {

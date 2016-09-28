@@ -15,3 +15,6 @@ sphinx/run
 sphinx.conf
 searchd.log
 .idea
+composer.lock
+composer.phar
+vendor
