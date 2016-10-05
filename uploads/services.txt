@@ -1,0 +1,28 @@
+{
+  "code":200,
+  "mensaje":"Ok",
+  "services":{
+    "items":[
+      {
+        "nombre":"confglobal",
+        "descripcion":"Listar Configuracinn global",
+        "url":"http://localhost/uploads/listarconfiguracionglobal.txt"
+      },
+      {
+        "nombre":"addconfglob",
+        "descripcion":"Agrega dia en la configuracion global",
+        "url":"http://localhost/uploads/agregardiaconfglobal.txt"
+      },
+      {
+        "nombre":"eliminardiaferiado",
+        "descripcion":"Elimina un dia feriado",
+        "url":"http://localhost/uploads/agregardiaconfglobal.txt"
+      },
+      {
+        "nombre":"buscaragenda",
+        "descripcion":"Busca agenda por nombre y/o por pertenece",
+        "url":"http://localhost/uploads/buscaragenda.txt"
+      }
+    ]
+  }
+}

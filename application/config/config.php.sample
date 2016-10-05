@@ -394,5 +394,35 @@ $config['hsm_password']='';
  */
 $config['main_domain']='';
 
+/*
+ * URL del microservicio de agendas 
+ *
+ */ 
+
+$config['base_service']='http://dev2.arkho.tech/';
+
+/*
+ *  Contexto de aplicación del servicio de agendas. 
+ * 
+ */
+
+$config['context_service']='v1/';//context del servicio
+
+
+/*  
+ * Identificado de aplicación o cuenta para acceder al microservicio de 
+ * agendas.
+ */
+
+$config['app_key']='mMRUI7s7Nn0yGq0';
+
+/*
+ * Cantidad de registros que se mostrarán por pagina
+ * 
+ */
+$config['base_service']='http://dev2.arkho.tech:80/';//url del servicios
+$config['context_service']='v1/';//context del servicio
+$config['records']=10;// numero de registros por pagina
+
 /* End of file config.php */
 /* Location: ./application/config/config.php */
