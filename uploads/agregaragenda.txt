@@ -1,0 +1,4 @@
+{
+  "validacion": true,
+  "redirect": "http://localhost/backend/agendas"
+}

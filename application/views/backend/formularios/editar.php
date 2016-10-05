@@ -36,6 +36,7 @@
             <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'file')">File</button>
             <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'date')">Date</button>
             <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'grid')">Grilla</button>
+            <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'agenda')">Agenda</button>
         </div>
         <div class="btn-group">
             <button class="btn btn-inverse" onclick="return agregarCampo(<?= $formulario->id ?>,'instituciones_gob')">Instituciones</button>
@@ -62,7 +63,9 @@
             </div>
         </div>
         <div class="edicionFormulario">
-            <?php foreach ($formulario->Campos as $c): ?>
+            <?php foreach ($formulario->Campos as $c): 
+            //print_r($c->datos_agenda);
+            ?>
                 <div class="row">
                     <div class="span10">
                     <div class="control-group campo" data-id="<?= $c->id ?>" <?= $c->dependiente_campo ? 'data-dependiente-campo="' . $c->dependiente_campo.'" data-dependiente-valor="' . $c->dependiente_valor .'" data-dependiente-tipo="' . $c->dependiente_tipo.'" data-dependiente-relacion="'.$c->dependiente_relacion.'"' : '' ?> >

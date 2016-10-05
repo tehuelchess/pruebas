@@ -1,3 +1,16 @@
+<link rel="stylesheet" href= "<?= base_url('assets/calendar/css/calendar.css') ?>" >
+<script src= "<?= base_url('/assets/js/jquery-ui/js/jquery-ui.js') ?>"></script>
+<script src= "<?= base_url('/assets/js/moment.min.js') ?>"></script>
+<script type="text/javascript" src="<?= base_url('assets/calendar/components/underscore/underscore-min.js') ?>"></script>
+<script type="text/javascript" src="<?= base_url('assets/calendar/components/jstimezonedetect/jstz.min.js') ?>"></script>
+<script type="text/javascript" src="<?= base_url('assets/calendar/js/language/es-CO.js') ?>"></script>
+<script src="<?= base_url() ?>assets/js/bootstrap-datetimepicker.min.js"></script>
+<script src= "<?= base_url('/assets/calendar/js/moment-2.2.1.js') ?>"></script>
+<script type="text/javascript" src="<?= base_url('assets/calendar/js/calendar.js?v=0.2') ?>"></script>
+<script src="<?= base_url() ?>assets/js/collapse.js"></script>
+<script src="<?= base_url() ?>assets/js/transition.js"></script>
+
+
 <?php if($etapa->Tarea->vencimiento):?>
 <div class="alert alert-warning">Atención. Esta etapa <?=$etapa->getFechaVencimientoAsString()?>.</div>
 <?php endif ?>
@@ -7,6 +20,8 @@
     <fieldset>
         <legend><?=$paso->Formulario->nombre?></legend>
         <?php foreach($paso->Formulario->Campos as $c):?>
+            <?php
+             ?>
             <div class="campo control-group" data-id="<?=$c->id?>" <?= $c->dependiente_campo ? 'data-dependiente-campo="' . $c->dependiente_campo.'" data-dependiente-valor="' . $c->dependiente_valor .'" data-dependiente-tipo="' . $c->dependiente_tipo.'" data-dependiente-relacion="'.$c->dependiente_relacion.'"' : '' ?> style="display: <?= $c->isCurrentlyVisible($etapa->id)? 'block' : 'none'?>;" data-readonly="<?=$paso->modo=='visualizacion' || $c->readonly?>" >
             <?=$c->displayConDatoSeguimiento($etapa->id,$paso->modo)?>
             </div>
@@ -17,3 +32,5 @@
         </div>
     </fieldset>
 </form>
+<div id="modalcalendar" class="modal hide fade modalconfg modcalejec"></div>
+<input type="hidden" id="urlbase" value="<?= base_url() ?>" />

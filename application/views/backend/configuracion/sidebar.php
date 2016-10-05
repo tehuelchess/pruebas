@@ -11,6 +11,12 @@
     <li class="<?=strpos($this->uri->segment(3),'modelador')===0?'active':''?>">
         <a href="<?=site_url('backend/configuracion/modelador')?>">Configuración Modelador</a>
     </li>
+    <li style="display:none" class="<?=strpos($this->uri->segment(3),'feriados')===0?'active':''?>"><!-- se deshabilito porque se movio a manager -->
+        <a href="<?=site_url('backend/configuracion/feriados')?>">Dias Feriados</a>
+    </li>
+    <li class="<?=strpos($this->uri->segment(3),'conf_services')===0?'active':''?>">
+        <a href="<?=site_url('backend/configuracion/conf_services')?>">Configuraci&oacute;n Services</a>
+    </li>
     <li class="nav-header">
         Accesos Frontend
     </li>

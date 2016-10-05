@@ -1,0 +1,23 @@
+{
+  "code": 200,
+  "mensaje": "Ok",
+  "resultado": {
+    "items": [
+      {
+        "id": 1,
+        "nombre": "cal1",
+        "padre": "312"
+      },
+      {
+        "id": 2,
+        "nombre": "cal2",
+        "padre": "312"
+      },
+      {
+        "id": 3,
+        "nombre": "cal3",
+        "padre": "2"
+      }
+    ]
+  }
+}

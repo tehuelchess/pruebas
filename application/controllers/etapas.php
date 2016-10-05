@@ -4,9 +4,28 @@ if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
 class Etapas extends MY_Controller {
-
+    private $domain='';
+    private $appkey='';
+    private $base_services='';
+    private $context='';
+    private $records=10;
     public function __construct() {
         parent::__construct();
+        include APPPATH . 'third_party/httpful/bootstrap.php';
+        $this->base_services=$this->config->item('base_service');
+        $this->context=$this->config->item('context_service');
+        $this->records=$this->config->item('records');
+        $cuenta=(isset(UsuarioSesion::usuario()->cuenta_id) && is_numeric(UsuarioSesion::usuario()->cuenta_id))?UsuarioSesion::usuario()->cuenta_id:1;
+        try{
+
+            $service=new Connect_services();
+            $service->setCuenta($cuenta);
+            $service->load_data();
+            $this->domain=$service->getDomain();
+            $this->appkey=$service->getAppkey();
+        }catch(Exception $err){
+            //echo 'Error: '.$err->getMessage();
+        }
     }
 
     public function inbox() {
@@ -137,7 +156,6 @@ class Etapas extends MY_Controller {
 
     public function ejecutar($etapa_id, $secuencia = 0) {
         $iframe = $this->input->get('iframe');
-
         $etapa = Doctrine::getTable('Etapa')->find($etapa_id);
         if(!$etapa){
             show_404();
@@ -185,7 +203,7 @@ class Etapas extends MY_Controller {
             $data['title'] = $etapa->Tarea->nombre;
             $template = $this->input->get('iframe') ? 'template_iframe' : 'template';
 
-            $config =Doctrine::getTable('CuentaHasConfig')->findOneByIdparAndCuentaId(1,Cuenta::cuentaSegunDominio()->id); 
+            $config =Doctrine::getTable('CuentaHasConfig')->findOneByIdparAndCuentaId(1,Cuenta::cuentaSegunDominio()->id);
             if($config){
                $config =Doctrine::getTable('Config')->findOneByIdAndIdparAndCuentaIdOrCuentaId($config->config_id,$config->idpar,Cuenta::cuentaSegunDominio()->id,0);
                $nombre = $config->nombre;
@@ -198,9 +216,29 @@ class Etapas extends MY_Controller {
                }
                
             }else{
-               $data['template_path'] = 'uploads/themes/default/';
-               $this->load->view('themes/default/template', $data);
+                $data['template_path'] = 'uploads/themes/default/';
+                $this->load->view('themes/default/template', $data);
             }
+        }
+    }
+
+    private function confirmar_cita($id){
+        try{
+            $uri=$this->base_services.''.$this->context.'appointments/confirm/'.$id;
+            $response = \Httpful\Request::put($uri)
+                ->expectsJson()
+                ->addHeaders(array(
+                    'appkey' => $this->appkey,             // heder de la app key
+                    'domain' => $this->domain,                              // heder de domain
+                ))
+                ->sendIt();
+            $code=$response->code;
+            if(isset($response->body) && is_array($response->body) && isset($response->body[0]->response->code)){
+                $code=$response->body[0]->response->code;
+                $appointment=$response->body[1]->id;
+            }
+        }catch(Exception $err){
+            throw new Exception($err->getMessage());
         }
     }
 
@@ -230,6 +268,17 @@ class Etapas extends MY_Controller {
 
         $respuesta = new stdClass();
         
+        if(isset($_POST['objappointments']) && is_array($_POST['objappointments'])){
+            foreach($_POST['objappointments'] as $item){
+                try{
+                    $this->confirmar_cita($item);    
+                }catch(Exception $err){
+                    echo $err->getMessage();
+                }
+                
+            }
+        }
+
         if ($modo == 'edicion') {
             $validar_formulario = FALSE;
             foreach ($formulario->Campos as $c) {                
@@ -578,5 +627,259 @@ class Etapas extends MY_Controller {
             $this->zip->download($nombre.'.zip');
         }
     }
+    public function ajax_modal_calendar(){
+        $idagenda=(isset($_GET['idagenda']) && is_numeric($_GET['idagenda']))?$_GET['idagenda']:0;
+        $idobject=(isset($_GET['object']) && is_numeric($_GET['object']))?$_GET['object']:0;
+        $idcita=(isset($_GET['idcita']) && is_numeric($_GET['idcita']))?$_GET['idcita']:0;
+        $idtramite=(isset($_GET['idtramite']) && is_numeric($_GET['idtramite']))?$_GET['idtramite']:0;
+        $data['idagenda']=$idagenda;
+        $data['idobject']=$idobject;
+        $data['idcita']=$idcita;
+        $data['idtramite']=$idtramite;
+        $this->load->view ('etapas/calendario_ciudadano',$data);
+    }
+    private function obtenerTiempoCita($idagenda){
+        $valor=0;
+        try{
+            $uri=$this->base_services.''.$this->context.'calendars/'.$idagenda;//url del servicio con los parametros
+            $response = \Httpful\Request::get($uri)
+                ->expectsJson()
+                ->addHeaders(array(
+                    'appkey' => $this->appkey,             // heder de la app key
+                    'domain' => $this->domain                              // heder de domain
+                ))
+                ->sendIt();
+            $code=$response->code;
+            if(isset($response->body) && is_array($response->body) && isset($response->body[0]->response->code)){
+                $valor=$response->body[1]->calendars[0]->time_attention;
+            }
+        }catch(Exception $err){
 
+        }
+        return $valor;
+    }
+    public function disponibilidad($idagenda,$idtramite){
+        //date_default_timezone_set('America/Bogota');
+        $code=0;
+        $mensaje='';
+        $data=array();
+        try{
+            $result = Doctrine_Query::create ()
+            ->select('cuenta_id')
+            ->from ('proceso,tramite')
+            ->where ("proceso.id=tramite.proceso_id AND tramite.id=?",array($idtramite))
+            ->execute ();
+            $cuenta=(isset($result[0]->cuenta_id) && is_numeric($result[0]->cuenta_id))?$result[0]->cuenta_id:1;
+
+            $service=new Connect_services();
+            $service->setCuenta($cuenta);
+            $service->load_data();
+            $this->domain=$service->getDomain();
+            $this->appkey=$service->getAppkey();
+
+            $tiempofin=$this->obtenerTiempoCita($idagenda);
+            $uri=$this->base_services.''.$this->context.'appointments/availability/'.$idagenda;//url del servicio con los parametros
+            $response = \Httpful\Request::get($uri)
+                ->expectsJson()
+                ->addHeaders(array(
+                    'appkey' => $this->appkey,             // heder de la app key
+                    'domain' => $this->domain,                              // heder de domain
+                ))
+                ->sendIt();
+            $code=$response->code;
+            if(isset($response->body) && is_array($response->body) && isset($response->body[0]->response->code)){
+                $code=$response->body[0]->response->code;
+                $mensaje=$response->body[0]->response->message;
+                $concurrency=$response->body[1]->concurrency;
+                foreach($response->body[1]->appointmentsavailable as $keyd => $item){
+                    $object=get_object_vars($item);
+                    if(is_array($object) && count($object)>0){
+                        $fecha=$keyd;
+                        foreach($object as $keyhora => $dispo){
+                            $index=1;
+                            foreach($dispo as $appontment){
+                                $id=$appontment->applyer_name;
+                                $tmp=strtotime($fecha.' '.$keyhora.':00',time());
+                                $end=strtotime('+'.$tiempofin.' minute',strtotime ($fecha.' '.$keyhora.':00'))*1000;
+                                $start=$tmp*1000;
+                                $title=$appontment->applyer_name;
+                                $available=$appontment->available;
+                                $clsevent='';
+                                switch($available){
+                                    case 'D':
+                                        $clsevent='event-warning';
+                                        $title='Disponible';
+                                    break;
+                                    case 'R':
+                                        //$clsevent='event-info';
+                                        $clsevent='event-success';
+                                        $title='Reservado';
+                                    break;
+                                    case 'B':
+                                        $clsevent='event-success';
+                                        $title='Bloqueado';
+                                    break;
+                                }
+                                $title=$title.' '.$fecha.' '.$keyhora.':00';
+                                $data[]=array('id'=>$id,'title'=>$title,'url'=>'#','class'=>$clsevent,'start'=>$start,'end'=>$end,'estado'=>$available,'concurrencia'=>$concurrency,'cuenta'=>$index);
+                                $index++;
+                            }
+                        }
+                    }
+                    
+                }
+            }
+        }catch(Exception $err){
+            $mensaje=$err->getMessage();
+            print $mensaje;
+        }
+        $result=array('success'=>1,'result'=>$data);
+        echo json_encode($result);
+    }
+    public function ajax_confirmar_agregar_dia(){
+        $idagenda=(isset($_GET['idagenda']))?$_GET['idagenda']:0;
+        $idtramite=(isset($_GET['idtramite']))?$_GET['idtramite']:0;
+        $fecha=(isset($_GET['fecha']))?$_GET['fecha']:'';
+        $hora=(isset($_GET['hora']))?$_GET['hora']:'';
+        $idcita=(isset($_GET['idcita']))?$_GET['idcita']:'';
+
+        $fechaf=(isset($_GET['fechaf']))?$_GET['fechaf']:'';
+        $horaf=(isset($_GET['horaf']))?$_GET['horaf']:'';
+
+        $object=(isset($_GET['obj']))?$_GET['obj']:0;
+        $tmp=explode('-',$fecha);
+        $data['dia']=$tmp[2];
+        $data['mes']=$tmp[1];
+        $data['ano']=$tmp[0];
+        $data['hora']=$hora;
+        $data['idagenda']=$idagenda;
+        $data['idcita']=$idcita;
+        $data['object']=$object;
+        $data['idtramite']=$idtramite;
+        $data['fechafinal']=$fechaf.' '.$horaf;
+        $this->load->view ('etapas/ajax_confirmar_agregar_dia',$data);
+    }
+    public function ajax_agregar_cita(){
+        //date_default_timezone_set('America/Bogota');
+        $id=UsuarioSesion::usuario()->id;
+        $nombre=UsuarioSesion::usuario()->nombres.' '.UsuarioSesion::usuario()->apellido_paterno.' '.UsuarioSesion::usuario()->apellido_materno;
+        $nombre=(!empty(trim($nombre)))?$nombre:'Anonimo';
+        $idagenda=(isset($_GET['idagenda']))?$_GET['idagenda']:'';
+        $fecha=(isset($_GET['fecha']))?$_GET['fecha']:'';
+        $fechafinal=(isset($_GET['fechafinal']))?$_GET['fechafinal']:'';
+        $desc=(isset($_GET['desc']))?$_GET['desc']:'';
+        $email=(isset($_GET['email']) && !empty($_GET['email']))?$_GET['email']:UsuarioSesion::usuario()->email;
+        $appointment=(isset($_GET['idcita']))?$_GET['idcita']:0;
+        $idetapa=(isset($_GET['idtramite']))?$_GET['idtramite']:0;
+        $code=0;
+        $tmp=explode(' ',$fecha);
+        $fe=explode('-',$tmp[0]);
+        $ho=explode(':',$tmp[1]);
+        $fechaformat=date(DATE_ATOM, mktime($ho[0],$ho[1],0,$fe[1],$fe[2],$fe[0]));
+        $mensaje='';
+        $nomproceso='';
+        $et=Doctrine_Query::create()
+                    ->from("Etapa")
+                    ->where('id='.$idetapa)
+                    ->execute();
+        foreach($et as $ob){
+            $idtramite=$ob->tramite_id;
+        }
+
+        $ttram= Doctrine::getTable('Tramite')->findByid($idtramite);
+        $nomproceso=$ttram[0]->Proceso->nombre;
+        $metavalue='{"tramite":"'.$idtramite.'","etapa":"'.$idetapa.'","nombre_tramite":"'.$nomproceso.'","calendario_id":"'.$idagenda.'"}';
+        try{
+            $result = Doctrine_Query::create ()
+            ->select('cuenta_id')
+            ->from ('proceso,tramite')
+            ->where ("proceso.id=tramite.proceso_id AND tramite.id=?",array($idtramite))
+            ->execute ();
+            $cuenta=(isset($result[0]->cuenta_id) && is_numeric($result[0]->cuenta_id))?$result[0]->cuenta_id:1;
+
+            $service=new Connect_services();
+            $service->setCuenta($cuenta);
+            $service->load_data();
+            $this->domain=$service->getDomain();
+            $this->appkey=$service->getAppkey();
+        }catch(Exception $err){
+
+        }
+        $json='{
+                "applyer_email": "'.$email.'",
+                "applyer_id": "'.$id.'",
+                "applyer_name": "'.$nombre.'",
+                "appointment_start_time": "'.$fechaformat.'",
+                "calendar_id": "'.$idagenda.'",
+                "subject": "'.$desc.'"
+                }';
+        if($appointment>0){//0 reserva una cita y 1 edita una cita
+            try{
+                $uri=$this->base_services.''.$this->context.'appointments/'.$appointment;
+                $response = \Httpful\Request::put($uri)
+                    ->expectsJson()
+                    ->body($json)
+                    ->addHeaders(array(
+                        'appkey' => $this->appkey,             // heder de la app key
+                        'domain' => $this->domain,                              // heder de domain
+                    ))
+                    ->sendIt();
+                $code=$response->code;
+                if(isset($response->body) && is_array($response->body) && isset($response->body[0]->response->code)){
+                    $code=$response->body[0]->response->code;
+                    $mensaje=$response->body[0]->response->message;
+                    $appointment=$response->body[1]->id;
+                }else{
+                    $code=$response->body->response->code;
+                    switch($code){
+                        case "2040":
+                            $mensaje='El tiempo seleccionado no se encuentra disponible en el calendario.';
+                        break;
+                        case "1020":
+                            $mensaje='El email de la persona es requerido.';
+                        break;
+                    }
+                }
+            }catch(Exception $err){
+                $mensaje=$response->body[0]->response->message;
+            }
+        }else{
+            $json='{
+                "applyer_email": "'.$email.'",
+                "applyer_id": "'.$id.'",
+                "applyer_name": "'.$nombre.'",
+                "appointment_start_time": "'.$fechaformat.'",
+                "calendar_id": "'.$idagenda.'",
+                "subject": "'.$desc.'",
+                "metadata":'.$metavalue.'
+                }';
+            try{
+                $uri=$this->base_services.''.$this->context.'appointments/reserve';//url del servicio con los parametros
+                $response = \Httpful\Request::post($uri)
+                    ->expectsJson()
+                    ->body($json)
+                    ->addHeaders(array(
+                        'appkey' => $this->appkey,             // heder de la app key
+                        'domain' => $this->domain,                              // heder de domain
+                    ))
+                    ->sendIt();
+                $code=$response->code;
+                if(isset($response->body) && is_array($response->body) && isset($response->body[0]->response->code)){
+                    $code=$response->body[0]->response->code;
+                    $mensaje=$response->body[0]->response->message;
+                    $appointment=$response->body[1]->id;
+                }else{
+                    $code=(isset($response->body->response->code))?$response->body->response->code:0;
+                    $mensaje=(isset($response->body->response->message))?$response->body->response->message:'Error General';
+                }
+            }catch(Exception $err){
+                $mensaje='No se pudo reservar la cita, volverlo a intentar.';
+                //$mensaje=$response->body[0]->response->message;
+            }
+        }
+        $tmpfecha=explode(' ',$fecha);
+        $tmp=explode('-',$tmpfecha[0]);
+        $fres=$tmp[2].'/'.$tmp[1].'/'.$tmp[0].' '.$tmpfecha[1];
+        echo json_encode(array('code'=>$code,'mensaje'=>$mensaje,'appointment'=>$appointment,'fecha'=>$fres));
+    }
 }

@@ -179,3 +179,49 @@ $(document).ready(function(){
     
     
 });
+function obtenerService(nombre){
+    var resultado="";
+    $.ajax({
+        url: "http://localhost/uploads/services.txt",
+        dataType: "json",
+        async:false,
+        success: function( data ) {
+            if(data.code==200){
+                var items=data.services.items;
+                $.each(items, function(index, element) {
+                    if( jQuery.trim(element.nombre) == jQuery.trim(nombre) ){
+                        resultado=element.url;
+                    }
+                });
+            }else{
+                resultado="";
+            }
+        }
+    });
+    return resultado;
+}
+function buscarAgenda(){
+    if(jQuery.trim($('.js-pertenece').val())!=""){
+        var base_url=$('#base_url').val();
+        if(jQuery.trim($('.js-pertenece').val())=='%'){
+            location.href=base_url+"/backend/agendas";;
+        }else{
+            var search=$('.js-pertenece').val();
+            $('#frmsearch').submit();
+        }
+    }else{
+        $('.validacion').html('<div class="alert alert-error"><a class="close" data-dismiss="alert">×</a>Debe ingresar un nombre de agenda o pertence. si quiere listar todas digite \'%\'</div>');              
+    }
+}
+function calendarioFront(idagenda,idobject,idcita=0){
+    var site_url=$('#urlbase').val();
+    if(idcita==0){
+        if (typeof $('#codcita'+idobject) !== "undefined") {
+            idcita=$('#codcita'+idobject).val();
+        }
+    }
+    $('#codcita'+idobject).attr('data-id-etapa');
+    var idtramite=$('#codcita'+idobject).attr('data-id-etapa');
+    $("#modalcalendar").load(site_url + "etapas/ajax_modal_calendar?idagenda="+idagenda+"&object="+idobject+"&idcita="+idcita+"&idtramite="+idtramite);
+    $("#modalcalendar").modal();
+}
