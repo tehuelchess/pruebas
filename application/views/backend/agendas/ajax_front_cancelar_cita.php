@@ -9,7 +9,7 @@
     if(isset($funcionario) && $funcionario){
         echo '
         <label>Motivo</label>
-        <textarea id="motivo" style="width: 500px; resize: none;"></textarea>';
+        <textarea id="motivo" class="motcancelcitafun" style="width: 500px; resize: none;"></textarea>';
     }
     ?>
 </div>

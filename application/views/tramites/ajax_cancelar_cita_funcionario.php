@@ -6,7 +6,7 @@
         <div class="validacion valcancelcita"></div>
         <form id="frmcanccita">
             <label>Motivo</label>
-            <textarea id="txtmotivo" name="motivo"></textarea>    
+            <textarea id="txtmotivo" name="motivo" class="motcancelcitafun"></textarea>    
         </form>
         
     </div>

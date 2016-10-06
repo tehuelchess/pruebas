@@ -8,6 +8,7 @@
 				if(event.estado=='D' && swdis){
 					swdis=false;
 					swbloq=false;
+					swres=false;
 					%>
 					<div data-event-id="<%= event.id %>" data-event-class="<%= event['class'] %>"
 						class="pull-left event <%= event['class'] %>" data-toggle="tooltip"
@@ -17,11 +18,12 @@
 				%>
 			<% }); %>
 			<%
-			if(swbloq){
+			if(swbloq || swdis){
 				swbloq=false;
+				swdis=false;
 				%>
-				<div data-event-id="<%= event.id %>" data-event-class="<%= event['class'] %>"
-					class="pull-left event <%= event['class'] %>" data-toggle="tooltip"
+				<div data-event-id="0" data-event-class="eventradocup"
+					class="pull-left event eventradocup" data-toggle="tooltip"
 					></div>
 				<%
 			} %>

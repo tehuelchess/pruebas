@@ -4,19 +4,19 @@
 ?>
 <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal">×</button>
-    <h3 id="myModalLabel">Agregar Bloqueo</h3>
+    <h3 id="myModalLabel">Bloquear Franja</h3>
 </div>
     <input type="hidden" name="fechainicio" />
     <input type="hidden" name="fechafinal" />
     <input type="hidden" name="idagenda" />
     <div class="modal-body">
         <div class="validacion"></div>
-        <label id="labdesc">Esta seguro de querer bloquear este rango de fecha/hora <strong>(<?= date('d/m/Y H:i',$start/1000) ?>) - (<?= date('d/m/Y H:i',$end/1000) ?>)</strong> .</label>
-        <textarea id="txtrazon" placeholder="Escriba la Razon"></textarea>
+        <label id="labdesc">¿Est&aacute; seguro de bloquear el intervalo del <strong>(<?= date('d/m/Y H:i',$start/1000) ?>) - (<?= date('d/m/Y H:i',$end/1000) ?>)</strong>?.</label>
+        <textarea id="txtrazon" style="width:715px; resize: none;" placeholder="Escriba la Razon"></textarea>
     </div>
 <div class="modal-footer">
     <button class="btn js_cerrar_vcancelar" data-dismiss="modal">Cerrar</button>
-    <a href="#" id="btnconfirmarbloqueo" class="btn btn-primary">Bloqear</a>
+    <a href="#" id="btnconfirmarbloqueo" class="btn btn-primary">Bloquear</a>
 </div>
 <script>
     $(function(){
@@ -29,10 +29,11 @@
         var m2=<?= date('m',$end/1000) ?>;
         var d2=<?= date('d',$end/1000) ?>;
 
-        var valini=moment(y+"-"+m+"-"+d).format('ll')+' a las <?= date('H:i',$start/1000) ?>';
-        var valfin=moment(y2+"-"+m2+"-"+d2).format('ll')+' a las <?= date('H:i',$end/1000) ?>';
+        var valini=moment(y+"/"+m+"/"+d).format('LL')+' a las <?= date('H:i',$start/1000) ?> horas';
+        //var valfin=moment(y2+"/"+m2+"/"+d2).format('LL')+' a las <?= date('H:i',$end/1000) ?> horas';
+        var valfin='<?= date('H:i',$end/1000) ?>';
 
-        var mendesc='Esta seguro de querer bloquear la disponibilidad desde el '+valini+' hasta el '+valfin;
+        var mendesc='¿Está seguro de bloquear el intervalo del '+valini+' hasta las '+valfin+' horas?';
         $('#labdesc').text(mendesc);
         $('#btnconfirmarbloqueo').click(function(){
             $('.validacion').html('');

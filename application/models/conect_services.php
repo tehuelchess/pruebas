@@ -18,8 +18,9 @@ class Connect_services{
         return $this->appkey;
     }
     public function setAppkey($appkey=''){
-        if(isset($appkey) && !empty(trim($appkey))){
-            $this->appkey=$appkey;
+        $trimAppkey = trim($appkey);
+        if(isset($trimAppkey) && !empty($trimAppkey)){
+            $this->appkey=$trimAppkey;
         }else{
             throw new Exception('El Appkey no puede estar vacio');
         }
@@ -28,7 +29,8 @@ class Connect_services{
         return $this->domain;
     }
     public function setDomain($domain=''){
-        if(isset($domain) && !empty(trim($domain))){
+        $trimDomain = trim($domain);
+        if(isset($trimDomain) && !empty($trimDomain)){
             $this->domain=$domain;
         }else{
             throw new Exception('El Dominio no puede estar vacio');
@@ -48,7 +50,8 @@ class Connect_services{
         $this->componente;
     }
     public function setComponente($componente=''){
-        if(isset($componente) && !empty(trim($componente))){
+        $trimComponente = trim($componente);
+        if(isset($trimComponente) && !empty($trimComponente)){
             $this->componente=$componente;
         }else{
             throw new Exception('El componente no puede estar vacio');
@@ -58,7 +61,8 @@ class Connect_services{
         return $this->base_services;
     }
     public function setBaseService($uri=''){
-        if(isset($uri) && !empty(trim($uri))){
+        $trimUri = trim($uri);
+        if(isset($trimUri) && !empty($trimUri)){
             if(preg_match("/^h(t){2}p(s)?:(\/){2}([a-zA-Z0-9])+([a-zA-Z0-9\._-])*(:([0-9])*)?(\/)?$/",$uri)){
                 $this->base_services=$uri;
             }else{
@@ -72,7 +76,8 @@ class Connect_services{
         return $this->context;
     }
     public function setContext($context=''){
-        if(isset($context) && !empty(trim($context))){
+        $trimContext = trim($context);
+        if(isset($trimContext) && !empty($trimContext)){
             if(preg_match("/^(\/)?([a-zA-Z0-9])+([a-zA-Z0-9\._-])*(\/)?$/",$context)){
                 $this->context=$context;
             }else{

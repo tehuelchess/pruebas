@@ -869,10 +869,11 @@ if(!String.prototype.formatNum) {
 		moment.lang('es');
 		switch(this.options.view) {
 			case 'year':
-				return this.locale.title_year.format(p.getFullYear());
+				//return this.locale.title_year.format(p.getFullYear());
+				return p.getFullYear();
 				break;
 			case 'month':
-				var string=moment(p.getFullYear()+'-'+(p.getMonth()+1)+'-1').format("MMMM YYYY");
+				var string=moment(p.getFullYear()+'/'+(p.getMonth()+1)+'/1').format("MMMM YYYY");
 				return string.substr(0,1).toUpperCase()+string.substr(1,string.length).toLowerCase()
 				//return this.locale.title_month.format(this.locale['m' + p.getMonth()], p.getFullYear());
 				break;
@@ -880,7 +881,7 @@ if(!String.prototype.formatNum) {
 				return this.locale.title_week.format(p.getWeek(getExtentedOption(this, 'week_numbers_iso_8601')), p.getFullYear());
 				break;
 			case 'day':
-				return moment(p.getFullYear()+'-'+(p.getMonth()+1)+'-'+p.getDate()).format("LL");
+				return moment(p.getFullYear()+'/'+(p.getMonth()+1)+'/'+p.getDate()).format("LL");
 				//return this.locale.title_day.format(this.locale['d' + p.getDay()], p.getDate(), this.locale['m' + p.getMonth()], p.getFullYear());
 				//return this.locale.title_day.format(this.locale['d' + p.getDay()], p.getDate(), this.locale['m' + p.getMonth()], p.getFullYear());
 				break;

@@ -7,7 +7,7 @@
     <button type="button" class="close" data-dismiss="modal">×</button>
     <h3 id="myModalLabel">Calendario</h3>
 </div>
-    <div class="modal-body">
+    <div class="modal-body mod-cal_ciu">
         <div class="validacion valcal"></div>
         <input type="hidden" id="daysel" >
         <div class="containter-calendar calendar-ciud">
@@ -15,9 +15,9 @@
             <div class="page-header">
                 <div class="pull-right form-inline">
                     <div class="btn-group">
-                        <button class="btn" data-calendar-nav="prev"><< Anterior</button>
+                        <button class="btn" data-calendar-nav="prev"><<</button>
                         <button class="btn btn-primary" data-calendar-nav="today">Hoy</button>
-                        <button class="btn" data-calendar-nav="next">Siguiente >></button>
+                        <button class="btn" data-calendar-nav="next">>></button>
                     </div>
                     <div class="btn-group">
                         <button class="btn" data-calendar-view="year">A&ntilde;o</button>
@@ -29,6 +29,7 @@
                 <h3></h3>
             </div>
             <div id="calendar" class="calendar"></div>
+            <div></div>
         </div>
         <div style="margin-top: 30px; display: none;">
             <div class="clearfix">

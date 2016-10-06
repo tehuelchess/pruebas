@@ -35,9 +35,9 @@
                 }
                 var fecha=d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear()+' '+h+':'+m;
                 
-                var lab=moment(d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate()).format("LL");
+                var lab=moment(d.getFullYear()+'/'+(d.getMonth()+1)+'/'+d.getDate()).format("LL");
                 //$('#txtresult'+id).html(fecha);
-                $('#txtresult'+id).html(lab+' a las '+h+':'+m);
+                $('#txtresult'+id).html(lab+' a las '+h+':'+m+" horas");
             }
         });
     });

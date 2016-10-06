@@ -213,7 +213,7 @@ function buscarAgenda(){
         $('.validacion').html('<div class="alert alert-error"><a class="close" data-dismiss="alert">×</a>Debe ingresar un nombre de agenda o pertence. si quiere listar todas digite \'%\'</div>');              
     }
 }
-function calendarioFront(idagenda,idobject,idcita=0){
+function calendarioFront(idagenda,idobject,idcita){
     var site_url=$('#urlbase').val();
     if(idcita==0){
         if (typeof $('#codcita'+idobject) !== "undefined") {

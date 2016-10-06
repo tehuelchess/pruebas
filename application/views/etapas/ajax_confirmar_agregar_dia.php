@@ -4,7 +4,7 @@
 </div>
     <div class="modal-body">
         <div class="validacion"></div>
-        <label>¿Esta seguro de agendar su cita para el <strong><span class="js-dia-cita" ><?php echo $ano.'-'.$mes.'-'.$dia ?></span> a las <?= $hora; ?></strong>?</label>
+        <label>¿Esta seguro de agendar su cita para el <strong><span class="js-dia-cita" ><?php echo $ano.'/'.$mes.'/'.$dia ?></span> a las <?= $hora; ?> horas</strong>?</label>
         <label>Observaci&oacute;n</label>
         <textarea id="desccita" placeholder="Observaci&oacute;n de la cita"></textarea>
         <?php 
@@ -82,8 +82,10 @@
                         //$('#txtresult'+idobject).html(data.fecha);
                         //fecha
                         var fe=fecha.split(' ');
-                        var lab=moment(fe[0]).format("LL");
-                        $('#txtresult'+idobject).html(lab+" a las "+fe[1]);
+                        var f=fe[0].split('-');
+                        var fechares=moment(f[0]+"/"+f[1]+"/"+f[2]).format("LL");
+                        //var lab=moment(fe[0]).format("LL");
+                        $('#txtresult'+idobject).html(fechares+" a las "+fe[1]+" horas");
                         $('.modal').modal('toggle');
                     }else{
                         location.href='<?=site_url('/tramites/miagenda')?>';
