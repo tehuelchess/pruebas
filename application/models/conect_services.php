@@ -153,35 +153,22 @@ class Connect_services{
         }
     }
     private function validateAll(){
-        if(empty(trim($this->appkey))){
+        $trimAppkey = trim($this->appkey);
+        $trimDomain = trim($this->domain);
+        $trimComponente=trim($this->componente);
+        if(empty($trimAppkey)){
             throw new Exception('El Appkey no puede estar vacio');
         }
-        if(empty(trim($this->domain))){
+        if(empty($trimDomain)){
             throw new Exception('El Dominio no puede estar vacio');
         }
-        if(empty(trim($this->componente))){
+        if(empty($trimComponente)){
             throw new Exception('El componente no puede estar vacio');
         }
         if(!is_numeric($this->cuenta) || $this->cuenta==0){
             throw new Exception('La cuenta de simple no puede estar vacia y debe ser numerica');
         }
-        /*if(isset($this->base_services) && !empty(trim($this->base_services))){
-            if(preg_match("/^h(t){2}p(s)?:(\/){2}([a-zA-Z0-9])+([a-zA-Z0-9\._-])*(:([0-9])*)?(\/)?$/",$this->base_services)){
-            }else{
-                throw new Exception('La url tiene un formato incorrecto');
-            }
-        }else{
-            throw new Exception('La url del servicio no puede estar vacia');
-        }
-        if(isset($this->context) && !empty(trim($this->context))){
-            if(preg_match("/^(\/)?([a-zA-Z0-9])+([a-zA-Z0-9\._-])*(\/)?$/",$this->context)){
-            }else{
-                throw new Exception('El contexto un formato incorrecto');
-            }
-        }
-        if(!isset($this->num_rows) || !is_numeric($this->num_rows) || $this->num_rows<=0){
-            throw new Exception('El numero de registros por pagina debe ser mayor a 0');
-        }*/
+       
     }
     private function isCreate(){
         try{

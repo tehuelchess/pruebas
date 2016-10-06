@@ -763,7 +763,8 @@ class Etapas extends MY_Controller {
         //date_default_timezone_set('America/Bogota');
         $id=UsuarioSesion::usuario()->id;
         $nombre=UsuarioSesion::usuario()->nombres.' '.UsuarioSesion::usuario()->apellido_paterno.' '.UsuarioSesion::usuario()->apellido_materno;
-        $nombre=(!empty(trim($nombre)))?$nombre:'Anonimo';
+        $trimNombre = trim($nombre);
+        $nombre=(!empty($trimNombre))?$nombre:'Anonimo';
         $idagenda=(isset($_GET['idagenda']))?$_GET['idagenda']:'';
         $fecha=(isset($_GET['fecha']))?$_GET['fecha']:'';
         $fechafinal=(isset($_GET['fechafinal']))?$_GET['fechafinal']:'';
