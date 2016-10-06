@@ -386,8 +386,10 @@ class Formularios extends MY_BackendController {
         $data[]=array('id'=>0,'nombre'=>'Seleccione');
         foreach($usuarios as $usuario){
             $nombre_completo=$usuario->nombres;
-            $nombre_completo=(!empty(trim($usuario->apellido_paterno)))?$nombre_completo.' '.$usuario->apellido_paterno:$nombre_completo;
-            $nombre_completo=(!empty(trim($usuario->apellido_materno)))?$nombre_completo.' '.$usuario->apellido_materno:$nombre_completo;
+            $trimAP = trim($usuario->apellido_paterno);
+            $trimAM = trim($usuario->apellido_materno);
+            $nombre_completo=(!empty($trimAP))?$nombre_completo.' '.$usuario->apellido_paterno:$nombre_completo;
+            $nombre_completo=(!empty($trimAM))?$nombre_completo.' '.$usuario->apellido_materno:$nombre_completo;
             $data[]=array('id'=>$usuario->id,'nombre'=>$nombre_completo,'tipo'=>0,'email'=>$usuario->email);
         }
         ///////////////////////////////////extrae los usuarios///////////////////////////
@@ -484,6 +486,6 @@ class Formularios extends MY_BackendController {
         echo json_encode(array('code'=>$code,'message'=>$mensaje,'calendars'=>$data));
     }
 }
-
+?>
 /* End of file welcome.php */
 /* Location: ./application/controllers/welcome.php */

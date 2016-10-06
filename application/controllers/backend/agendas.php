@@ -190,7 +190,8 @@ class Agendas extends MY_BackendController {
     }
     public function ajax_eliminar_agenda(){
         $id=(isset($_GET['id']) && is_numeric($_GET['id']))?$_GET['id']:0;
-        $motivo=(isset($_GET['motivo']) && !empty(trim($_GET['motivo'])))?$_GET['motivo']:'';
+        $trimMotivo = trim($_GET['motivo']);
+        $motivo=(isset($_GET['motivo']) && !empty($trimMotivo))?$_GET['motivo']:'';
         $nombre=(isset($_GET['nombre']))?$_GET['nombre']:'';
         $pertenece=(isset($_GET['pertenece']))?$_GET['pertenece']:'';
         $code=0;
