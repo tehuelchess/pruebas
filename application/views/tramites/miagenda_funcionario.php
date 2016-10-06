@@ -60,8 +60,8 @@
 <script type="text/javascript" src="<?= base_url('assets/calendar/js/language/es-CO.js') ?>"></script>
 <script src="<?= base_url() ?>assets/js/bootstrap-datetimepicker.min.js"></script>
 <script src= "<?= base_url('/assets/calendar/js/moment-2.2.1.js') ?>"></script>
-<script type="text/javascript" src="<?= base_url('assets/calendar/js/calendar-custom.js?v=0.3') ?>"></script>
-<script type="text/javascript" src="<?= base_url('assets/js/calendarfront.js?v=0.17') ?>"></script>
+<script type="text/javascript" src="<?= base_url('assets/calendar/js/calendar-custom.js?v=0.4') ?>"></script>
+<script type="text/javascript" src="<?= base_url('assets/js/calendarfront.js?v=0.19') ?>"></script>
 <script src="<?= base_url() ?>assets/js/collapse.js"></script>
 <script src="<?= base_url() ?>assets/js/transition.js"></script>
 
@@ -124,7 +124,7 @@
 
                             $acsi=(isset($item->applyer_attended) && $item->applyer_attended==1)?'active':'';
                             $acno=(isset($item->applyer_attended) && $item->applyer_attended==0)?'active':'';
-                            $acciones='<a class="btn btn-primary" onclick="ver_cita('.$item->appointment_id.',\''.$solicitante.'\',\''.$fechaparam.'\',\''.$hora.'\',\''.$item->tramite.'\',\''.$item->applyer_email.'\')" href="#"><i class="icon-white icon-edit"></i> Ver</a> <a class="btn btn-danger" href="#" onclick="cancelarCita(\''.$item->appointment_id.'\',\''.$fechaparam.'\');"><i class="icon-white icon-remove"></i> Cancelar</a>';
+                            $acciones='<a class="btn btn-primary" onclick="ver_cita('.$item->appointment_id.',\''.$solicitante.'\',\''.$fechaparam.'\',\''.$hora.'\',\''.$item->tramite.'\',\''.$item->applyer_email.'\')" href="#"><i class="icon-white icon-edit"></i> Ver</a> <a class="btn btn-danger btncanappofun" href="#" onclick="cancelarCita(\''.$item->appointment_id.'\',\''.$fechaparam.'\');"><i class="icon-white icon-remove"></i> Cancelar</a>';
                             $asistencia='<a class="btn '.$acsi.' js-sia" data-idcita="'.$item->appointment_id.'" onclick="asistio(1,'.$item->appointment_id.','.$item->idtramite.','.$item->calendar_id.');" href="#">Si</a> <a class="btn '.$acno.' js-noa" data-idcita="'.$item->appointment_id.'" href="#" onclick="asistio(0,'.$item->appointment_id.','.$item->idtramite.','.$item->calendar_id.');" >No</a>';
                             echo '<tr><td>'.$item->tramite.'</td><td>'.$solicitante.'</td><td>'.$hora.'</td><td>'.$asistencia.'</td><td>'.$acciones.'</td></tr>';
                           }
@@ -156,15 +156,15 @@
            </div>
        
       </div>
-      <div id="tabs-2">
+      <div id="tabs-2" class="con-tab-cal">
         <div class="containter-calendar">
            <input type="hidden" id="urlbase" value="<?= base_url() ?>" />
            <div class="page-header">
               <div class="pull-right form-inline">
                  <div class="btn-group">
-                    <button type="button" class="btn" data-calendar-nav="prev"><< Anterior</button>
+                    <button type="button" class="btn" data-calendar-nav="prev"><<</button>
                     <button type="button" class="btn btn-primary" data-calendar-nav="today">Hoy</button>
-                    <button type="button" class="btn" data-calendar-nav="next">Siguiente >></button>
+                    <button type="button" class="btn" data-calendar-nav="next">>></button>
                  </div>
                  <div class="btn-group">
                     <button type="button" class="btn" data-calendar-view="year">A&ntilde;o</button>

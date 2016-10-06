@@ -330,6 +330,7 @@ class Agendas extends MY_BackendController {
             $lunes=$martes=$miercoles=$jueves=$viernes=$sabado=$domingo=array();
             $franja=array();
             $swvalhoracero=true;
+            $swhorval=true;
             try{
                 $i=0;
                 $cuenta=0;
@@ -389,6 +390,7 @@ class Agendas extends MY_BackendController {
                     $franja['domingo']=$domingo;
                 }
             }catch(Exception $err){
+                $swhorval=false;
                 $mensaje=$err->getMessage();
             }
             $serialfranja='{';
@@ -455,7 +457,7 @@ class Agendas extends MY_BackendController {
                                         $mensaje='No puede ingresar una agenda con el mismo nombre';
                                     break;
                                     case "1020":
-                                        $mensaje='No pueden grabar rangos de horas mayor a 8 horas';
+                                        $mensaje=''.$response->body->response->message;
                                     break;
                                     default:
                                         $mensaje='Error General';
@@ -473,11 +475,17 @@ class Agendas extends MY_BackendController {
                     }
                 }else{
                     $code=3;
-                    $mensaje='No se puede grabar agenda con una hora inicial y hora final iguales';
+                    //$mensaje='No se puede grabar agenda con una hora inicial y hora final iguales';
+                    $mensaje='Rango de horas inv&aacute;lido';
                 }
             }else{
                 $code=4;
-                $mensaje='Debe agregar al menos una franja horaria';
+                if($swhorval){
+                    $mensaje='Debe Agregar almenos una franja horaria';
+                }else{
+                    $mensaje='Rango de horas inv&aacute;lido';
+                }
+                //$mensaje='Debe agregar al menos una franja horaria';
             }
             
         }
@@ -494,15 +502,18 @@ class Agendas extends MY_BackendController {
                 $hora1=strtotime($rangi);
                 $hora2=strtotime($rangof);
                 if(($hora1>=$hini &&  $hora1<$hinf) || ($hora2>$hini &&  $hora2<=$hinf)){
-                    throw new Exception('El dia '.$nomdia.' con horas entre '.$rangi.'-'.$rangof.' esta generando inconsistencia con otro rango favor verifiquelo para continuar');
+                    //throw new Exception('El dia '.$nomdia.' con horas entre '.$rangi.'-'.$rangof.' esta generando inconsistencia con otro rango favor verifiquelo para continuar');
+                    throw new Exception('Rango de horas inv&aacute;lido');
                 }else{
                     if(($hini>=$hora1 && $hini<$hora2) || ($hinf>$hora1 && $hinf<=$hora2)){
-                        throw new Exception('El dia '.$nomdia.' con horas entre '.$rangi.'-'.$rangof.' esta generando inconsistencia con otro rango favor verifiquelo para continuar');
+                        //throw new Exception('El dia '.$nomdia.' con horas entre '.$rangi.'-'.$rangof.' esta generando inconsistencia con otro rango favor verifiquelo para continuar');
+                        throw new Exception('Rango de horas inv&aacute;lido');
                     }
                 }
                 $i++;
             }
             $array[]=$rangi.'-'.$rangof;
+
             return $array;
         }catch(Exception $err){
             throw new Exception($err->getMessage());
@@ -536,6 +547,7 @@ class Agendas extends MY_BackendController {
             $lunes=$martes=$miercoles=$jueves=$viernes=$sabado=$domingo=array();
             $franja=array();
             $swvalhoracero=true;
+            $swhorval=true;
             try{
                 $i=0;
                 $cuenta=0;
@@ -547,7 +559,9 @@ class Agendas extends MY_BackendController {
                         foreach($arr as $item){
                             switch($item){
                                 case "lunes":
+                                    //echo 'cuenta: '.$_GET['horafin'][$cuenta];
                                     $lunes=$this->add_rangos_franjas($_GET['horainicio'][$cuenta],$_GET['horafin'][$cuenta],'lunes',$lunes);
+                                    //print_r($lunes);
                                 break;
                                 case "martes":
                                     $martes=$this->add_rangos_franjas($_GET['horainicio'][$cuenta],$_GET['horafin'][$cuenta],'martes',$martes);
@@ -595,6 +609,7 @@ class Agendas extends MY_BackendController {
                     $franja['domingo']=$domingo;
                 }
             }catch(Exception $err){
+                $swhorval=false;
                 $mensaje=$err->getMessage();
             }
             $serialfranja='{';
@@ -670,12 +685,16 @@ class Agendas extends MY_BackendController {
                     }
                 }else{
                     $code=3;
-                    $mensaje='No se puede grabar agenda con una hora inicial y hora final iguales';
+                    //$mensaje='No se puede grabar agenda con una hora inicial y hora final iguales';
+                    $mensaje='Rango de horas inv&aacute;lido';
                 }
-                
             }else{
                 $code=4;
-                $mensaje='Debe Agregar almenos una franja horaria';
+                if($swhorval){
+                    $mensaje='Debe Agregar almenos una franja horaria';
+                }else{
+                    $mensaje='Rango de horas inv&aacute;lido';   
+                }
             }
         }
         $array=array('code'=>$code,'message'=>$mensaje);

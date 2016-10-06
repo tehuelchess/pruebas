@@ -160,13 +160,24 @@ if(isset($editar) && $editar){
             templateSelection: selection,
             templateResult: format
         });
-        $('.js_btn_add_franja').click(function(){
+        cargarDatosEditar();
+        eventoadd();
+        //$('.js_btn_add_franja').click(function(){
+            //eventoadd();
+            /*$('.js_btn_add_franja').on( "click", function(e) {
+                eventoadd();
+            });*/
+        //});
+    });
+    function eventoadd(){
+        $('.js_btn_add_franja').off();
+        $('.js_btn_add_franja').on( "click", function(e) {
             idrow++;
             $('.zfranja').find('table').append(crearRow(idrow));
             iniciarSelectDias('cmbdias'+idrow);
+            eventoadd();
         });
-        cargarDatosEditar();
-    });
+    };
     function format(icon) {
         var originalOption = icon.element;
         return '<i class="fa defaulticonglyp '+$(originalOption).data('icon')+'" style="top: 1px;"></i>&nbsp;&nbsp;' + icon.text;
@@ -300,6 +311,7 @@ if(isset($editar) && $editar){
                         $('#tiempoconfirmacion').timepicker('setTime',tiempoconfirmacion);
                         $('#tiempoconfirmacion').val(tiempoconfirmacion);
                         $('#tconfirmacion').val(getTimeSelect(data.calendar.time_confirm_appointment));
+                        eventoadd();
                     }else{
                         $('.valcal').append('<div class="alert alert-error"><a class="close" data-dismiss="alert">×</a>'+data.mensaje+'</div>');              
                     }

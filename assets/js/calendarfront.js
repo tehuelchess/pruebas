@@ -12,7 +12,7 @@ $(function(){
         tmpl_path: $('#urlbase').val()+'/assets/calendar/tmpls_funcionario/',
         tmpl_cache: false,
         language:'es-CO',
-        width:562,
+        width:436,
         classes: {
             months: {
                 inmonth: 'cal-day-inmonth',
@@ -131,7 +131,6 @@ function reload_dia(){
 function cargarDiasFeriados(calendar){
     var url=$('#urlbase').val()+'tramites/diasFeriados';
     var arrdata=new Array();
-    //var arrdata='';
     $.ajax({
         url: url,
         dataType: "json",
