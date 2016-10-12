@@ -548,10 +548,10 @@ class Tramites extends MY_Controller {
         if(!isset(UsuarioSesion::usuario()->cuenta_id) || !is_numeric(UsuarioSesion::usuario()->cuenta_id)){
             $idtramite=(isset($_GET['tram']))?intval($_GET['tram']):0;
             try{
-                 $result = Doctrine_Query::create ()
-                ->select('cuenta_id')
-                ->from ('proceso,tramite')
-                ->where ("proceso.id=tramite.proceso_id AND tramite.id=?",array($idtramite))
+                $result = Doctrine_Query::create ()
+                ->select('p.cuenta_id')
+                ->from ('Proceso p,Tramite t,Etapa e')
+                ->where ("t.proceso_id=p.id AND e.tramite_id=tramite.id AND e.id=?",$idtramite)
                 ->execute ();
                 $cuenta=(isset($result[0]->cuenta_id) && is_numeric($result[0]->cuenta_id))?$result[0]->cuenta_id:1;
 

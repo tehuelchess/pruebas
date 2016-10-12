@@ -810,6 +810,7 @@ footer .area2 .container-fluid .footerGob {
 }
 [class*="cal-cell"]:hover , [class*="cal-cell"]:hover > div {
   background-color: #fcf8e3 !important;
+  cursor: pointer;
 }
 #cal-week-box{
   display:none !important;
@@ -858,6 +859,11 @@ footer .area2 .container-fluid .footerGob {
   }
   .modal-body{
     overflow-y: hidden;
+  }
+}
+@media (max-width: 670px) {
+  .descbloq{
+    width: 450px !important;
   }
 }
 @media (max-width: 563px) {
@@ -930,6 +936,9 @@ footer .area2 .container-fluid .footerGob {
     width: 40px !important;
     padding: 0px;
   }
+  .descbloq{
+    width: 256px !important;
+  }
 }
 @media (max-width: 504px) {
   .modcalejec{
@@ -966,6 +975,17 @@ footer .area2 .container-fluid .footerGob {
 @media (max-width: 349px) {
   .modcalejec{
     width: 325px;
+  }
+  .containter-tabs-citas{
+    margin-left: -18px;
+    border: 0px !important;
+    width: 312px !important;
+  }
+  .containter-tabs-citas .ui-tabs-panel{
+    padding-left: 0px !important;
+  }
+  .cal-front-fun .cal-month-box .cal-row-fluid .cal-cell1 .cal-hoy{
+    width: 39px !important;
   }
 }
 @media (max-width: 325px) {
