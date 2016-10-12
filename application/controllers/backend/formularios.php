@@ -198,7 +198,7 @@ class Formularios extends MY_BackendController {
                 ->expectsJson()
                 ->addHeaders(array(
                     'appkey' => $this->appkey,             // heder de la app key
-                    'domain' => $this->domain,                              // heder de domain
+                    'domain' => $this->domain                              // heder de domain
                 ))
                 ->sendIt();
             $code=$response->code;
@@ -419,7 +419,7 @@ class Formularios extends MY_BackendController {
                     ->expectsJson()
                     ->addHeaders(array(
                         'appkey' => $this->appkey,              // heder de la app key
-                        'domain' => $this->domain,              // heder de domain
+                        'domain' => $this->domain              // heder de domain
                     ))
                     ->sendIt();
                 $code=$response->code;
@@ -456,7 +456,7 @@ class Formularios extends MY_BackendController {
                         ->expectsJson()
                         ->addHeaders(array(
                             'appkey' => $this->appkey,              // heder de la app key
-                            'domain' => $this->domain,              // heder de domain
+                            'domain' => $this->domain              // heder de domain
                         ))
                         ->sendIt();
                     $code=$response->code;

@@ -229,7 +229,7 @@ class Etapas extends MY_Controller {
                 ->expectsJson()
                 ->addHeaders(array(
                     'appkey' => $this->appkey,             // heder de la app key
-                    'domain' => $this->domain,                              // heder de domain
+                    'domain' => $this->domain                              // heder de domain
                 ))
                 ->sendIt();
             $code=$response->code;
@@ -683,7 +683,7 @@ class Etapas extends MY_Controller {
                 ->expectsJson()
                 ->addHeaders(array(
                     'appkey' => $this->appkey,             // heder de la app key
-                    'domain' => $this->domain,                              // heder de domain
+                    'domain' => $this->domain                              // heder de domain
                 ))
                 ->sendIt();
             $code=$response->code;
@@ -822,7 +822,7 @@ class Etapas extends MY_Controller {
                     ->body($json)
                     ->addHeaders(array(
                         'appkey' => $this->appkey,             // heder de la app key
-                        'domain' => $this->domain,                              // heder de domain
+                        'domain' => $this->domain                              // heder de domain
                     ))
                     ->sendIt();
                 $code=$response->code;
@@ -861,7 +861,7 @@ class Etapas extends MY_Controller {
                     ->body($json)
                     ->addHeaders(array(
                         'appkey' => $this->appkey,             // heder de la app key
-                        'domain' => $this->domain,                              // heder de domain
+                        'domain' => $this->domain                              // heder de domain
                     ))
                     ->sendIt();
                 $code=$response->code;

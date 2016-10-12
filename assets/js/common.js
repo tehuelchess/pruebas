@@ -23,10 +23,15 @@ $(document).ready(function(){
             action: $(el).data("action"),
             onComplete: function(id,filename,respuesta){
                 if(!respuesta.error){
-                    $parentDiv.find(":input[type=hidden]").val(respuesta.file_name);
-                    $parentDiv.find(".qq-upload-list").empty();
-                    $parentDiv.find(".link").html("<a target='blank' href='"+site_url+"uploader/datos_get/"+respuesta.file_name+"?id="+respuesta.id+"&token="+respuesta.llave+"'>"+respuesta.file_name+"</a> (<a href='#' class='remove'>X</a>)")
-                    prepareDynaForm(".dynaForm");
+                    if(typeof(respuesta.file_name) !== "undefined"){
+                        $parentDiv.find(":input[type=hidden]").val(respuesta.file_name);
+                        $parentDiv.find(".qq-upload-list").empty();
+                        $parentDiv.find(".link").html("<a target='blank' href='"+site_url+"uploader/datos_get/"+respuesta.file_name+"?id="+respuesta.id+"&token="+respuesta.llave+"'>"+respuesta.file_name+"</a> (<a href='#' class='remove'>X</a>)")
+                        prepareDynaForm(".dynaForm");
+                    }else{
+                        $parentDiv.find(".link").html("");
+                        alert("La imagen es muy grande");
+                    }
                 }
             }
         }); 
