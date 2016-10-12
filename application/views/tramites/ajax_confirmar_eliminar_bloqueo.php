@@ -4,7 +4,7 @@
 </div>
     <div class="modal-body">
         <div class="validacion"></div>
-        <label>¿Está seguro de desbloquar este intervalo?.</label>
+        <label>¿Está seguro de desbloquar este intervalo?</label>
     </div>
 <div class="modal-footer">
     <button class="btn js_cerrar_vcancelar" data-dismiss="modal">Cerrar</button>
@@ -24,7 +24,6 @@
                 dataType: "json",
                 success: function( data ) {
                     if(data.code==200){
-                        //location.href='<?=site_url('/tramites/miagenda')?>';
                         reload_dia();
                         $('#modalcancelar').modal('toggle');
                     }else{

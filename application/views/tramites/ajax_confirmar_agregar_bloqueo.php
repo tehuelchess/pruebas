@@ -12,7 +12,7 @@
     <div class="modal-body">
         <div class="validacion"></div>
         <label id="labdesc">¿Est&aacute; seguro de bloquear el intervalo del <strong>(<?= date('d/m/Y H:i',$start/1000) ?>) - (<?= date('d/m/Y H:i',$end/1000) ?>)</strong>?.</label>
-        <textarea id="txtrazon" style="width:715px; resize: none;" placeholder="Escriba la Razon"></textarea>
+        <textarea id="txtrazon" class="descbloq" style="width:715px; resize: none;" placeholder="Escriba la Razon"></textarea>
     </div>
 <div class="modal-footer">
     <button class="btn js_cerrar_vcancelar" data-dismiss="modal">Cerrar</button>
