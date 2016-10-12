@@ -115,7 +115,7 @@ class AgendasUsuario extends MY_BackendController {
                 ->body($json)
                 ->addHeaders(array(
                     'appkey' => $this->appkey,              // heder de la app key
-                    'domain' => $this->domain,              // heder de domain
+                    'domain' => $this->domain              // heder de domain
                 ))
                 ->sendIt();
             $code=$response->code;

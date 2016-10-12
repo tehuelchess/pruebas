@@ -4,7 +4,6 @@ if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
 class DiaFeriado extends CI_Controller {
-    private $domain='';
     private $appkey='';
     private $base_services='';
     private $context='';
@@ -17,15 +16,7 @@ class DiaFeriado extends CI_Controller {
         $this->base_services=$this->config->item('base_service');
         $this->context=$this->config->item('context_service');
         $this->records=$this->config->item('records');
-        try{
-            $service=new Connect_services();
-            $service->setCuenta(1);
-            $service->load_data();
-            $this->domain=$service->getDomain();
-            $this->appkey=$service->getAppkey();
-        }catch(Exception $err){
-            echo 'Error: '.$err->getMessage();
-        }
+        $this->appkey=$this->config->item('appkey');
     }
 
     public function index() {
@@ -55,8 +46,7 @@ class DiaFeriado extends CI_Controller {
             $response = \Httpful\Request::get($uri)
                 ->expectsJson()
                 ->addHeaders(array(
-                    'appkey' => $this->appkey,             // heder de la app key
-                    'domain' => $this->domain,                              // heder de domain
+                    'appkey' => $this->appkey                              // heder de appkey
                 ))
                 ->sendIt();
             $code=$response->code;
@@ -90,15 +80,12 @@ class DiaFeriado extends CI_Controller {
                 "name": "'.$name.'"
                 }';
             try{
-                //echo 'appkey: '.$this->appkey.'  Domain: '.$this->domain;
-                //echo $json;
                 $uri=$this->base_services.''.$this->context.'daysOff';//url del servicio con los parametros
                 $response = \Httpful\Request::post($uri)
                     ->expectsJson()
                     ->body($json)
                     ->addHeaders(array(
-                        'appkey' => $this->appkey,             // heder de la app key
-                        'domain' => $this->domain,                              // heder de domain
+                        'appkey' => $this->appkey                             // heder de appkey
                     ))
                     ->sendIt();
                 $code=$response->code;
@@ -144,8 +131,7 @@ class DiaFeriado extends CI_Controller {
                 $response = \Httpful\Request::delete($uri)
                     ->expectsJson()
                     ->addHeaders(array(
-                        'appkey' => $this->appkey,             // heder de la app key
-                        'domain' => $this->domain,                              // heder de domain
+                        'appkey' => $this->appkey                             // heder de appkey
                     ))
                     ->sendIt();
                 $code=$response->code;

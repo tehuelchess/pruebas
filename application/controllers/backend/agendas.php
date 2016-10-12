@@ -47,7 +47,7 @@ class Agendas extends MY_BackendController {
                 ->expectsJson()
                 ->addHeaders(array(
                     'appkey' => $this->appkey,              // heder de la app key
-                    'domain' => $this->domain,              // heder de domain
+                    'domain' => $this->domain              // heder de domain
                 ))
                 ->sendIt();
             if(isset($response->body) && is_array($response->body) && isset($response->body[0]->response->code) && $response->body[0]->response->code==200){
@@ -126,7 +126,7 @@ class Agendas extends MY_BackendController {
                     ->expectsJson()
                     ->addHeaders(array(
                         'appkey' => $this->appkey,              // heder de la app key
-                        'domain' => $this->domain,              // heder de domain
+                        'domain' => $this->domain              // heder de domain
                     ))
                     ->sendIt();
                 if(isset($response->body) && is_array($response->body) && isset($response->body[0]->response->code) && $response->body[0]->response->code==200){
@@ -204,7 +204,7 @@ class Agendas extends MY_BackendController {
                         ->expectsJson()
                         ->addHeaders(array(
                             'appkey' => $this->appkey,              // heder de la app key
-                            'domain' => $this->domain,              // heder de domain
+                            'domain' => $this->domain              // heder de domain
                         ))
                         ->sendIt();
                     $code=$response->code;
@@ -263,7 +263,7 @@ class Agendas extends MY_BackendController {
                     ->expectsJson()
                     ->addHeaders(array(
                         'appkey' => $this->appkey,              // heder de la app key
-                        'domain' => $this->domain,              // heder de domain
+                        'domain' => $this->domain              // heder de domain
                     ))
                     ->sendIt();
                 $code=$response->code;
@@ -444,7 +444,7 @@ class Agendas extends MY_BackendController {
                                 ->expectsJson()
                                 ->addHeaders(array(
                                     'appkey' => $this->appkey,              // heder de la app key
-                                    'domain' => $this->domain,              // heder de domain
+                                    'domain' => $this->domain              // heder de domain
                                 ))
                                 ->sendIt();
                             $code=$response->code;
@@ -663,7 +663,7 @@ class Agendas extends MY_BackendController {
                                 ->expectsJson()
                                 ->addHeaders(array(
                                     'appkey' => $this->appkey,              // heder de la app key
-                                    'domain' => $this->domain,              // heder de domain
+                                    'domain' => $this->domain              // heder de domain
                                 ))
                                 ->sendIt();
                             $code=$response->code;
@@ -721,7 +721,7 @@ class Agendas extends MY_BackendController {
                 ->expectsJson()
                 ->addHeaders(array(
                     'appkey' => $this->appkey,             // heder de la app key
-                    'domain' => $this->domain,                              // heder de domain
+                    'domain' => $this->domain                              // heder de domain
                 ))
                 ->sendIt();
             $code=$response->code;
@@ -757,7 +757,7 @@ class Agendas extends MY_BackendController {
                     ->body($json)
                     ->addHeaders(array(
                         'appkey' => $this->appkey,             // heder de la app key
-                        'domain' => $this->domain,                              // heder de domain
+                        'domain' => $this->domain                              // heder de domain
                     ))
                     ->sendIt();
                 $code=$response->code;
@@ -798,7 +798,7 @@ class Agendas extends MY_BackendController {
                     ->expectsJson()
                     ->addHeaders(array(
                         'appkey' => $this->appkey,             // heder de la app key
-                        'domain' => $this->domain,                              // heder de domain
+                        'domain' => $this->domain                              // heder de domain
                     ))
                     ->sendIt();
                 $code=$response->code;
