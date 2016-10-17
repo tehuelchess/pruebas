@@ -20,7 +20,8 @@
         $.each($('.js-data-cita'),function(){
             if($(this).is('[readonly]')){
                 var id=$(this).attr('id');
-                var d=new Date($(this).val());
+                var arrdat=$(this).val().split('_');
+                var d=new Date(arrdat[1]);
                 var h='';
                 if(d.getHours()<=9){
                     h='0'+d.getHours();
@@ -36,7 +37,6 @@
                 var fecha=d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear()+' '+h+':'+m;
                 
                 var lab=moment(d.getFullYear()+'/'+(d.getMonth()+1)+'/'+d.getDate()).format("LL");
-                //$('#txtresult'+id).html(fecha);
                 $('#txtresult'+id).html(lab+' a las '+h+':'+m+" horas");
             }
         });

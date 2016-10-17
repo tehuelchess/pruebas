@@ -60,7 +60,7 @@
 <script type="text/javascript" src="<?= base_url('assets/calendar/js/language/es-CO.js') ?>"></script>
 <script src="<?= base_url() ?>assets/js/bootstrap-datetimepicker.min.js"></script>
 <script src= "<?= base_url('/assets/calendar/js/moment-2.2.1.js') ?>"></script>
-<script type="text/javascript" src="<?= base_url('assets/calendar/js/calendar-custom.js?v=0.4') ?>"></script>
+<script type="text/javascript" src="<?= base_url('assets/calendar/js/calendar-custom.js?v=0.5') ?>"></script>
 <script type="text/javascript" src="<?= base_url('assets/js/calendarfront.js?v=0.19') ?>"></script>
 <script src="<?= base_url() ?>assets/js/collapse.js"></script>
 <script src="<?= base_url() ?>assets/js/transition.js"></script>

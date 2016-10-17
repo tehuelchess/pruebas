@@ -1,15 +1,16 @@
 <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal">×</button>
-    <h3 id="myModalLabel">Cancelaci&oacute;n de Cita</h3>
+    <h3 id="myModalLabel">Cancelar cita</h3>
 </div>
 <div class="modal-body">
     <div class="validacion"></div>
-    <label>Esta seguro de querer cancelar la cita</label>
     <?php
     if(isset($funcionario) && $funcionario){
-        echo '
+        echo '<label>Se cancelar&aacute; la cita seleccionada. Ingrese el motivo por el cual solicita esta operaci&oacute;n:</label>
         <label>Motivo</label>
         <textarea id="motivo" class="motcancelcitafun" style="width: 500px; resize: none;"></textarea>';
+    }else{
+        echo '<label>Se cancelar&aacute; la cita seleccionada.</label>';
     }
     ?>
 </div>
@@ -47,6 +48,5 @@
         }else{
             $('.validacion').html('<div class="alert alert-error"><a class="close" data-dismiss="alert">×</a>Debe registrar un motivo .</div>');
         }
-        
     }
 </script>

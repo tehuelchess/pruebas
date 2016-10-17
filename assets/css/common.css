@@ -390,16 +390,20 @@ footer .area2 .container-fluid .footerGob {
   height: 42px !important; 
 }
 .calendar-ciud .calendar .cal-month-box .cal-row-fluid .cal-cell1 .cal-day-weekend{
-  background-color: lightgrey;
+  /*background-color: lightgrey;*/
   width: 100% !important;
 }
 .cal-front-fun .cal-month-box .cal-row-fluid .cal-cell1 .cal-day-weekend{
-  background-color: lightgrey;
+  /*background-color: lightgrey;*/
   width: 100% !important;
 }
 .container-feriados .calendar .cal-month-box .cal-row-fluid .cal-cell1 .cal-day-weekend{
-  background-color: lightgrey;
+  /*background-color: lightgrey;*/
   width: 100% !important;
+}
+.cal-month-day .pull-right{
+  color: red;
+  font-weight: 800 !important;
 }
 .dia-festivo{
   font-size: 13px;
@@ -408,8 +412,18 @@ footer .area2 .container-fluid .footerGob {
   vertical-align: middle;
   cursor: pointer;
   border: 1px solid transparent;
-  background-color: #f2dede !important;
-  border-color: #ebccd1;
+  /*background-color: #f2dede !important;
+  border-color: #ebccd1;*/
+}
+.dia-festivo > span{
+  color: gray !important;
+  font-weight: 800 !important;
+}
+.styhaycita{
+  color: green !important;
+}
+.event{
+  display: none !important;
 }
 .calendar-ciud .calendar .cal-month-box .cal-row-fluid .cal-cell1 .dia-festivo,.calendar-ciud .calendar .cal-month-box .cal-row-fluid .cal-cell1 .cal-hoy{
   height: 41px !important;
@@ -435,7 +449,7 @@ footer .area2 .container-fluid .footerGob {
   height: 102px !important;
 }
 .cal-hoy .pull-right{
-  color:#ffffff !important;
+  /*color:#ffffff !important;*/
 }
 .calendar .cal-month-box .cal-cell .cal-month-day .pull-right{
   margin-top: 5px;
@@ -447,7 +461,7 @@ footer .area2 .container-fluid .footerGob {
   vertical-align: middle;
   cursor: pointer;
   
-  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.75);
+  /*text-shadow: 0 1px 1px rgba(255, 255, 255, 0.75);
   background-color: #f5f5f5;
   background-image: -moz-linear-gradient(top, #ffffff, #e6e6e6);
   background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ffffff), to(#e6e6e6));
@@ -477,7 +491,7 @@ footer .area2 .container-fluid .footerGob {
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff005181', endColorstr='#ff002681', GradientType=0);
   border-color: #002681 #002681 #000f35;
   border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
-  *background-color: #002681;
+  *background-color: #002681;*/
   height: 61px !important;
   width: 99%;
   /* Darken IE7 buttons by default so they stand out more given they won't have borders */
@@ -642,14 +656,19 @@ footer .area2 .container-fluid .footerGob {
   width: 81px;
 }
 .eventradocup{
-  background-color: red !important;
+  color: #a94442 !important;
+  background-color: #EB5A46 !important;
+  border-color: #ebccd1 !important;
 }
 .evdisp{
   -webkit-box-shadow: inset 0px 0px 5px 0px rgba(0, 0, 0, 0.4);
   box-shadow: inset 0px 0px 5px 0px rgba(0, 0, 0, 0.4);
   border-radius: 8px;
-  border: 1px solid #ffffff;
-  background-color: #02A702; 
+  /*border: 1px solid #ffffff;
+  background-color: #02A702; */
+  color: #3c763d;
+  background-color: #dff0d8;
+  border-color: #d6e9c6;
   cursor: pointer;
 }
 .evreserv{
@@ -664,8 +683,11 @@ footer .area2 .container-fluid .footerGob {
   -webkit-box-shadow: inset 0px 0px 5px 0px rgba(0, 0, 0, 0.4);
   box-shadow: inset 0px 0px 5px 0px rgba(0, 0, 0, 0.4);
   border-radius: 8px;
-  border: 1px solid #ffffff;
-  background-color: red;
+  /*border: 1px solid #ffffff;
+  background-color: red;*/
+  color: #a94442;
+  background-color: #f2dede;
+  border-color: #ebccd1;
 }
 .labresreserv{
   margin-top: 7px;
@@ -721,7 +743,9 @@ footer .area2 .container-fluid .footerGob {
   background-color: yellow !important;
 }
 .event-warning{
-  background-color: #02A702 !important; 
+  color: #3c763d !important;
+  background-color: #61BD4F !important;
+  border-color: #d6e9c6 !important;
 }
 .circ-blank{
   display: block;
@@ -772,7 +796,7 @@ footer .area2 .container-fluid .footerGob {
   height: 41px !important;
 }
 .cal-day-weekend span[data-cal-date] {
-  color: #333333 !important;
+  /*color: #333333 !important;*/
 }
 .customtooltips{
   display:block;
@@ -817,6 +841,9 @@ footer .area2 .container-fluid .footerGob {
 }
 .cal-events-num{
   display: none;
+}
+.txtmotivocanfun{
+  resize: none;
 }
 @media (max-width: 1199px) {
   .cal-cell1{
@@ -869,6 +896,9 @@ footer .area2 .container-fluid .footerGob {
 @media (max-width: 563px) {
   .modcalejec{
     width: 532px;
+  }
+  .motcancelcitafun{
+    width: 483px !important;
   }
 }
 @media (max-width: 550px) {
@@ -991,5 +1021,11 @@ footer .area2 .container-fluid .footerGob {
 @media (max-width: 325px) {
   .modcalejec{
     width: 300px;
+  }
+  .motcancelcitafun{
+    width: 244px !important;
+  }
+  .txtmotivocanfun{
+    width: 123px; 
   }
 }

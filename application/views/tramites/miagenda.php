@@ -80,7 +80,7 @@
                         $fe=explode('/',$tmp[0]);
                         $dcita=transformarFecha($fe);
                         $fechaparam=$fe[0].'-'.$fe[1].'-'.$fe[2];
-                        $acciones='<a class="btn btn-primary" onclick="editar('.$item->appointment_id.','.$item->calendar_id.');" href="#"><i class="icon-white icon-edit"></i> Editar</a> <a class="btn btn-danger" href="#" onclick="cancelarCita(\''.$item->appointment_id.'\',\''.$fechaparam.'\');"><i class="icon-white icon-remove"></i> Cancelar</a>';
+                        $acciones='<a class="btn btn-primary" onclick="editar('.$item->appointment_id.','.$item->calendar_id.','.$item->idtramite.','.$item->etapa.');" href="#"><i class="icon-white icon-edit"></i> Editar</a> <a class="btn btn-danger" href="#" onclick="cancelarCita(\''.$item->appointment_id.'\',\''.$fechaparam.'\');"><i class="icon-white icon-remove"></i> Cancelar</a>';
                         echo '<tr> <td>'.$item->tramite.'</td><td>'.$item->owner_name.'</td><td>'.$dcita.' a las '.$tmp2[1].'</td><td>'.$acciones.'</td></tr>';
                     }
                 }else{
@@ -112,8 +112,8 @@
         $("#modalcancelar").load(site_url + "backend/agendasusuario/ajax_cancelar_cita?id="+id+"&fecha="+fecha);
         $("#modalcancelar").modal();
     }
-    function editar(idcita,idcalendar){
-        calendarioFront(idcalendar,0,idcita);
+    function editar(idcita,idcalendar,tramite,etapa){
+        calendarioFront(idcalendar,0,idcita,parseInt(tramite),etapa);
     }
 </script>
 <div id="modalcancelar" class="modal hide fade"></div>

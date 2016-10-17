@@ -138,6 +138,7 @@
                 $('span[data-toggle="tooltip"]').mouseout(function(){
                     $("#mtooltipcustom").remove();
                 });
+                $('.event-warning').parent().parent().find('span').addClass('styhaycita');
             }
         };
         calendar = $('#calendar').calendar(options);
@@ -291,7 +292,8 @@
             var tmp2=$(this).attr('data-event-fin').split(' ');
             var tmpf2=tmp2[0].split('/');
             var fecha2=tmpf2[2]+'-'+tmpf2[1]+'-'+tmpf2[0];
-            var idtramite=<?= $idtramite ?>;
+            var idtramite=<?= $etapa ?>;
+            //var etapa=<?= $etapa ?>;
             $("#modalconfirmar").load(site_url + "etapas/ajax_confirmar_agregar_dia?idagenda=<?= $idagenda ?>&fecha="+fecha+"&hora="+tmp[1]+"&obj="+object+"&fechaf="+fecha2+"&horaf="+tmp2[1]+"&idcita=<?= $idcita ?>&idtramite="+idtramite);
             $("#modalconfirmar").modal();
         });

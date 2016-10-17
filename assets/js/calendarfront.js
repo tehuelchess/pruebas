@@ -66,6 +66,8 @@ $(function(){
                     //$('.ajaxLoader').remove();
                 }
             });
+            $('.event-warning').parent().parent().find('span').addClass('styhaycita');
+            $('.event-warning').parent().parent().addClass('sweventhaycita');
         }
     };
 
@@ -331,6 +333,7 @@ function confirmar_cancelar_cita(idcita){
                     eventDaysCalendar();
                     $(ajaxLoader).remove();
                 }else{
+                    $(ajaxLoader).remove();
                     $('.valcancelcita').html('<div class="alert alert-error"><a class="close" data-dismiss="alert">×</a>'+data.message+'.</div>');
                 }
             }

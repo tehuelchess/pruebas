@@ -218,15 +218,21 @@ function buscarAgenda(){
         $('.validacion').html('<div class="alert alert-error"><a class="close" data-dismiss="alert">×</a>Debe ingresar un nombre de agenda o pertence. si quiere listar todas digite \'%\'</div>');              
     }
 }
-function calendarioFront(idagenda,idobject,idcita){
+function calendarioFront(idagenda,idobject,idcita,tramite,etapa){
     var site_url=$('#urlbase').val();
     if(idcita==0){
         if (typeof $('#codcita'+idobject) !== "undefined") {
             idcita=$('#codcita'+idobject).val();
         }
     }
-    $('#codcita'+idobject).attr('data-id-etapa');
     var idtramite=$('#codcita'+idobject).attr('data-id-etapa');
-    $("#modalcalendar").load(site_url + "etapas/ajax_modal_calendar?idagenda="+idagenda+"&object="+idobject+"&idcita="+idcita+"&idtramite="+idtramite);
+    if(typeof(idtramite)==="undefined" || idtramite==0){
+        idtramite=tramite;
+    }
+    if(typeof(etapa)==="undefined" || etapa==0){
+        etapa=idtramite;
+    }
+    $('#codcita'+idobject).attr('data-id-etapa');    
+    $("#modalcalendar").load(site_url + "etapas/ajax_modal_calendar?idagenda="+idagenda+"&object="+idobject+"&idcita="+idcita+"&idtramite="+idtramite+"&etapa="+etapa);
     $("#modalcalendar").modal();
 }

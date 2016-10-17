@@ -10,7 +10,6 @@
 <script src="<?= base_url() ?>assets/js/collapse.js"></script>
 <script src="<?= base_url() ?>assets/js/transition.js"></script>
 
-
 <?php if($etapa->Tarea->vencimiento):?>
 <div class="alert alert-warning">Atención. Esta etapa <?=$etapa->getFechaVencimientoAsString()?>.</div>
 <?php endif ?>
@@ -34,3 +33,34 @@
 </form>
 <div id="modalcalendar" class="modal hide fade modalconfg modcalejec"></div>
 <input type="hidden" id="urlbase" value="<?= base_url() ?>" />
+<script>
+    $(function(){
+        moment.lang('es');
+        $.each($('.js-data-cita'),function(){
+            if(jQuery.trim($(this).val())!=""){
+                var id=$(this).attr('id');
+                var arrdat=$(this).val().split('_');
+                $('#codcita'+id).val(arrdat[0]);
+                var feho=arrdat[1].split(' ');
+                var fe=feho[0].split('-');
+                var d=new Date(fe[0]+'/'+fe[1]+'/'+fe[2]+' '+feho[1]);
+                var h='';
+                if(d.getHours()<=9){
+                    h='0'+d.getHours();
+                }else{
+                    h=d.getHours();
+                }
+                var m='';
+                if(d.getMinutes()<=9){
+                    m='0'+d.getMinutes();
+                }else{
+                    m=d.getMinutes();
+                }
+                var fecha=d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear()+' '+h+':'+m;
+                var lab=moment(d.getFullYear()+'/'+(d.getMonth()+1)+'/'+d.getDate()).format("LL");
+                $('#txtresult'+id).html(lab+' a las '+h+':'+m+" horas");
+            }
+            
+        });
+    });
+</script>

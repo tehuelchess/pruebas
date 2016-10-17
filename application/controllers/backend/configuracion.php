@@ -623,6 +623,3 @@ class Configuracion extends MY_BackendController {
         echo json_encode(array('code'=>$code,'mensaje'=>$mensaje));
     }
 }
-
-/* End of file welcome.php */
-/* Location: ./application/controllers/welcome.php */
