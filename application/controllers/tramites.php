@@ -231,6 +231,7 @@ class Tramites extends MY_Controller {
                     $class->applyer_name=trim($items->applyer_name);
                     $metadata=json_decode($items->metadata);
                     $class->idtramite=(isset($metadata->tramite) && is_numeric($metadata->tramite))?$metadata->tramite:0;
+                    $class->etapa=(isset($metadata->etapa) && is_numeric($metadata->etapa))?$metadata->etapa:0;
                     $datos[]=$class;
                 }
             }
@@ -281,6 +282,7 @@ class Tramites extends MY_Controller {
                     $class->applyer_name=trim($items->applyer_name);
                     $metadata=json_decode($items->metadata);
                     $class->idtramite=(isset($metadata->tramite) && is_numeric($metadata->tramite))?$metadata->tramite:0;
+                    $class->etapa=(isset($metadata->etapa) && is_numeric($metadata->etapa))?$metadata->etapa:0;
                     $datos[]=$class;
                 }
             }
@@ -337,7 +339,7 @@ class Tramites extends MY_Controller {
         $total_paginas=($total_paginas!=0)?$total_paginas:1;
         $data['data']=$datos;
         $data['total_paginas']=$total_paginas;
-        if($tipousuario){//true si es funcionario false si es un funcionario
+        if($tipousuario){//true si es funcionario false si es un ciudadano
             //$idagenda=(isset($_GET['idagenda']) && is_numeric($_GET['idagenda']))?$_GET['idagenda']:0;
             $data['idagenda'] = $agenda;
             $data['title'] = 'Mi Agenda';

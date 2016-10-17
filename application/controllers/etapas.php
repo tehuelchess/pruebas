@@ -233,9 +233,13 @@ class Etapas extends MY_Controller {
                 ))
                 ->sendIt();
             $code=$response->code;
-            if(isset($response->body) && is_array($response->body) && isset($response->body[0]->response->code)){
-                $code=$response->body[0]->response->code;
-                $appointment=$response->body[1]->id;
+            if($code==200){
+                if(isset($response->body) && is_array($response->body) && isset($response->body[0]->response->code)){
+                    $code=$response->body[0]->response->code;
+                    $appointment=$response->body[1]->id;
+                }
+            }else{
+                throw new Exception('La cita reservada ya no esta disponible, reserve una nueva hora.');
             }
         }catch(Exception $err){
             throw new Exception($err->getMessage());
@@ -268,17 +272,6 @@ class Etapas extends MY_Controller {
 
         $respuesta = new stdClass();
         
-        if(isset($_POST['objappointments']) && is_array($_POST['objappointments'])){
-            foreach($_POST['objappointments'] as $item){
-                try{
-                    $this->confirmar_cita($item);    
-                }catch(Exception $err){
-                    echo $err->getMessage();
-                }
-                
-            }
-        }
-
         if ($modo == 'edicion') {
             $validar_formulario = FALSE;
             foreach ($formulario->Campos as $c) {                
@@ -313,7 +306,7 @@ class Etapas extends MY_Controller {
                 $etapa->save();
 
                 $etapa->finalizarPaso($paso);
-
+                
                 $respuesta->validacion = TRUE;
 
                 $qs = $this->input->server('QUERY_STRING');
@@ -435,18 +428,90 @@ class Etapas extends MY_Controller {
             exit;
         }
 
-
-        $etapa->avanzar($this->input->post('usuarios_a_asignar'));
-
         $respuesta = new stdClass();
+        //$etapa->avanzar($this->input->post('usuarios_a_asignar'));
         $respuesta->validacion = TRUE;
+        try{
+            $appointments=$this->obtener_citas_de_tramite($etapa_id);
+            if(isset($appointments) && is_array($appointments) && (count($appointments)>=1) ){
+                foreach($appointments as $item){
+                    $this->confirmar_cita($item);
+                }
+                $etapa->avanzar($this->input->post('usuarios_a_asignar'));
+            }else{
+                $etapa->avanzar($this->input->post('usuarios_a_asignar'));    
+            }
+        }catch(Exception $err){
+            $respuesta->validacion = false;
+            $respuesta->errores = '<div class="alert alert-error"><a class="close" data-dismiss="alert">×</a>'.$err->getMessage().'</div>';
+            log_message('error',$err->getMessage());
+        }
 
-        if ($this->input->get('iframe'))
+        
+        //$respuesta->validacion = TRUE;
+        //$respuesta->validacion = false;
+        
+        if ($this->input->get('iframe')){
             $respuesta->redirect = site_url('etapas/ejecutar_exito');
+        }
         else
             $respuesta->redirect = site_url();
 
         echo json_encode($respuesta);
+    }
+    private function obtener_citas_de_tramite($etapa){
+        //SELECT tramite_id FROM etapa WHERE id=104
+        $result=array();
+        try{
+            $rstramite = Doctrine_Query::create ()
+                    ->select('tramite_id')
+                    ->from ('Etapa')
+                    ->where ("id=?",$etapa)
+                    ->execute ();
+            $idtramite=0;
+            foreach($rstramite as $obj){
+                $idtramite=$obj->tramite_id;
+            }
+            $rsvalores = Doctrine_Query::create ()
+                    ->select('ds.valor')
+                    ->from ('DatoSeguimiento ds,Etapa e')
+                    ->where ("ds.etapa_id=e.id AND e.tramite_id=?",$idtramite)
+                    ->execute ();
+            foreach($rsvalores as $obj2){
+                $val=str_replace('"','', $obj2->valor);
+                $arrval=explode('_',$val);
+                if(isset($arrval[1])){
+                    if($this->validateDate($arrval[1])){
+                        $result[]=$arrval[0];
+                    }
+                }
+            }
+            return $result;
+        }catch(Exception $err){
+            throw new Exception('No se pudo confirmar si en su proceso existen citas, vuelva a intentarlo');
+        }
+        
+
+    }
+    private function validateDate($date, $format = 'Y-m-d'){
+        try{
+            $val=explode("-",$date);
+            if(isset($val[0]) && isset($val[1]) && isset($val[2])){
+                if(checkdate($val[1],$val[2],$val[0])){
+                    return true;
+                }else{
+                    return false;
+                }
+            }else{
+                return false;
+            }
+        }catch(Exception $err){
+            return false;
+        }
+        //return true;
+        //return is_date($date, $format);
+        /*$d = DateTime::createFromFormat($format, $date);
+        return $d && $d->format($format) == $date;*/
     }
 
     //Pagina que indica que la etapa se completo con exito. Solamente la ven los que acceden mediante iframe.
@@ -632,10 +697,12 @@ class Etapas extends MY_Controller {
         $idobject=(isset($_GET['object']) && is_numeric($_GET['object']))?$_GET['object']:0;
         $idcita=(isset($_GET['idcita']) && is_numeric($_GET['idcita']))?$_GET['idcita']:0;
         $idtramite=(isset($_GET['idtramite']) && is_numeric($_GET['idtramite']))?$_GET['idtramite']:0;
+        $etapa=(isset($_GET['etapa']) && is_numeric($_GET['etapa']))?$_GET['etapa']:0;
         $data['idagenda']=$idagenda;
         $data['idobject']=$idobject;
         $data['idcita']=$idcita;
         $data['idtramite']=$idtramite;
+        $data['etapa']=$etapa;
         $this->load->view ('etapas/calendario_ciudadano',$data);
     }
     private function obtenerTiempoCita($idagenda){
@@ -739,6 +806,7 @@ class Etapas extends MY_Controller {
     public function ajax_confirmar_agregar_dia(){
         $idagenda=(isset($_GET['idagenda']))?$_GET['idagenda']:0;
         $idtramite=(isset($_GET['idtramite']))?$_GET['idtramite']:0;
+        $etapa=(isset($_GET['etapa']))?$_GET['etapa']:0;
         $fecha=(isset($_GET['fecha']))?$_GET['fecha']:'';
         $hora=(isset($_GET['hora']))?$_GET['hora']:'';
         $idcita=(isset($_GET['idcita']))?$_GET['idcita']:'';
@@ -756,6 +824,7 @@ class Etapas extends MY_Controller {
         $data['idcita']=$idcita;
         $data['object']=$object;
         $data['idtramite']=$idtramite;
+        $data['etapa']=$etapa;
         $data['fechafinal']=$fechaf.' '.$horaf;
         $this->load->view ('etapas/ajax_confirmar_agregar_dia',$data);
     }
@@ -779,6 +848,7 @@ class Etapas extends MY_Controller {
         $fechaformat=date(DATE_ATOM, mktime($ho[0],$ho[1],0,$fe[1],$fe[2],$fe[0]));
         $mensaje='';
         $nomproceso='';
+        //echo 'checkpoint a: '.$idetapa;
         $et=Doctrine_Query::create()
                     ->from("Etapa")
                     ->where('id='.$idetapa)
@@ -786,7 +856,6 @@ class Etapas extends MY_Controller {
         foreach($et as $ob){
             $idtramite=$ob->tramite_id;
         }
-
         $ttram= Doctrine::getTable('Tramite')->findByid($idtramite);
         $nomproceso=$ttram[0]->Proceso->nombre;
         $metavalue='{"tramite":"'.$idtramite.'","etapa":"'.$idetapa.'","nombre_tramite":"'.$nomproceso.'","calendario_id":"'.$idagenda.'"}';

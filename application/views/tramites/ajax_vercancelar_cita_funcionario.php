@@ -3,7 +3,7 @@
     <h3 id="myModalLabel">Cita</h3>
 </div>
     <div class="modal-body">
-        <div class="validacion"></div>
+        <div class="validacion valcancelcita"></div>
         <table>
             <tr>
                 <td style="width: 140px;"><strong>Tramite: </strong></td>
@@ -25,14 +25,18 @@
                 <td><strong>Correo Solicitante: </strong></td>
                 <td><?= $correo ?></td>
             </tr>
+            <tr>
+                <td><strong>Motivo para cancelar cita: </strong></td>
+                <td><textarea id="txtmotivo" class="txtmotivocanfun" ></textarea></td>
+            </tr>
         </table>
     </div>
 <div class="modal-footer">
     <button class="btn js_cerrar_vcancelar" data-dismiss="modal">Cerrar</button>
-    <a href="#" onclick="cancelar_cita(<?= $idcita ?>);" class="btn btn-primary">Cancelar Cita</a>
+    <a href="#" onclick="confirmar_cancelar_cita(<?= $idcita ?>);" class="btn btn-primary">Cancelar Cita</a>
 </div>
 <?php
-    $fe=explode('-',$dia);
+    $fe=explode('/',$dia);
 ?>
 <script>
     $(function(){
@@ -40,7 +44,7 @@
         var d=<?= $fe[0] ?>;
         var m=<?= $fe[1] ?>;
         var y=<?= $fe[2] ?>;
-        var f=moment(y+"-"+m+"-"+d).format("LL");
+        var f=moment(y+"/"+m+"/"+d).format("LL");
         $("#txtfechadet").text(f);
     });
 </script>

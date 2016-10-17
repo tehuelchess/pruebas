@@ -9,7 +9,7 @@
         <link href="<?= base_url() ?>assets/js/handsontable/dist/handsontable.full.min.css" rel="stylesheet">
         <link href="<?= base_url() ?>assets/js/jquery.chosen/chosen.css" rel="stylesheet">
         <link href="<?= base_url() ?>assets/js/file-uploader/fileuploader.css" rel="stylesheet">
-        <link href="<?= base_url() ?>assets/css/common.css?v=0.5" rel="stylesheet">
+        <link href="<?= base_url() ?>assets/css/common.css?v=0.6" rel="stylesheet">
         <link href="<?= base_url() ?>assets/css/frontend.css" rel="stylesheet">
         
 

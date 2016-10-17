@@ -75,12 +75,6 @@ if(isset($editar) && $editar){
             }
             ?>
         </select>
-        <label class="labcustomagend">Tiempo de confirmaci&oacute;n</label>
-        <input id="txttiempconfirmacion" name="tconfirmacion" type="hidden">
-        <div class="input-group bootstrap-timepicker timepicker">
-            <input id="tiempoconfirmacion" readonly="readonly" type="text" class="form-control input-small">
-            <span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
-        </div>
     </form>
 </div>
 <div class="modal-footer">
@@ -120,14 +114,6 @@ if(isset($editar) && $editar){
             defaultTime:false
         }).on('changeTime.timepicker', function(e) {
             $('#txttatencion').val(e.time.hours+':'+e.time.minutes);
-        });
-        $('#tiempoconfirmacion').timepicker({
-            showMeridian:false,
-            minuteStep:1,
-            defaultTime:false,
-            maxHours:1
-        }).on('changeTime.timepicker', function(e) {
-            $('#txttiempconfirmacion').val(e.time.hours+':'+e.time.minutes);
         });
         $('#tiempoconfirmacion').timepicker('setTime','00:05');
         $('.zfranja').find('table').append(crearRow(idrow));

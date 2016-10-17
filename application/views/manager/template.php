@@ -10,7 +10,7 @@
         <link href="<?= base_url() ?>assets/css/bootstrap.css" rel="stylesheet">
         <link href="<?= base_url() ?>assets/css/responsive.css" rel="stylesheet">
         <link href="<?= base_url() ?>assets/js/file-uploader/fileuploader.css" rel="stylesheet">
-        <link href="<?= base_url() ?>assets/css/common.css" rel="stylesheet">
+        <link href="<?= base_url() ?>assets/css/common.css?v0.1" rel="stylesheet">
 
 
         <script src="<?= base_url() ?>assets/js/jquery/jquery-1.8.3.min.js" type="text/javascript"></script>

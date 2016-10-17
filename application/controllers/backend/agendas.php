@@ -22,8 +22,7 @@ class Agendas extends MY_BackendController {
             $service->load_data();
             $this->domain=$service->getDomain();
             $this->appkey=$service->getAppkey();
-            
-            
+          
         }catch(Exception $err){
             //echo 'Error: '.$err->getMessage();
         }
@@ -324,7 +323,8 @@ class Agendas extends MY_BackendController {
             $finindexdia=isset($_GET['horainicio'])?count($_GET['horainicio']):0;
             $ignorarferiados=(isset($_GET['ignorarferiados']) && $_GET['ignorarferiados']==1)?1:0;
             $tminimocancelacion=(isset($_GET['tmincancelacion']))?$_GET['tmincancelacion']:0;
-            $tmpta=explode(':',$_GET['tconfirmacion']);
+            //$tmpta=explode(':',$_GET['tconfirmacion']);
+            $tmpta=$this->config->item('tiempoconfimacioncita');
             $tconfirmacion=intval($tmpta[1])+(intval($tmpta[0])*60);
 
             $arrayshedule=array();

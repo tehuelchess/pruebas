@@ -52,6 +52,7 @@
     function procAgregar(email){
         var idagenda=<?= $idagenda ?>;
         var idtramite=<?= $idtramite ?>;
+        var etapa=<?= $etapa ?>;
         var desc=jQuery.trim($('#desccita').val());
         var idobject=<?= $object ?>;
         var idcita=<?= $idcita ?>;
@@ -70,7 +71,8 @@
                 desc:desc,
                 email:email,
                 idcita:idcita,
-                idtramite:idtramite
+                idtramite:idtramite,
+                etapa:etapa
             },
             dataType: "json",
             success: function( data ) {
@@ -78,7 +80,7 @@
                     var idcita=data.appointment;
                     if(idobject>0){// mayor que 0 es el editar dentro del tramite y 0 es el editar en mi agenda
                         $('#codcita'+idobject).val(idcita);
-                        $('#'+idobject).val(fecha);
+                        $('#'+idobject).val(idcita+'_'+fecha);
                         //$('#txtresult'+idobject).html(data.fecha);
                         //fecha
                         var fe=fecha.split(' ');
