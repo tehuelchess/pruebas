@@ -324,8 +324,9 @@ class Agendas extends MY_BackendController {
             $ignorarferiados=(isset($_GET['ignorarferiados']) && $_GET['ignorarferiados']==1)?1:0;
             $tminimocancelacion=(isset($_GET['tmincancelacion']))?$_GET['tmincancelacion']:0;
             //$tmpta=explode(':',$_GET['tconfirmacion']);
-            $tmpta=$this->config->item('tiempoconfimacioncita');
-            $tconfirmacion=intval($tmpta[1])+(intval($tmpta[0])*60);
+            //$tmpta=$this->config->item('tiempoconfimacioncita');
+            //$tconfirmacion=intval($tmpta[1])+(intval($tmpta[0])*60);
+            $tconfirmacion=$this->config->item('tiempoconfimacioncita');
 
             $arrayshedule=array();
             $lunes=$martes=$miercoles=$jueves=$viernes=$sabado=$domingo=array();
@@ -542,8 +543,9 @@ class Agendas extends MY_BackendController {
             $ignorarferiados=(isset($_GET['ignorarferiados']) && $_GET['ignorarferiados']==1)?1:0;
             $tminimocancelacion=(isset($_GET['tmincancelacion']))?$_GET['tmincancelacion']:0;
             
-            $tmpta=explode(':',$_GET['tconfirmacion']);
-            $tconfirmacion=intval($tmpta[1])+(intval($tmpta[0])*60);
+            //$tmpta=explode(':',$_GET['tconfirmacion']);
+            //$tconfirmacion=intval($tmpta[1])+(intval($tmpta[0])*60);
+            $tconfirmacion=$this->config->item('tiempoconfimacioncita');
             $arrayshedule=array();
             $lunes=$martes=$miercoles=$jueves=$viernes=$sabado=$domingo=array();
             $franja=array();

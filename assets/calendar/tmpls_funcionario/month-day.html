@@ -5,7 +5,9 @@
 			<% swres=true; swdis=true; swbloq=true;  %>
 			<% _.each(events, function(event) { %>
 				<% 
-				if(event.estado=='D' && swdis){
+				var timeacutal=new Date();
+				var cita=new Date(event.start);
+				if(event.estado=='D' && swdis && (cita>timeacutal)){
 					swdis=false;
 					swbloq=false;
 					swres=false;

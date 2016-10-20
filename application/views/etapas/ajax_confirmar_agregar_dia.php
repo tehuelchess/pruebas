@@ -72,7 +72,8 @@
                 email:email,
                 idcita:idcita,
                 idtramite:idtramite,
-                etapa:etapa
+                etapa:etapa,
+                obj:idobject
             },
             dataType: "json",
             success: function( data ) {

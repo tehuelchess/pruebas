@@ -4,6 +4,9 @@
 </div>
 <div class="modal-body">
         <div class="validacion"></div>
+        <div class="alert alert-warning">
+          <strong>Advertencia!</strong> "Recuerde que agregar un dia feriado no eliminar&aacute; citas futuras sobre las agenda".
+        </div>
         <label>Por favor, ingrese el detalle del d&iacute;a <strong><span id="nombredia"></span></strong> </label>
         <textarea id="descdia"></textarea>
 </div>

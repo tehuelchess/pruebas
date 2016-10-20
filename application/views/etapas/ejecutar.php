@@ -1,12 +1,12 @@
 <link rel="stylesheet" href= "<?= base_url('assets/calendar/css/calendar.css') ?>" >
-<script src= "<?= base_url('/assets/js/jquery-ui/js/jquery-ui.js') ?>"></script>
+<!-- <script src= "<?= base_url('/assets/js/jquery-ui/js/jquery-ui.js') ?>"></script> -->
 <script src= "<?= base_url('/assets/js/moment.min.js') ?>"></script>
 <script type="text/javascript" src="<?= base_url('assets/calendar/components/underscore/underscore-min.js') ?>"></script>
 <script type="text/javascript" src="<?= base_url('assets/calendar/components/jstimezonedetect/jstz.min.js') ?>"></script>
 <script type="text/javascript" src="<?= base_url('assets/calendar/js/language/es-CO.js') ?>"></script>
 <script src="<?= base_url() ?>assets/js/bootstrap-datetimepicker.min.js"></script>
 <script src= "<?= base_url('/assets/calendar/js/moment-2.2.1.js') ?>"></script>
-<script type="text/javascript" src="<?= base_url('assets/calendar/js/calendar.js?v=0.2') ?>"></script>
+<script type="text/javascript" src="<?= base_url('assets/calendar/js/calendar.js?v=0.3') ?>"></script>
 <script src="<?= base_url() ?>assets/js/collapse.js"></script>
 <script src="<?= base_url() ?>assets/js/transition.js"></script>
 

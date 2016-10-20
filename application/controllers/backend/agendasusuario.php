@@ -65,6 +65,7 @@ class AgendasUsuario extends MY_BackendController {
         $asistencia=(isset($_GET['asistencia']) && is_numeric($_GET['asistencia']))?$_GET['asistencia']:0;
         $idtramite=(isset($_GET['idtramite']) && is_numeric($_GET['idtramite']))?$_GET['idtramite']:0;
         $calendario=(isset($_GET['calendario']) && is_numeric($_GET['calendario']))?$_GET['calendario']:0;
+        $campoid=(isset($_GET['campoid']) && is_numeric($_GET['campoid']))?$_GET['campoid']:0;
         $code=0;
         $mensaje='';
         $idetapa=0;
@@ -78,14 +79,15 @@ class AgendasUsuario extends MY_BackendController {
             }
             $usuario=Doctrine_Query::create()
                         ->from("Campo")
-                        ->where('agenda_campo='.$calendario)
+                        ->where('id=?',$campoid)
                         ->execute();
             $nombrecampo ='';
+            $sw=false;
             foreach($usuario as $ob){
+                $sw=true;
                 $nombrecampo=$ob->nombre.'_asistio';
             }
             if($idetapa>0){
-
                 $valueasis=($asistencia==1)?'si':'no';
                 $result = Doctrine_Query::create ()
                 ->select('COUNT(*) AS cuenta')
@@ -109,19 +111,23 @@ class AgendasUsuario extends MY_BackendController {
             $json='{
                 "applyer_attended": "'.$asistencia.'"
             }';
-            $uri=$this->base_services.''.$this->context.'appointments/assists/'.$idcita;
-            $response = \Httpful\Request::put($uri)
-                ->expectsJson()
-                ->body($json)
-                ->addHeaders(array(
-                    'appkey' => $this->appkey,              // heder de la app key
-                    'domain' => $this->domain              // heder de domain
-                ))
-                ->sendIt();
-            $code=$response->code;
-            if(isset($response->body->response->code)){
-                $code=$response->body->response->code;
-                $mensaje=$response->body->response->message;
+            if($sw){
+                $uri=$this->base_services.''.$this->context.'appointments/assists/'.$idcita;
+                $response = \Httpful\Request::put($uri)
+                    ->expectsJson()
+                    ->body($json)
+                    ->addHeaders(array(
+                        'appkey' => $this->appkey,              // heder de la app key
+                        'domain' => $this->domain              // heder de domain
+                    ))
+                    ->sendIt();
+                $code=$response->code;
+                if(isset($response->body->response->code)){
+                    $code=$response->body->response->code;
+                    $mensaje=$response->body->response->message;
+                }    
+            }else{
+                $mensaje='No se pudo crear variable de seguimiento.';
             }
         }catch(Exception $err){
             $mensaje=$err->getMessage();

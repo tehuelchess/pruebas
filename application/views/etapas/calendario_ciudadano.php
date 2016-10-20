@@ -139,6 +139,8 @@
                     $("#mtooltipcustom").remove();
                 });
                 $('.event-warning').parent().parent().find('span').addClass('styhaycita');
+                $('.event-warning').parent().parent().addClass('sweventhaycita');
+                $('.eventradocup').parent().parent().find('span').addClass('diaocupado');
             }
         };
         calendar = $('#calendar').calendar(options);
@@ -221,8 +223,9 @@
         var select=d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear();
         var $html='';
         var i=0;
-        var concurrencia=0;
+        var concurrencia=1;
         var swhaycita=false;
+        var timeacutal=new Date();
         $.each(calendar.getEventos(),function(index,element){
             var cita=new Date(element.start);
             var fincita=new Date(element.end);
@@ -238,11 +241,15 @@
             if(diacita==select){
                 swhaycita=true;
                 if(i==0){
-                    $html='<div><div class="clearfix js-row-day">';
+                    if(cita>timeacutal){
+                        $html='<div><div class="clearfix js-row-day">';    
+                    }
                 }else{
                     if(i==element.concurrencia){
                         concurrencia=element.concurrencia;
-                        $html=$html+'</div><hr class="sep-row" /><div class="clearfix js-row-day">';
+                        if(cita>timeacutal){
+                            $html=$html+'</div><hr class="sep-row" /><div class="clearfix js-row-day">';
+                        }
                         i=0;
                     }
                 }
@@ -251,7 +258,6 @@
                 if(element.estado=='D'){
                     $desc='Disponible';
                     cssdesc='evdisp';
-                    //$desc='&nbsp;';
                 }else{
                     if(element.estado=='R'){
                         cssdesc='evreserv';
@@ -267,7 +273,9 @@
                     }
                 }
                 var $div='<div class="clearfix row-events-cal"><div class="hora">'+hora+'</div><div><div class="descevent '+cssdesc+'" data-event="'+dataEvent+'" data-event-fin="'+dataEventFin+'"  >'+$desc+'</div></div></div>';
-                $html=$html+$div;
+                if(cita>timeacutal){
+                    $html=$html+$div;
+                }
             }else{
                 i=-1;
             }
