@@ -208,16 +208,6 @@ class Tramites extends MY_Controller {
             if(isset($response->body) && is_array($response->body) && isset($response->body[0]->response->code) && $response->body[0]->response->code==200){
                 $total_registros=$response->body[1]->count;
                 foreach($response->body[1]->appointments as $items){
-                    $usuario=Doctrine_Query::create()
-                    ->from("Campo")
-                    ->where('agenda_campo='.$items->calendar_id)
-                    ->execute();
-                    $nombre ='';
-                    $nombre_campo ='';
-                    foreach($usuario as $ob){
-                        $nombre=$ob->etiqueta;
-                        $nombre_campo =$ob->nombre;;
-                    }
                     $class=$newobj = new stdClass();
                     $class->appointment_id=$items->appointment_id;
                     $class->subject=$items->subject;
@@ -225,13 +215,23 @@ class Tramites extends MY_Controller {
                     $class->appointment_time=$items->appointment_time;
                     $class->applyer_attended=$items->applyer_attended;
                     $class->calendar_id=$items->calendar_id;
-                    $class->tramite=$nombre;
-                    $class->nombre=$nombre_campo;
                     $class->applyer_email=$items->applyer_email;
                     $class->applyer_name=trim($items->applyer_name);
                     $metadata=json_decode($items->metadata);
                     $class->idtramite=(isset($metadata->tramite) && is_numeric($metadata->tramite))?$metadata->tramite:0;
                     $class->etapa=(isset($metadata->etapa) && is_numeric($metadata->etapa))?$metadata->etapa:0;
+                    $class->idcampo=(isset($metadata->idcampo) && is_numeric($metadata->idcampo))?$metadata->idcampo:0;
+                    $proceso=Doctrine_Query::create()
+                    ->select('p.nombre')
+                    ->from("Proceso p,Tramite t")
+                    ->where('p.id=t.proceso_id AND t.id=?',$class->idtramite)
+                    ->execute();
+                    $nombre ='';
+                    foreach($proceso as $ob){
+                        $nombre=$ob->nombre;
+                    }
+                    $class->tramite=$nombre;
+
                     $datos[]=$class;
                 }
             }
@@ -259,16 +259,6 @@ class Tramites extends MY_Controller {
             if(isset($response->body) && is_array($response->body) && isset($response->body[0]->response->code) && $response->body[0]->response->code==200){
                 //$datos=$response->body->appointments;
                 foreach($response->body[1]->appointments as $items){
-                    $usuario=Doctrine_Query::create()
-                    ->from("Campo")
-                    ->where('agenda_campo='.$items->calendar_id)
-                    ->execute();
-                    $nombre ='';
-                    $nombre_campo ='';
-                    foreach($usuario as $ob){
-                        $nombre=$ob->etiqueta;
-                        $nombre_campo =$ob->nombre;;
-                    }
                     $class=$newobj = new stdClass();
                     $class->appointment_id=$items->appointment_id;
                     $class->subject=$items->subject;
@@ -276,13 +266,24 @@ class Tramites extends MY_Controller {
                     $class->appointment_time=$items->appointment_time;
                     $class->applyer_attended=$items->applyer_attended;
                     $class->calendar_id=$items->calendar_id;
-                    $class->tramite=$nombre;
-                    $class->nombre=$nombre_campo;
                     $class->applyer_email=$items->applyer_email;
                     $class->applyer_name=trim($items->applyer_name);
                     $metadata=json_decode($items->metadata);
                     $class->idtramite=(isset($metadata->tramite) && is_numeric($metadata->tramite))?$metadata->tramite:0;
                     $class->etapa=(isset($metadata->etapa) && is_numeric($metadata->etapa))?$metadata->etapa:0;
+                    $class->idcampo=(isset($metadata->idcampo) && is_numeric($metadata->idcampo))?$metadata->idcampo:0;
+                    $proceso=Doctrine_Query::create()
+                    ->select('p.nombre')
+                    ->from("Proceso p,Tramite t")
+                    ->where('p.id=t.proceso_id AND t.id=?',$class->idtramite)
+                    ->execute();
+                    $nombre ='';
+                    foreach($proceso as $ob){
+                        $nombre=$ob->nombre;
+                    }
+                    $class->tramite=$nombre;
+
+
                     $datos[]=$class;
                 }
             }

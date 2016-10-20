@@ -402,8 +402,9 @@ footer .area2 .container-fluid .footerGob {
   width: 100% !important;
 }
 .cal-month-day .pull-right{
-  color: red;
+  color: gray;
   font-weight: 800 !important;
+  cursor:default;
 }
 .dia-festivo{
   font-size: 13px;
@@ -415,11 +416,37 @@ footer .area2 .container-fluid .footerGob {
   /*background-color: #f2dede !important;
   border-color: #ebccd1;*/
 }
+
+/* Calendario Ciudadano */
+.cal-context .cal-month-box .cal-row-fluid .cal-cell1 .cal-month-day .pull-right{
+  color:gray !important;
+}
+.cal-context .cal-month-box .cal-row-fluid .cal-cell1 .sweventhaycita .styhaycita{
+  color: green !important;
+}
+.cal-context .cal-month-box .cal-row-fluid .cal-cell1 .cal-month-day .diaocupado{
+  color:red !important;
+}
+.cal-context .cal-month-box .cal-row-fluid .cal-cell1 .cal-month-day{
+  cursor: default !important;
+  height: 42px;
+}
+/* Calendario funcionario */
+.cal-front-fun .cal-month-box .cal-row-fluid .cal-cell1 .cal-month-day .pull-right{
+  color:gray !important;
+}
+.cal-front-fun .cal-month-box .cal-row-fluid .cal-cell1 .cal-month-day .diaocupado{
+  color:red !important;
+}
 .dia-festivo > span{
   color: gray !important;
   font-weight: 800 !important;
 }
 .styhaycita{
+  cursor: pointer !important;
+  color: green !important;
+}
+.cal-front-fun .cal-month-box .cal-row-fluid .cal-cell1 .sweventhaycita .styhaycita{
   color: green !important;
 }
 .event{
@@ -430,7 +457,17 @@ footer .area2 .container-fluid .footerGob {
   width: 98% !important;
 }
 .cal-front-fun .cal-month-box .cal-row-fluid .cal-cell1 .cal-month-day{
+  cursor: default !important;
   height: 42px;
+}
+.cal-front-fun .cal-month-box .cal-row-fluid .cal-cell1 .sweventhaycita{
+  cursor: pointer !important;
+}
+.cal-front-fun .cal-month-box .cal-row-fluid .cal-cell1 .dia-festivo > span{
+  cursor: default !important;
+}
+.cal-front-fun .cal-month-box .cal-row-fluid .cal-cell1 .dia-festivo{
+  cursor: default !important;
 }
 .cal-front-fun .cal-month-box .cal-row-fluid .cal-cell1 .cal-month-day .events-list .event {
     width: 8px;
@@ -475,11 +512,9 @@ footer .area2 .container-fluid .footerGob {
   filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
   border: 1px solid #cccccc;
   border-bottom-color: #b3b3b3;
-
   -webkit-box-shadow: inset 0 1px 0 rgba(255,255,255,.2), 0 1px 2px rgba(0,0,0,.05);
   -moz-box-shadow: inset 0 1px 0 rgba(255,255,255,.2), 0 1px 2px rgba(0,0,0,.05);
   box-shadow: inset 0 1px 0 rgba(255,255,255,.2), 0 1px 2px rgba(0,0,0,.05);
-
   text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
   background-color: #004081;
   background-image: -moz-linear-gradient(top, #005181, #002681);

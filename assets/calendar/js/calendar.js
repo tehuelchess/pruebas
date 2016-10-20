@@ -1033,21 +1033,21 @@ if(!String.prototype.formatNum) {
 			self.options.day = $(this).data('cal-date');
 			self.view(view);*/
 
-			if(!$(this).parent().hasClass('dia-festivo') ){
+			if(!$(this).parent().hasClass('dia-festivo') && $(this).children().hasClass('sweventhaycita')){
 				var view = $(this).data('cal-view');
 				self.options.day = $(this).data('cal-date');
 				self.view(view);
 			}
 		});
 		$('.cal-cell').dblclick(function() {
-			if(!$(this).children().hasClass('dia-festivo') ){
+			if(!$(this).children().hasClass('dia-festivo') && $(this).children().hasClass('sweventhaycita')){
 				var view = $('[data-cal-date]', this).data('cal-view');
 				self.options.day = $('[data-cal-date]', this).data('cal-date');
 				self.view(view);
 			}
 		});
 		$('.cal-cell').click(function(){
-			if($(this).children().hasClass('cal-month-day') && !$(this).children().hasClass('dia-festivo') ){
+			if($(this).children().hasClass('cal-month-day') && !$(this).children().hasClass('dia-festivo') && $(this).children().hasClass('sweventhaycita')){
 				
 				var view = $('[data-cal-date]', this).data('cal-view');
 				self.options.day = $('[data-cal-date]', this).data('cal-date');

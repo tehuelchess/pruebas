@@ -33,6 +33,9 @@ if(isset($editar) && $editar){
         if(isset($editar) && $editar){
             $idagenda=(isset($id) && is_numeric($id))?$id:0;
             echo '<input id="codagenda" name="codagenda" type="hidden" value="'.$idagenda.'" />';
+            echo '<div class="alert alert-warning">
+                  <strong>Advertencia!</strong> "Recuerde que la edici&oacute;n de una agenda no eliminar&aacute; citas futuras sobre esta agenda".
+                </div>';
         }else{
             $idagenda=0;
             echo '<input id="codagenda" name="codagenda" type="hidden" value="0" />';
@@ -119,7 +122,7 @@ if(isset($editar) && $editar){
         $('.zfranja').find('table').append(crearRow(idrow));
         iniciarSelectDias('cmbdias'+idrow);
         $.ajax({
-            url:"/backend/formularios/listarPertenece",
+            url:'<?= site_url('/backend/formularios/listarPertenece') ?>',
             dataType: "json",
             async:false,
             success: function( data ) {

@@ -50,7 +50,7 @@
    }
 ?>
 <link rel="stylesheet" href= "<?= base_url('assets/css/jquery-ui.css') ?>" >
-<link rel="stylesheet" href= "<?= base_url('assets/calendar/css/calendar.css') ?>" >
+<link rel="stylesheet" href= "<?= base_url('assets/calendar/css/calendar.css?v=0.1') ?>" >
 <link rel="stylesheet" href= "<?= base_url('assets/css/bootstrap-datetimepicker.min.css') ?>" >
 <script src= "<?= base_url('/assets/js/jquery-ui/js/jquery-ui.js') ?>"></script>
 <script src= "<?= base_url('/assets/js/moment.min.js') ?>"></script>
@@ -61,7 +61,7 @@
 <script src="<?= base_url() ?>assets/js/bootstrap-datetimepicker.min.js"></script>
 <script src= "<?= base_url('/assets/calendar/js/moment-2.2.1.js') ?>"></script>
 <script type="text/javascript" src="<?= base_url('assets/calendar/js/calendar-custom.js?v=0.5') ?>"></script>
-<script type="text/javascript" src="<?= base_url('assets/js/calendarfront.js?v=0.19') ?>"></script>
+<script type="text/javascript" src="<?= base_url('assets/js/calendarfront.js?v=0.20') ?>"></script>
 <script src="<?= base_url() ?>assets/js/collapse.js"></script>
 <script src="<?= base_url() ?>assets/js/transition.js"></script>
 
@@ -125,7 +125,7 @@
                             $acsi=(isset($item->applyer_attended) && $item->applyer_attended==1)?'active':'';
                             $acno=(isset($item->applyer_attended) && $item->applyer_attended==0)?'active':'';
                             $acciones='<a class="btn btn-primary" onclick="ver_cita('.$item->appointment_id.',\''.$solicitante.'\',\''.$fechaparam.'\',\''.$hora.'\',\''.$item->tramite.'\',\''.$item->applyer_email.'\')" href="#"><i class="icon-white icon-edit"></i> Ver</a> <a class="btn btn-danger btncanappofun" href="#" onclick="cancelarCita(\''.$item->appointment_id.'\',\''.$fechaparam.'\');"><i class="icon-white icon-remove"></i> Cancelar</a>';
-                            $asistencia='<a class="btn '.$acsi.' js-sia" data-idcita="'.$item->appointment_id.'" onclick="asistio(1,'.$item->appointment_id.','.$item->idtramite.','.$item->calendar_id.');" href="#">Si</a> <a class="btn '.$acno.' js-noa" data-idcita="'.$item->appointment_id.'" href="#" onclick="asistio(0,'.$item->appointment_id.','.$item->idtramite.','.$item->calendar_id.');" >No</a>';
+                            $asistencia='<a class="btn '.$acsi.' js-sia" data-idcita="'.$item->appointment_id.'" onclick="asistio(1,'.$item->appointment_id.','.$item->idtramite.','.$item->calendar_id.','.$item->idcampo.');" href="#">Si</a> <a class="btn '.$acno.' js-noa" data-idcita="'.$item->appointment_id.'" href="#" onclick="asistio(0,'.$item->appointment_id.','.$item->idtramite.','.$item->calendar_id.','.$item->idcampo.');" >No</a>';
                             echo '<tr><td>'.$item->tramite.'</td><td>'.$solicitante.'</td><td>'.$hora.'</td><td>'.$asistencia.'</td><td>'.$acciones.'</td></tr>';
                           }
                           $swnocitas=false;
@@ -281,12 +281,12 @@
       $("#formcitasfunc").attr('action',urlbase+'/'+pagina);
       $("#formcitasfunc").submit();
    }
-   function asistio(asistio,idcita,idtramite,calid){
-      ajax_asistencia(asistio,idcita,idtramite,calid);
+   function asistio(asistio,idcita,idtramite,calid,campoid){
+      ajax_asistencia(asistio,idcita,idtramite,calid,campoid);
       /*$("#modalcancelar").load(site_url + "backend/agendasusuario/ajax_asistencia/" + asistio+"/"+idcita+"/"+idtramite+"/"+calid);
       $("#modalcancelar").modal();*/
    }
-  function ajax_asistencia(asistencia,idcita,idtramite,calendario){
+  function ajax_asistencia(asistencia,idcita,idtramite,calendario,campoid){
     var form=$('#tabs');
     $(form).append("<div class='ajaxLoader ajaxLoaderfunc'>Cargando</div>");
       var ajaxLoader=$(form).find(".ajaxLoader");
@@ -301,7 +301,8 @@
             idcita:idcita,
             asistencia:asistencia,
             idtramite:idtramite,
-            calendario:calendario
+            calendario:calendario,
+            campoid:campoid
         },
         dataType: "json",
         success: function( data ) {

@@ -1,5 +1,4 @@
 <?php
-
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
@@ -478,11 +477,16 @@ class Etapas extends MY_Controller {
                     ->where ("ds.etapa_id=e.id AND e.tramite_id=?",$idtramite)
                     ->execute ();
             foreach($rsvalores as $obj2){
-                $val=str_replace('"','', $obj2->valor);
-                $arrval=explode('_',$val);
-                if(isset($arrval[1])){
-                    if($this->validateDate($arrval[1])){
-                        $result[]=$arrval[0];
+                if(isset($obj2->valor)){
+                    $val=str_replace('"','', $obj2->valor);
+                    $val=trim($val);
+                    if(is_string($val) && !empty($val)){
+                        $arrval=explode('_',$val);
+                        if(isset($arrval[1])){
+                            if($this->validateDate($arrval[1])){
+                                $result[]=$arrval[0];
+                            }
+                        }
                     }
                 }
             }
@@ -490,8 +494,6 @@ class Etapas extends MY_Controller {
         }catch(Exception $err){
             throw new Exception('No se pudo confirmar si en su proceso existen citas, vuelva a intentarlo');
         }
-        
-
     }
     private function validateDate($date, $format = 'Y-m-d'){
         try{
@@ -841,6 +843,7 @@ class Etapas extends MY_Controller {
         $email=(isset($_GET['email']) && !empty($_GET['email']))?$_GET['email']:UsuarioSesion::usuario()->email;
         $appointment=(isset($_GET['idcita']))?$_GET['idcita']:0;
         $idetapa=(isset($_GET['idtramite']))?$_GET['idtramite']:0;
+        $obj=(isset($_GET['obj']))?$_GET['obj']:0;
         $code=0;
         $tmp=explode(' ',$fecha);
         $fe=explode('-',$tmp[0]);
@@ -858,7 +861,7 @@ class Etapas extends MY_Controller {
         }
         $ttram= Doctrine::getTable('Tramite')->findByid($idtramite);
         $nomproceso=$ttram[0]->Proceso->nombre;
-        $metavalue='{"tramite":"'.$idtramite.'","etapa":"'.$idetapa.'","nombre_tramite":"'.$nomproceso.'","calendario_id":"'.$idagenda.'"}';
+        $metavalue='{"tramite":"'.$idtramite.'","etapa":"'.$idetapa.'","nombre_tramite":"'.$nomproceso.'","calendario_id":"'.$idagenda.'","idcampo":"'.$obj.'" }';
         try{
             $result = Doctrine_Query::create ()
             ->select('cuenta_id')
@@ -884,34 +887,85 @@ class Etapas extends MY_Controller {
                 "subject": "'.$desc.'"
                 }';
         if($appointment>0){//0 reserva una cita y 1 edita una cita
+
             try{
                 $uri=$this->base_services.''.$this->context.'appointments/'.$appointment;
-                $response = \Httpful\Request::put($uri)
+                $response = \Httpful\Request::get($uri)
                     ->expectsJson()
-                    ->body($json)
                     ->addHeaders(array(
                         'appkey' => $this->appkey,             // heder de la app key
                         'domain' => $this->domain                              // heder de domain
                     ))
                     ->sendIt();
                 $code=$response->code;
-                if(isset($response->body) && is_array($response->body) && isset($response->body[0]->response->code)){
-                    $code=$response->body[0]->response->code;
-                    $mensaje=$response->body[0]->response->message;
-                    $appointment=$response->body[1]->id;
+                if(isset($response->body->response->code) && ($response->body->response->code==200) ){//Se verifica si existe la cita.
+                    //Si la cita existe se procede a consumir el servicio de actualizar.
+                    try{
+                        $uri=$this->base_services.''.$this->context.'appointments/'.$appointment;
+                        $response = \Httpful\Request::put($uri)
+                            ->expectsJson()
+                            ->body($json)
+                            ->addHeaders(array(
+                                'appkey' => $this->appkey,             // heder de la app key
+                                'domain' => $this->domain                              // heder de domain
+                            ))
+                            ->sendIt();
+                        $code=$response->code;
+                        if(isset($response->body) && is_array($response->body) && isset($response->body[0]->response->code)){
+                            $code=$response->body[0]->response->code;
+                            $mensaje=$response->body[0]->response->message;
+                            $appointment=$response->body[1]->id;
+                        }else{
+                            $code=$response->body->response->code;
+                            switch($code){
+                                case "2040":
+                                    $mensaje='El tiempo seleccionado no se encuentra disponible en el calendario.';
+                                break;
+                                case "1020":
+                                    $mensaje='El email de la persona es requerido.';
+                                break;
+                            }
+                        }
+                    }catch(Exception $err){
+                        $mensaje=$response->body[0]->response->message;
+                    }
                 }else{
-                    $code=$response->body->response->code;
-                    switch($code){
-                        case "2040":
-                            $mensaje='El tiempo seleccionado no se encuentra disponible en el calendario.';
-                        break;
-                        case "1020":
-                            $mensaje='El email de la persona es requerido.';
-                        break;
+                    //Si la cita no existe se procede a consumir el servicio de reservar
+                    $json='{
+                        "applyer_email": "'.$email.'",
+                        "applyer_id": "'.$id.'",
+                        "applyer_name": "'.$nombre.'",
+                        "appointment_start_time": "'.$fechaformat.'",
+                        "calendar_id": "'.$idagenda.'",
+                        "subject": "'.$desc.'",
+                        "metadata":'.$metavalue.'
+                        }';
+                    try{
+                        $uri=$this->base_services.''.$this->context.'appointments/reserve';//url del servicio con los parametros
+                        $response = \Httpful\Request::post($uri)
+                            ->expectsJson()
+                            ->body($json)
+                            ->addHeaders(array(
+                                'appkey' => $this->appkey,             // heder de la app key
+                                'domain' => $this->domain                              // heder de domain
+                            ))
+                            ->sendIt();
+                        $code=$response->code;
+                        if(isset($response->body) && is_array($response->body) && isset($response->body[0]->response->code)){
+                            $code=$response->body[0]->response->code;
+                            $mensaje=$response->body[0]->response->message;
+                            $appointment=$response->body[1]->id;
+                        }else{
+                            $code=(isset($response->body->response->code))?$response->body->response->code:0;
+                            $mensaje=(isset($response->body->response->message))?$response->body->response->message:'Error General';
+                        }
+                    }catch(Exception $err){
+                        $mensaje='No se pudo reservar la cita, volverlo a intentar.';
+                        //$mensaje=$response->body[0]->response->message;
                     }
                 }
             }catch(Exception $err){
-                $mensaje=$response->body[0]->response->message;
+
             }
         }else{
             $json='{

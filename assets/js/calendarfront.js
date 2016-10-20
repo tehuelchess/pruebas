@@ -68,6 +68,7 @@ $(function(){
             });
             $('.event-warning').parent().parent().find('span').addClass('styhaycita');
             $('.event-warning').parent().parent().addClass('sweventhaycita');
+            $('.eventradocup').parent().parent().find('span').addClass('diaocupado');
         }
     };
 
@@ -189,13 +190,14 @@ function eventDaysCalendar(){
     var select=d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear();
     var $html='';
     var i=0;
-    var concurrencia=0;
+    var concurrencia=1;
     var swhaycita=false;
     //var iconblock='<div><span class="glyphicon glyphicon glyphicon-ban-circle" aria-hidden="true"></span></div>';
     var iconrow='';
     var swpuedeblock=true;
     var toltips='';
     var desctoltips='';
+    var timeacutal=new Date();
     $.each(calendar.getEventos(),function(index,element){
         var cita=new Date(element.start);
         var fincita=new Date(element.end);
@@ -211,13 +213,17 @@ function eventDaysCalendar(){
         if(diacita==select){
             swhaycita=true;
             if(i==0){
-                iconrow='<div><span onclick="block('+element.start+','+element.end+');" class="glyphicon glyphicon glyphicon-ban-circle cursor" aria-hidden="true"></span></div>';
-                $html='<div><div class="clearfix js-row-day">';
+                if(cita>timeacutal){
+                    iconrow='<div><span onclick="block('+element.start+','+element.end+');" class="glyphicon glyphicon glyphicon-ban-circle cursor" aria-hidden="true"></span></div>';
+                    $html='<div><div class="clearfix js-row-day">';
+                }
             }else{
                 if(i==element.concurrencia){
                     concurrencia=element.concurrencia;
-                    $html=$html+iconrow+'</div><hr class="sep-row" /><div class="clearfix js-row-day">';
-                    iconrow='<div><span onclick="block('+element.start+','+element.end+');" class="glyphicon glyphicon glyphicon-ban-circle cursor" aria-hidden="true"></span></div>';
+                    if(cita>timeacutal){
+                        $html=$html+iconrow+'</div><hr class="sep-row" /><div class="clearfix js-row-day">';
+                        iconrow='<div><span onclick="block('+element.start+','+element.end+');" class="glyphicon glyphicon glyphicon-ban-circle cursor" aria-hidden="true"></span></div>';
+                    }
                     i=0;
                 }
             }
@@ -229,6 +235,7 @@ function eventDaysCalendar(){
                 $desc='Disponible';
                 //$desc='&nbsp;';
                 cssdesc='evdisp';
+                //console.log("Hora: "+hora);
             }else{
                 if(element.estado=='R'){
                     //cssdesc='evreserv';
@@ -250,7 +257,10 @@ function eventDaysCalendar(){
                 }
             }
             var $div='<div class="clearfix row-events-cal"><div class="hora">'+hora+'</div><div><div data-cita="'+element.cita+'" data-fecha="'+element.fecha+'" data-hora="'+element.hora+'" data-tramite="'+element.tramite+'" data-solicitante="'+element.id+'" data-correo="'+element.correo+'" class="descevent '+cssdesc+'" data-event="'+dataEvent+'" '+toltips+' title="'+desctoltips+'" data-event-fin="'+dataEventFin+'"  >'+$desc+'</div></div></div>';
-            $html=$html+$div;
+            if(cita>timeacutal){
+                $html=$html+$div;
+            }
+            //$html=$html+$div;
         }else{
             i=-1;
         }
