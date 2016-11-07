@@ -43,7 +43,7 @@
             if(jQuery.trim($('#txtcorreo').val())){
                 procAgregar(jQuery.trim($('#txtcorreo').val()));
             }else{
-                $('.validacion').html('<div class="alert alert-error"><a class="close" data-dismiss="alert">×</a>Debe ingresar una correo electronico.</div>');    
+                $('.validacion').html('<div class="alert alert-error"><a class="close" data-dismiss="alert">×</a>Debe ingresar un correo electrónico.</div>');    
             }
         }else{
             procAgregar('');

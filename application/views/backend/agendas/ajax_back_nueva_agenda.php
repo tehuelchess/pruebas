@@ -54,7 +54,7 @@ if(isset($editar) && $editar){
                 
             </table>
         </div>
-        <input type="checkbox" value="1" name="ignorarferiados" style="float: left;" />
+        <input type="checkbox" value="1" id="ignorarferiados" name="ignorarferiados" style="float: left;" />
         <label>&nbsp;&nbsp;Ignorar Feriados</label>
         <label class="labtiematen">Tiempo de Atenci&oacute;n</label>
         <input id="txttatencion" name="tatencion" type="hidden">
@@ -175,18 +175,6 @@ if(isset($editar) && $editar){
         var originalOption = icon.element;
         return '<i class="fa defaulticonglyp '+$(originalOption).data('icon')+' " style="top: 7px;"></i>&nbsp;&nbsp;' + icon.text;
     }
-    function ajaxcancelarCita(id){
-        $.ajax({
-            url: "http://localhost/uploads/miagenda.txt",
-            data:{
-                id:id
-            },
-            dataType: "json",
-            success: function( data ) {
-                location.href='<?=site_url('/tramites/miagenda') ?>';
-            }
-        });
-    }
     function guardaragenda(){
         var form=$('#formeditagenda');
         $('.validacion').html('');
@@ -292,6 +280,9 @@ if(isset($editar) && $editar){
                             $('#cmbdias'+idrow).val(dias).trigger("change");
                             
                         });
+                        if(data.calendar.ignore_non_working_days==1){
+                            $("#ignorarferiados").prop("checked", "checked");
+                        }
                         $('#concurrencia').val(data.calendar.concurrency);
                         var tiempoatencion=getTimeSelect(data.calendar.time_attention);
                         $('#txttiempoatencion').timepicker('setTime',tiempoatencion);

@@ -175,6 +175,3 @@ class Autenticacion extends MY_BackendController {
         return FALSE;
     }
 }
-
-/* End of file welcome.php */
-/* Location: ./application/controllers/welcome.php */

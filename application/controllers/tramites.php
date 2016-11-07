@@ -567,27 +567,32 @@ class Tramites extends MY_Controller {
 
             }
         }
-        try{
-            $uri=$this->base_services.''.$this->context.'daysOff';//url del servicio con los parametros
-            $response = \Httpful\Request::get($uri)
-                ->expectsJson()
-                ->addHeaders(array(
-                    'appkey' => $this->appkey,             // heder de la app key
-                    'domain' => $this->domain                              // heder de domain
-                ))
-                ->sendIt();
-            $code=$response->code;
-            if(isset($response->body) && is_array($response->body) && isset($response->body[0]->response->code)){
-                $code=$response->body[0]->response->code;
-                $mensaje=$response->body[0]->response->message;
-                foreach($response->body[1]->daysoff as $item){
-                    $tmp=date('d-m',strtotime($item->date_dayoff));
-                    $data[]=array('date_dayoff'=>$tmp,'name'=>$item->name);
+        $ytemp=date('Y')-1;       
+        for($i=1;$i<=3;$i++){
+            try{
+                $uri=$this->base_services.''.$this->context.'daysOff?year='.$ytemp;//url del servicio con los parametros
+                $response = \Httpful\Request::get($uri)
+                    ->expectsJson()
+                    ->addHeaders(array(
+                        'appkey' => $this->appkey,             // heder de la app key
+                        'domain' => $this->domain                              // heder de domain
+                    ))
+                    ->sendIt();
+                $code=$response->code;
+                if(isset($response->body) && is_array($response->body) && isset($response->body[0]->response->code)){
+                    $code=$response->body[0]->response->code;
+                    $mensaje=$response->body[0]->response->message;
+                    foreach($response->body[1]->daysoff as $item){
+                        $tmp=date('d-m-Y',strtotime($item->date_dayoff));
+                        $data[]=array('date_dayoff'=>$tmp,'name'=>$item->name);
+                    }
                 }
+            }catch(Exception $err){
+                $mensaje=$err->getMessage();
             }
-        }catch(Exception $err){
-            $mensaje=$err->getMessage();
+            $ytemp++;
         }
+        
         $array=array('code'=>$code,'message'=>$mensaje,'daysoff'=>$data);
         echo json_encode($array);
     }
@@ -630,6 +635,80 @@ class Tramites extends MY_Controller {
         $data['calendario']=$_GET['cmbagendabloq'];
         $this->load->view('tramites/ajax_confirmar_agregar_bloqueo', $data);
     }*/
+    public function ajax_agregar_bloqueo_dia_completo(){
+        $code=0;
+        $mensaje='';
+        $idagenda=(isset($_GET['idagenda']) && is_numeric($_GET['idagenda']))?$_GET['idagenda']:0;
+        $causa=(isset($_GET['razon']))?$_GET['razon']:'';
+        
+        if(count($_GET['horainicio'])>=1){
+            $rage='[';
+            for($i=0;$i<count($_GET['horainicio']);$i++){
+                $fechainicio=date(DATE_ATOM,$_GET['horainicio'][$i]/1000);
+                $fechafinal=date(DATE_ATOM,$_GET['horafinal'][$i]/1000);
+                if($i==0){
+                    $rage=$rage.'{
+                        "start_date": "'.$fechainicio.'",
+                        "end_date": "'.$fechafinal.'"
+                    }';
+                }else{
+                    $rage=$rage.',{
+                        "start_date": "'.$fechainicio.'",
+                        "end_date": "'.$fechafinal.'"
+                    }';
+                }
+            }
+            $rage=$rage.']';
+            $usuario=(isset(UsuarioSesion::usuario()->usuario))?UsuarioSesion::usuario()->usuario:'';
+            $id=(isset(UsuarioSesion::usuario()->id))?UsuarioSesion::usuario()->id:0;
+            $json='{
+                "calendar_id": "'.$idagenda.'",
+                "user_id_block": "'.$id.'",
+                "user_name_block":"'.$usuario.'",
+                "range":'.$rage.',
+                "cause": "'.$causa.'"
+            }';
+            if($idagenda>0){
+                try{
+                    $uri=$this->base_services.''.$this->context.'blockSchedules/bulkCreate';//url del servicio con los parametros
+                    $response = \Httpful\Request::post($uri)
+                        ->body($json)
+                        ->expectsJson()
+                        ->addHeaders(array(
+                            'appkey' => $this->appkey,              // heder de la app key
+                            'domain' => $this->domain              // heder de domain
+                        ))
+                        ->sendIt();
+                    $code=$response->code;
+                    if(isset($response->body) && is_array($response->body) && isset($response->body[0]->response->code)){
+                        $code=$response->body[0]->response->code;
+                        $mensaje=$response->body[0]->response->message;
+                    }else{
+                        if(isset($response->body->response->code) && is_numeric($response->body->response->code)){
+                            $code=$response->body->response->code;
+                            switch($response->body->response->code){
+                                case '2090':
+                                    $mensaje='No puede bloquear una fecha/hora menor a la actual';
+                                    $mensaje=$response->body->response->message;
+                                break;
+                                default:
+                                    $mensaje=(isset($response->body->response->message))?$response->body->response->message:'No se pudo bloquear intentelo mas tarde.';
+                                break;
+                            }
+                        }else{
+                            $mensaje='No se pudo bloquear vuelvalo a intentar, si el problema persiste contacte con el administrador';
+                        }
+                    }
+                }catch(Exception $err){
+                    $mensaje='No se pudo bloquear vuelvalo a intentar, si el problema persiste contacte con el administrador';
+                }
+            }
+        }else{
+            $mensaje='No hay horas para bloquear';
+            //echo 'no hay horas para bloquear';
+        }
+        echo json_encode(array('code'=>$code,'mensaje'=>$mensaje));
+    }
     public function ajax_agregar_bloqueo(){
         $code=0;
         $mensaje='';
@@ -637,6 +716,12 @@ class Tramites extends MY_Controller {
         $fechainicio=(isset($_GET['fechainicio']))?$_GET['fechainicio']:'';
         $fechafinal=(isset($_GET['fechafinal']))?$_GET['fechafinal']:'';
         $causa=(isset($_GET['razon']))?$_GET['razon']:'';
+        $tmpfecha=date('Y-m-d',strtotime($fechainicio));
+        //echo 'checkpoint'.$tmpfecha;
+        if($tmpfecha==date('Y-m-d')){
+            $tfini=date('Y-m-d H:i');
+            $fechainicio = date('Y-m-d H:i',strtotime ('+5 minute',strtotime($tfini)));
+        }
         $fechainicio=date(DATE_ATOM,strtotime($fechainicio));
         $fechafinal=date(DATE_ATOM,strtotime($fechafinal));
         $id=(isset(UsuarioSesion::usuario()->id))?UsuarioSesion::usuario()->id:0;
@@ -670,6 +755,7 @@ class Tramites extends MY_Controller {
                         switch($response->body->response->code){
                             case '2090':
                                 $mensaje='No puede bloquear una fecha/hora menor a la actual';
+                                $mensaje=$response->body->response->message;
                             break;
                             default:
                                 $mensaje=(isset($response->body->response->message))?$response->body->response->message:'No se pudo bloquear intentelo mas tarde.';
@@ -685,6 +771,17 @@ class Tramites extends MY_Controller {
         }
         echo json_encode(array('code'=>$code,'mensaje'=>$mensaje));
     }
+    public function ajax_confirmar_agregar_bloqueo_dia_completo(){
+        $timetmp=strtotime($_GET['fechainicio']);
+        $start=$timetmp*1000;
+        $timetmp=strtotime($_GET['fechafinal']);
+        $end=$timetmp*1000;
+        $data['start']=$start;
+        $data['end']=$end;
+        $data['id']=$_GET['agenda'];
+        $data['bloqueardia']=true;
+        $this->load->view('tramites/ajax_confirmar_agregar_bloqueo_dia', $data);
+    }
     private function convertirFechaFormatoBloqueo($fe){
         $tmp=explode(' ',$fe);
         $tmpf=explode('/',$tmp[0]);
@@ -699,7 +796,14 @@ class Tramites extends MY_Controller {
         $tramite='';
         try{
             $tiempofin=$this->obtenerTiempoCita($idagenda);
-            $uri=$this->base_services.''.$this->context.'appointments/availability/'.$idagenda;//url del servicio con los parametros
+            $date=(isset($_GET['date']))?$_GET['date']:'';
+            if(!empty($date)){
+                //echo $date;
+                $uri=$this->base_services.''.$this->context.'appointments/availability/'.$idagenda.'?date='.$date;//url del servicio con los parametros
+            }else{
+                $uri=$this->base_services.''.$this->context.'appointments/availability/'.$idagenda;//url del servicio con los parametros
+            }
+            
             $response = \Httpful\Request::get($uri)
                 ->expectsJson()
                 ->addHeaders(array(
@@ -828,6 +932,32 @@ class Tramites extends MY_Controller {
             $mensaje=$err->getMessage();
         }
         echo json_encode(array('code'=>$code,'mensaje'=>$mensaje));
+    }
+    public function ajax_obtejer_datos_agenda(){
+        $code=0;
+        $mensaje=0;
+        $id=(isset($_GET['id']) && is_numeric($_GET['id']))?$_GET['id']:0;
+        $agenda='';
+        try{
+            $uri=$this->base_services.''.$this->context.'calendars/'.$id;//url del servicio con los parametros
+            $response = \Httpful\Request::get($uri)
+                ->expectsJson()
+                ->addHeaders(array(
+                    'appkey' => $this->appkey,             // heder de la app key
+                    'domain' => $this->domain                              // heder de domain
+                ))
+                ->sendIt();
+            $code=$response->code;
+            if(isset($response->body) && isset($response->body[0]->response->code) && $response->body[0]->response->code==200){
+                $agenda=$response->body[1]->calendars[0];
+            }else{
+                $code=0;
+                $mensaje='No se pudo obtener la validacion de ignorar feriados.';
+            }
+        }catch(Exception $err){
+            $mensaje=$err->getMessage();
+        }
+        echo json_encode(array('code'=>$code,'mensaje'=>$mensaje,'calendar'=>$agenda));
     }
 
 }

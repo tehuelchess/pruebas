@@ -486,4 +486,3 @@ class Formularios extends MY_BackendController {
         echo json_encode(array('code'=>$code,'message'=>$mensaje,'calendars'=>$data));
     }
 }
-?>

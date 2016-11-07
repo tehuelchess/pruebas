@@ -747,7 +747,14 @@ class Etapas extends MY_Controller {
             $this->appkey=$service->getAppkey();
 
             $tiempofin=$this->obtenerTiempoCita($idagenda);
-            $uri=$this->base_services.''.$this->context.'appointments/availability/'.$idagenda;//url del servicio con los parametros
+            //$uri=$this->base_services.''.$this->context.'appointments/availability/'.$idagenda;//url del servicio con los parametros
+            $date=(isset($_GET['date']))?$_GET['date']:'';
+            if(!empty($date)){
+                //echo $date;
+                $uri=$this->base_services.''.$this->context.'appointments/availability/'.$idagenda.'?date='.$date;//url del servicio con los parametros
+            }else{
+                $uri=$this->base_services.''.$this->context.'appointments/availability/'.$idagenda;//url del servicio con los parametros
+            }
             $response = \Httpful\Request::get($uri)
                 ->expectsJson()
                 ->addHeaders(array(
@@ -760,38 +767,79 @@ class Etapas extends MY_Controller {
                 $code=$response->body[0]->response->code;
                 $mensaje=$response->body[0]->response->message;
                 $concurrency=$response->body[1]->concurrency;
+                $fechasagregadas=array();
                 foreach($response->body[1]->appointmentsavailable as $keyd => $item){
                     $object=get_object_vars($item);
                     if(is_array($object) && count($object)>0){
                         $fecha=$keyd;
                         foreach($object as $keyhora => $dispo){
                             $index=1;
-                            foreach($dispo as $appontment){
-                                $id=$appontment->applyer_name;
-                                $tmp=strtotime($fecha.' '.$keyhora.':00',time());
-                                $end=strtotime('+'.$tiempofin.' minute',strtotime ($fecha.' '.$keyhora.':00'))*1000;
-                                $start=$tmp*1000;
-                                $title=$appontment->applyer_name;
-                                $available=$appontment->available;
-                                $clsevent='';
-                                switch($available){
-                                    case 'D':
-                                        $clsevent='event-warning';
-                                        $title='Disponible';
-                                    break;
-                                    case 'R':
-                                        //$clsevent='event-info';
-                                        $clsevent='event-success';
-                                        $title='Reservado';
-                                    break;
-                                    case 'B':
-                                        $clsevent='event-success';
-                                        $title='Bloqueado';
-                                    break;
+                            if($concurrency>1){// se verifica si la concurrencia es mayor a 1
+                                foreach($dispo as $appontment){
+                                    //$id=$appontment->applyer_name;
+                                    $tmp=strtotime($fecha.' '.$keyhora.':00',time());
+                                    $end=strtotime('+'.$tiempofin.' minute',strtotime ($fecha.' '.$keyhora.':00'))*1000;
+                                    $start=$tmp*1000;
+                                    $id=$start;
+                                    $title=$appontment->applyer_name;
+                                    $available=$appontment->available;
+                                    $clsevent='';
+                                    switch($available){
+                                        case 'D':
+                                            $clsevent='event-warning';
+                                            $title='Disponible';
+                                        break;
+                                        case 'R':
+                                            //$clsevent='event-info';
+                                            $clsevent='event-success';
+                                            $title='Reservado';
+                                        break;
+                                        case 'B':
+                                            $clsevent='event-success';
+                                            $title='Bloqueado';
+                                        break;
+                                    }
+                                    $title=$title.' '.$fecha.' '.$keyhora.':00';
+                                    if(!in_array($start,$fechasagregadas)){
+                                        $fechasagregadas[]=$start;
+                                        $data[]=array('id'=>$id,'title'=>$title,'url'=>'#','class'=>$clsevent,'start'=>$start,'end'=>$end,'estado'=>$available,'concurrencia'=>$concurrency,'cuenta'=>$index);
+                                        $index++;
+                                    }else{
+
+                                        if($available=='D'){
+                                            $clave = array_search($start, $fechasagregadas);
+                                            $data[$clave]=array('id'=>$id,'title'=>$title,'url'=>'#','class'=>$clsevent,'start'=>$start,'end'=>$end,'estado'=>$available,'concurrencia'=>$concurrency,'cuenta'=>$index);
+                                        }
+                                    }
                                 }
-                                $title=$title.' '.$fecha.' '.$keyhora.':00';
-                                $data[]=array('id'=>$id,'title'=>$title,'url'=>'#','class'=>$clsevent,'start'=>$start,'end'=>$end,'estado'=>$available,'concurrencia'=>$concurrency,'cuenta'=>$index);
-                                $index++;
+                            }else{
+                                foreach($dispo as $appontment){
+                                    $id=$appontment->applyer_name;
+                                    $tmp=strtotime($fecha.' '.$keyhora.':00',time());
+                                    $end=strtotime('+'.$tiempofin.' minute',strtotime ($fecha.' '.$keyhora.':00'))*1000;
+                                    $start=$tmp*1000;
+                                    $title=$appontment->applyer_name;
+                                    $available=$appontment->available;
+                                    $clsevent='';
+                                    switch($available){
+                                        case 'D':
+                                            $clsevent='event-warning';
+                                            $title='Disponible';
+                                        break;
+                                        case 'R':
+                                            //$clsevent='event-info';
+                                            $clsevent='event-success';
+                                            $title='Reservado';
+                                        break;
+                                        case 'B':
+                                            $clsevent='event-success';
+                                            $title='Bloqueado';
+                                        break;
+                                    }
+                                    $title=$title.' '.$fecha.' '.$keyhora.':00';
+                                    $data[]=array('id'=>$id,'title'=>$title,'url'=>'#','class'=>$clsevent,'start'=>$start,'end'=>$end,'estado'=>$available,'concurrencia'=>$concurrency,'cuenta'=>$index);
+                                    $index++;
+                                }
                             }
                         }
                     }
@@ -835,7 +883,7 @@ class Etapas extends MY_Controller {
         $id=UsuarioSesion::usuario()->id;
         $nombre=UsuarioSesion::usuario()->nombres.' '.UsuarioSesion::usuario()->apellido_paterno.' '.UsuarioSesion::usuario()->apellido_materno;
         $trimNombre = trim($nombre);
-        $nombre=(!empty($trimNombre))?$nombre:'Anonimo';
+        $nombre=(!empty($trimNombre))?$nombre:'Cliente';
         $idagenda=(isset($_GET['idagenda']))?$_GET['idagenda']:'';
         $fecha=(isset($_GET['fecha']))?$_GET['fecha']:'';
         $fechafinal=(isset($_GET['fechafinal']))?$_GET['fechafinal']:'';
@@ -887,18 +935,17 @@ class Etapas extends MY_Controller {
                 "subject": "'.$desc.'"
                 }';
         if($appointment>0){//0 reserva una cita y 1 edita una cita
-
             try{
                 $uri=$this->base_services.''.$this->context.'appointments/'.$appointment;
-                $response = \Httpful\Request::get($uri)
+                $responsever = \Httpful\Request::get($uri)
                     ->expectsJson()
                     ->addHeaders(array(
                         'appkey' => $this->appkey,             // heder de la app key
                         'domain' => $this->domain                              // heder de domain
                     ))
                     ->sendIt();
-                $code=$response->code;
-                if(isset($response->body->response->code) && ($response->body->response->code==200) ){//Se verifica si existe la cita.
+                $code=$responsever->code;
+                if(isset($responsever->body) && is_array($responsever->body) && isset($responsever->body[0]->response->code) && ($responsever->body[0]->response->code==200) ){//Se verifica si existe la cita.
                     //Si la cita existe se procede a consumir el servicio de actualizar.
                     try{
                         $uri=$this->base_services.''.$this->context.'appointments/'.$appointment;
@@ -930,6 +977,7 @@ class Etapas extends MY_Controller {
                         $mensaje=$response->body[0]->response->message;
                     }
                 }else{
+                    //echo 'no existe';
                     //Si la cita no existe se procede a consumir el servicio de reservar
                     $json='{
                         "applyer_email": "'.$email.'",

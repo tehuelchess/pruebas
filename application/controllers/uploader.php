@@ -104,5 +104,3 @@ class Uploader extends MY_Controller {
     }
 
 }
-
-?>

@@ -737,6 +737,7 @@ if(!String.prototype.formatNum) {
 		if(date.toDateString() == (new Date()).toDateString()) {
 			addClass("today", classes);
 		}
+
 		var holiday = this._getHoliday(date);
 		if(holiday !== false) {
 			addClass("holidays", classes);
@@ -762,7 +763,6 @@ if(!String.prototype.formatNum) {
 			}
 			this.options.view = view;
 		}
-
 		this._init_position();
 		this._loadEvents();
 		this._render();
@@ -961,8 +961,9 @@ if(!String.prototype.formatNum) {
 						if(browser_timezone.length) {
 							params.browser_timezone = browser_timezone;
 						}
+						var $date=self.options.position.start.getFullYear()+'-'+(self.options.position.start.getMonth()+1);
 						$.ajax({
-							url: buildEventsUrl(source, params),
+							url: buildEventsUrl(source, params)+"&date="+$date,
 							dataType: 'json',
 							type: 'GET',
 							async: false
@@ -1032,22 +1033,33 @@ if(!String.prototype.formatNum) {
 			/*var view = $(this).data('cal-view');
 			self.options.day = $(this).data('cal-date');
 			self.view(view);*/
-
-			if(!$(this).parent().hasClass('dia-festivo') && $(this).children().hasClass('sweventhaycita')){
+			var ignore=0;
+			if (typeof($('#validarferiado')) !== "undefined"){
+				ignore=$('#validarferiado').val();
+			}
+			if((!$(this).parent().hasClass('dia-festivo') || ignore==1 ) && $(this).children().hasClass('sweventhaycita')){
 				var view = $(this).data('cal-view');
 				self.options.day = $(this).data('cal-date');
 				self.view(view);
 			}
 		});
 		$('.cal-cell').dblclick(function() {
-			if(!$(this).children().hasClass('dia-festivo') && $(this).children().hasClass('sweventhaycita')){
+			var ignore=0;
+			if (typeof($('#validarferiado')) !== "undefined"){
+				ignore=$('#validarferiado').val();
+			}
+			if((!$(this).children().hasClass('dia-festivo') || ignore==1) && $(this).children().hasClass('sweventhaycita')){
 				var view = $('[data-cal-date]', this).data('cal-view');
 				self.options.day = $('[data-cal-date]', this).data('cal-date');
 				self.view(view);
 			}
 		});
 		$('.cal-cell').click(function(){
-			if($(this).children().hasClass('cal-month-day') && !$(this).children().hasClass('dia-festivo') && $(this).children().hasClass('sweventhaycita')){
+			var ignore=0;
+			if (typeof($('#validarferiado')) !== "undefined"){
+				ignore=$('#validarferiado').val();
+			}
+			if($(this).children().hasClass('cal-month-day') && (!$(this).children().hasClass('dia-festivo') || ignore==1 ) && $(this).children().hasClass('sweventhaycita')){
 				
 				var view = $('[data-cal-date]', this).data('cal-view');
 				self.options.day = $('[data-cal-date]', this).data('cal-date');

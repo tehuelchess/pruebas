@@ -8,7 +8,7 @@
 <script type="text/javascript" src="<?= base_url('assets/calendar/components/jstimezonedetect/jstz.min.js') ?>"></script>
 <script type="text/javascript" src="<?= base_url('assets/calendar/js/language/es-CO.js') ?>"></script>
 <script type="text/javascript" src="<?= base_url('assets/calendar/js/calendar.js') ?>"></script>
-<script type="text/javascript" src="<?= base_url('assets/js/calendarmanager.js') ?>"></script>
+<script type="text/javascript" src="<?= base_url('assets/js/calendarmanager.js?v=0.5') ?>"></script>
 <script src="<?= base_url() ?>assets/js/collapse.js"></script>
 <script src="<?= base_url() ?>assets/js/transition.js"></script>
 <script src="<?= base_url() ?>assets/js/bootstrap-datetimepicker.min.js"></script>

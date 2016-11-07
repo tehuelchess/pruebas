@@ -4,6 +4,7 @@ window.calendar;
 $(function(){
     $( "#tabs" ).tabs();
     var idagenda=$('#txtidagenda').val();
+    ignorar_festivo(idagenda);
     var url=$('#urlbase').val()+'tramites/disponibilidad/'+idagenda;
     feriados=cargarDiasFeriados();
     var options = {
@@ -54,20 +55,34 @@ $(function(){
                 eventDaysCalendar();
             });
             $('.cal-cell').click(function(){
-                if($(this).children().hasClass('cal-month-day') && !$(this).children().hasClass('dia-festivo') ){
-                    /*var form=$('#formcitasfunc');
-                    $(form).append("<div class='ajaxLoader ajaxLoaderfunc'>Cargando</div>");
-                    var ajaxLoader=$(form).find(".ajaxLoader");
-                    $(ajaxLoader).css({
-                        left: ($(form).width()/2 - $(ajaxLoader).width()/2)+"px", 
-                        top: ($(form).height()/2 - $(ajaxLoader).height()/2)+"px"
-                    });*/
+                var ignore=0
+                if (typeof($('#validarferiado')) !== "undefined"){
+                    ignore=$('#validarferiado').val();
+                }
+                if($(this).children().hasClass('cal-month-day') && (!$(this).children().hasClass('dia-festivo') || ignore==1) ){
                     eventDaysCalendar();
-                    //$('.ajaxLoader').remove();
                 }
             });
             $('.event-warning').parent().parent().find('span').addClass('styhaycita');
             $('.event-warning').parent().parent().addClass('sweventhaycita');
+            var ignore=0
+            if (typeof($('#validarferiado')) !== "undefined"){
+                ignore=$('#validarferiado').val();
+                //console.log("ignore: "+ignore);
+                if(ignore==1){
+                    $('.event-warning').parent().parent().addClass('festivodisp');
+                    $('.event-warning').parent().parent().find('span').addClass('styhaycitaspan');
+                }
+            }
+            
+            $.each($('span[data-cal-date'),function(index,element){
+                var adateinview=$(this).attr('data-cal-date').split('-');
+                var $datecal=new Date(adateinview[0],adateinview[1],adateinview[2],0,0,0,0);
+                var $datehoy=new Date();
+                if( $datecal >= $datehoy){
+                    $('.eventradocup').parent().parent().find('span').addClass('diapasado');
+                }
+            });
             $('.eventradocup').parent().parent().find('span').addClass('diaocupado');
         }
     };
@@ -198,6 +213,9 @@ function eventDaysCalendar(){
     var toltips='';
     var desctoltips='';
     var timeacutal=new Date();
+    $("#frmdataranghorbloq").html('');
+    var arrbloq=new Array();
+    var arrrese=new Array();
     $.each(calendar.getEventos(),function(index,element){
         var cita=new Date(element.start);
         var fincita=new Date(element.end);
@@ -216,6 +234,12 @@ function eventDaysCalendar(){
                 if(cita>timeacutal){
                     iconrow='<div><span onclick="block('+element.start+','+element.end+');" class="glyphicon glyphicon glyphicon-ban-circle cursor" aria-hidden="true"></span></div>';
                     $html='<div><div class="clearfix js-row-day">';
+                    if(element.estado=='D'){
+                        if(typeof($('#ref'+element.start).val()) === "undefined" ){
+                            var objrean='<input type="hidden" name="horainicio[]" id="ref'+element.start+'" value="'+element.start+'" ><input type="hidden" name="horafinal[]" id="reff'+element.start+'" value="'+element.end+'" >';
+                            $("#frmdataranghorbloq").append(objrean);
+                        }
+                    }
                 }
             }else{
                 if(i==element.concurrencia){
@@ -223,6 +247,12 @@ function eventDaysCalendar(){
                     if(cita>timeacutal){
                         $html=$html+iconrow+'</div><hr class="sep-row" /><div class="clearfix js-row-day">';
                         iconrow='<div><span onclick="block('+element.start+','+element.end+');" class="glyphicon glyphicon glyphicon-ban-circle cursor" aria-hidden="true"></span></div>';
+                        if(element.estado=='D'){
+                            if(typeof($('#ref'+element.start).val()) === "undefined" ){
+                                var objrean='<input type="hidden" name="horainicio[]" id="ref'+element.start+'" value="'+element.start+'" ><input type="hidden" name="horafinal[]" id="reff'+element.start+'" value="'+element.end+'" >';
+                                $("#frmdataranghorbloq").append(objrean);
+                            }
+                        }
                     }
                     i=0;
                 }
@@ -235,7 +265,6 @@ function eventDaysCalendar(){
                 $desc='Disponible';
                 //$desc='&nbsp;';
                 cssdesc='evdisp';
-                //console.log("Hora: "+hora);
             }else{
                 if(element.estado=='R'){
                     //cssdesc='evreserv';
@@ -246,17 +275,26 @@ function eventDaysCalendar(){
                     desctoltips=''+element.id+' '+element.correo;
                     swpuedeblock=true;
                     iconrow='';
+                    arrrese.push(element.start);
                 }else{
                     if(element.estado=='B'){
                         cssdesc='evbloq';
                         $desc='Bloqueado';
                         //$desc='&nbsp;';
                         swpuedeblock=true;
-                        iconrow='<div><span onclick="unblock('+element.block_id+');" class="glyphicon glyphicon glyphicon-remove-circle cursor" aria-hidden="true"></span></div>';
+                        if(cita>timeacutal){
+                            iconrow='<div><span onclick="unblock('+element.block_id+');" class="glyphicon glyphicon glyphicon-remove-circle cursor" aria-hidden="true"></span></div>';
+                        }
+                        arrbloq.push(element.start);
                     }
                 }
             }
-            var $div='<div class="clearfix row-events-cal"><div class="hora">'+hora+'</div><div><div data-cita="'+element.cita+'" data-fecha="'+element.fecha+'" data-hora="'+element.hora+'" data-tramite="'+element.tramite+'" data-solicitante="'+element.id+'" data-correo="'+element.correo+'" class="descevent '+cssdesc+'" data-event="'+dataEvent+'" '+toltips+' title="'+desctoltips+'" data-event-fin="'+dataEventFin+'"  >'+$desc+'</div></div></div>';
+            var zonahora='';
+            if(i==0){
+                zonahora='<div class="hora">'+hora+'</div>';
+            }
+            //var $div='<div class="clearfix row-events-cal"><div class="hora">'+hora+'</div><div><div data-cita="'+element.cita+'" data-fecha="'+element.fecha+'" data-hora="'+element.hora+'" data-tramite="'+element.tramite+'" data-solicitante="'+element.id+'" data-correo="'+element.correo+'" class="descevent '+cssdesc+'" data-event="'+dataEvent+'" '+toltips+' title="'+desctoltips+'" data-event-fin="'+dataEventFin+'"  >'+$desc+'</div></div></div>';
+            var $div='<div class="clearfix row-events-cal">'+zonahora+'<div><div data-cita="'+element.cita+'" data-fecha="'+element.fecha+'" data-hora="'+element.hora+'" data-tramite="'+element.tramite+'" data-solicitante="'+element.id+'" data-correo="'+element.correo+'" class="descevent '+cssdesc+'" data-event="'+dataEvent+'" '+toltips+' title="'+desctoltips+'" data-event-fin="'+dataEventFin+'"  >'+$desc+'</div></div></div>';
             if(cita>timeacutal){
                 $html=$html+$div;
             }
@@ -266,10 +304,24 @@ function eventDaysCalendar(){
         }
         i++;
     });
+    $.each(arrrese, function( index, value ) {
+        if(typeof($('#ref'+value).val()) !== "undefined" ){
+            $('#ref'+value).remove();
+            $('#reff'+value).remove();
+        }
+    });
+    $.each(arrbloq, function( index, value ) {
+        if(typeof($('#ref'+value).val()) !== "undefined" ){
+            $('#ref'+value).remove();
+            $('#reff'+value).remove();
+        }
+    });
     $html=$html+iconrow+'<hr class="sep-row" /></div></div>';
     if(swhaycita){
         $('#cont_cal').html($html);
+        $("#btnbloqueargeneral").css({'display':'block'});
     }else{
+        $("#btnbloqueargeneral").css({'display':'none'});
         $('#cont_cal').html('<div class="clearfix row-events-cal">No existe disponibilidad de citas</div>');
     }
     $('[data-tooltips="tooltip"]').tooltip();
@@ -306,6 +358,17 @@ function eventDaysCalendar(){
         $('#ver_email').val(correo);
         var param=$('#formvercita').serialize();
         $("#modalcancelar").load(site_url + "backend/agendasusuario/ajax_modal_ver_cita_funcionario/" + cita+'?'+param);
+        $("#modalcancelar").modal();
+    });
+    $('.btnbloqueargeneral').off('click');
+    $('.btnbloqueargeneral').on('click',function(){
+        var urlbase=$('#urlbase').val();
+        var dia=$("#dvbloquear").val();
+        $("#fechainicio").val(dia+' 00:00');
+        $("#fechafinal").val(dia+' 23:59');
+        $('#agendabloqgen').val($('#cmbagenda').val());
+        var param=$("#frmbloqgener").serialize();
+        $("#modalcancelar").load(urlbase + "tramites/ajax_confirmar_agregar_bloqueo_dia_completo?" + param);
         $("#modalcancelar").modal();
     });
 }
@@ -372,4 +435,21 @@ function fecha_hora(ObjectDate){
 function unblock(idblock){
     $("#modalcancelar").load($('#urlbase').val()+'tramites/desbloqueo?id='+idblock);
     $("#modalcancelar").modal();   
+}
+function ignorar_festivo(idagenda){
+    var url=$('#urlbase').val()+'tramites/ajax_obtejer_datos_agenda';
+    $.ajax({
+        url: url,
+        async:false,
+        dataType: "json",
+        data:{
+            id:idagenda
+        },
+        success: function( data ) {
+            if(data.code==200){
+                var ignorefestivo=data.calendar.ignore_non_working_days;
+                $('#validarferiado').val(ignorefestivo);
+            }
+        }
+    });
 }

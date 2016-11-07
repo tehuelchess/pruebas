@@ -6,4 +6,3 @@ class CuentaHasConfig extends Doctrine_Record {
         $this->hasColumn('cuenta_id','integer',4,array('primary' => true));
     }
 }
-?>

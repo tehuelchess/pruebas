@@ -7,6 +7,7 @@
     <button type="button" class="close" data-dismiss="modal">×</button>
     <h3 id="myModalLabel">Calendario</h3>
 </div>
+    <input type="hidden" id="validarferiado" value="0" >
     <div class="modal-body mod-cal_ciu">
         <div class="validacion valcal"></div>
         <input type="hidden" id="daysel" >
@@ -58,6 +59,7 @@
     window.calendar=null;
     $(function(){
         var urlbase='<?= base_url() ?>';
+        ignorar_festivo(<?= $idagenda ?>);
         var url=urlbase+'etapas/disponibilidad/<?= $idagenda ?>/<?= $idtramite ?>';
         feriados=cargarDiasFeriados();
         var options = {
@@ -140,6 +142,22 @@
                 });
                 $('.event-warning').parent().parent().find('span').addClass('styhaycita');
                 $('.event-warning').parent().parent().addClass('sweventhaycita');
+                var ignore=0
+                if (typeof($('#validarferiado')) !== "undefined"){
+                    ignore=$('#validarferiado').val();
+                    if(ignore==1){
+                        $('.event-warning').parent().parent().addClass('festivodisp');
+                        $('.event-warning').parent().parent().find('span').addClass('styhaycitaspan');
+                    }
+                }
+                $.each($('span[data-cal-date'),function(index,element){
+                var adateinview=$(this).attr('data-cal-date').split('-');
+                var $datecal=new Date(adateinview[0],adateinview[1],adateinview[2],0,0,0,0);
+                var $datehoy=new Date();
+                if( $datecal >= $datehoy){
+                    $('.eventradocup').parent().parent().find('span').addClass('diapasado');
+                }
+            });
                 $('.eventradocup').parent().parent().find('span').addClass('diaocupado');
             }
         };
@@ -245,13 +263,17 @@
                         $html='<div><div class="clearfix js-row-day">';    
                     }
                 }else{
-                    if(i==element.concurrencia){
+                    //concurrencia=element.concurrencia;
+                    if(cita>timeacutal){
+                        $html=$html+'</div><hr class="sep-row" /><div class="clearfix js-row-day">';
+                    }
+                    /*if(i==element.concurrencia){
                         concurrencia=element.concurrencia;
                         if(cita>timeacutal){
                             $html=$html+'</div><hr class="sep-row" /><div class="clearfix js-row-day">';
                         }
                         i=0;
-                    }
+                    }*/
                 }
                 $desc='';
                 var cssdesc='';
@@ -322,5 +344,23 @@
         }
         var dataEvent=tmp+' '+hora;
         return dataEvent;
+    }
+    function ignorar_festivo(idagenda){
+        var urlbase='<?= base_url() ?>';
+        var url=urlbase+'tramites/ajax_obtejer_datos_agenda';
+        $.ajax({
+            url: url,
+            dataType: "json",
+            async:false,
+            data:{
+                id:idagenda
+            },
+            success: function( data ) {
+                if(data.code==200){
+                    var ignorefestivo=data.calendar.ignore_non_working_days;
+                    $('#validarferiado').val(ignorefestivo);
+                }
+            }
+        });
     }
 </script>

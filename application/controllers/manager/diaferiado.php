@@ -41,6 +41,7 @@ class DiaFeriado extends CI_Controller {
         $code=0;
         $mensaje='';
         $data=array();
+        //$year=(isset($_GET['year']) && is_numeric($_GET['year']) && $_GET['year']>0 )?$_GET['year']:date('Y');
         try{
             $uri=$this->base_services.''.$this->context.'daysOff';//url del servicio con los parametros
             $response = \Httpful\Request::get($uri)
@@ -49,18 +50,20 @@ class DiaFeriado extends CI_Controller {
                     'appkey' => $this->appkey                              // heder de appkey
                 ))
                 ->sendIt();
-            $code=$response->code;
+            //$code=$response->code;
             if(isset($response->body) && is_array($response->body) && isset($response->body[0]->response->code)){
+                $code=$response->code;
                 $code=$response->body[0]->response->code;
                 $mensaje=$response->body[0]->response->message;
                 foreach($response->body[1]->daysoff as $item){
-                    $tmp=date('d-m',strtotime($item->date_dayoff));
+                    $tmp=date('d-m-Y',strtotime($item->date_dayoff));
                     $data[]=array('date_dayoff'=>$tmp,'name'=>$item->name,'id'=>$item->id);
                 }
             }
         }catch(Exception $err){
             $mensaje=$err->getMessage();
         }
+        
         $array=array('code'=>$code,'message'=>$mensaje,'daysoff'=>$data);
         echo json_encode($array);
     }
@@ -154,6 +157,3 @@ class DiaFeriado extends CI_Controller {
         echo json_encode($array);
     }
 }
-
-/* End of file welcome.php */
-/* Location: ./application/controllers/welcome.php */

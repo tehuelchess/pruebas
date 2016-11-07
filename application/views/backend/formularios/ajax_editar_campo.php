@@ -219,7 +219,7 @@ if(!isset($idagendaeditar) || !is_numeric($idagendaeditar)){
                                     $("#miagenda").html('');
                                     var idseleccionado=$(this).val();
                                     $.ajax({
-                                        url:"/backend/formularios/ajax_mi_calendario",
+                                        url:'<?= site_url('/backend/formularios/ajax_mi_calendario') ?>',
                                         dataType: "json",
                                         data:{
                                             pertenece:idseleccionado
@@ -244,7 +244,7 @@ if(!isset($idagendaeditar) || !is_numeric($idagendaeditar)){
                                     });
                                 });
                                 $.ajax({
-                                    url:"/backend/formularios/listarPertenece",
+                                    url:'<?= site_url('/backend/formularios/listarPertenece') ?>',
                                     dataType: "json",
                                     success: function( data ) {
                                         if(data.code==200){
@@ -276,7 +276,7 @@ if(!isset($idagendaeditar) || !is_numeric($idagendaeditar)){
                             }
                             function cargar_service(idagenda){
                                 $.ajax({
-                                    url:"/backend/formularios/obtener_agenda",
+                                    url:'<?= site_url('/backend/formularios/obtener_agenda') ?>', 
                                     dataType: "json",
                                     data:{
                                         idagenda:idagenda

@@ -60,13 +60,15 @@
 <script type="text/javascript" src="<?= base_url('assets/calendar/js/language/es-CO.js') ?>"></script>
 <script src="<?= base_url() ?>assets/js/bootstrap-datetimepicker.min.js"></script>
 <script src= "<?= base_url('/assets/calendar/js/moment-2.2.1.js') ?>"></script>
-<script type="text/javascript" src="<?= base_url('assets/calendar/js/calendar-custom.js?v=0.5') ?>"></script>
-<script type="text/javascript" src="<?= base_url('assets/js/calendarfront.js?v=0.20') ?>"></script>
+<script type="text/javascript" src="<?= base_url('assets/calendar/js/calendar-custom.js?v=0.7') ?>"></script>
+<script type="text/javascript" src="<?= base_url('assets/js/calendarfront.js?v=0.29') ?>"></script>
 <script src="<?= base_url() ?>assets/js/collapse.js"></script>
 <script src="<?= base_url() ?>assets/js/transition.js"></script>
 
 <h2>Mis citas</h2>
+<input type="hidden" id="dvbloquear" value="" >
 <form method="POST" id="formcitasfunc" action="<?=site_url('/tramites/miagenda')?>">
+  <input type="hidden" id="validarferiado" value="0" >
   <input type="hidden" id="txtidagenda" name="idagenda" value="<?= $defaultid ?>" >
   <?php
      if(isset($agendas) && count($agendas)>1){
@@ -154,13 +156,15 @@
                  <li><a onclick="recargarPagina(<?= $total_paginas ?>);">&raquo;</a></li>
               </ul>
            </div>
-       
       </div>
       <div id="tabs-2" class="con-tab-cal">
         <div class="containter-calendar">
            <input type="hidden" id="urlbase" value="<?= base_url() ?>" />
            <div class="page-header">
               <div class="pull-right form-inline">
+                <div class="btn-group">
+                  
+                </div>
                  <div class="btn-group">
                     <button type="button" class="btn" data-calendar-nav="prev"><<</button>
                     <button type="button" class="btn btn-primary" data-calendar-nav="today">Hoy</button>
@@ -211,6 +215,11 @@
   <input type="hidden" id="ver_tramite" name="tramite" >
   <input type="hidden" id="ver_email" name="email" >
 </form>
+<form id="frmbloqgener">
+  <input type="hidden" id="fechainicio" name="fechainicio">
+  <input type="hidden" id="fechafinal" name="fechafinal">
+  <input type="hidden" id="agendabloqgen" name="agenda">
+</form>
 <script type="text/javascript">
    var calendars = {};
    $(function(){
@@ -225,6 +234,19 @@
          });
          recargarPagina(pagina);
       });
+
+      /*$("#btnbloqueargeneral").click(function(){
+
+        var urlbase='<?=site_url()?>';
+        //var dia=$(this).attr('data-value');
+        var dia=$("#dvbloquear").val();
+        $("#fechainicio").val(dia+' 00:00');
+        $("#fechafinal").val(dia+' 23:59');
+        $('#agendabloqgen').val($('#cmbagenda').val());
+        var param=$("#frmbloqgener").serialize();
+        $("#modalcancelar").load(urlbase + "tramites/ajax_confirmar_agregar_bloqueo_dia_completo?" + param);
+        $("#modalcancelar").modal();
+      });*/
    });
    //Cuando se escoje una de las fechas se crea el otro calendario estimando tiempos limites.
    function crearObjetoFecha(id1,id2,e){
@@ -329,25 +351,26 @@
         }
     });
   }
-   $('#btnbloqueo').click(function(){
-      var agenda=$('#cmbagendabloq').val();
-      if(agenda!=''){
-         $('.validacionbloq').html('');
-         var fei=$('#cont-cal1').find('.js-date').val();
-         var fef=$('#cont-cal2').find('.js-date').val();
-         if(fei!='' && fef!=''){
-            var val=$('#formbloqueo').serialize();
-            $("#modalcancelar").load(site_url + "tramites/ajax_confirmar_agregar_bloqueo?"+val);
-            $("#modalcancelar").modal();   
-         }else{
-            $('.validacionbloq').html('<div class="alert alert-error"><a class="close" data-dismiss="alert">×</a>Debe seleccionar rango de fechas/horas.</div>');
-         }
+  $('#btnbloqueo').click(function(){
+    var agenda=$('#cmbagendabloq').val();
+    if(agenda!=''){
+      $('.validacionbloq').html('');
+      var fei=$('#cont-cal1').find('.js-date').val();
+      var fef=$('#cont-cal2').find('.js-date').val();
+      if(fei!='' && fef!=''){
+        var val=$('#formbloqueo').serialize();
+        $("#modalcancelar").load(site_url + "tramites/ajax_confirmar_agregar_bloqueo?"+val);
+        $("#modalcancelar").modal();   
       }else{
-         $('.validacionbloq').html('<div class="alert alert-error"><a class="close" data-dismiss="alert">×</a>Debe seleccionar una agenda.</div>');
+        $('.validacionbloq').html('<div class="alert alert-error"><a class="close" data-dismiss="alert">×</a>Debe seleccionar rango de fechas/horas.</div>');
       }
-      
-      
-   });
+    }else{
+      $('.validacionbloq').html('<div class="alert alert-error"><a class="close" data-dismiss="alert">×</a>Debe seleccionar una agenda.</div>');
+    }
+  });
 </script>
 <div id="modalcancelar" class="modal hide fade"></div>
 <div id="modalasistencia" class="modal hide fade"></div>
+<form id="frmdataranghorbloq">
+  
+</form>

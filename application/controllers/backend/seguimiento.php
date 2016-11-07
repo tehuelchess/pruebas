@@ -586,6 +586,3 @@ groupBy ( 't.id' )->orderBy ( $order . ' ' . $direction )->limit ( $per_page )->
 	}
 
 }
-
-/* End of file welcome.php */
-/* Location: ./application/controllers/welcome.php */

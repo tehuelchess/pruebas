@@ -823,6 +823,3 @@ class Agendas extends MY_BackendController {
         echo json_encode($array);
     }
 }
-
-/* End of file welcome.php */
-/* Location: ./application/controllers/welcome.php */
