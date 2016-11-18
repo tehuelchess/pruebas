@@ -933,7 +933,7 @@ class Tramites extends MY_Controller {
         }
         echo json_encode(array('code'=>$code,'mensaje'=>$mensaje));
     }
-    public function ajax_obtejer_datos_agenda(){
+    public function ajax_obtener_datos_agenda(){
         $code=0;
         $mensaje=0;
         $id=(isset($_GET['id']) && is_numeric($_GET['id']))?$_GET['id']:0;

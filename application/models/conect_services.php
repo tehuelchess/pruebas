@@ -10,13 +10,16 @@ class Connect_services{
     private $num_rows=0;
 
     function __construct(){
+        $CI =& get_instance();
         $this->componente='token_services';
         $this->cuenta=1;
         $this->num_rows=10;
+        $this->appkey = $CI->config->item('appkey');
     }
-    public function getAppkey(){
+    public function getAppkey(){        
         return $this->appkey;
     }
+    
     public function setAppkey($appkey=''){
         $trimAppkey = trim($appkey);
         if(isset($trimAppkey) && !empty($trimAppkey)){
@@ -95,10 +98,11 @@ class Connect_services{
             throw new Exception('El numero de registros por pagina debe ser mayor a 0');
         }
     }
-    public function save(){
+    
+     public function save(){
         try{
             $this->validateAll();
-            Doctrine_Manager::connection()->beginTransaction();
+            
             $objappkey=new Config_general();
 
             $objappkey->componente=$this->componente;
@@ -113,45 +117,20 @@ class Connect_services{
             $objdomain->llave='domain';
             $objdomain->valor=$this->domain;
 
-            /*$objuri=new Config_general();
-
-            $objuri->componente=$this->componente;
-            $objuri->cuenta=$this->cuenta;
-            $objuri->llave='base_services';
-            $objuri->valor=$this->base_services;
-
-            $objcontext=new Config_general();
-
-            $objcontext->componente=$this->componente;
-            $objcontext->cuenta=$this->cuenta;
-            $objcontext->llave='context';
-            $objcontext->valor=$this->context;
-
-            $objnumrow=new Config_general();
-
-            $objnumrow->componente=$this->componente;
-            $objnumrow->cuenta=$this->cuenta;
-            $objnumrow->llave='records';
-            $objnumrow->valor=$this->num_rows;*/
-
             if($this->isCreate()){
                 $objappkey->actualizar();
                 $objdomain->actualizar();
-                /*$objuri->actualizar();
-                $objnumrow->actualizar();
-                $objcontext->actualizar();*/
             }else{
                 $objappkey->save();
                 $objdomain->save();
-                /*$objuri->save();
-                $objcontext->save();
-                $objnumrow->save();*/
-            }
-            Doctrine_Manager::connection()->commit();
+                
+            }            
         }catch(Exception $err){
             throw new Exception($err->getMessage());
         }
     }
+    
+   
     private function validateAll(){
         $trimAppkey = trim($this->appkey);
         $trimDomain = trim($this->domain);
@@ -202,16 +181,14 @@ class Connect_services{
             throw new Exception($err->getMessage());
         }
     }
-    public function load_data(){
+     public function load_data(){
         try{
             $this->appkey=$this->loadCampo('appkey');
             $this->domain=$this->loadCampo('domain');
-            /*$this->base_services=$this->loadCampo('base_services');
-            $this->context=$this->loadCampo('context');
-            $this->num_rows=$this->loadCampo('records');
-            $this->num_rows=(isset($this->num_rows) && $this->num_rows!=0)?$this->num_rows:1;*/
         }catch(Exception $err){
             throw new Exception($err->getMessage());
         }
     }
+    
+
 }

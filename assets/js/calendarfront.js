@@ -1,6 +1,7 @@
 window.feriados=new Array();
 window.mesvisto='';
 window.calendar;
+window.hiddenbutton=false;
 $(function(){
     $( "#tabs" ).tabs();
     var idagenda=$('#txtidagenda').val();
@@ -68,19 +69,18 @@ $(function(){
             var ignore=0
             if (typeof($('#validarferiado')) !== "undefined"){
                 ignore=$('#validarferiado').val();
-                //console.log("ignore: "+ignore);
                 if(ignore==1){
                     $('.event-warning').parent().parent().addClass('festivodisp');
                     $('.event-warning').parent().parent().find('span').addClass('styhaycitaspan');
                 }
             }
-            
-            $.each($('span[data-cal-date'),function(index,element){
+             var tmp=new Date();
+            var $datehoy=new Date(tmp.getFullYear(),tmp.getMonth(),tmp.getDate(),0,0,0,0);
+            $.each($('span[data-cal-date]'),function(index,element){
                 var adateinview=$(this).attr('data-cal-date').split('-');
-                var $datecal=new Date(adateinview[0],adateinview[1],adateinview[2],0,0,0,0);
-                var $datehoy=new Date();
-                if( $datecal >= $datehoy){
-                    $('.eventradocup').parent().parent().find('span').addClass('diapasado');
+                var $datecal=new Date(adateinview[0],adateinview[1]-1,adateinview[2],0,0,0,0);
+                if($datecal.getTime() < $datehoy.getTime()){
+                    $(this).addClass('diapasado');
                 }
             });
             $('.eventradocup').parent().parent().find('span').addClass('diaocupado');
@@ -97,7 +97,32 @@ $(function(){
     $('.btn-group button[data-calendar-nav]').each(function() {
         var $this = $(this);
         $this.click(function() {
+            hiddenbutton=false;
             calendar.navigate($this.data('calendar-nav'));
+            var ignore=0
+            if (typeof($('#validarferiado')) !== "undefined"){
+                ignore=$('#validarferiado').val();
+            }
+            var index=0;
+            var sw=false;
+            var tmp=calendar.getDateSelect().split("/");
+            var hoy=new Date(tmp[2],tmp[1]-1,tmp[0],0,0,0,0);
+            for (var k in feriados){
+                if (feriados.hasOwnProperty(k)) {
+                    var m=k.split('-');
+                    var hol=new Date(m[2],m[1]-1,m[0],0,0,0,0);
+                    if(hoy.getTime() == hol.getTime()){
+                        if(ignore==0){
+                            sw=true;
+                        }
+                    }
+                }
+            }
+            if(sw){
+                //$("#cont_cal").css({'display':'none'});
+                $('#cont_cal').html('<div class="clearfix row-events-cal">No existe disponibilidad de citas</div>');
+                hiddenbutton=true;
+            }
         });
     });
 
@@ -319,7 +344,12 @@ function eventDaysCalendar(){
     $html=$html+iconrow+'<hr class="sep-row" /></div></div>';
     if(swhaycita){
         $('#cont_cal').html($html);
-        $("#btnbloqueargeneral").css({'display':'block'});
+        if(hiddenbutton){
+            //$("#btnbloqueargeneral").css({'display':'none'});
+            $('#cont_cal').html('<div class="clearfix row-events-cal">No existe disponibilidad de citas</div>');    
+        }else{
+            $("#btnbloqueargeneral").css({'display':'block'});
+        }
     }else{
         $("#btnbloqueargeneral").css({'display':'none'});
         $('#cont_cal').html('<div class="clearfix row-events-cal">No existe disponibilidad de citas</div>');
@@ -437,7 +467,7 @@ function unblock(idblock){
     $("#modalcancelar").modal();   
 }
 function ignorar_festivo(idagenda){
-    var url=$('#urlbase').val()+'tramites/ajax_obtejer_datos_agenda';
+    var url=$('#urlbase').val()+'tramites/ajax_obtener_datos_agenda';
     $.ajax({
         url: url,
         async:false,

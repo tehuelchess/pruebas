@@ -244,6 +244,30 @@ class Etapas extends MY_Controller {
             throw new Exception($err->getMessage());
         }
     }
+    private function confirmar_citas_grupo($ids){
+        try{
+            $uri=$this->base_services.''.$this->context.'appointments/bulkConfirm/';
+            $response = \Httpful\Request::post($uri)
+                ->body($ids)
+                ->expectsJson()
+                ->addHeaders(array(
+                    'appkey' => $this->appkey,             // heder de la app key
+                    'domain' => $this->domain                              // heder de domain
+                ))
+                ->sendIt();
+            $code=$response->code;
+            if($code==200){
+                if(isset($response->body) && is_array($response->body) && isset($response->body[0]->response->code)){
+                    $code=$response->body[0]->response->code;
+                    $appointment=$response->body[1]->id;
+                }
+            }else{
+                throw new Exception('La cita reservada ya no esta disponible, reserve una nueva hora.');
+            }
+        }catch(Exception $err){
+            throw new Exception($err->getMessage());
+        }
+    }
 
     public function ejecutar_form($etapa_id, $secuencia) {
         $etapa = Doctrine::getTable('Etapa')->find($etapa_id);
@@ -433,9 +457,19 @@ class Etapas extends MY_Controller {
         try{
             $appointments=$this->obtener_citas_de_tramite($etapa_id);
             if(isset($appointments) && is_array($appointments) && (count($appointments)>=1) ){
+                $json='{"ids":[';
+                $i=0;
                 foreach($appointments as $item){
-                    $this->confirmar_cita($item);
+                    if($i==0){
+                        $json=$json.'"'.$item.'"';
+                    }else{
+                        $json=$json.',"'.$item.'"';
+                    }
+                    $i++;
                 }
+                
+                $json=$json.']}';
+                $this->confirmar_citas_grupo($json);
                 $etapa->avanzar($this->input->post('usuarios_a_asignar'));
             }else{
                 $etapa->avanzar($this->input->post('usuarios_a_asignar'));    

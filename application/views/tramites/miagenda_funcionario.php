@@ -61,7 +61,7 @@
 <script src="<?= base_url() ?>assets/js/bootstrap-datetimepicker.min.js"></script>
 <script src= "<?= base_url('/assets/calendar/js/moment-2.2.1.js') ?>"></script>
 <script type="text/javascript" src="<?= base_url('assets/calendar/js/calendar-custom.js?v=0.7') ?>"></script>
-<script type="text/javascript" src="<?= base_url('assets/js/calendarfront.js?v=0.29') ?>"></script>
+<script type="text/javascript" src="<?= base_url('assets/js/calendarfront.js?v=0.30') ?>"></script>
 <script src="<?= base_url() ?>assets/js/collapse.js"></script>
 <script src="<?= base_url() ?>assets/js/transition.js"></script>
 
@@ -129,8 +129,8 @@
                             $acciones='<a class="btn btn-primary" onclick="ver_cita('.$item->appointment_id.',\''.$solicitante.'\',\''.$fechaparam.'\',\''.$hora.'\',\''.$item->tramite.'\',\''.$item->applyer_email.'\')" href="#"><i class="icon-white icon-edit"></i> Ver</a> <a class="btn btn-danger btncanappofun" href="#" onclick="cancelarCita(\''.$item->appointment_id.'\',\''.$fechaparam.'\');"><i class="icon-white icon-remove"></i> Cancelar</a>';
                             $asistencia='<a class="btn '.$acsi.' js-sia" data-idcita="'.$item->appointment_id.'" onclick="asistio(1,'.$item->appointment_id.','.$item->idtramite.','.$item->calendar_id.','.$item->idcampo.');" href="#">Si</a> <a class="btn '.$acno.' js-noa" data-idcita="'.$item->appointment_id.'" href="#" onclick="asistio(0,'.$item->appointment_id.','.$item->idtramite.','.$item->calendar_id.','.$item->idcampo.');" >No</a>';
                             echo '<tr><td>'.$item->tramite.'</td><td>'.$solicitante.'</td><td>'.$hora.'</td><td>'.$asistencia.'</td><td>'.$acciones.'</td></tr>';
+                            $swnocitas=false;
                           }
-                          $swnocitas=false;
                        }
                        if($swnocitas){
                           echo '<tr><td colspan="5" style="text-align: center;" >No existen citas agendadas</td></tr>';   
