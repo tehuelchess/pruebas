@@ -227,8 +227,8 @@ class Etapas extends MY_Controller {
             $response = \Httpful\Request::put($uri)
                 ->expectsJson()
                 ->addHeaders(array(
-                    'appkey' => $this->appkey,             // heder de la app key
-                    'domain' => $this->domain                              // heder de domain
+                    'appkey' => $this->appkey,
+                    'domain' => $this->domain                
                 ))
                 ->sendIt();
             $code=$response->code;
@@ -238,7 +238,7 @@ class Etapas extends MY_Controller {
                     $appointment=$response->body[1]->id;
                 }
             }else{
-                throw new Exception('La cita reservada ya no esta disponible, reserve una nueva hora.');
+                throw new Exception('La cita reservada ya no esta disponible. Por favor, reserve una nueva hora.');
             }
         }catch(Exception $err){
             throw new Exception($err->getMessage());
@@ -251,8 +251,8 @@ class Etapas extends MY_Controller {
                 ->body($ids)
                 ->expectsJson()
                 ->addHeaders(array(
-                    'appkey' => $this->appkey,             // heder de la app key
-                    'domain' => $this->domain                              // heder de domain
+                    'appkey' => $this->appkey,
+                    'domain' => $this->domain                
                 ))
                 ->sendIt();
             $code=$response->code;
@@ -262,7 +262,7 @@ class Etapas extends MY_Controller {
                     $appointment=$response->body[1]->id;
                 }
             }else{
-                throw new Exception('La cita reservada ya no esta disponible, reserve una nueva hora.');
+                throw new Exception('La cita reservada ya no esta disponible. Por favor, reserve una nueva hora.');
             }
         }catch(Exception $err){
             throw new Exception($err->getMessage());
@@ -562,7 +562,7 @@ class Etapas extends MY_Controller {
         $etapa = Doctrine::getTable('Etapa')->find($etapa_id);
 
         if (UsuarioSesion::usuario()->id != $etapa->usuario_id) {
-            echo 'No tiene permisos para hacer seguimiento a este tramite.';
+            echo 'No tiene permisos para hacer seguimiento a este trámite.';
             exit;
         }
 
@@ -748,8 +748,8 @@ class Etapas extends MY_Controller {
             $response = \Httpful\Request::get($uri)
                 ->expectsJson()
                 ->addHeaders(array(
-                    'appkey' => $this->appkey,             // heder de la app key
-                    'domain' => $this->domain                              // heder de domain
+                    'appkey' => $this->appkey,
+                    'domain' => $this->domain                
                 ))
                 ->sendIt();
             $code=$response->code;
@@ -792,8 +792,8 @@ class Etapas extends MY_Controller {
             $response = \Httpful\Request::get($uri)
                 ->expectsJson()
                 ->addHeaders(array(
-                    'appkey' => $this->appkey,             // heder de la app key
-                    'domain' => $this->domain                              // heder de domain
+                    'appkey' => $this->appkey,
+                    'domain' => $this->domain                
                 ))
                 ->sendIt();
             $code=$response->code;
@@ -919,6 +919,7 @@ class Etapas extends MY_Controller {
         $trimNombre = trim($nombre);
         $nombre=(!empty($trimNombre))?$nombre:'Cliente';
         $idagenda=(isset($_GET['idagenda']))?$_GET['idagenda']:'';
+        $tzz=(isset($_GET['tzz']))?$_GET['tzz']:'';
         $fecha=(isset($_GET['fecha']))?$_GET['fecha']:'';
         $fechafinal=(isset($_GET['fechafinal']))?$_GET['fechafinal']:'';
         $desc=(isset($_GET['desc']))?$_GET['desc']:'';
@@ -930,7 +931,13 @@ class Etapas extends MY_Controller {
         $tmp=explode(' ',$fecha);
         $fe=explode('-',$tmp[0]);
         $ho=explode(':',$tmp[1]);
-        $fechaformat=date(DATE_ATOM, mktime($ho[0],$ho[1],0,$fe[1],$fe[2],$fe[0]));
+        //$fechaformat=date(DATE_ATOM, mktime($ho[0],$ho[1],0,$fe[1],$fe[2],$fe[0]));
+        $defaulTimeZone  = new DateTimeZone(date_default_timezone_get());//'America/Santiago'
+        $browserTimeZone = empty($tzz)? $defaulTimeZone: new DateTimeZone($tzz);
+        $fechaCal = new DateTime($fecha, $browserTimeZone);
+        $fechaCal->setTimezone($defaulTimeZone);
+        $fechaformat=$fechaCal->format('Y-m-d H:i:sP');
+
         $mensaje='';
         $nomproceso='';
         //echo 'checkpoint a: '.$idetapa;
@@ -974,8 +981,8 @@ class Etapas extends MY_Controller {
                 $responsever = \Httpful\Request::get($uri)
                     ->expectsJson()
                     ->addHeaders(array(
-                        'appkey' => $this->appkey,             // heder de la app key
-                        'domain' => $this->domain                              // heder de domain
+                        'appkey' => $this->appkey,             // header de la app key
+                        'domain' => $this->domain              // header de domain
                     ))
                     ->sendIt();
                 $code=$responsever->code;
@@ -987,8 +994,8 @@ class Etapas extends MY_Controller {
                             ->expectsJson()
                             ->body($json)
                             ->addHeaders(array(
-                                'appkey' => $this->appkey,             // heder de la app key
-                                'domain' => $this->domain                              // heder de domain
+                                'appkey' => $this->appkey,             
+                                'domain' => $this->domain               
                             ))
                             ->sendIt();
                         $code=$response->code;
@@ -1028,8 +1035,8 @@ class Etapas extends MY_Controller {
                             ->expectsJson()
                             ->body($json)
                             ->addHeaders(array(
-                                'appkey' => $this->appkey,             // heder de la app key
-                                'domain' => $this->domain                              // heder de domain
+                                'appkey' => $this->appkey,             
+                                'domain' => $this->domain
                             ))
                             ->sendIt();
                         $code=$response->code;
@@ -1065,8 +1072,8 @@ class Etapas extends MY_Controller {
                     ->expectsJson()
                     ->body($json)
                     ->addHeaders(array(
-                        'appkey' => $this->appkey,             // heder de la app key
-                        'domain' => $this->domain                              // heder de domain
+                        'appkey' => $this->appkey,
+                        'domain' => $this->domain
                     ))
                     ->sendIt();
                 $code=$response->code;

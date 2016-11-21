@@ -125,7 +125,6 @@
         $("#modalnuevaagenda").modal();
     }
     function paginar(obj){
-        console.log('url: '+$(obj).attr('data-url'));
         $('#frmsearch').attr('action',$(obj).attr('data-url'));
         $('#frmsearch').submit();
     }

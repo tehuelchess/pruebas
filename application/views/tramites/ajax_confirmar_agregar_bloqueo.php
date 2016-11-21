@@ -16,7 +16,7 @@
     </div>
 <div class="modal-footer">
     <button class="btn js_cerrar_vcancelar" data-dismiss="modal">Cerrar</button>
-    <a href="#" id="btnconfirmarbloqueo" class="btn btn-primary">Bloquear</a>
+    <a href="#" id="btnconfirmarbloqueo" class="btn btn-primary">Confirmar</a>
 </div>
 <script>
     $(function(){

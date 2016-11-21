@@ -197,8 +197,8 @@ class Formularios extends MY_BackendController {
             $response = \Httpful\Request::get($uri)
                 ->expectsJson()
                 ->addHeaders(array(
-                    'appkey' => $this->appkey,             // heder de la app key
-                    'domain' => $this->domain                              // heder de domain
+                    'appkey' => $this->appkey,
+                    'domain' => $this->domain                
                 ))
                 ->sendIt();
             $code=$response->code;
@@ -418,8 +418,8 @@ class Formularios extends MY_BackendController {
                 $response = \Httpful\Request::get($uri)
                     ->expectsJson()
                     ->addHeaders(array(
-                        'appkey' => $this->appkey,              // heder de la app key
-                        'domain' => $this->domain              // heder de domain
+                        'appkey' => $this->appkey, 
+                        'domain' => $this->domain
                     ))
                     ->sendIt();
                 $code=$response->code;
@@ -455,8 +455,8 @@ class Formularios extends MY_BackendController {
                     $response = \Httpful\Request::get($uri)
                         ->expectsJson()
                         ->addHeaders(array(
-                            'appkey' => $this->appkey,              // heder de la app key
-                            'domain' => $this->domain              // heder de domain
+                            'appkey' => $this->appkey, 
+                            'domain' => $this->domain
                         ))
                         ->sendIt();
                     $code=$response->code;

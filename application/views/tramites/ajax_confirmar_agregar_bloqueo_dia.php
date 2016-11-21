@@ -4,7 +4,7 @@
 ?>
 <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal">×</button>
-    <h3 id="myModalLabel">Bloquear Dia</h3>
+    <h3 id="myModalLabel">Bloquear d&iacute;a</h3>
 </div>
     <input type="hidden" name="fechainicio" />
     <input type="hidden" name="fechafinal" />
@@ -16,7 +16,7 @@
     </div>
 <div class="modal-footer">
     <button class="btn js_cerrar_vcancelar" data-dismiss="modal">Cerrar</button>
-    <a href="#" id="btnconfirmarbloqueo" class="btn btn-primary">Bloquear</a>
+    <a href="#" id="btnconfirmarbloqueo" class="btn btn-primary">Confirmar</a>
 </div>
 <script>
     $(function(){
@@ -24,10 +24,8 @@
         var y=<?= date('Y',$start/1000) ?>;
         var m=<?= date('m',$start/1000) ?>;
         var d=<?= date('d',$start/1000) ?>;
-
         var dia=moment(y+"/"+m+"/"+d).format('LL');
-
-        var mendesc='¿Está seguro de bloquear el dia '+dia+'?';
+        var mendesc='¿Está seguro de bloquear el día '+dia+'?';
         $('#labdesc').text(mendesc);
         $('#btnconfirmarbloqueo').click(function(){
             $('.validacion').html('');
@@ -67,9 +65,7 @@
             }else{
                 $(".ajaxLoader").remove();
                 $('.validacion').html('<div class="alert alert-error"><a class="close" data-dismiss="alert">×</a>Debe escribir una raz&oacute;n.</div>');
-            }
-            
+            }            
         });
-        
     });
 </script>

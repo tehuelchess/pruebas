@@ -337,7 +337,6 @@ if(!String.prototype.formatNum) {
 							break;
 					}
 				}
-				//console.log("holiday: "+key+"date: "+date);
 				if(!date) {
 					warn('Unknown holiday: ' + key);
 					failed = true;

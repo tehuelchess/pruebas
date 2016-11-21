@@ -26,10 +26,8 @@ class Agendas extends MY_BackendController {
         }catch(Exception $err){
             //echo 'Error: '.$err->getMessage();
         }
-       
-//        if(UsuarioBackendSesion::usuario()->rol!='super' && UsuarioBackendSesion::usuario()->rol!='modelamiento'){
         if(!in_array('super', explode(',',UsuarioBackendSesion::usuario()->rol) ) && !in_array( 'agenda',explode(',',UsuarioBackendSesion::usuario()->rol))){
-            echo 'No tiene permisos para acceder a esta seccion.';
+            echo 'No tiene permisos para acceder a esta secci&oacute;n.';
             exit;
         }
     }
@@ -45,8 +43,8 @@ class Agendas extends MY_BackendController {
             $response = \Httpful\Request::get($uri)
                 ->expectsJson()
                 ->addHeaders(array(
-                    'appkey' => $this->appkey,              // heder de la app key
-                    'domain' => $this->domain              // heder de domain
+                    'appkey' => $this->appkey, 
+                    'domain' => $this->domain
                 ))
                 ->sendIt();
             if(isset($response->body) && is_array($response->body) && isset($response->body[0]->response->code) && $response->body[0]->response->code==200){
@@ -76,18 +74,12 @@ class Agendas extends MY_BackendController {
         $paginador['registros']=$registros;
         $paginador['inicio']=$inicio;
         $paginador['inicio']=0;
-        
         $pagina_intervalo=ceil($num_paginas/2)-1;
-
         $pagina_desde=$pagina-$pagina_intervalo; 
         $pagina_hasta=$pagina+$pagina_intervalo;
         $paginador['pagina_desde']=$pagina_desde;
         $paginador['pagina_hasta']=$pagina_hasta;
-
-
         $data['paginador']=$paginador;
-
-
         $this->load->view('backend/template', $data);
     }
     public function config_global(){
@@ -105,7 +97,6 @@ class Agendas extends MY_BackendController {
     public function crear(){
         $data['title']='Nueva Agenda';
         $data['nuevo']=true;
-
         $data['content'] = 'backend/agendas/template';
         $this->load->view('backend/template', $data);
     }
@@ -124,8 +115,8 @@ class Agendas extends MY_BackendController {
                 $response = \Httpful\Request::get($uri)
                     ->expectsJson()
                     ->addHeaders(array(
-                        'appkey' => $this->appkey,              // heder de la app key
-                        'domain' => $this->domain              // heder de domain
+                        'appkey' => $this->appkey, 
+                        'domain' => $this->domain
                     ))
                     ->sendIt();
                 if(isset($response->body) && is_array($response->body) && isset($response->body[0]->response->code) && $response->body[0]->response->code==200){
@@ -149,18 +140,12 @@ class Agendas extends MY_BackendController {
             $paginador['registros']=$registros;
             $paginador['inicio']=$inicio;
             $paginador['inicio']=0;
-            
             $pagina_intervalo=ceil($num_paginas/2)-1;
-
             $pagina_desde=$pagina-$pagina_intervalo; 
             $pagina_hasta=$pagina+$pagina_intervalo;
             $paginador['pagina_desde']=$pagina_desde;
             $paginador['pagina_hasta']=$pagina_hasta;
-
-
             $data['paginador']=$paginador;
-
-
             $this->load->view('backend/template', $data);
         }else{
             $this->listarAgendas(1);
@@ -202,8 +187,8 @@ class Agendas extends MY_BackendController {
                     $response = \Httpful\Request::put($uri)
                         ->expectsJson()
                         ->addHeaders(array(
-                            'appkey' => $this->appkey,              // heder de la app key
-                            'domain' => $this->domain              // heder de domain
+                            'appkey' => $this->appkey, 
+                            'domain' => $this->domain
                         ))
                         ->sendIt();
                     $code=$response->code;
@@ -225,7 +210,7 @@ class Agendas extends MY_BackendController {
                         $code=$response->body->response->code;
                         switch($code){
                             case '1060':
-                                $mensaje='No se puede eliminar la agenda porque tiene citas asignadas';
+                                $mensaje='No se puede eliminar la agenda, tiene citas asignadas.';
                             break;
                             default:
                                 $mensaje=$response->body->response->message;    
@@ -236,7 +221,7 @@ class Agendas extends MY_BackendController {
                     $mensaje=$err->getMessage();
                 }
             }else{
-                $mensaje='Debe ingresar un motivo por el cual elimina la agenda.';
+                $mensaje='Debe ingresar el motivo por el cual elimina la agenda.';
             }
         }
         echo json_encode(array('code'=>$code,'mensaje'=>$mensaje));
@@ -261,8 +246,8 @@ class Agendas extends MY_BackendController {
                 $response = \Httpful\Request::get($uri)
                     ->expectsJson()
                     ->addHeaders(array(
-                        'appkey' => $this->appkey,              // heder de la app key
-                        'domain' => $this->domain              // heder de domain
+                        'appkey' => $this->appkey, 
+                        'domain' => $this->domain
                     ))
                     ->sendIt();
                 $code=$response->code;
@@ -298,7 +283,7 @@ class Agendas extends MY_BackendController {
                 $mensaje=$err->getMessage();
             }
         }else{
-            $mensaje='No se pudo cargar los datos intentelo mas tarde';
+            $mensaje='Imposible cargar los datos. Por favor, int&eacute;ntelo m&aacute;s tarde.';
         }
         $array=array('code'=>200,'message'=>$mensaje,'calendar'=>$data,'franja'=>$franjas);
         echo json_encode($array);
@@ -323,11 +308,7 @@ class Agendas extends MY_BackendController {
             $finindexdia=isset($_GET['horainicio'])?count($_GET['horainicio']):0;
             $ignorarferiados=(isset($_GET['ignorarferiados']) && $_GET['ignorarferiados']==1)?1:0;
             $tminimocancelacion=(isset($_GET['tmincancelacion']))?$_GET['tmincancelacion']:0;
-            //$tmpta=explode(':',$_GET['tconfirmacion']);
-            //$tmpta=$this->config->item('tiempoconfimacioncita');
-            //$tconfirmacion=intval($tmpta[1])+(intval($tmpta[0])*60);
             $tconfirmacion=$this->config->item('tiempoconfimacioncita');
-
             $arrayshedule=array();
             $lunes=$martes=$miercoles=$jueves=$viernes=$sabado=$domingo=array();
             $franja=array();
@@ -444,8 +425,8 @@ class Agendas extends MY_BackendController {
                                 ->body($json)
                                 ->expectsJson()
                                 ->addHeaders(array(
-                                    'appkey' => $this->appkey,              // heder de la app key
-                                    'domain' => $this->domain              // heder de domain
+                                    'appkey' => $this->appkey, 
+                                    'domain' => $this->domain
                                 ))
                                 ->sendIt();
                             $code=$response->code;
@@ -456,7 +437,7 @@ class Agendas extends MY_BackendController {
                                 $code=$response->body->response->code;
                                 switch($code){
                                     case "1040":
-                                        $mensaje='No puede ingresar una agenda con el mismo nombre';
+                                        $mensaje='Nombre ya existente. Por favor, elija uno nuevo.';
                                     break;
                                     case "1020":
                                         $mensaje=''.$response->body->response->message;
@@ -468,26 +449,23 @@ class Agendas extends MY_BackendController {
                                 }
                             }
                         }catch(Exception $err){
-                            //$mensaje=$err->getMessage();}
-                            $mensaje='El servicio tuvo un problema verifique los datos y vuelva a intentarlo';
+                            $mensaje='Problema en la comunicaci&oacute;n. Por favor verifique los datos y vuelva a intentarlo.';
                         }
                     }else{
                         $code=2;
-                        $mensaje='Debe seleccionar el tiempo de atenci&oacuten';
+                        $mensaje='Debe seleccionar el tiempo de atenci&oacute;n';
                     }
                 }else{
                     $code=3;
-                    //$mensaje='No se puede grabar agenda con una hora inicial y hora final iguales';
                     $mensaje='Rango de horas inv&aacute;lido';
                 }
             }else{
                 $code=4;
                 if($swhorval){
-                    $mensaje='Debe Agregar almenos una franja horaria';
+                    $mensaje='Debe Agregar al menos una franja horaria.';
                 }else{
                     $mensaje='Rango de horas inv&aacute;lido';
                 }
-                //$mensaje='Debe agregar al menos una franja horaria';
             }
             
         }
@@ -504,18 +482,15 @@ class Agendas extends MY_BackendController {
                 $hora1=strtotime($rangi);
                 $hora2=strtotime($rangof);
                 if(($hora1>=$hini &&  $hora1<$hinf) || ($hora2>$hini &&  $hora2<=$hinf)){
-                    //throw new Exception('El dia '.$nomdia.' con horas entre '.$rangi.'-'.$rangof.' esta generando inconsistencia con otro rango favor verifiquelo para continuar');
                     throw new Exception('Rango de horas inv&aacute;lido');
                 }else{
                     if(($hini>=$hora1 && $hini<$hora2) || ($hinf>$hora1 && $hinf<=$hora2)){
-                        //throw new Exception('El dia '.$nomdia.' con horas entre '.$rangi.'-'.$rangof.' esta generando inconsistencia con otro rango favor verifiquelo para continuar');
                         throw new Exception('Rango de horas inv&aacute;lido');
                     }
                 }
                 $i++;
             }
             $array[]=$rangi.'-'.$rangof;
-
             return $array;
         }catch(Exception $err){
             throw new Exception($err->getMessage());
@@ -523,7 +498,7 @@ class Agendas extends MY_BackendController {
     }
     public function ajax_editar_agenda_back(){//funcion editar agenda (backend) del Service
         $code=0;
-        $mensaje='No se pudo guardar, vualeva a intentarlo, si el problema persiste consute con el administrador.';
+        $mensaje='Imposible almacenar la informaci&oacute;, Por favor, vuelva a intentarlo, si el problema persiste consute con el administrador.';
         if(isset($_GET) && is_array($_GET)){
 
             $nombre=$_GET['nombre'];
@@ -542,9 +517,6 @@ class Agendas extends MY_BackendController {
             $finindexdia=isset($_GET['horainicio'])?count($_GET['horainicio']):0;
             $ignorarferiados=(isset($_GET['ignorarferiados']) && $_GET['ignorarferiados']==1)?1:0;
             $tminimocancelacion=(isset($_GET['tmincancelacion']))?$_GET['tmincancelacion']:0;
-            
-            //$tmpta=explode(':',$_GET['tconfirmacion']);
-            //$tconfirmacion=intval($tmpta[1])+(intval($tmpta[0])*60);
             $tconfirmacion=$this->config->item('tiempoconfimacioncita');
             $arrayshedule=array();
             $lunes=$martes=$miercoles=$jueves=$viernes=$sabado=$domingo=array();
@@ -562,9 +534,7 @@ class Agendas extends MY_BackendController {
                         foreach($arr as $item){
                             switch($item){
                                 case "lunes":
-                                    //echo 'cuenta: '.$_GET['horafin'][$cuenta];
                                     $lunes=$this->add_rangos_franjas($_GET['horainicio'][$cuenta],$_GET['horafin'][$cuenta],'lunes',$lunes);
-                                    //print_r($lunes);
                                 break;
                                 case "martes":
                                     $martes=$this->add_rangos_franjas($_GET['horainicio'][$cuenta],$_GET['horafin'][$cuenta],'martes',$martes);
@@ -664,8 +634,8 @@ class Agendas extends MY_BackendController {
                                 ->body($json)
                                 ->expectsJson()
                                 ->addHeaders(array(
-                                    'appkey' => $this->appkey,              // heder de la app key
-                                    'domain' => $this->domain              // heder de domain
+                                    'appkey' => $this->appkey, 
+                                    'domain' => $this->domain
                                 ))
                                 ->sendIt();
                             $code=$response->code;
@@ -676,7 +646,7 @@ class Agendas extends MY_BackendController {
                                 $code=$response->body->response->code;
                                 $mensaje=$response->body->response->message;
                                 if($code==500){
-                                    $mensaje='No se pude actualizar porque tiene citas agendadas';
+                                    $mensaje='Imposible actualizar la agenda, tiene citas agendadas.';
                                 }
                             }
                         }catch(Exception $err){
@@ -688,13 +658,12 @@ class Agendas extends MY_BackendController {
                     }
                 }else{
                     $code=3;
-                    //$mensaje='No se puede grabar agenda con una hora inicial y hora final iguales';
                     $mensaje='Rango de horas inv&aacute;lido';
                 }
             }else{
                 $code=4;
                 if($swhorval){
-                    $mensaje='Debe Agregar almenos una franja horaria';
+                    $mensaje='Debe Agregar al menos una franja horaria';
                 }else{
                     $mensaje='Rango de horas inv&aacute;lido';   
                 }
@@ -707,7 +676,6 @@ class Agendas extends MY_BackendController {
         $var='{
                 "success": 1,
                 "result": [
-
                 ]
             }
             ';
@@ -722,8 +690,8 @@ class Agendas extends MY_BackendController {
             $response = \Httpful\Request::get($uri)
                 ->expectsJson()
                 ->addHeaders(array(
-                    'appkey' => $this->appkey,             // heder de la app key
-                    'domain' => $this->domain                              // heder de domain
+                    'appkey' => $this->appkey,
+                    'domain' => $this->domain                
                 ))
                 ->sendIt();
             $code=$response->code;
@@ -758,8 +726,8 @@ class Agendas extends MY_BackendController {
                     ->expectsJson()
                     ->body($json)
                     ->addHeaders(array(
-                        'appkey' => $this->appkey,             // heder de la app key
-                        'domain' => $this->domain                              // heder de domain
+                        'appkey' => $this->appkey,
+                        'domain' => $this->domain                
                     ))
                     ->sendIt();
                 $code=$response->code;
@@ -771,7 +739,7 @@ class Agendas extends MY_BackendController {
                         $code=$response->body->response->code;
                         switch($code){
                             case '1080':
-                                $mensaje='No se puede agregar este dia festivo porque ya existen citas para este dia';
+                                $mensaje='Imposible agregar este d&iacute;a feriado, ya existen citas para este d&iacute;a';
                             break;
                             default:
                                 $mensaje=$response->body->response->message;
@@ -783,7 +751,7 @@ class Agendas extends MY_BackendController {
                 $mensaje=$err->getMessage();
             }
         }else{
-            $mensaje='No se pudo ingresar el dia el parametro de fecha a ingresar es incorrecto';
+            $mensaje='No se pudo ingresar el d&iacute;a, el par&aacute;metro es incorrecto.';
         }
         $array=array('code'=>$code,'mensaje'=>$mensaje,'daysoff'=>$data);
         echo json_encode($array);
@@ -799,8 +767,8 @@ class Agendas extends MY_BackendController {
                 $response = \Httpful\Request::delete($uri)
                     ->expectsJson()
                     ->addHeaders(array(
-                        'appkey' => $this->appkey,             // heder de la app key
-                        'domain' => $this->domain                              // heder de domain
+                        'appkey' => $this->appkey,
+                        'domain' => $this->domain                
                     ))
                     ->sendIt();
                 $code=$response->code;
@@ -817,7 +785,7 @@ class Agendas extends MY_BackendController {
                 $mensaje=$err->getMessage();
             }
         }else{
-            $mensaje='No se pudo eliminar el dia, el parametro de la fecha a eliminar es incorrecto';
+            $mensaje='No se pudo eliminar el d&iacute;a, el par&aacute;metro es incorrecto.';
         }
         $array=array('code'=>$code,'mensaje'=>$mensaje,'daysoff'=>$data);
         echo json_encode($array);

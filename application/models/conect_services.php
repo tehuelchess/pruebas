@@ -103,13 +103,6 @@ class Connect_services{
         try{
             $this->validateAll();
             
-            $objappkey=new Config_general();
-
-            $objappkey->componente=$this->componente;
-            $objappkey->cuenta=$this->cuenta;
-            $objappkey->llave='appkey';
-            $objappkey->valor=$this->appkey;
-            
             $objdomain=new Config_general();
 
             $objdomain->componente=$this->componente;
@@ -117,11 +110,9 @@ class Connect_services{
             $objdomain->llave='domain';
             $objdomain->valor=$this->domain;
 
-            if($this->isCreate()){
-                $objappkey->actualizar();
+            if($this->isCreate()){                
                 $objdomain->actualizar();
             }else{
-                $objappkey->save();
                 $objdomain->save();
                 
             }            
@@ -183,7 +174,8 @@ class Connect_services{
     }
      public function load_data(){
         try{
-            $this->appkey=$this->loadCampo('appkey');
+            $CI =& get_instance();        
+            $this->appkey=$CI->config->item('appkey');
             $this->domain=$this->loadCampo('domain');
         }catch(Exception $err){
             throw new Exception($err->getMessage());

@@ -6,7 +6,7 @@
 </ul>
 <div class="validacion"></div>
 <form id="frmsearch" method="POST" action="<?= base_url('backend/agendas/buscar') ?>" >
-    <a class="btn btn-success" href="#" onclick="nuevaagenda();"  ><i class="icon-file icon-white"></i> Nuevo</a>
+    <a class="btn btn-success" href="#" onclick="nuevaagenda();"  ><i class="icon-file icon-white"></i> Nueva</a>
     <!-- <label class='lpertenece'>Pertenece a:</label> -->
     <div class="zona-search clearfix" >
         <div class="clearfix"><input type="text" name="pertenece" class="js-pertenece" /></div>
@@ -17,7 +17,7 @@
     <thead>
         <tr>
             <th>Nombre</th>
-            <th>Pertenece</th>
+            <th>Pertenece a:</th>
             <th>Acciones</th>
         </tr>
     </thead>

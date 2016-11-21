@@ -49,7 +49,6 @@
 <script src= "<?= base_url('/assets/js/jquery-ui/js/jquery-ui.js') ?>"></script>
 <script src= "<?= base_url('/assets/js/moment.min.js') ?>"></script>
 <script type="text/javascript" src="<?= base_url('assets/calendar/components/underscore/underscore-min.js') ?>"></script>
-<!-- <script type="text/javascript" src="<?= base_url('assets/calendar/components/bootstrap2/js/bootstrap.min.js') ?>"></script> -->
 <script type="text/javascript" src="<?= base_url('assets/calendar/components/jstimezonedetect/jstz.min.js') ?>"></script>
 <script type="text/javascript" src="<?= base_url('assets/calendar/js/language/es-CO.js') ?>"></script>
 <script type="text/javascript" src="<?= base_url('assets/calendar/js/calendar.js?v=0.1') ?>"></script>
@@ -63,9 +62,9 @@
     <table class="table js-tab-agenda">
         <thead>
             <tr>
-                <th>Tramite</th>
-                <th>Atiende</th>
-                <th>Cuando</th>
+                <th>Tr&aacute;mite</th>
+                <th>Responsable</th>
+                <th>Fecha</th>
                 <th>Acciones</th>
             </tr>
         </thead>
@@ -108,7 +107,6 @@
         moment.lang('es');
     });
     function cancelarCita(id,fecha) {
-        //$("#modalcancelar").load(site_url + "backend/agendasusuario/ajax_cancelar_cita/" + id+"/"+fecha);
         $("#modalcancelar").load(site_url + "backend/agendasusuario/ajax_cancelar_cita?id="+id+"&fecha="+fecha);
         $("#modalcancelar").modal();
     }

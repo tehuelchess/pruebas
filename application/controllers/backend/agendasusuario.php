@@ -57,7 +57,6 @@ class AgendasUsuario extends MY_BackendController {
         $data['idcita']=$idcita;
         $data['idtramite']=$idtramite;
         $data['calendario']=$calendario;
-
         $this->load->view ( 'backend/agendas/ajax_front_asistencia', $data );
     }
     public function ajax_confirmo_asistencia(){
@@ -117,8 +116,8 @@ class AgendasUsuario extends MY_BackendController {
                     ->expectsJson()
                     ->body($json)
                     ->addHeaders(array(
-                        'appkey' => $this->appkey,              // heder de la app key
-                        'domain' => $this->domain              // heder de domain
+                        'appkey' => $this->appkey, 
+                        'domain' => $this->domain
                     ))
                     ->sendIt();
                 $code=$response->code;
@@ -166,6 +165,4 @@ class AgendasUsuario extends MY_BackendController {
         $data['idcita']=$idcita;
         $this->load->view ('tramites/ajax_cancelar_cita_funcionario', $data);
     }
-
-
 }

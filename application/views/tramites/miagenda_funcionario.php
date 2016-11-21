@@ -55,7 +55,6 @@
 <script src= "<?= base_url('/assets/js/jquery-ui/js/jquery-ui.js') ?>"></script>
 <script src= "<?= base_url('/assets/js/moment.min.js') ?>"></script>
 <script type="text/javascript" src="<?= base_url('assets/calendar/components/underscore/underscore-min.js') ?>"></script>
-<!-- <script type="text/javascript" src="<?= base_url('assets/calendar/components/bootstrap2/js/bootstrap.min.js') ?>"></script> -->
 <script type="text/javascript" src="<?= base_url('assets/calendar/components/jstimezonedetect/jstz.min.js') ?>"></script>
 <script type="text/javascript" src="<?= base_url('assets/calendar/js/language/es-CO.js') ?>"></script>
 <script src="<?= base_url() ?>assets/js/bootstrap-datetimepicker.min.js"></script>
@@ -73,7 +72,7 @@
   <?php
      if(isset($agendas) && count($agendas)>1){
         echo '
-           <label>Agenda</label>
+           <label>Agenda:</label>
            <select id="cmbagenda" name="cmbagenda">';
               if(isset($agendas) && $agendas){
                  foreach($agendas as $item){
@@ -92,7 +91,7 @@
   <div id="tabs" class="containter-tabs-citas" style="display:none">
     <ul>
       <li><a href="#tabs-1">Hoy</a></li>
-      <li><a href="#tabs-2">Citas</a></li>
+      <li><a href="#tabs-2">Calendario</a></li>
     </ul>
       <div id="tabs-1" class="tabs-func" >
         <h2><?php 
@@ -103,9 +102,9 @@
               <table class="table js-tab-agenda" >
                  <thead>
                     <tr>
-                       <th>Tramite</th>
+                       <th>Tr&aacute;mite</th>
                        <th>Solicitante</th>
-                       <th>Cuando</th>
+                       <th>Hora</th>
                        <th>Asistencia</th>
                        <th>Acciones</th>
                     </tr>
@@ -166,9 +165,9 @@
                   
                 </div>
                  <div class="btn-group">
-                    <button type="button" class="btn" data-calendar-nav="prev"><<</button>
+                    <button type="button" class="btn" data-calendar-nav="prev">&lt;&lt;</button>
                     <button type="button" class="btn btn-primary" data-calendar-nav="today">Hoy</button>
-                    <button type="button" class="btn" data-calendar-nav="next">>></button>
+                    <button type="button" class="btn" data-calendar-nav="next">&gt;&gt;</button>
                  </div>
                  <div class="btn-group">
                     <button type="button" class="btn" data-calendar-view="year">A&ntilde;o</button>
@@ -180,29 +179,6 @@
               <h3></h3>
            </div>
           <div id="calendar" class="calendar cal-front-fun"></div>
-        </div>
-        <div style="margin-top: 30px; display:none;">
-          <div class="clearfix">
-            <div class="circ event-info float-left"></div><span>&nbsp;&nbsp;&nbsp;Este color identifica a las citas reservadas. Pasando el cursor sobre ellas podra ver el detalle de la cita </span>
-          </div>
-          <div class="clearfix">
-            <div class="circ event-warning float-left"></div><span>&nbsp;&nbsp;&nbsp;Este color identifica la disponibilidad de citas.</span>
-          </div>
-          <div class="clearfix">
-            <div class="circ event-success float-left"></div><span>&nbsp;&nbsp;&nbsp;Este color identifica cuando una franja horaria esta bloqueada. Aqui no se prodran reservar citas.</span>
-          </div>
-          <div class="clearfix">
-            <div class="circ-blank float-left"></div><span>&nbsp;&nbsp;&nbsp;Al presionar 1 clic sobre un dia del calendario, vera el detalle del dia.</span>
-          </div>
-          <div class="clearfix">
-            <div class="circ-blank float-left"></div><span>&nbsp;&nbsp;&nbsp;Al presionar 2 clic sobre un dia del calendario, cambiara a vista de dia.</span>
-          </div>
-          <div class="clearfix">
-            <span style="margin-left:3px; cursor: inherit;" class="glyphicon glyphicon glyphicon-ban-circle cursor" aria-hidden="true"></span><span>&nbsp;&nbsp;&nbsp;Para bloquear la disponibilidad de cita presionar clic sobre el icono en la visa de dia.</span>
-          </div>
-          <div class="clearfix">
-            <span style="margin-left:3px; cursor: inherit;" class="glyphicon glyphicon glyphicon-remove-circle cursor" aria-hidden="true"></span><span>&nbsp;&nbsp;&nbsp;Para eliminar un bloqueo de cita presionar clic sobre el icono en la visa de dia.</span>
-          </div>
         </div>
       </div>
   </div>
@@ -234,19 +210,6 @@
          });
          recargarPagina(pagina);
       });
-
-      /*$("#btnbloqueargeneral").click(function(){
-
-        var urlbase='<?=site_url()?>';
-        //var dia=$(this).attr('data-value');
-        var dia=$("#dvbloquear").val();
-        $("#fechainicio").val(dia+' 00:00');
-        $("#fechafinal").val(dia+' 23:59');
-        $('#agendabloqgen').val($('#cmbagenda').val());
-        var param=$("#frmbloqgener").serialize();
-        $("#modalcancelar").load(urlbase + "tramites/ajax_confirmar_agregar_bloqueo_dia_completo?" + param);
-        $("#modalcancelar").modal();
-      });*/
    });
    //Cuando se escoje una de las fechas se crea el otro calendario estimando tiempos limites.
    function crearObjetoFecha(id1,id2,e){

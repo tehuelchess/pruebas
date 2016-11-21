@@ -137,8 +137,8 @@ class Tramites extends MY_Controller {
                 $response = \Httpful\Request::get($uri)
                     ->expectsJson()
                     ->addHeaders(array(
-                        'appkey' => $this->appkey,              // heder de la app key
-                        'domain' => $this->domain              // heder de domain
+                        'appkey' => $this->appkey, 
+                        'domain' => $this->domain
                     ))
                     ->sendIt();
                 $code=$response->code;
@@ -164,8 +164,8 @@ class Tramites extends MY_Controller {
             $response = \Httpful\Request::get($uri)
                 ->expectsJson()
                 ->addHeaders(array(
-                    'appkey' => $this->appkey,              // heder de la app key
-                    'domain' => $this->domain              // heder de domain
+                    'appkey' => $this->appkey, 
+                    'domain' => $this->domain
                 ))
                 ->sendIt();
             $code=$response->code;
@@ -200,8 +200,8 @@ class Tramites extends MY_Controller {
             $response = \Httpful\Request::get($uri)
                 ->expectsJson()
                 ->addHeaders(array(
-                    'appkey' => $this->appkey,              // heder de la app key
-                    'domain' => $this->domain              // heder de domain
+                    'appkey' => $this->appkey, 
+                    'domain' => $this->domain
                 ))
                 ->sendIt();
             $code=$response->code;
@@ -251,8 +251,8 @@ class Tramites extends MY_Controller {
             $response = \Httpful\Request::get($uri)
                 ->expectsJson()
                 ->addHeaders(array(
-                    'appkey' => $this->appkey,              // heder de la app key
-                    'domain' => $this->domain              // heder de domain
+                    'appkey' => $this->appkey, 
+                    'domain' => $this->domain
                 ))
                 ->sendIt();
             $code=$response->code;
@@ -362,8 +362,8 @@ class Tramites extends MY_Controller {
             $response = \Httpful\Request::get($uri)
                 ->expectsJson()
                 ->addHeaders(array(
-                    'appkey' => $this->appkey,              // heder de la app key
-                    'domain' => $this->domain              // heder de domain
+                    'appkey' => $this->appkey, 
+                    'domain' => $this->domain
                 ))
                 ->sendIt();
             $code=$response->code;
@@ -395,8 +395,8 @@ class Tramites extends MY_Controller {
                 $response = \Httpful\Request::get($uri)
                     ->expectsJson()
                     ->addHeaders(array(
-                        'appkey' => $this->appkey,              // heder de la app key
-                        'domain' => $this->domain              // heder de domain
+                        'appkey' => $this->appkey, 
+                        'domain' => $this->domain
                     ))
                     ->sendIt();
                 $code=$response->code;
@@ -520,8 +520,8 @@ class Tramites extends MY_Controller {
                 ->expectsJson()
                 ->body($json)
                 ->addHeaders(array(
-                    'appkey' => $this->appkey,              // heder de la app key
-                    'domain' => $this->domain              // heder de domain
+                    'appkey' => $this->appkey, 
+                    'domain' => $this->domain
                 ))
                 ->sendIt();
             $code=$response->code;
@@ -574,8 +574,8 @@ class Tramites extends MY_Controller {
                 $response = \Httpful\Request::get($uri)
                     ->expectsJson()
                     ->addHeaders(array(
-                        'appkey' => $this->appkey,             // heder de la app key
-                        'domain' => $this->domain                              // heder de domain
+                        'appkey' => $this->appkey,
+                        'domain' => $this->domain                
                     ))
                     ->sendIt();
                 $code=$response->code;
@@ -606,8 +606,8 @@ class Tramites extends MY_Controller {
             $response = \Httpful\Request::get($uri)
                 ->expectsJson()
                 ->addHeaders(array(
-                    'appkey' => $this->appkey,              // heder de la app key
-                    'domain' => $this->domain              // heder de domain
+                    'appkey' => $this->appkey, 
+                    'domain' => $this->domain
                 ))
                 ->sendIt();
             $code=$response->code;
@@ -675,8 +675,8 @@ class Tramites extends MY_Controller {
                         ->body($json)
                         ->expectsJson()
                         ->addHeaders(array(
-                            'appkey' => $this->appkey,              // heder de la app key
-                            'domain' => $this->domain              // heder de domain
+                            'appkey' => $this->appkey, 
+                            'domain' => $this->domain
                         ))
                         ->sendIt();
                     $code=$response->code;
@@ -741,8 +741,8 @@ class Tramites extends MY_Controller {
                     ->body($json)
                     ->expectsJson()
                     ->addHeaders(array(
-                        'appkey' => $this->appkey,              // heder de la app key
-                        'domain' => $this->domain              // heder de domain
+                        'appkey' => $this->appkey, 
+                        'domain' => $this->domain
                     ))
                     ->sendIt();
                 $code=$response->code;
@@ -807,8 +807,8 @@ class Tramites extends MY_Controller {
             $response = \Httpful\Request::get($uri)
                 ->expectsJson()
                 ->addHeaders(array(
-                    'appkey' => $this->appkey,             // heder de la app key
-                    'domain' => $this->domain                              // heder de domain
+                    'appkey' => $this->appkey,
+                    'domain' => $this->domain                
                 ))
                 ->sendIt();
             $code=$response->code;
@@ -881,8 +881,8 @@ class Tramites extends MY_Controller {
             $response = \Httpful\Request::get($uri)
                 ->expectsJson()
                 ->addHeaders(array(
-                    'appkey' => $this->appkey,             // heder de la app key
-                    'domain' => $this->domain             // heder de domain
+                    'appkey' => $this->appkey,
+                    'domain' => $this->domain
                 ))
                 ->sendIt();
             $code=$response->code;
@@ -916,8 +916,8 @@ class Tramites extends MY_Controller {
             $response = \Httpful\Request::delete($uri)
                 ->expectsJson()
                 ->addHeaders(array(
-                    'appkey' => $this->appkey,             // heder de la app key
-                    'domain' => $this->domain                              // heder de domain
+                    'appkey' => $this->appkey,
+                    'domain' => $this->domain                
                 ))
                 ->sendIt();
             $code=$response->code;
@@ -943,8 +943,8 @@ class Tramites extends MY_Controller {
             $response = \Httpful\Request::get($uri)
                 ->expectsJson()
                 ->addHeaders(array(
-                    'appkey' => $this->appkey,             // heder de la app key
-                    'domain' => $this->domain                              // heder de domain
+                    'appkey' => $this->appkey,
+                    'domain' => $this->domain                
                 ))
                 ->sendIt();
             $code=$response->code;

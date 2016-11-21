@@ -177,8 +177,6 @@ function cargarPanelLateral(){
     moment.lang('es');
     $('#desccalendar').html('');
     var index=0;
-    console.log(feriados);
-    console.log(idfierados);
     for (var k in feriados){
         if (feriados.hasOwnProperty(k)) {
             var fecha = new Date();

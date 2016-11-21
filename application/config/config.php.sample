@@ -398,14 +398,12 @@ $config['main_domain']='';
  * URL del microservicio de agendas 
  *
  */ 
-
 $config['base_service']='http://dev2.arkho.tech/';
 
 /*
  *  Contexto de aplicación del servicio de agendas. 
  * 
  */
-
 $config['context_service']='v1/';//context del servicio
 
 
@@ -414,15 +412,20 @@ $config['context_service']='v1/';//context del servicio
  * agendas.
  */
 
-$config['app_key']='mMRUI7s7Nn0yGq0';
+$config['appkey']='mMRUI7s7Nn0yGq0';
 
 /*
  * Cantidad de registros que se mostrarán por pagina
  * 
  */
-$config['base_service']='http://dev2.arkho.tech:80/';//url del servicios
-$config['context_service']='v1/';//context del servicio
 $config['records']=10;// numero de registros por pagina
+
+
+/*
+ * Minutos para eliminar una cita si no ha sido confirmada
+ *
+ */
+$config['tiempoconfimacioncita']=30; 
 
 /* End of file config.php */
 /* Location: ./application/config/config.php */

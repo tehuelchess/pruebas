@@ -21,9 +21,9 @@
         <h3></h3>
         <div class="form-inline">
             <div class="btn-group">
-                <button class="btn" data-calendar-nav="prev"><< Anterior</button>
-                <button class="btn btn-primary" data-calendar-nav="today">Hoy</button>
-                <button class="btn" data-calendar-nav="next">Siguiente >></button>
+                <button class="btn" data-calendar-nav="prev">&lt;&lt;</button>
+                <button class="btn btn-primary" data-calendar-nav="today">Mes Actual</button>
+                <button class="btn" data-calendar-nav="next">&gt;&gt;</button>
             </div>
             <div class="btn-group">
                 <button class="btn anoradios" data-calendar-view="year">A&ntilde;o</button>
@@ -60,12 +60,8 @@
         var fecha='0';
         if(jQuery.trim($('#fechaaelim').val())!=''){
             swselecciono=1;
-            //var fe=$('#fechaaelim').val().split('/');
-            //fecha=fe[0]+'-'+fe[1]+'-'+fe[2];
             fecha=$('#fechaaelim').val();
-            //console.log('fecha: '+$('#fechaaelim').val());
             var idelim=$('#idelim').val();
-            //$("#agregardia").load(site_url + "backend/agendas/ajax_confirmar_eliminar_dia/"+swselecciono+"/"+fecha);
             $("#agregardia").load(site_url + "manager/diaferiado/ajax_confirmar_eliminar_dia?select="+swselecciono+"&fecha="+fecha+"&id="+idelim);
             $("#agregardia").modal();
         }

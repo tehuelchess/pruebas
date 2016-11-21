@@ -16,9 +16,9 @@
             <div class="page-header">
                 <div class="pull-right form-inline">
                     <div class="btn-group">
-                        <button class="btn" data-calendar-nav="prev"><<</button>
+                        <button class="btn" data-calendar-nav="prev">&lt;&lt;</button>
                         <button class="btn btn-primary" data-calendar-nav="today">Hoy</button>
-                        <button class="btn" data-calendar-nav="next">>></button>
+                        <button class="btn" data-calendar-nav="next">&gt;&gt;</button>
                     </div>
                     <div class="btn-group">
                         <button class="btn" data-calendar-view="year">A&ntilde;o</button>
@@ -31,23 +31,6 @@
             </div>
             <div id="calendar" class="calendar"></div>
             <div></div>
-        </div>
-        <div style="margin-top: 30px; display: none;">
-            <div class="clearfix">
-                <div class="circ event-info float-left"></div><span>&nbsp;&nbsp;&nbsp;Este color identifica a las citas reservadas</span>
-            </div>
-            <div class="clearfix">
-                <div class="circ event-warning float-left"></div><span>&nbsp;&nbsp;&nbsp;Este color identifica la disponibilidad de citas.</span>
-            </div>
-            <div class="clearfix">
-                <div class="circ event-success float-left"></div><span>&nbsp;&nbsp;&nbsp;Este color identifica cuando una franja horaria esta bloqueada. Aqui no se prodran reservar citas.</span>
-            </div>
-            <div class="clearfix">
-                <div class="circ-blank float-left"></div><span>&nbsp;&nbsp;&nbsp;Al presionar 1 clic sobre un dia del calendario, vera el detalle del dia.</span>
-            </div>
-            <div class="clearfix">
-                <div class="circ-blank float-left"></div><span>&nbsp;&nbsp;&nbsp;Al presionar 2 clic sobre un dia del calendario, cambiara a vista de dia.</span>
-            </div>
         </div>
     </div>
 <div class="modal-footer">
@@ -220,23 +203,17 @@
             var val = $(this).is(':checked') ? true : false;
             calendar.setOptions({display_week_numbers: val});
             calendar.view();
-            //console.log('doble click');
         });
         $('#show_wb').change(function(){
             var val = $(this).is(':checked') ? true : false;
             calendar.setOptions({weekbox: val});
             calendar.view();
-            //console.log('doble click');
         });
         $('#events-modal .modal-header, #events-modal .modal-footer').click(function(e){
             //e.preventDefault();
             //e.stopPropagation();
         });
         $('#tabs').css({'display':'block'});
-        /*$('.js_close_cal_ciud').click(function(){
-            $("#modalcalendar").modal('toggle');
-            $('.modal-backdrop').remove();
-        });*/
     });
 
     function cargarDiasFeriados(calendar){

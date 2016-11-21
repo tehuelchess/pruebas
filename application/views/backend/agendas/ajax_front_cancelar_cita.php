@@ -6,7 +6,7 @@
     <div class="validacion"></div>
     <?php
     if(isset($funcionario) && $funcionario){
-        echo '<label>Se cancelar&aacute; la cita seleccionada. Ingrese el motivo por el cual solicita esta operaci&oacute;n:</label>
+        echo '<label>Se cancelar&aacute; la cita seleccionada. Ingrese el motivo por el cual solicita esta acci&oacute;n:</label>
         <label>Motivo</label>
         <textarea id="motivo" class="motcancelcitafun" style="width: 500px; resize: none;"></textarea>';
     }else{
@@ -16,7 +16,7 @@
 </div>
 <div class="modal-footer">
     <button class="btn js_cerrar_vcancelar" data-dismiss="modal">Cerrar</button>
-    <a href="#" onclick="ajaxcancelarCita(<?= $id ?>,'<?= $fecha ?>');" class="btn btn-primary">Cancelar Cita</a>
+    <a href="#" onclick="ajaxcancelarCita(<?= $id ?>,'<?= $fecha ?>');" class="btn btn-primary">Confirmar</a>
 </div>
 <script>
     function ajaxcancelarCita(id,fecha){

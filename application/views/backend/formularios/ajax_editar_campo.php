@@ -196,12 +196,11 @@ if(!isset($idagendaeditar) || !is_numeric($idagendaeditar)){
                 </span>
                 <input type="hidden" name="dependiente_tipo" value="<?=isset($campo) && $campo->dependiente_tipo? $campo->dependiente_tipo:'string' ?>" />
                 <?php if(isset($campo->datos_agenda) && $campo->datos_agenda): ?>
-                    <label>Pertenece A: </label>
-                    <!-- <input type="text" id="pertenece" name="valor_pertenece" class="js_pertenece"  value="<?=htmlspecialchars($campo->valor_default)?>" /> -->
+                    <label>Pertenece a: </label>
                     <select id="selectgrupo" class="input-xlarge" name="grupos_usuarios">
                     </select>
                     <button class="btn btn_filtrar_agenda vtop" type="button">Filtrar</button>
-                    <label style="margin-top:8px;">Mi Calendario</label>
+                    <label style="margin-top:8px;">Agenda:</label>
                     <select id="miagenda" class="input-xlarge" name="agenda_campo">
                         <option value="1">Seleccione(Opcional)</option>
                     </select>

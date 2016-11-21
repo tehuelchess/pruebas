@@ -71,12 +71,8 @@
         var fecha='0';
         if(jQuery.trim($('#fechaaelim').val())!=''){
             swselecciono=1;
-            //var fe=$('#fechaaelim').val().split('/');
-            //fecha=fe[0]+'-'+fe[1]+'-'+fe[2];
             fecha=$('#fechaaelim').val();
-            //console.log('fecha: '+$('#fechaaelim').val());
             var idelim=$('#idelim').val();
-            //$("#agregardia").load(site_url + "backend/agendas/ajax_confirmar_eliminar_dia/"+swselecciono+"/"+fecha);
             $("#agregardia").load(site_url + "backend/agendas/ajax_confirmar_eliminar_dia?select="+swselecciono+"&fecha="+fecha+"&id="+idelim);
             $("#agregardia").modal();
         }

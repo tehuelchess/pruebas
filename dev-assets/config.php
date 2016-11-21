@@ -402,7 +402,7 @@ $config['base_service']='http://dev2.arkho.tech/';
 
 $config['context_service']='v1/';//context del servicio
 
-$config['app_key']='mMRUI7s7Nn0yGq0';
+$config['appkey']='mMRUI7s7Nn0yGq0';
 
 #Cantidad de registros que se mostrarán por pagina
 $config['records']=5;

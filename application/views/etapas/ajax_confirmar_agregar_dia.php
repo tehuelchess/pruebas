@@ -4,14 +4,14 @@
 </div>
     <div class="modal-body">
         <div class="validacion"></div>
-        <label>¿Esta seguro de agendar su cita para el <strong><span class="js-dia-cita" ><?php echo $ano.'/'.$mes.'/'.$dia ?></span> a las <?= $hora; ?> horas</strong>?</label>
+        <label>¿Est&aacute; seguro de agendar su cita para el <strong><span class="js-dia-cita" ><?php echo $ano.'/'.$mes.'/'.$dia ?></span> a las <?= $hora; ?> horas</strong>?</label>
         <label>Observaci&oacute;n</label>
         <textarea id="desccita" placeholder="Observaci&oacute;n de la cita"></textarea>
         <?php 
             if(!isset(UsuarioSesion::usuario()->email) || empty(UsuarioSesion::usuario()->email)){
                 ?>
                 <input type="hidden" id="chkcorreo" value="1" />
-                <label>Correo</label>
+                <label>Correo electr&oacute;nico</label>
                 <input type="text" id="txtcorreo" value="" />
                 <?php
             }else{
@@ -26,6 +26,7 @@
 <script>
     window.fecha='<?php echo $ano.'-'.$mes.'-'.$dia.' '.$hora; ?>';
     window.fechafinal='<?php echo $fechafinal; ?>';
+    window.tzz=jstz.determine().name();
     $(function(){
         moment.lang('es');
         var lab=moment($('.js-dia-cita').text()).format("LL");
@@ -65,6 +66,7 @@
         $.ajax({
             url: '<?=site_url('/etapas/ajax_agregar_cita')?>',
             data:{
+                tzz:tzz,
                 fecha:fecha,
                 fechafinal:fechafinal,
                 idagenda:idagenda,
@@ -105,7 +107,7 @@
                             $('.validacion').html('<div class="alert alert-error"><a class="close" data-dismiss="alert">×</a>'+data.mensaje+'</div>');
                         break;
                         default:
-                            $('.validacion').html('<div class="alert alert-error"><a class="close" data-dismiss="alert">×</a>No se pudo grabar una cita. Si el problema presiste contacte con el administrador.</div>');
+                            $('.validacion').html('<div class="alert alert-error"><a class="close" data-dismiss="alert">×</a>No se pudo agendar la cita. Si el problema persiste contacte al administrador.</div>');
                         break;
                     }
                 }
