@@ -228,7 +228,7 @@ class Etapas extends MY_Controller {
                 ->expectsJson()
                 ->addHeaders(array(
                     'appkey' => $this->appkey,
-                    'domain' => $this->domain                
+                    'domain' => $this->domain
                 ))
                 ->sendIt();
             $code=$response->code;
@@ -238,7 +238,7 @@ class Etapas extends MY_Controller {
                     $appointment=$response->body[1]->id;
                 }
             }else{
-                throw new Exception('La cita reservada ya no esta disponible. Por favor, reserve una nueva hora.');
+                throw new Exception('La cita reservada ya no esta disponible, reserve una nueva hora.');
             }
         }catch(Exception $err){
             throw new Exception($err->getMessage());
@@ -252,7 +252,7 @@ class Etapas extends MY_Controller {
                 ->expectsJson()
                 ->addHeaders(array(
                     'appkey' => $this->appkey,
-                    'domain' => $this->domain                
+                    'domain' => $this->domain
                 ))
                 ->sendIt();
             $code=$response->code;
@@ -459,6 +459,28 @@ class Etapas extends MY_Controller {
             if(isset($appointments) && is_array($appointments) && (count($appointments)>=1) ){
                 $json='{"ids":[';
                 $i=0;
+
+                $rstramite = Doctrine_Query::create ()
+                        ->select('tramite_id')
+                        ->from ('Etapa')
+                        ->where ("id=?",$etapa_id)
+                        ->execute ();
+                foreach($rstramite as $obj){
+                    $idtramite=$obj->tramite_id;
+                }
+                $result = Doctrine_Query::create ()
+                ->select('p.cuenta_id')
+                ->from ('Proceso p,Tramite t,Etapa e')
+                ->where ("t.proceso_id=p.id AND e.tramite_id=tramite.id AND e.id=?",$idtramite)
+                ->execute ();
+                $cuenta=(isset($result[0]->cuenta_id) && is_numeric($result[0]->cuenta_id))?$result[0]->cuenta_id:1;
+                
+                $service=new Connect_services();
+                $service->setCuenta($cuenta);
+                $service->load_data();
+                $this->domain=$service->getDomain();
+                $this->appkey=$service->getAppkey();
+
                 foreach($appointments as $item){
                     if($i==0){
                         $json=$json.'"'.$item.'"';
@@ -562,7 +584,7 @@ class Etapas extends MY_Controller {
         $etapa = Doctrine::getTable('Etapa')->find($etapa_id);
 
         if (UsuarioSesion::usuario()->id != $etapa->usuario_id) {
-            echo 'No tiene permisos para hacer seguimiento a este trámite.';
+            echo 'No tiene permisos para hacer seguimiento a este tramite.';
             exit;
         }
 
@@ -744,12 +766,12 @@ class Etapas extends MY_Controller {
     private function obtenerTiempoCita($idagenda){
         $valor=0;
         try{
-            $uri=$this->base_services.''.$this->context.'calendars/'.$idagenda;//url del servicio con los parametros
+            $uri=$this->base_services.''.$this->context.'calendars/'.$idagenda; //url del servicio con los parametros
             $response = \Httpful\Request::get($uri)
                 ->expectsJson()
                 ->addHeaders(array(
                     'appkey' => $this->appkey,
-                    'domain' => $this->domain                
+                    'domain' => $this->domain
                 ))
                 ->sendIt();
             $code=$response->code;
@@ -762,7 +784,6 @@ class Etapas extends MY_Controller {
         return $valor;
     }
     public function disponibilidad($idagenda,$idtramite){
-        //date_default_timezone_set('America/Bogota');
         $code=0;
         $mensaje='';
         $data=array();
@@ -793,7 +814,7 @@ class Etapas extends MY_Controller {
                 ->expectsJson()
                 ->addHeaders(array(
                     'appkey' => $this->appkey,
-                    'domain' => $this->domain                
+                    'domain' => $this->domain
                 ))
                 ->sendIt();
             $code=$response->code;
@@ -894,10 +915,8 @@ class Etapas extends MY_Controller {
         $fecha=(isset($_GET['fecha']))?$_GET['fecha']:'';
         $hora=(isset($_GET['hora']))?$_GET['hora']:'';
         $idcita=(isset($_GET['idcita']))?$_GET['idcita']:'';
-
         $fechaf=(isset($_GET['fechaf']))?$_GET['fechaf']:'';
         $horaf=(isset($_GET['horaf']))?$_GET['horaf']:'';
-
         $object=(isset($_GET['obj']))?$_GET['obj']:0;
         $tmp=explode('-',$fecha);
         $data['dia']=$tmp[2];
@@ -928,10 +947,10 @@ class Etapas extends MY_Controller {
         $idetapa=(isset($_GET['idtramite']))?$_GET['idtramite']:0;
         $obj=(isset($_GET['obj']))?$_GET['obj']:0;
         $code=0;
-        $tmp=explode(' ',$fecha);
+        /*$tmp=explode(' ',$fecha);
         $fe=explode('-',$tmp[0]);
         $ho=explode(':',$tmp[1]);
-        //$fechaformat=date(DATE_ATOM, mktime($ho[0],$ho[1],0,$fe[1],$fe[2],$fe[0]));
+        $fechaformat=date(DATE_ATOM, mktime($ho[0],$ho[1],0,$fe[1],$fe[2],$fe[0]));*/
         $defaulTimeZone  = new DateTimeZone(date_default_timezone_get());//'America/Santiago'
         $browserTimeZone = empty($tzz)? $defaulTimeZone: new DateTimeZone($tzz);
         $fechaCal = new DateTime($fecha, $browserTimeZone);
@@ -981,8 +1000,8 @@ class Etapas extends MY_Controller {
                 $responsever = \Httpful\Request::get($uri)
                     ->expectsJson()
                     ->addHeaders(array(
-                        'appkey' => $this->appkey,             // header de la app key
-                        'domain' => $this->domain              // header de domain
+                        'appkey' => $this->appkey,
+                        'domain' => $this->domain
                     ))
                     ->sendIt();
                 $code=$responsever->code;
@@ -994,8 +1013,8 @@ class Etapas extends MY_Controller {
                             ->expectsJson()
                             ->body($json)
                             ->addHeaders(array(
-                                'appkey' => $this->appkey,             
-                                'domain' => $this->domain               
+                                'appkey' => $this->appkey,
+                                'domain' => $this->domain
                             ))
                             ->sendIt();
                         $code=$response->code;
@@ -1035,7 +1054,7 @@ class Etapas extends MY_Controller {
                             ->expectsJson()
                             ->body($json)
                             ->addHeaders(array(
-                                'appkey' => $this->appkey,             
+                                'appkey' => $this->appkey,
                                 'domain' => $this->domain
                             ))
                             ->sendIt();
@@ -1086,8 +1105,7 @@ class Etapas extends MY_Controller {
                     $mensaje=(isset($response->body->response->message))?$response->body->response->message:'Error General';
                 }
             }catch(Exception $err){
-                $mensaje='No se pudo reservar la cita, volverlo a intentar.';
-                //$mensaje=$response->body[0]->response->message;
+                $mensaje='No se pudo reservar la cita. Por favor, inténtelo de nuevo.';
             }
         }
         $tmpfecha=explode(' ',$fecha);
