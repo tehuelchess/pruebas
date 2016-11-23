@@ -21,43 +21,47 @@
     </div>
 <div class="modal-footer">
     <button class="btn js_cerrar_vcancelar">Cancelar</button>
-    <a href="#" id="btnconfadd" class="btn btn-primary">Confirmar</a>
-    </div>
+    <button id="btnconfadd" class="btn btn-primary">Confirmar</button>
+</div>
 <script>
     window.fecha='<?php echo $ano.'-'.$mes.'-'.$dia.' '.$hora; ?>';
     window.fechafinal='<?php echo $fechafinal; ?>';
     window.tzz=jstz.determine().name();
-    $(function(){
+    $(function() {
         moment.lang('es');
         var lab=moment($('.js-dia-cita').text()).format("LL");
         $('.js-dia-cita').text(lab);
-        $('#btnconfadd').click(function(){
+        $('#btnconfadd').click(function() {
+            $('#btnconfadd').prop("disabled", true);
+            $('.js_cerrar_vcancelar').prop("disabled", true);
             ajaxAgregarCita(fecha);
         });
-        $('.js_cerrar_vcancelar').click(function(){
+        $('.js_cerrar_vcancelar').click(function() {
+            $('#btnconfadd').prop("disabled", true );
+            $('.js_cerrar_vcancelar').prop("disabled", true);
             $('.validacion').html('');
             $('#modalconfirmar').modal('toggle');
         });
     });
-    function ajaxAgregarCita(fecha){
-        if($('#chkcorreo').val()>=1){
-            if(jQuery.trim($('#txtcorreo').val())){
+    function ajaxAgregarCita(fecha) {
+        if ($('#chkcorreo').val()>=1) {
+            if (jQuery.trim($('#txtcorreo').val())) {
                 procAgregar(jQuery.trim($('#txtcorreo').val()));
-            }else{
+            } else {
                 $('.validacion').html('<div class="alert alert-error"><a class="close" data-dismiss="alert">×</a>Debe ingresar un correo electrónico.</div>');    
             }
-        }else{
+        } else {
             procAgregar('');
         }
     }
-    function procAgregar(email){
+    function procAgregar(email) {
         var idagenda=<?= $idagenda ?>;
         var idtramite=<?= $idtramite ?>;
         var etapa=<?= $etapa ?>;
         var desc=jQuery.trim($('#desccita').val());
         var idobject=<?= $object ?>;
         var idcita=<?= $idcita ?>;
-        if(idcita==0){
+        if (idcita == 0) {
             if (typeof $('#codcita'+idobject) !== "undefined") {
                 idcita=$('#codcita'+idobject).val();
             }    

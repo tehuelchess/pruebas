@@ -3,39 +3,36 @@
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
+use Httpful\Request;
+
 class AgendasUsuario extends MY_BackendController {
-    private $domain='';
-    private $appkey='';
+
     private $base_services='';
     private $context='';
-    private $records=10;
+
     public function __construct() {
         parent::__construct();
         include APPPATH . 'third_party/httpful/bootstrap.php';
         UsuarioSesion::force_login();
         $this->base_services=$this->config->item('base_service');
         $this->context=$this->config->item('context_service');
-        $this->records=$this->config->item('records');
-        if( isset(UsuarioBackendSesion::usuario()->cuenta_id) && is_numeric(UsuarioBackendSesion::usuario()->cuenta_id)){
-            $cuenta=UsuarioBackendSesion::usuario()->cuenta_id;
-        }else{
-            if( isset(UsuarioSesion::usuario()->cuenta_id) && is_numeric(UsuarioSesion::usuario()->cuenta_id)){
-                $cuenta=UsuarioSesion::usuario()->cuenta_id;
-            }else{
-                $cuenta=1;
-            }
-        }
+        $cuenta = Cuenta::cuentaSegunDominio()->id;
         try{
             $service=new Connect_services();
             $service->setCuenta($cuenta);
             $service->load_data();
-            $this->domain=$service->getDomain();
-            $this->appkey=$service->getAppkey();
+            $agendaTemplate = Request::init()
+                ->expectsJson()
+                ->addHeaders(array(
+                    'appkey' => $service->getAppkey(),
+                    'domain' => $service->getDomain()
+                ));
+            Request::ini($agendaTemplate);
         }catch(Exception $err){
             //echo 'Error: '.$err->getMessage();
         }
-
     }
+
     public function ajax_cancelar_cita(){
         if (!UsuarioSesion::usuario()->registrado) {
             $this->session->set_flashdata('redirect', current_url());
@@ -112,14 +109,7 @@ class AgendasUsuario extends MY_BackendController {
             }';
             if($sw){
                 $uri=$this->base_services.''.$this->context.'appointments/assists/'.$idcita;
-                $response = \Httpful\Request::put($uri)
-                    ->expectsJson()
-                    ->body($json)
-                    ->addHeaders(array(
-                        'appkey' => $this->appkey, 
-                        'domain' => $this->domain
-                    ))
-                    ->sendIt();
+                $response = Request::put($uri)->body($json)->sendIt();
                 $code=$response->code;
                 if(isset($response->body->response->code)){
                     $code=$response->body->response->code;

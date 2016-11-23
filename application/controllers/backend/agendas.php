@@ -3,12 +3,13 @@
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
+use Httpful\Request;
+
 class Agendas extends MY_BackendController {
-    private $domain='';
-    private $appkey='';
     private $base_services='';
     private $context='';
     private $records=10;
+
     public function __construct() {
         parent::__construct();
         include APPPATH . 'third_party/httpful/bootstrap.php';
@@ -16,16 +17,22 @@ class Agendas extends MY_BackendController {
         $this->base_services=$this->config->item('base_service');
         $this->context=$this->config->item('context_service');
         $this->records=$this->config->item('records');
+        $cuenta = Cuenta::cuentaSegunDominio()->id;
         try{
             $service=new Connect_services();
-            $service->setCuenta(UsuarioBackendSesion::usuario()->cuenta_id);
+            $service->setCuenta($cuenta);
             $service->load_data();
-            $this->domain=$service->getDomain();
-            $this->appkey=$service->getAppkey();
-          
+            $agendaTemplate = Request::init()
+                ->expectsJson()
+                ->addHeaders(array(
+                    'appkey' => $service->getAppkey(),
+                    'domain' => $service->getDomain()
+                ));
+            Request::ini($agendaTemplate);
         }catch(Exception $err){
             //echo 'Error: '.$err->getMessage();
         }
+
         if(!in_array('super', explode(',',UsuarioBackendSesion::usuario()->rol) ) && !in_array( 'agenda',explode(',',UsuarioBackendSesion::usuario()->rol))){
             echo 'No tiene permisos para acceder a esta secci&oacute;n.';
             exit;
@@ -40,13 +47,7 @@ class Agendas extends MY_BackendController {
         $registros=$this->records; // numero de registro a mostrar por pagina
         try{
             $uri=$this->base_services.''.$this->context.'calendars?page='.$pagina.'&records='.$registros;
-            $response = \Httpful\Request::get($uri)
-                ->expectsJson()
-                ->addHeaders(array(
-                    'appkey' => $this->appkey, 
-                    'domain' => $this->domain
-                ))
-                ->sendIt();
+            $response = Request::get($uri)->sendIt();
             if(isset($response->body) && is_array($response->body) && isset($response->body[0]->response->code) && $response->body[0]->response->code==200){
                 $total_registros=$response->body[1]->count;
                 foreach($response->body[1]->calendars as $item){
@@ -82,14 +83,17 @@ class Agendas extends MY_BackendController {
         $data['paginador']=$paginador;
         $this->load->view('backend/template', $data);
     }
+
     public function config_global(){
         $data['title'] = 'Configuración Global';
         $data['content'] = 'backend/agendas/config_global';
         $this->load->view('backend/template', $data);
     }
+
     public function index() {
         $this->listarAgendas(1);
     }
+
     public function pagina($pagina=1) {
         $this->listarAgendas($pagina);
     }
@@ -100,6 +104,7 @@ class Agendas extends MY_BackendController {
         $data['content'] = 'backend/agendas/template';
         $this->load->view('backend/template', $data);
     }
+
     public function buscar($pagina=1){// function de busqueda de agendas por nombre y pertenece
         $search=(isset($_POST['pertenece']))?$_POST['pertenece']:'';
         if(!empty($search)){
@@ -112,13 +117,7 @@ class Agendas extends MY_BackendController {
             $finreg=$inicio+$registros; // se calcula hasta que registro se muestra
             try{
                 $uri=$this->base_services.''.$this->context.'calendars/searchByName?text='.$search.'&page='.$pagina.'&records='.$registros;
-                $response = \Httpful\Request::get($uri)
-                    ->expectsJson()
-                    ->addHeaders(array(
-                        'appkey' => $this->appkey, 
-                        'domain' => $this->domain
-                    ))
-                    ->sendIt();
+                $response = Request::get($uri)->sendIt();
                 if(isset($response->body) && is_array($response->body) && isset($response->body[0]->response->code) && $response->body[0]->response->code==200){
                     $total_registros=$response->body[1]->count;
                     foreach($response->body[1]->calendars as $item){
@@ -151,17 +150,20 @@ class Agendas extends MY_BackendController {
             $this->listarAgendas(1);
         }
     }
+
     public function ajax_back_nueva_agenda(){
         $data['title_form']='Nueva Agenda';
         $data['editar']=false;
         $this->load->view ( 'backend/agendas/ajax_back_nueva_agenda', $data );        
     }
+
     public function ajax_back_editar_agenda($id){
         $data['title_form']='Editar Agenda';
         $data['editar']=true;
         $data['id']=$id;
         $this->load->view ( 'backend/agendas/ajax_back_nueva_agenda', $data );        
     }
+
     public function ajax_back_eliminar_agenda(){
         if (! in_array ( 'super', explode ( ",", UsuarioBackendSesion::usuario ()->rol ) ))
             show_error ( 'No tiene permisos', 401 );
@@ -172,6 +174,7 @@ class Agendas extends MY_BackendController {
 
         $this->load->view ( 'backend/agendas/ajax_back_eliminar_agenda', $data );
     }
+
     public function ajax_eliminar_agenda(){
         $id=(isset($_GET['id']) && is_numeric($_GET['id']))?$_GET['id']:0;
         $trimMotivo = trim($_GET['motivo']);
@@ -184,13 +187,7 @@ class Agendas extends MY_BackendController {
             if($motivo!=''){
                 try{
                     $uri=$this->base_services.''.$this->context.'calendars/disable/'.$id;//url del servicio con los parametros
-                    $response = \Httpful\Request::put($uri)
-                        ->expectsJson()
-                        ->addHeaders(array(
-                            'appkey' => $this->appkey, 
-                            'domain' => $this->domain
-                        ))
-                        ->sendIt();
+                    $response = Request::put($uri)->sendIt();
                     $code=$response->code;
                     if(isset($response->body) && isset($response->body->response->code) && $response->body->response->code==200){
                         $code=$response->body->response->code;
@@ -226,16 +223,19 @@ class Agendas extends MY_BackendController {
         }
         echo json_encode(array('code'=>$code,'mensaje'=>$mensaje));
     }
+
     public function ajax_dia_conf_global($fecha){
         $data['fecha'] = $fecha;
         $this->load->view ( 'backend/agendas/ajax_dia_calendario', $data );
     }
+
     public function ajax_confirmar_eliminar_dia(){
         $data['selecciono'] =(isset($_GET['select']) && isset($_GET['fecha']) && !empty($_GET['fecha']))?$_GET['select']:0;
         $data['fecha']=(isset($_GET['fecha']))?$_GET['fecha']:'';
         $data['id'] =(isset($_GET['id']))?$_GET['id']:'';
         $this->load->view ( 'backend/agendas/ajax_confirmar_eliminar_dia', $data );
     }
+
     public function ajax_cargarDatosAgenda($id){
         $data='';
         $code=0;
@@ -243,13 +243,7 @@ class Agendas extends MY_BackendController {
         if(isset($id) && is_numeric($id)){
             try{
                 $uri=$this->base_services.''.$this->context.'calendars/'.$id;//url del servicio con los parametros
-                $response = \Httpful\Request::get($uri)
-                    ->expectsJson()
-                    ->addHeaders(array(
-                        'appkey' => $this->appkey, 
-                        'domain' => $this->domain
-                    ))
-                    ->sendIt();
+                $response = Request::get($uri)->sendIt();
                 $code=$response->code;
                 if(isset($response->body) && is_array($response->body) && isset($response->body[0]->response->code) && $response->body[0]->response->code==200){
                     $code=$response->body[0]->response->code;
@@ -288,6 +282,7 @@ class Agendas extends MY_BackendController {
         $array=array('code'=>200,'message'=>$mensaje,'calendar'=>$data,'franja'=>$franjas);
         echo json_encode($array);
     }
+
     public function ajax_grabar_agenda_back(){
         $code=0;
         $mensaje='';
@@ -421,14 +416,7 @@ class Agendas extends MY_BackendController {
                     if($tatencion>0){
                         try{
                             $uri=$this->base_services.''.$this->context.'calendars';//url del servicio con los parametros
-                            $response = \Httpful\Request::post($uri)
-                                ->body($json)
-                                ->expectsJson()
-                                ->addHeaders(array(
-                                    'appkey' => $this->appkey, 
-                                    'domain' => $this->domain
-                                ))
-                                ->sendIt();
+                            $response = Request::post($uri)->body($json)->sendIt();
                             $code=$response->code;
                             if(isset($response->body) && is_array($response->body) && isset($response->body[0]->response->code)){
                                 $code=$response->body[0]->response->code;
@@ -472,6 +460,7 @@ class Agendas extends MY_BackendController {
         $array=array('code'=>$code,'message'=>$mensaje);
         echo json_encode($array);
     }
+
     private function add_rangos_franjas($rangi,$rangof,$nomdia,$array){
         try{
             $i=0;
@@ -496,6 +485,7 @@ class Agendas extends MY_BackendController {
             throw new Exception($err->getMessage());
         }
     }
+
     public function ajax_editar_agenda_back(){//funcion editar agenda (backend) del Service
         $code=0;
         $mensaje='Imposible almacenar la informaci&oacute;, Por favor, vuelva a intentarlo, si el problema persiste consute con el administrador.';
@@ -630,14 +620,7 @@ class Agendas extends MY_BackendController {
                     if($tatencion>0){
                         try{
                             $uri=$this->base_services.''.$this->context.'calendars/'.$id;//url del servicio con los parametros
-                            $response = \Httpful\Request::put($uri)
-                                ->body($json)
-                                ->expectsJson()
-                                ->addHeaders(array(
-                                    'appkey' => $this->appkey, 
-                                    'domain' => $this->domain
-                                ))
-                                ->sendIt();
+                            $response = Request::put($uri)->body($json)->sendIt(); 
                             $code=$response->code;
                             if(isset($response->body) && is_array($response->body) && isset($response->body[0]->response->code)){
                                 $code=$response->body[0]->response->code;
@@ -672,6 +655,7 @@ class Agendas extends MY_BackendController {
         $array=array('code'=>$code,'message'=>$mensaje);
         echo json_encode($array);
     }
+
     public function EmptyCalendar(){
         $var='{
                 "success": 1,
@@ -681,19 +665,14 @@ class Agendas extends MY_BackendController {
             ';
         echo $var;
     }
+
     public function diasFeriados(){
         $code=0;
         $mensaje='';
         $data=array();
         try{
             $uri=$this->base_services.''.$this->context.'daysOff';//url del servicio con los parametros
-            $response = \Httpful\Request::get($uri)
-                ->expectsJson()
-                ->addHeaders(array(
-                    'appkey' => $this->appkey,
-                    'domain' => $this->domain                
-                ))
-                ->sendIt();
+            $response = Request::get($uri)->sendIt();
             $code=$response->code;
             if(isset($response->body) && is_array($response->body) && isset($response->body[0]->response->code)){
                 $code=$response->body[0]->response->code;
@@ -709,6 +688,7 @@ class Agendas extends MY_BackendController {
         $array=array('code'=>$code,'message'=>$mensaje,'daysoff'=>$data);
         echo json_encode($array);
     }
+
     public function ajax_agregar_dia_feriado(){
         $code=0;
         $mensaje='';
@@ -722,14 +702,7 @@ class Agendas extends MY_BackendController {
                 }';
             try{
                 $uri=$this->base_services.''.$this->context.'daysOff';//url del servicio con los parametros
-                $response = \Httpful\Request::post($uri)
-                    ->expectsJson()
-                    ->body($json)
-                    ->addHeaders(array(
-                        'appkey' => $this->appkey,
-                        'domain' => $this->domain                
-                    ))
-                    ->sendIt();
+                $response = Request::post($uri)->body($json)->sendIt();
                 $code=$response->code;
                 if(isset($response->body) && is_array($response->body) && isset($response->body[0]->response->code)){
                     $code=$response->body[0]->response->code;
@@ -756,6 +729,7 @@ class Agendas extends MY_BackendController {
         $array=array('code'=>$code,'mensaje'=>$mensaje,'daysoff'=>$data);
         echo json_encode($array);
     }
+    
     public function ajax_eliminar_dia_feriado(){
         $code=0;
         $mensaje='';
@@ -764,13 +738,7 @@ class Agendas extends MY_BackendController {
         if($id>0){
             try{
                 $uri=$this->base_services.''.$this->context.'daysOff/'.$id;//url del servicio con los parametros
-                $response = \Httpful\Request::delete($uri)
-                    ->expectsJson()
-                    ->addHeaders(array(
-                        'appkey' => $this->appkey,
-                        'domain' => $this->domain                
-                    ))
-                    ->sendIt();
+                $response = Request::delete($uri)->sendIt();
                 $code=$response->code;
                 if(isset($response->body) && is_array($response->body) && isset($response->body[0]->response->code)){
                     $code=$response->body[0]->response->code;

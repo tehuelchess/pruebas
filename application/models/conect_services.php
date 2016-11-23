@@ -13,7 +13,7 @@ class Connect_services{
         $CI =& get_instance();
         $this->componente='token_services';
         $this->cuenta=1;
-        $this->num_rows=10;
+        $this->num_rows=$CI->config->item('records');
         $this->appkey = $CI->config->item('appkey');
     }
     public function getAppkey(){        

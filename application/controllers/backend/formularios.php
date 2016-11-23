@@ -3,31 +3,33 @@
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
+use Httpful\Request;
+
 class Formularios extends MY_BackendController {
-    private $domain='';
-    private $appkey='';
     private $base_services='';
     private $context='';
-    private $records=10;
+ 
     public function __construct() {
         parent::__construct();
-
         UsuarioBackendSesion::force_login();
         include APPPATH . 'third_party/httpful/bootstrap.php';
         $this->base_services=$this->config->item('base_service');
         $this->context=$this->config->item('context_service');
-        $this->records=$this->config->item('records');
         try{
             $service=new Connect_services();
             $service->setCuenta(UsuarioBackendSesion::usuario()->cuenta_id);
             $service->load_data();
-            $this->domain=$service->getDomain();
-            $this->appkey=$service->getAppkey();
+            $agendaTemplate = Request::init()
+                ->expectsJson()
+                ->addHeaders(array(
+                    'appkey' => $service->getAppkey(),
+                    'domain' => $service->getDomain()
+                ));
+            Request::ini($agendaTemplate);
         }catch(Exception $err){
             //echo 'Error: '.$err->getMessage();
         }
-        
-//        if(UsuarioBackendSesion::usuario()->rol!='super' && UsuarioBackendSesion::usuario()->rol!='modelamiento'){
+        //if(UsuarioBackendSesion::usuario()->rol!='super' && UsuarioBackendSesion::usuario()->rol!='modelamiento'){
         if(!in_array('super', explode(',',UsuarioBackendSesion::usuario()->rol) ) && !in_array( 'modelamiento',explode(',',UsuarioBackendSesion::usuario()->rol))){
             echo 'No tiene permisos para acceder a esta seccion.';
             exit;
@@ -187,38 +189,11 @@ class Formularios extends MY_BackendController {
         
         $this->load->view('backend/formularios/ajax_editar_campo',$data);
     }
-    public function obtener_agenda(){
-        $code=0;
-        $mensaje='';
-        $data=array();
-        $idagenda=(isset($_GET['idagenda']) && is_numeric($_GET['idagenda']))?$_GET['idagenda']:0;
-        try{
-            $uri=$this->base_services.''.$this->context.'calendars/'.$idagenda;//url del servicio con los parametros
-            $response = \Httpful\Request::get($uri)
-                ->expectsJson()
-                ->addHeaders(array(
-                    'appkey' => $this->appkey,
-                    'domain' => $this->domain                
-                ))
-                ->sendIt();
-            $code=$response->code;
-            if(isset($response->body) && is_array($response->body) && isset($response->body[0]->response->code)){
-                $code=$response->body[0]->response->code;
-                $data=$response->body[1]->calendars[0]->owner_name;
 
-            }
-        }catch(Exception $err){
-
-        }
-        echo json_encode(array('code'=>$code,'mensaje'=>$mensaje,'calendario_owner'=>$data));
-    }
-    
     public function editar_campo_form($campo_id=NULL){
         $campo=NULL;
         if($campo_id){
             $campo=Doctrine::getTable('Campo')->find($campo_id);
-
-            
         }else{
             $formulario=Doctrine::getTable('Formulario')->find($this->input->post('formulario_id'));
                 $campo=Campo::factory($this->input->post('tipo'));
@@ -342,25 +317,18 @@ class Formularios extends MY_BackendController {
         return preg_replace('/\|\s*$/','',$validacion);
     }
     
-    public function exportar($formulario_id)
-    {
-
+    public function exportar($formulario_id) {
         $formulario = Doctrine::getTable('Formulario')->find($formulario_id);
-
         $json = $formulario->exportComplete();
-
         header("Content-Disposition: attachment; filename=\"".mb_convert_case(str_replace(' ','-',$formulario->nombre),MB_CASE_LOWER).".simple\"");
         header('Content-Type: application/json');
         echo $json;
-
     }
     
-    public function importar()
-    {
+    public function importar(){
         try {
             $file_path = $_FILES['archivo']['tmp_name'];
             $proceso_id = $this->input->post('proceso_id');
-
             if ($file_path && $proceso_id) {
                 $input = file_get_contents($_FILES['archivo']['tmp_name']);
                 $formulario = Formulario::importComplete($input, $proceso_id);
@@ -372,16 +340,15 @@ class Formularios extends MY_BackendController {
         } catch (Exception $ex) {
             die('Código: '.$ex->getCode().' Mensaje: '.$ex->getMessage());
         }
-        
         redirect($_SERVER['HTTP_REFERER']);
     }
+
     public function listarPertenece(){
         $data=array();
-        ///////////////////////////////////extrae los usuarios///////////////////////////
         $q = Doctrine_Query::create()
                 ->select("id,nombres, apellido_paterno, apellido_materno,email")
                 ->from("Usuario")
-                ->where("registrado = ? AND cuenta_id <> ? AND open_id = ? AND cuenta_id=?",array(1,'',0,UsuarioBackendSesion::usuario()->cuenta_id));
+                ->where("registrado = ? AND open_id = ? AND cuenta_id=?",array(1,0,UsuarioBackendSesion::usuario()->cuenta_id));
         $usuarios = $q->execute();
         $data[]=array('id'=>0,'nombre'=>'Seleccione');
         foreach($usuarios as $usuario){
@@ -392,21 +359,39 @@ class Formularios extends MY_BackendController {
             $nombre_completo=(!empty($trimAM))?$nombre_completo.' '.$usuario->apellido_materno:$nombre_completo;
             $data[]=array('id'=>$usuario->id,'nombre'=>$nombre_completo,'tipo'=>0,'email'=>$usuario->email);
         }
-        ///////////////////////////////////extrae los usuarios///////////////////////////
-        ///////////////////////////////////extrae los grupos///////////////////////////
         $q = Doctrine_Query::create()
                 ->select("id,nombre")
-                ->from("GrupoUsuarios");
+                ->from("GrupoUsuarios")
+                ->where("cuenta_id = ?",UsuarioBackendSesion::usuario()->cuenta_id);
         $grupo_usuarios = $q->execute();
         foreach($grupo_usuarios as $grupo){
             $data[]=array('id'=>$grupo->id,'nombre'=>$grupo->nombre,'tipo'=>1,'email'=>'grupo@grupo.com');
         }
-        ///////////////////////////////////extrae los grupos///////////////////////////
-
         $items=array('items'=>$data);
         $arr=array('code'=>200,'mensaje'=>'Ok','resultado'=>$items);
         echo json_encode($arr);
     }
+
+    public function obtener_agenda(){
+        $code=0;
+        $mensaje='';
+        $data=array();
+        $idagenda=(isset($_GET['idagenda']) && is_numeric($_GET['idagenda']))?$_GET['idagenda']:0;
+        try{
+            $uri=$this->base_services.''.$this->context.'calendars/'.$idagenda;//url del servicio con los parametros
+            $response = Request::get($uri)->sendIt();
+            $code=$response->code;
+            if(isset($response->body) && is_array($response->body) && isset($response->body[0]->response->code)){
+                $code=$response->body[0]->response->code;
+                $data=$response->body[1]->calendars[0]->owner_name;
+
+            }
+        }catch(Exception $err){
+
+        }
+        echo json_encode(array('code'=>$code,'mensaje'=>$mensaje,'calendario_owner'=>$data));
+    }
+
     public function ajax_mi_calendario(){
         $code=0;
         $mensaje='';
@@ -415,13 +400,7 @@ class Formularios extends MY_BackendController {
         if($idagenda>0){
             try{
                 $uri=$this->base_services.''.$this->context.'calendars/listByOwner/'.$idagenda;//url del servicio con los parametros
-                $response = \Httpful\Request::get($uri)
-                    ->expectsJson()
-                    ->addHeaders(array(
-                        'appkey' => $this->appkey, 
-                        'domain' => $this->domain
-                    ))
-                    ->sendIt();
+                $response = Request::get($uri)->sendIt();
                 $code=$response->code;
                 if(isset($response->body) && is_array($response->body) && isset($response->body[0]->response->code) && $response->body[0]->response->code==200){
                     $code=$response->body[0]->response->code;
@@ -452,13 +431,7 @@ class Formularios extends MY_BackendController {
             foreach($usuario[0]->GruposUsuarios as $g){
                 try{
                     $uri=$this->base_services.''.$this->context.'calendars/listByOwner/'.$g->id;
-                    $response = \Httpful\Request::get($uri)
-                        ->expectsJson()
-                        ->addHeaders(array(
-                            'appkey' => $this->appkey, 
-                            'domain' => $this->domain
-                        ))
-                        ->sendIt();
+                    $response = Request::get($uri)->sendIt();
                     $code=$response->code;
                     if(isset($response->code) && $response->code==200 && isset($response->body) && is_array($response->body) && isset($response->body[0]->response->code)){
                         foreach($response->body[1]->calendars as $item){

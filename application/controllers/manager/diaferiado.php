@@ -3,11 +3,11 @@
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
+use Httpful\Request;
+
 class DiaFeriado extends CI_Controller {
-    private $appkey='';
     private $base_services='';
     private $context='';
-    private $records=10;
 
     public function __construct() {
         parent::__construct();
@@ -15,8 +15,12 @@ class DiaFeriado extends CI_Controller {
         require_once APPPATH . 'third_party/httpful/bootstrap.php';
         $this->base_services=$this->config->item('base_service');
         $this->context=$this->config->item('context_service');
-        $this->records=$this->config->item('records');
-        $this->appkey=$this->config->item('appkey');
+        $agendaTemplate = Request::init()
+                ->expectsJson()
+                ->addHeaders(array(
+                    'appkey' => config->item('appkey')
+                ));
+        Request::ini($agendaTemplate);
     }
 
     public function index() {
@@ -27,11 +31,11 @@ class DiaFeriado extends CI_Controller {
         
         $this->load->view('manager/template',$data);
     }
+
     public function EmptyCalendar(){
         $var='{
                 "success": 1,
                 "result": [
-
                 ]
             }
             ';
@@ -44,13 +48,7 @@ class DiaFeriado extends CI_Controller {
         //$year=(isset($_GET['year']) && is_numeric($_GET['year']) && $_GET['year']>0 )?$_GET['year']:date('Y');
         try{
             $uri=$this->base_services.''.$this->context.'daysOff';//url del servicio con los parametros
-            $response = \Httpful\Request::get($uri)
-                ->expectsJson()
-                ->addHeaders(array(
-                    'appkey' => $this->appkey                              // heder de appkey
-                ))
-                ->sendIt();
-            //$code=$response->code;
+            $response = Request::get($uri)->sendIt();
             if(isset($response->body) && is_array($response->body) && isset($response->body[0]->response->code)){
                 $code=$response->code;
                 $code=$response->body[0]->response->code;
@@ -84,13 +82,7 @@ class DiaFeriado extends CI_Controller {
                 }';
             try{
                 $uri=$this->base_services.''.$this->context.'daysOff';//url del servicio con los parametros
-                $response = \Httpful\Request::post($uri)
-                    ->expectsJson()
-                    ->body($json)
-                    ->addHeaders(array(
-                        'appkey' => $this->appkey                             // heder de appkey
-                    ))
-                    ->sendIt();
+                $response = Request::post($uri)->body($json)->sendIt();
                 $code=$response->code;
                 if(isset($response->body) && is_array($response->body) && isset($response->body[0]->response->code)){
                     $code=$response->body[0]->response->code;
@@ -117,12 +109,14 @@ class DiaFeriado extends CI_Controller {
         $array=array('code'=>$code,'mensaje'=>$mensaje,'daysoff'=>$data);
         echo json_encode($array);
     }
+
     public function ajax_confirmar_eliminar_dia(){
         $data['selecciono'] =(isset($_GET['select']) && isset($_GET['fecha']) && !empty($_GET['fecha']))?$_GET['select']:0;
         $data['fecha']=(isset($_GET['fecha']))?$_GET['fecha']:'';
         $data['id'] =(isset($_GET['id']))?$_GET['id']:'';
         $this->load->view ( 'manager/diaferiado/ajax_confirmar_eliminar_dia', $data );
     }
+
     public function ajax_eliminar_dia_feriado(){
         $code=0;
         $mensaje='';
@@ -131,12 +125,7 @@ class DiaFeriado extends CI_Controller {
         if($id>0){
             try{
                 $uri=$this->base_services.''.$this->context.'daysOff/'.$id;//url del servicio con los parametros
-                $response = \Httpful\Request::delete($uri)
-                    ->expectsJson()
-                    ->addHeaders(array(
-                        'appkey' => $this->appkey                             // heder de appkey
-                    ))
-                    ->sendIt();
+                $response = Request::delete($uri)->sendIt();
                 $code=$response->code;
                 if(isset($response->body) && is_array($response->body) && isset($response->body[0]->response->code)){
                     $code=$response->body[0]->response->code;

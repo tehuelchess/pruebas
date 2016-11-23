@@ -3,26 +3,29 @@
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
+use Httpful\Request;
+
 class Tramites extends MY_Controller {
-    private $domain='';
-    private $appkey='';
     private $base_services='';
     private $context='';
-    private $records=10;
+
     public function __construct() {
         parent::__construct();
         include APPPATH . 'third_party/httpful/bootstrap.php';
         $this->base_services=$this->config->item('base_service');
         $this->context=$this->config->item('context_service');
-        $this->records=$this->config->item('records');
-        $cuenta=UsuarioSesion::usuario()->cuenta_id;
-        $cuenta=(isset($cuenta) && is_numeric($cuenta) && $cuenta>0)?$cuenta:1;
+        $cuenta = Cuenta::cuentaSegunDominio()->id;
         try{
             $service=new Connect_services();
             $service->setCuenta($cuenta);
             $service->load_data();
-            $this->domain=$service->getDomain();
-            $this->appkey=$service->getAppkey();
+            $agendaTemplate = Request::init()
+                ->expectsJson()
+                ->addHeaders(array(
+                    'appkey' => $service->getAppkey(),
+                    'domain' => $service->getDomain()
+                ));
+            Request::ini($agendaTemplate);
         }catch(Exception $err){
             //echo 'Error: '.$err->getMessage();
         }
@@ -134,13 +137,7 @@ class Tramites extends MY_Controller {
         foreach($usuario[0]->GruposUsuarios as $g){
             try{
                 $uri=$this->base_services.''.$this->context.'calendars/listByOwner/'.$g->id;
-                $response = \Httpful\Request::get($uri)
-                    ->expectsJson()
-                    ->addHeaders(array(
-                        'appkey' => $this->appkey, 
-                        'domain' => $this->domain
-                    ))
-                    ->sendIt();
+                $response = Request::get($uri)->sendIt();
                 $code=$response->code;
                 if(isset($response->code) && $response->code==200 && isset($response->body) && is_array($response->body) && isset($response->body[0]->response->code)){
                     if(count($response->body[1]->calendars)>0){
@@ -161,13 +158,7 @@ class Tramites extends MY_Controller {
         try{
             $id=(isset(UsuarioSesion::usuario()->id))?UsuarioSesion::usuario()->id:0;
             $uri=$this->base_services.''.$this->context.'calendars/listByOwner/'.$id;
-            $response = \Httpful\Request::get($uri)
-                ->expectsJson()
-                ->addHeaders(array(
-                    'appkey' => $this->appkey, 
-                    'domain' => $this->domain
-                ))
-                ->sendIt();
+            $response = Request::get($uri)->sendIt();
             $code=$response->code;
             if(isset($response->body) && is_array($response->body) && isset($response->body[0]->response->code) && $response->body[0]->response->code==200){
                 if(count($response->body[1]->calendars)>0){
@@ -197,13 +188,7 @@ class Tramites extends MY_Controller {
             }else{
                 $uri=$this->base_services.''.$this->context.'appointments/listByApplyer/'.$id.'?page='.$pagina;    
             }
-            $response = \Httpful\Request::get($uri)
-                ->expectsJson()
-                ->addHeaders(array(
-                    'appkey' => $this->appkey, 
-                    'domain' => $this->domain
-                ))
-                ->sendIt();
+            $response = Request::get($uri)->sendIt();
             $code=$response->code;
             if(isset($response->body) && is_array($response->body) && isset($response->body[0]->response->code) && $response->body[0]->response->code==200){
                 $total_registros=$response->body[1]->count;
@@ -248,13 +233,7 @@ class Tramites extends MY_Controller {
         $mensaje='';
         try{
             $uri=$this->base_services.''.$this->context.'appointments/listByCalendar/'.$agenda.'?page='.$pagina;
-            $response = \Httpful\Request::get($uri)
-                ->expectsJson()
-                ->addHeaders(array(
-                    'appkey' => $this->appkey, 
-                    'domain' => $this->domain
-                ))
-                ->sendIt();
+            $response = Request::get($uri)->sendIt();
             $code=$response->code;
             if(isset($response->body) && is_array($response->body) && isset($response->body[0]->response->code) && $response->body[0]->response->code==200){
                 //$datos=$response->body->appointments;
@@ -359,13 +338,7 @@ class Tramites extends MY_Controller {
         $result=array();
         try{
             $uri=$this->base_services.''.$this->context.'calendars/listByOwner/'.$owner;
-            $response = \Httpful\Request::get($uri)
-                ->expectsJson()
-                ->addHeaders(array(
-                    'appkey' => $this->appkey, 
-                    'domain' => $this->domain
-                ))
-                ->sendIt();
+            $response = Request::get($uri)->sendIt();
             $code=$response->code;
             if(isset($response->code) && $response->code==200 && isset($response->body) && is_array($response->body) && isset($response->body[0]->response->code)){
                 foreach($response->body[1]->calendars as $item){
@@ -392,13 +365,7 @@ class Tramites extends MY_Controller {
         foreach($usuario[0]->GruposUsuarios as $g){
             try{
                 $uri=$this->base_services.''.$this->context.'calendars/listByOwner/'.$g->id;
-                $response = \Httpful\Request::get($uri)
-                    ->expectsJson()
-                    ->addHeaders(array(
-                        'appkey' => $this->appkey, 
-                        'domain' => $this->domain
-                    ))
-                    ->sendIt();
+                $response = Request::get($uri)->sendIt();
                 $code=$response->code;
                 if(isset($response->code) && $response->code==200 && isset($response->body) && is_array($response->body) && isset($response->body[0]->response->code)){
                     foreach($response->body[1]->calendars as $item){
@@ -516,14 +483,7 @@ class Tramites extends MY_Controller {
                 "user_name_cancel": "'.$nombre.'"
                 }';
             $uri=$this->base_services.''.$this->context.'appointments/cancel/'.$appoint_id;//url del servicio con los parametros
-            $response = \Httpful\Request::put($uri)
-                ->expectsJson()
-                ->body($json)
-                ->addHeaders(array(
-                    'appkey' => $this->appkey, 
-                    'domain' => $this->domain
-                ))
-                ->sendIt();
+            $response = Request::put($uri)->body($json)->sendIt();
             $code=$response->code;
             if(isset($response->body->response->code) && $response->body->response->code==200){
                 $code=$response->body->response->code;
@@ -544,40 +504,16 @@ class Tramites extends MY_Controller {
         $array=array('code'=>$code,'message'=>$mensaje);
         echo json_encode($array);
     }
+    
     public function diasFeriados(){
         $code=0;
         $mensaje='';
         $data=array();
-        if(!isset(UsuarioSesion::usuario()->cuenta_id) || !is_numeric(UsuarioSesion::usuario()->cuenta_id)){
-            $idtramite=(isset($_GET['tram']))?intval($_GET['tram']):0;
-            try{
-                $result = Doctrine_Query::create ()
-                ->select('p.cuenta_id')
-                ->from ('Proceso p,Tramite t,Etapa e')
-                ->where ("t.proceso_id=p.id AND e.tramite_id=tramite.id AND e.id=?",$idtramite)
-                ->execute ();
-                $cuenta=(isset($result[0]->cuenta_id) && is_numeric($result[0]->cuenta_id))?$result[0]->cuenta_id:1;
-
-                $service=new Connect_services();
-                $service->setCuenta($cuenta);
-                $service->load_data();
-                $this->domain=$service->getDomain();
-                $this->appkey=$service->getAppkey();
-            }catch(Exception $err){
-
-            }
-        }
         $ytemp=date('Y')-1;       
         for($i=1;$i<=3;$i++){
             try{
                 $uri=$this->base_services.''.$this->context.'daysOff?year='.$ytemp;//url del servicio con los parametros
-                $response = \Httpful\Request::get($uri)
-                    ->expectsJson()
-                    ->addHeaders(array(
-                        'appkey' => $this->appkey,
-                        'domain' => $this->domain                
-                    ))
-                    ->sendIt();
+                $response = Request::get($uri)->sendIt();
                 $code=$response->code;
                 if(isset($response->body) && is_array($response->body) && isset($response->body[0]->response->code)){
                     $code=$response->body[0]->response->code;
@@ -592,24 +528,17 @@ class Tramites extends MY_Controller {
             }
             $ytemp++;
         }
-        
         $array=array('code'=>$code,'message'=>$mensaje,'daysoff'=>$data);
         echo json_encode($array);
     }
+
     public function cargarCitasCalendar(){
-        //date_default_timezone_set('America/Bogota');
         $id=(isset(UsuarioSesion::usuario()->id))?UsuarioSesion::usuario()->id:0;
         $data=array();
         try{
             $id=(isset(UsuarioSesion::usuario()->id))?UsuarioSesion::usuario()->id:0;
             $uri=$this->base_services.''.$this->context.'appointments/listByOwner/'.$id;//url del servicio con los parametros
-            $response = \Httpful\Request::get($uri)
-                ->expectsJson()
-                ->addHeaders(array(
-                    'appkey' => $this->appkey, 
-                    'domain' => $this->domain
-                ))
-                ->sendIt();
+            $response = Request::get($uri)->sendIt();
             $code=$response->code;
             if(isset($response->body) && is_array($response->body) && isset($response->body[0]->response->code) && $response->body[0]->response->code==200){
                 foreach($response->body[1]->appointments as $item){
@@ -629,12 +558,7 @@ class Tramites extends MY_Controller {
         $result=array('success'=>1,'result'=>$data);
         echo json_encode($result);
     }
-    /*public function ajax_confirmar_agregar_bloqueo(){
-        $data['fechainicio']=$_GET['fecha1'];
-        $data['fechafinal']=$_GET['fecha2'];
-        $data['calendario']=$_GET['cmbagendabloq'];
-        $this->load->view('tramites/ajax_confirmar_agregar_bloqueo', $data);
-    }*/
+
     public function ajax_agregar_bloqueo_dia_completo(){
         $code=0;
         $mensaje='';
@@ -671,14 +595,7 @@ class Tramites extends MY_Controller {
             if($idagenda>0){
                 try{
                     $uri=$this->base_services.''.$this->context.'blockSchedules/bulkCreate';//url del servicio con los parametros
-                    $response = \Httpful\Request::post($uri)
-                        ->body($json)
-                        ->expectsJson()
-                        ->addHeaders(array(
-                            'appkey' => $this->appkey, 
-                            'domain' => $this->domain
-                        ))
-                        ->sendIt();
+                    $response = Request::post($uri)->body($json)->sendIt();
                     $code=$response->code;
                     if(isset($response->body) && is_array($response->body) && isset($response->body[0]->response->code)){
                         $code=$response->body[0]->response->code;
@@ -709,6 +626,7 @@ class Tramites extends MY_Controller {
         }
         echo json_encode(array('code'=>$code,'mensaje'=>$mensaje));
     }
+
     public function ajax_agregar_bloqueo(){
         $code=0;
         $mensaje='';
@@ -737,14 +655,7 @@ class Tramites extends MY_Controller {
         if($idagenda>0){
             try{
                 $uri=$this->base_services.''.$this->context.'blockSchedules';//url del servicio con los parametros
-                $response = \Httpful\Request::post($uri)
-                    ->body($json)
-                    ->expectsJson()
-                    ->addHeaders(array(
-                        'appkey' => $this->appkey, 
-                        'domain' => $this->domain
-                    ))
-                    ->sendIt();
+                $response = Request::post($uri)->body($json)->sendIt();
                 $code=$response->code;
                 if(isset($response->body) && is_array($response->body) && isset($response->body[0]->response->code)){
                     $code=$response->body[0]->response->code;
@@ -771,6 +682,7 @@ class Tramites extends MY_Controller {
         }
         echo json_encode(array('code'=>$code,'mensaje'=>$mensaje));
     }
+
     public function ajax_confirmar_agregar_bloqueo_dia_completo(){
         $timetmp=strtotime($_GET['fechainicio']);
         $start=$timetmp*1000;
@@ -782,14 +694,15 @@ class Tramites extends MY_Controller {
         $data['bloqueardia']=true;
         $this->load->view('tramites/ajax_confirmar_agregar_bloqueo_dia', $data);
     }
+
     private function convertirFechaFormatoBloqueo($fe){
         $tmp=explode(' ',$fe);
         $tmpf=explode('/',$tmp[0]);
         $fecha=$tmpf[2].'-'.$tmpf[1].$tmpf[0].' '.$tmp[1];
         return $fecha;
     }
+
     public function disponibilidad($idagenda=0){
-        //date_default_timezone_set('America/Bogota');
         $code=0;
         $mensaje='';
         $data=array();
@@ -798,19 +711,11 @@ class Tramites extends MY_Controller {
             $tiempofin=$this->obtenerTiempoCita($idagenda);
             $date=(isset($_GET['date']))?$_GET['date']:'';
             if(!empty($date)){
-                //echo $date;
                 $uri=$this->base_services.''.$this->context.'appointments/availability/'.$idagenda.'?date='.$date;//url del servicio con los parametros
             }else{
                 $uri=$this->base_services.''.$this->context.'appointments/availability/'.$idagenda;//url del servicio con los parametros
             }
-            
-            $response = \Httpful\Request::get($uri)
-                ->expectsJson()
-                ->addHeaders(array(
-                    'appkey' => $this->appkey,
-                    'domain' => $this->domain                
-                ))
-                ->sendIt();
+            $response = Request::get($uri)->sendIt();            
             $code=$response->code;
             if(isset($response->body) && is_array($response->body) && isset($response->body[0]->response->code)){
                 $code=$response->body[0]->response->code;
@@ -864,7 +769,6 @@ class Tramites extends MY_Controller {
                             }
                         }
                     }
-                    
                 }
             }
         }catch(Exception $err){
@@ -874,17 +778,12 @@ class Tramites extends MY_Controller {
         $result=array('success'=>1,'result'=>$data);
         echo json_encode($result);
     }
+
     private function obtenerTiempoCita($idagenda){
         $valor=0;
         try{
             $uri=$this->base_services.''.$this->context.'calendars/'.$idagenda;//url del servicio con los parametros
-            $response = \Httpful\Request::get($uri)
-                ->expectsJson()
-                ->addHeaders(array(
-                    'appkey' => $this->appkey,
-                    'domain' => $this->domain
-                ))
-                ->sendIt();
+            $response = Request::get($uri)->sendIt();
             $code=$response->code;
             if(isset($response->body) && is_array($response->body) && isset($response->body[0]->response->code)){
                 $valor=$response->body[1]->calendars[0]->time_attention;
@@ -894,6 +793,7 @@ class Tramites extends MY_Controller {
         }
         return $valor;
     }
+
     public function bloqueo(){
         $start=(isset($_GET['start']))?$_GET['start']:0;
         $end=(isset($_GET['end']))?$_GET['end']:0;
@@ -903,23 +803,19 @@ class Tramites extends MY_Controller {
         $data['id']=$id;
         $this->load->view('tramites/ajax_confirmar_agregar_bloqueo', $data);
     }
+
     public function desbloqueo(){
         $data['id']=(isset($_GET['id']) && is_numeric($_GET['id']))?$_GET['id']:0;
         $this->load->view('tramites/ajax_confirmar_eliminar_bloqueo', $data);
     }
+
     public function ajax_eliminar_bloqueo(){
         $code=0;
         $mensaje=0;
         $idbloqueo=(isset($_GET['id']) && is_numeric($_GET['id']))?$_GET['id']:0;
         try{
             $uri=$this->base_services.''.$this->context.'blockSchedules/'.$idbloqueo;//url del servicio con los parametros
-            $response = \Httpful\Request::delete($uri)
-                ->expectsJson()
-                ->addHeaders(array(
-                    'appkey' => $this->appkey,
-                    'domain' => $this->domain                
-                ))
-                ->sendIt();
+            $response = Request::delete($uri)->sendIt();
             $code=$response->code;
             if(isset($response->body) && isset($response->body->response->code) && $response->body->response->code==200){
                 $code=$response->body->response->code;
@@ -933,6 +829,7 @@ class Tramites extends MY_Controller {
         }
         echo json_encode(array('code'=>$code,'mensaje'=>$mensaje));
     }
+
     public function ajax_obtener_datos_agenda(){
         $code=0;
         $mensaje=0;
@@ -940,13 +837,7 @@ class Tramites extends MY_Controller {
         $agenda='';
         try{
             $uri=$this->base_services.''.$this->context.'calendars/'.$id;//url del servicio con los parametros
-            $response = \Httpful\Request::get($uri)
-                ->expectsJson()
-                ->addHeaders(array(
-                    'appkey' => $this->appkey,
-                    'domain' => $this->domain                
-                ))
-                ->sendIt();
+            $response = Request::get($uri)->sendIt();
             $code=$response->code;
             if(isset($response->body) && isset($response->body[0]->response->code) && $response->body[0]->response->code==200){
                 $agenda=$response->body[1]->calendars[0];
@@ -959,5 +850,4 @@ class Tramites extends MY_Controller {
         }
         echo json_encode(array('code'=>$code,'mensaje'=>$mensaje,'calendar'=>$agenda));
     }
-
 }
