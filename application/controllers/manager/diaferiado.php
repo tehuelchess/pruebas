@@ -18,7 +18,7 @@ class DiaFeriado extends CI_Controller {
         $agendaTemplate = Request::init()
                 ->expectsJson()
                 ->addHeaders(array(
-                    'appkey' => config->item('appkey')
+                    'appkey' => $this->config->item('appkey')
                 ));
         Request::ini($agendaTemplate);
     }

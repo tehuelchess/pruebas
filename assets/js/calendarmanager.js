@@ -80,7 +80,7 @@ $(function(){
     $('.btn-group button[data-calendar-nav]').each(function() {
         var $this = $(this);
         $this.click(function() {
-            $('.btn-group button[data-calendar-nav]').prop( "disabled", true );
+            //$('.btn-group button[data-calendar-nav]').prop( "disabled", true );
             calendar.navigate($this.data('calendar-nav'));
             cargarDiasFeriados_async(calendar.getYear());
 
