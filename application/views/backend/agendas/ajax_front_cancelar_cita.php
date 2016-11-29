@@ -31,7 +31,7 @@
         }
         if(sw){
             $.ajax({
-                url:'<?= base_url('/tramites/ajax_cancelarCita/'.$id) ?>',
+                url:'<?= base_url('/agenda/ajax_cancelarCita/'.$id) ?>',
                 data:{
                     id:id,
                     motivo:motivo
@@ -39,7 +39,7 @@
                 dataType: "json",
                 success: function( data ) {
                     if(data.code==200){
-                        location.href='<?=site_url('/tramites/miagenda')?>';
+                        location.href='<?=site_url('/agenda/miagenda')?>';
                     }else{
                         $('.validacion').html('<div class="alert alert-error"><a class="close" data-dismiss="alert">×</a>'+data.message+' .</div>');
                     }

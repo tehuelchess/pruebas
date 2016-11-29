@@ -105,7 +105,7 @@ class AgendasUsuario extends MY_BackendController {
                 }
             }
             $json='{
-                "applyer_attended": "'.$asistencia.'"
+                "applier_attended": "'.$asistencia.'"
             }';
             if($sw){
                 $uri=$this->base_services.''.$this->context.'appointments/assists/'.$idcita;
@@ -129,13 +129,13 @@ class AgendasUsuario extends MY_BackendController {
         $idobject=(isset($_GET['object']) && is_numeric($_GET['object']))?$_GET['object']:0;
         $data['idagenda']=$idagenda;
         $data['idobject']=$idobject;
-        $this->load->view ( 'tramites/ajax_editar_cita', $data );
+        $this->load->view ( 'agenda/ajax_editar_cita', $data );
     }
     function ajax_modal_editar_cita_funcionario(){
         $idagenda=(isset($_GET['idagenda']) && is_numeric($_GET['idagenda']))?$_GET['idagenda']:0;
         $data['idagenda']=$idagenda;
         $data['idobject']=0;
-        $this->load->view ( 'tramites/ajax_editar_cita_funcionario', $data );
+        $this->load->view ( 'agenda/ajax_editar_cita_funcionario', $data );
     }
     function ajax_modal_ver_cita_funcionario($idcita){
         $solicitante=(isset($_GET['soli']))?$_GET['soli']:'';
@@ -149,10 +149,10 @@ class AgendasUsuario extends MY_BackendController {
         $data['tramite']=$tramite;
         $data['correo']=$correo;
         $data['idcita']=$idcita;
-        $this->load->view ('tramites/ajax_vercancelar_cita_funcionario', $data);
+        $this->load->view ('agenda/ajax_vercancelar_cita_funcionario', $data);
     }
     function ajax_vercancelar_cita_funcionario($idcita){
         $data['idcita']=$idcita;
-        $this->load->view ('tramites/ajax_cancelar_cita_funcionario', $data);
+        $this->load->view ('agenda/ajax_cancelar_cita_funcionario', $data);
     }
 }

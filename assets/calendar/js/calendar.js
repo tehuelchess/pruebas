@@ -1029,42 +1029,23 @@ if(!String.prototype.formatNum) {
 
 		$('*[data-toggle="tooltip"]').tooltip({container: this.options.tooltip_container});
 
-		$('*[data-cal-date]').click(function() {
-			/*var view = $(this).data('cal-view');
-			self.options.day = $(this).data('cal-date');
-			self.view(view);*/
-			var ignore=0;
-			if (typeof($('#validarferiado')) !== "undefined"){
-				ignore=$('#validarferiado').val();
-			}
-			if((!$(this).parent().hasClass('dia-festivo') || ignore==1 ) && $(this).children().hasClass('sweventhaycita')){
-				var view = $(this).data('cal-view');
-				self.options.day = $(this).data('cal-date');
-				self.view(view);
-			}
+		$('.cal-month-box .cal-cell').click(function() {
+      var ignore = 0;
+      if (typeof($('#validarferiado')) !== "undefined") {
+        ignore = $('#validarferiado').val();
+      }
+      console.log('ignore: ' + ignore);
+      if ($(this).children().hasClass('cal-month-day') && (!$(this).children().hasClass('dia-festivo') || ignore==1 ) && $(this).children().hasClass('sweventhaycita')) {
+        var view = $('[data-cal-date]', this).data('cal-view');
+        self.options.day = $('[data-cal-date]', this).data('cal-date');
+        self.view(view);
+      }
 		});
-		$('.cal-cell').dblclick(function() {
-			var ignore=0;
-			if (typeof($('#validarferiado')) !== "undefined"){
-				ignore=$('#validarferiado').val();
-			}
-			if((!$(this).children().hasClass('dia-festivo') || ignore==1) && $(this).children().hasClass('sweventhaycita')){
-				var view = $('[data-cal-date]', this).data('cal-view');
-				self.options.day = $('[data-cal-date]', this).data('cal-date');
-				self.view(view);
-			}
-		});
-		$('.cal-cell').click(function(){
-			var ignore=0;
-			if (typeof($('#validarferiado')) !== "undefined"){
-				ignore=$('#validarferiado').val();
-			}
-			if($(this).children().hasClass('cal-month-day') && (!$(this).children().hasClass('dia-festivo') || ignore==1 ) && $(this).children().hasClass('sweventhaycita')){
-				
-				var view = $('[data-cal-date]', this).data('cal-view');
-				self.options.day = $('[data-cal-date]', this).data('cal-date');
-				self.view(view);
-			}
+
+		$('.cal-year-box .cal-cell').click(function() {
+		  var view = $('[data-cal-date]', this).data('cal-view');
+		  self.options.day = $('[data-cal-date]', this).data('cal-date');
+		  self.view(view);
 		});
 		
 		this['_update_' + this.options.view]();

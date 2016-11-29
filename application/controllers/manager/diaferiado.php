@@ -25,20 +25,13 @@ class DiaFeriado extends CI_Controller {
 
     public function index() {
         $data['cuentas']='';
-        
         $data['title']='D&iacute;as Feriados';
-        $data['content']='manager/diaferiado/index';
-        
+        $data['content']='manager/diaferiado/index';        
         $this->load->view('manager/template',$data);
     }
 
     public function EmptyCalendar(){
-        $var='{
-                "success": 1,
-                "result": [
-                ]
-            }
-            ';
+        $var='{"success": 1,"result": []}';
         echo $var;
     }
     public function diasFeriados(){
@@ -47,8 +40,10 @@ class DiaFeriado extends CI_Controller {
         $data=array();
         //$year=(isset($_GET['year']) && is_numeric($_GET['year']) && $_GET['year']>0 )?$_GET['year']:date('Y');
         try{
-            $uri=$this->base_services.''.$this->context.'daysOff';//url del servicio con los parametros
+            $uri=$this->base_services.''.$this->context.'daysOff';
+            log_message('debug', 'diasFeriados URI '.$uri);
             $response = Request::get($uri)->sendIt();
+            log_message('debug', 'diasFeriados Response '.$response);
             if(isset($response->body) && is_array($response->body) && isset($response->body[0]->response->code)){
                 $code=$response->code;
                 $code=$response->body[0]->response->code;
@@ -59,16 +54,18 @@ class DiaFeriado extends CI_Controller {
                 }
             }
         }catch(Exception $err){
+            log_message('error', 'diasFeriados '.$err);
             $mensaje=$err->getMessage();
         }
-        
         $array=array('code'=>$code,'message'=>$mensaje,'daysoff'=>$data);
         echo json_encode($array);
     }
+
     public function ajax_dia_conf_global($fecha){
         $data['fecha'] = $fecha;
         $this->load->view ( 'manager/diaferiado/ajax_dia_calendario', $data );
     }
+
     public function ajax_agregar_dia_feriado(){
         $code=0;
         $mensaje='';
@@ -81,8 +78,10 @@ class DiaFeriado extends CI_Controller {
                 "name": "'.$name.'"
                 }';
             try{
-                $uri=$this->base_services.''.$this->context.'daysOff';//url del servicio con los parametros
+                $uri=$this->base_services.''.$this->context.'daysOff';
+                log_message('debug', 'ajax_agregar_dia_feriado URI '.$uri);
                 $response = Request::post($uri)->body($json)->sendIt();
+                log_message('debug', 'ajax_agregar_dia_feriado Response '.$response);
                 $code=$response->code;
                 if(isset($response->body) && is_array($response->body) && isset($response->body[0]->response->code)){
                     $code=$response->body[0]->response->code;
@@ -101,6 +100,7 @@ class DiaFeriado extends CI_Controller {
                     }
                 }
             }catch(Exception $err){
+                log_message('error', 'ajax_agregar_dia_feriado '.$err);
                 $mensaje=$err->getMessage();
             }
         }else{
@@ -124,8 +124,10 @@ class DiaFeriado extends CI_Controller {
         $id=(isset($_GET['id']) && is_numeric($_GET['id']))?$_GET['id']:0;
         if($id>0){
             try{
-                $uri=$this->base_services.''.$this->context.'daysOff/'.$id;//url del servicio con los parametros
+                $uri=$this->base_services.''.$this->context.'daysOff/'.$id;
+                log_message('debug', 'ajax_eliminar_dia_feriado URI '.$uri);
                 $response = Request::delete($uri)->sendIt();
+                log_message('debug', 'ajax_eliminar_dia_feriado Response '.$response);
                 $code=$response->code;
                 if(isset($response->body) && is_array($response->body) && isset($response->body[0]->response->code)){
                     $code=$response->body[0]->response->code;
@@ -137,6 +139,7 @@ class DiaFeriado extends CI_Controller {
                     }
                 }
             }catch(Exception $err){
+                log_message('error', 'ajax_eliminar_dia_feriado '.$err);
                 $mensaje=$err->getMessage();
             }
         }else{

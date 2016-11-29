@@ -12,5 +12,5 @@
     </div>
 <div class="modal-footer">
     <button class="btn js_cerrar_vcancelar" data-dismiss="modal">Cerrar</button>
-    <a href="#" onclick="confirmar_cancelar_cita(<?= $idcita ?>);" class="btn btn-primary">Cancelar Cita</a>
+    <button onclick="confirmar_cancelar_cita(<?= $idcita ?>);" class="btn btn-primary" id="cancelar_cita_">Cancelar Cita</button>
 </div>

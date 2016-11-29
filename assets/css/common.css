@@ -587,11 +587,11 @@ footer .area2 .container-fluid .footerGob {
   background-position: center;
 }
 .iconglyp-user{
-  background-image: url(../img/glyphicons-4-user.png);
+  background-image: url(../fonts/png/glyphicons-4-user.png);
 }
 .iconglyp-group{
   background-size: 17px 12px;
-  background-image: url(../img/glyphicons-44-group.png);
+  background-image: url(../fonts/png/glyphicons-44-group.png);
 }
 .glyphicon{
   position:relative;

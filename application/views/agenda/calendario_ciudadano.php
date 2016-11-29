@@ -44,14 +44,14 @@
     $(function(){
         var urlbase='<?= base_url() ?>';
         ignorar_festivo(<?= $idagenda ?>);
-        var url=urlbase+'etapas/disponibilidad/<?= $idagenda ?>/<?= $idtramite ?>';
-        feriados=cargarDiasFeriados();
+        var url = urlbase+'agenda/disponibilidadCiudadano/<?= $idagenda ?>'; 
+        feriados = cargarDiasFeriados();
         var options = {
             events_source:url,
             view: 'month',
             tmpl_path: urlbase+'/assets/calendar/tmpls_ciudadano/',
             tmpl_cache: false,
-            width:650,
+            width: 650,
             language:'es-CO',
             classes: {
                 months: {
@@ -86,8 +86,8 @@
                     enable: true
                 }
             },
-            merge_holidays:true,
-            holidays:feriados,
+            merge_holidays: true,
+            holidays: feriados,
             onAfterEventsLoad: function(events) {
                 if(!events) {
                     return;
@@ -105,13 +105,13 @@
                 $('.page-header h3').text(this.getTitle());
                 $('.btn-group button').removeClass('active');
                 $('button[data-calendar-view="' + view + '"]').addClass('active');
-                $('.cal-cell').dblclick(function(){
+                $('.cal-cell').dblclick(function() {
                     eventDaysCalendar();
                 });
-                $('.cal-cell').click(function(){
+                $('.cal-cell').click(function() {
                     eventDaysCalendar();
                 });
-                $('span[data-toggle="tooltip"]').mouseover(function(e){
+                $('span[data-toggle="tooltip"]').mouseover(function(e) {
                     $("#mtooltipcustom").css({'top':(y + 20)+'px','left':(x + 20) + 'px'});
                     var id=$(this).attr('aria-describedby');
                     if (typeof($("#"+id).find(".ui-tooltip-content").html()) != "undefined"){
@@ -124,8 +124,8 @@
                 $('span[data-toggle="tooltip"]').mouseout(function(){
                     $("#mtooltipcustom").remove();
                 });
-                $('.event-warning').parent().parent().find('span').addClass('styhaycita');
-                $('.event-warning').parent().parent().addClass('sweventhaycita');
+                $('.cal-month-box .event-warning').parent().parent().find('span').addClass('styhaycita');
+                $('.cal-month-box .event-warning').parent().parent().addClass('sweventhaycita');
                 var ignore=0
                 if (typeof($('#validarferiado')) !== "undefined"){
                     ignore=$('#validarferiado').val();
@@ -147,7 +147,7 @@
             }
         };
         calendar = $('#calendar').calendar(options);
-        $(document).on('click','.pull-right',function(){
+        $(document).on('click','.pull-right',function() {
             eventDaysCalendar();
         });
 
@@ -165,7 +165,7 @@
                 var sw=false;
                 var tmp=calendar.getDateSelect().split("/");
                 var hoy=new Date(tmp[2],tmp[1]-1,tmp[0],0,0,0,0);
-                for (var k in feriados){
+                for (var k in feriados) {
                     if (feriados.hasOwnProperty(k)) {
                         var m=k.split('-');
                         var hol=new Date(m[2],m[1]-1,m[0],0,0,0,0);
@@ -216,27 +216,27 @@
         $('#tabs').css({'display':'block'});
     });
 
-    function cargarDiasFeriados(calendar){
-        var urlbase='<?= base_url() ?>';
-        var url=urlbase+'tramites/diasFeriados?tram=<?= $idtramite ?>';
-        var arrdata=new Array();
+    function cargarDiasFeriados(calendar) {
+        var urlbase = '<?= base_url() ?>';
+        var url = urlbase + 'agenda/diasFeriados';
+        var arrdata = new Array();
         $.ajax({
             url: url,
-            dataType: "json",
-            async:false,
-            success: function( data ) {
-                if(data.code==200){
-                    var items=data.daysoff;
+            dataType: 'json',
+            async: false,
+            success: function(data) {
+                if (data.code == '200') {
+                    var items = data.daysoff;
                     $.each(items, function(index, element) {
-                        var fe=element.date_dayoff.split('-');
                         arrdata[element.date_dayoff]=element.name;
                     });
-                }                    
+                }
             }
         });
         return arrdata;
     }
-    function eventDaysCalendar(){
+
+    function eventDaysCalendar() {
         var tmp=calendar.getDateSelect().split('/');
         var d=new Date(tmp[2],tmp[1]-1,tmp[0],1,0,0,0);
         var select=d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear();
@@ -321,7 +321,7 @@
             var fecha2=tmpf2[2]+'-'+tmpf2[1]+'-'+tmpf2[0];
             var idtramite=<?= $etapa ?>;
             //var etapa=<?= $etapa ?>;
-            $("#modalconfirmar").load(site_url + "etapas/ajax_confirmar_agregar_dia?idagenda=<?= $idagenda ?>&fecha="+fecha+"&hora="+tmp[1]+"&obj="+object+"&fechaf="+fecha2+"&horaf="+tmp2[1]+"&idcita=<?= $idcita ?>&idtramite="+idtramite);
+            $("#modalconfirmar").load(site_url + "agenda/ajax_confirmar_agregar_dia?idagenda=<?= $idagenda ?>&fecha="+fecha+"&hora="+tmp[1]+"&obj="+object+"&fechaf="+fecha2+"&horaf="+tmp2[1]+"&idcita=<?= $idcita ?>&idtramite="+idtramite);
             $("#modalconfirmar").modal();
         });
     }
@@ -344,7 +344,7 @@
     }
     function ignorar_festivo(idagenda){
         var urlbase='<?= base_url() ?>';
-        var url=urlbase+'tramites/ajax_obtener_datos_agenda';
+        var url=urlbase+'agenda/ajax_obtener_datos_agenda';
         $.ajax({
             url: url,
             dataType: "json",

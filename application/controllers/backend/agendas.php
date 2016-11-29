@@ -16,7 +16,7 @@ class Agendas extends MY_BackendController {
         UsuarioBackendSesion::force_login();
         $this->base_services=$this->config->item('base_service');
         $this->context=$this->config->item('context_service');
-        $this->records=$this->config->item('records');
+        $this->records=empty($this->config->item('records'))?10:$this->config->item('records');
         $cuenta = Cuenta::cuentaSegunDominio()->id;
         try{
             $service=new Connect_services();
@@ -30,6 +30,7 @@ class Agendas extends MY_BackendController {
                 ));
             Request::ini($agendaTemplate);
         }catch(Exception $err){
+            log_message('error', 'Constructor'.$err);
             //echo 'Error: '.$err->getMessage();
         }
 
@@ -47,7 +48,9 @@ class Agendas extends MY_BackendController {
         $registros=$this->records; // numero de registro a mostrar por pagina
         try{
             $uri=$this->base_services.''.$this->context.'calendars?page='.$pagina.'&records='.$registros;
+            log_message('debug', 'listarAgendas URI '.$uri);
             $response = Request::get($uri)->sendIt();
+            log_message('debug', 'listarAgendas Response '.$response);
             if(isset($response->body) && is_array($response->body) && isset($response->body[0]->response->code) && $response->body[0]->response->code==200){
                 $total_registros=$response->body[1]->count;
                 foreach($response->body[1]->calendars as $item){
@@ -56,7 +59,7 @@ class Agendas extends MY_BackendController {
                 }
             }
         }catch(Exception $err){
-            //echo $err->getMessage();
+            log_message('error', 'listarAgendas '.$err);
         }
         
         $num_paginas=5; // numeros maximo de paginas a mostrar en la lista del paginador
@@ -81,12 +84,6 @@ class Agendas extends MY_BackendController {
         $paginador['pagina_desde']=$pagina_desde;
         $paginador['pagina_hasta']=$pagina_hasta;
         $data['paginador']=$paginador;
-        $this->load->view('backend/template', $data);
-    }
-
-    public function config_global(){
-        $data['title'] = 'Configuración Global';
-        $data['content'] = 'backend/agendas/config_global';
         $this->load->view('backend/template', $data);
     }
 
@@ -117,7 +114,9 @@ class Agendas extends MY_BackendController {
             $finreg=$inicio+$registros; // se calcula hasta que registro se muestra
             try{
                 $uri=$this->base_services.''.$this->context.'calendars/searchByName?text='.$search.'&page='.$pagina.'&records='.$registros;
+                log_message('debug', 'buscar URI '.$uri);
                 $response = Request::get($uri)->sendIt();
+                log_message('debug', 'buscar Response '.$response);
                 if(isset($response->body) && is_array($response->body) && isset($response->body[0]->response->code) && $response->body[0]->response->code==200){
                     $total_registros=$response->body[1]->count;
                     foreach($response->body[1]->calendars as $item){
@@ -125,7 +124,7 @@ class Agendas extends MY_BackendController {
                     }
                 }
             }catch(Exception $err){
-                //echo $err->getMessage();
+                log_message('error', 'buscar '.$err);
             }
             $total_paginas = ceil($total_registros / $registros); // calculo de total de paginas.
 
@@ -186,8 +185,10 @@ class Agendas extends MY_BackendController {
         if($id>0){
             if($motivo!=''){
                 try{
-                    $uri=$this->base_services.''.$this->context.'calendars/disable/'.$id;//url del servicio con los parametros
+                    $uri=$this->base_services.''.$this->context.'calendars/disable/'.$id;
+                    log_message('debug', 'ajax_eliminar_agenda URI '.$uri);
                     $response = Request::put($uri)->sendIt();
+                    log_message('debug', 'ajax_eliminar_agenda Response '.$response);
                     $code=$response->code;
                     if(isset($response->body) && isset($response->body->response->code) && $response->body->response->code==200){
                         $code=$response->body->response->code;
@@ -215,6 +216,7 @@ class Agendas extends MY_BackendController {
                         }
                     }
                 }catch(Exception $err){
+                    log_message('error', 'ajax_eliminar_agenda '.$err);
                     $mensaje=$err->getMessage();
                 }
             }else{
@@ -242,8 +244,10 @@ class Agendas extends MY_BackendController {
         $mensaje='';
         if(isset($id) && is_numeric($id)){
             try{
-                $uri=$this->base_services.''.$this->context.'calendars/'.$id;//url del servicio con los parametros
+                $uri=$this->base_services.''.$this->context.'calendars/'.$id;
+                log_message('debug', 'ajax_cargarDatosAgenda URI '.$uri);
                 $response = Request::get($uri)->sendIt();
+                log_message('debug', 'ajax_cargarDatosAgenda Response '.$response);
                 $code=$response->code;
                 if(isset($response->body) && is_array($response->body) && isset($response->body[0]->response->code) && $response->body[0]->response->code==200){
                     $code=$response->body[0]->response->code;
@@ -274,6 +278,7 @@ class Agendas extends MY_BackendController {
                     }
                 }
             }catch(Exception $err){
+                log_message('error', 'ajax_cargarDatosAgenda '.$err);
                 $mensaje=$err->getMessage();
             }
         }else{
@@ -416,7 +421,9 @@ class Agendas extends MY_BackendController {
                     if($tatencion>0){
                         try{
                             $uri=$this->base_services.''.$this->context.'calendars';//url del servicio con los parametros
+                            log_message('debug', 'ajax_grabar_agenda_back URI '.$uri);
                             $response = Request::post($uri)->body($json)->sendIt();
+                            log_message('debug', 'ajax_grabar_agenda_back Response '.$response);
                             $code=$response->code;
                             if(isset($response->body) && is_array($response->body) && isset($response->body[0]->response->code)){
                                 $code=$response->body[0]->response->code;
@@ -437,6 +444,7 @@ class Agendas extends MY_BackendController {
                                 }
                             }
                         }catch(Exception $err){
+                            log_message('error', 'ajax_grabar_agenda_back '.$err);
                             $mensaje='Problema en la comunicaci&oacute;n. Por favor verifique los datos y vuelva a intentarlo.';
                         }
                     }else{
@@ -482,6 +490,7 @@ class Agendas extends MY_BackendController {
             $array[]=$rangi.'-'.$rangof;
             return $array;
         }catch(Exception $err){
+            log_message('error', 'add_rangos_franjas '.$err);
             throw new Exception($err->getMessage());
         }
     }
@@ -572,6 +581,7 @@ class Agendas extends MY_BackendController {
                     $franja['domingo']=$domingo;
                 }
             }catch(Exception $err){
+                log_message('error', 'ajax_editar_agenda_back '.$err);
                 $swhorval=false;
                 $mensaje=$err->getMessage();
             }
@@ -619,8 +629,10 @@ class Agendas extends MY_BackendController {
                 if($swvalhoracero){
                     if($tatencion>0){
                         try{
-                            $uri=$this->base_services.''.$this->context.'calendars/'.$id;//url del servicio con los parametros
+                            $uri=$this->base_services.''.$this->context.'calendars/'.$id;
+                            log_message('debug', 'ajax_editar_agenda_back URI '.$uri);
                             $response = Request::put($uri)->body($json)->sendIt(); 
+                            log_message('debug', 'ajax_editar_agenda_back Response '.$response);
                             $code=$response->code;
                             if(isset($response->body) && is_array($response->body) && isset($response->body[0]->response->code)){
                                 $code=$response->body[0]->response->code;
@@ -633,6 +645,7 @@ class Agendas extends MY_BackendController {
                                 }
                             }
                         }catch(Exception $err){
+                            log_message('error', 'ajax_editar_agenda_back URI '.$err);
                             $mensaje=$err->getMessage();
                         }
                     }else{
@@ -657,105 +670,8 @@ class Agendas extends MY_BackendController {
     }
 
     public function EmptyCalendar(){
-        $var='{
-                "success": 1,
-                "result": [
-                ]
-            }
-            ';
+        $var='{"success": 1,"result": [ ] }';
         echo $var;
     }
 
-    public function diasFeriados(){
-        $code=0;
-        $mensaje='';
-        $data=array();
-        try{
-            $uri=$this->base_services.''.$this->context.'daysOff';//url del servicio con los parametros
-            $response = Request::get($uri)->sendIt();
-            $code=$response->code;
-            if(isset($response->body) && is_array($response->body) && isset($response->body[0]->response->code)){
-                $code=$response->body[0]->response->code;
-                $mensaje=$response->body[0]->response->message;
-                foreach($response->body[1]->daysoff as $item){
-                    $tmp=date('d-m',strtotime($item->date_dayoff));
-                    $data[]=array('date_dayoff'=>$tmp,'name'=>$item->name,'id'=>$item->id);
-                }
-            }
-        }catch(Exception $err){
-            $mensaje=$err->getMessage();
-        }
-        $array=array('code'=>$code,'message'=>$mensaje,'daysoff'=>$data);
-        echo json_encode($array);
-    }
-
-    public function ajax_agregar_dia_feriado(){
-        $code=0;
-        $mensaje='';
-        $data=array();
-        $fecha=(isset($_GET['fecha']) && !empty($_GET['fecha']))?$_GET['fecha']:'';
-        $name=(isset($_GET['name']))?$_GET['name']:'';
-        if(!empty($fecha)){
-            $json='{
-                "date_dayoff": "'.$fecha.'",
-                "name": "'.$name.'"
-                }';
-            try{
-                $uri=$this->base_services.''.$this->context.'daysOff';//url del servicio con los parametros
-                $response = Request::post($uri)->body($json)->sendIt();
-                $code=$response->code;
-                if(isset($response->body) && is_array($response->body) && isset($response->body[0]->response->code)){
-                    $code=$response->body[0]->response->code;
-                    $mensaje=$response->body[0]->response->message;
-                }else{
-                    if(isset($response->body->response->code)){
-                        $code=$response->body->response->code;
-                        switch($code){
-                            case '1080':
-                                $mensaje='Imposible agregar este d&iacute;a feriado, ya existen citas para este d&iacute;a';
-                            break;
-                            default:
-                                $mensaje=$response->body->response->message;
-                            break;
-                        }
-                    }
-                }
-            }catch(Exception $err){
-                $mensaje=$err->getMessage();
-            }
-        }else{
-            $mensaje='No se pudo ingresar el d&iacute;a, el par&aacute;metro es incorrecto.';
-        }
-        $array=array('code'=>$code,'mensaje'=>$mensaje,'daysoff'=>$data);
-        echo json_encode($array);
-    }
-    
-    public function ajax_eliminar_dia_feriado(){
-        $code=0;
-        $mensaje='';
-        $data=array();
-        $id=(isset($_GET['id']) && is_numeric($_GET['id']))?$_GET['id']:0;
-        if($id>0){
-            try{
-                $uri=$this->base_services.''.$this->context.'daysOff/'.$id;//url del servicio con los parametros
-                $response = Request::delete($uri)->sendIt();
-                $code=$response->code;
-                if(isset($response->body) && is_array($response->body) && isset($response->body[0]->response->code)){
-                    $code=$response->body[0]->response->code;
-                    $mensaje=$response->body[0]->response->message;
-                }else{
-                    if(isset($response->body->response->code)){
-                        $code=$response->body->response->code;
-                        $mensaje=$response->body->response->message;
-                    }
-                }
-            }catch(Exception $err){
-                $mensaje=$err->getMessage();
-            }
-        }else{
-            $mensaje='No se pudo eliminar el d&iacute;a, el par&aacute;metro es incorrecto.';
-        }
-        $array=array('code'=>$code,'mensaje'=>$mensaje,'daysoff'=>$data);
-        echo json_encode($array);
-    }
 }

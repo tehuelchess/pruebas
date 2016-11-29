@@ -46,7 +46,7 @@
             }else{
                 ?>
                 <tr>
-                    <td colspan="3">No se encontraron registro</td>
+                    <td colspan="3">No se encontraron registros</td>
                 </tr>
                 <?php
             }

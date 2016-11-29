@@ -3,8 +3,6 @@
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
-use Httpful\Request;
-
 class Formularios extends MY_BackendController {
     private $base_services='';
     private $context='';
@@ -12,23 +10,7 @@ class Formularios extends MY_BackendController {
     public function __construct() {
         parent::__construct();
         UsuarioBackendSesion::force_login();
-        include APPPATH . 'third_party/httpful/bootstrap.php';
-        $this->base_services=$this->config->item('base_service');
-        $this->context=$this->config->item('context_service');
-        try{
-            $service=new Connect_services();
-            $service->setCuenta(UsuarioBackendSesion::usuario()->cuenta_id);
-            $service->load_data();
-            $agendaTemplate = Request::init()
-                ->expectsJson()
-                ->addHeaders(array(
-                    'appkey' => $service->getAppkey(),
-                    'domain' => $service->getDomain()
-                ));
-            Request::ini($agendaTemplate);
-        }catch(Exception $err){
-            //echo 'Error: '.$err->getMessage();
-        }
+        require_once(APPPATH.'controllers/agenda.php'); //include Agenda controller
         //if(UsuarioBackendSesion::usuario()->rol!='super' && UsuarioBackendSesion::usuario()->rol!='modelamiento'){
         if(!in_array('super', explode(',',UsuarioBackendSesion::usuario()->rol) ) && !in_array( 'modelamiento',explode(',',UsuarioBackendSesion::usuario()->rol))){
             echo 'No tiene permisos para acceder a esta seccion.';
@@ -373,89 +355,16 @@ class Formularios extends MY_BackendController {
     }
 
     public function obtener_agenda(){
-        $code=0;
-        $mensaje='';
-        $data=array();
         $idagenda=(isset($_GET['idagenda']) && is_numeric($_GET['idagenda']))?$_GET['idagenda']:0;
-        try{
-            $uri=$this->base_services.''.$this->context.'calendars/'.$idagenda;//url del servicio con los parametros
-            $response = Request::get($uri)->sendIt();
-            $code=$response->code;
-            if(isset($response->body) && is_array($response->body) && isset($response->body[0]->response->code)){
-                $code=$response->body[0]->response->code;
-                $data=$response->body[1]->calendars[0]->owner_name;
-
-            }
-        }catch(Exception $err){
-
-        }
-        echo json_encode(array('code'=>$code,'mensaje'=>$mensaje,'calendario_owner'=>$data));
+        $agenda = new agenda();  
+        $agenda->ajax_obtener_agenda($idagenda);
     }
 
     public function ajax_mi_calendario(){
-        $code=0;
-        $mensaje='';
-        $data=array();
-        $idagenda=(isset($_GET['pertenece']) && is_numeric($_GET['pertenece']))?$_GET['pertenece']:0;
-        if($idagenda>0){
-            try{
-                $uri=$this->base_services.''.$this->context.'calendars/listByOwner/'.$idagenda;//url del servicio con los parametros
-                $response = Request::get($uri)->sendIt();
-                $code=$response->code;
-                if(isset($response->body) && is_array($response->body) && isset($response->body[0]->response->code) && $response->body[0]->response->code==200){
-                    $code=$response->body[0]->response->code;
-                    $mensaje=$response->body[0]->response->message;
-                    foreach($response->body[1]->calendars as $items){
-                        $tmp=new stdClass();
-                        $tmp->id=$items->id;
-                        $tmp->name=$items->name;
-                        $tmp->owner_id=$items->owner_id;
-                        $tmp->owner_name=$items->owner_name;
-                        $tmp->owner_email=$items->owner_email;
-                        $tmp->is_group=$items->is_group;
-                        $tmp->schedule=$items->schedule;
-                        $tmp->time_attention=$items->time_attention;
-                        $tmp->concurrency=$items->concurrency;
-                        $tmp->ignore_non_working_days=$items->ignore_non_working_days;
-                        $tmp->time_cancel_appointment=$items->time_cancel_appointment;
-                        $tmp->time_confirm_appointment=$items->time_confirm_appointment;
-                        $data[]=$tmp;
-                    }
-                }else{
-                    $mensaje=$response->body->response->message;
-                }
-            }catch(Exception $err){
-                $mensaje=$err->getMessage();
-            }
-            $usuario= Doctrine::getTable('Usuario')->findByid($idagenda);
-            foreach($usuario[0]->GruposUsuarios as $g){
-                try{
-                    $uri=$this->base_services.''.$this->context.'calendars/listByOwner/'.$g->id;
-                    $response = Request::get($uri)->sendIt();
-                    $code=$response->code;
-                    if(isset($response->code) && $response->code==200 && isset($response->body) && is_array($response->body) && isset($response->body[0]->response->code)){
-                        foreach($response->body[1]->calendars as $item){
-                            $tmp=new stdClass();
-                            $tmp->id=$item->id;
-                            $tmp->name=$item->name;
-                            $tmp->owner_id=$item->owner_id;
-                            $tmp->owner_name=$item->owner_name;
-                            $tmp->owner_email=$item->owner_email;
-                            $tmp->is_group=$item->is_group;
-                            $tmp->schedule=$item->schedule;
-                            $tmp->time_attention=$item->time_attention;
-                            $tmp->concurrency=$item->concurrency;
-                            $tmp->ignore_non_working_days=$item->ignore_non_working_days;
-                            $tmp->time_cancel_appointment=$item->time_cancel_appointment;
-                            $tmp->time_confirm_appointment=$item->time_confirm_appointment;
-                            $data[]=$tmp;
-                        }
-                    }
-                }catch(Exception $err){
-                    throw new Exception($err->getMessage());
-                }
-            }
-        }
-        echo json_encode(array('code'=>$code,'message'=>$mensaje,'calendars'=>$data));
+        $owner=(isset($_GET['pertenece']) && is_numeric($_GET['pertenece']))?$_GET['pertenece']:0;
+        $agenda = new agenda();  
+        $agenda->ajax_mi_calendario($owner);
     }
+
+        
 }
