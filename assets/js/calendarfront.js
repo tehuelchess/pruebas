@@ -525,7 +525,7 @@ function unblock(idblock) {
 }
 
 function getTimeBrowser(time) {
-  var localDate = new Date(time);
+  var localDate = moment(time).toDate();
   var min = ('0' + localDate.getMinutes()).slice(-2);
 
   var localHour = localDate.getHours() + ':' + min;

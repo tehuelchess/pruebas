@@ -66,11 +66,11 @@
   }
 
   function getTimeBrowserES(time) {
-    var localDate = new Date(time);
+    var localDate = moment(time).toDate();
     var min = ('0' + localDate.getMinutes()).slice(-2);
     var localMonth;
 
-    switch (localDate.getMonth()) {
+    switch (localDate.getMonth()+1) {
       case 1:
         localMonth = "Enero";
         break;
