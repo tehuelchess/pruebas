@@ -196,12 +196,11 @@ if(!isset($idagendaeditar) || !is_numeric($idagendaeditar)){
                 </span>
                 <input type="hidden" name="dependiente_tipo" value="<?=isset($campo) && $campo->dependiente_tipo? $campo->dependiente_tipo:'string' ?>" />
                 <?php if(isset($campo->datos_agenda) && $campo->datos_agenda): ?>
-                    <label>Pertenece A: </label>
-                    <!-- <input type="text" id="pertenece" name="valor_pertenece" class="js_pertenece"  value="<?=htmlspecialchars($campo->valor_default)?>" /> -->
+                    <label>Pertenece a: </label>
                     <select id="selectgrupo" class="input-xlarge" name="grupos_usuarios">
                     </select>
                     <button class="btn btn_filtrar_agenda vtop" type="button">Filtrar</button>
-                    <label style="margin-top:8px;">Mi Calendario</label>
+                    <label style="margin-top:8px;">Agenda:</label>
                     <select id="miagenda" class="input-xlarge" name="agenda_campo">
                         <option value="1">Seleccione(Opcional)</option>
                     </select>
@@ -219,7 +218,7 @@ if(!isset($idagendaeditar) || !is_numeric($idagendaeditar)){
                                     $("#miagenda").html('');
                                     var idseleccionado=$(this).val();
                                     $.ajax({
-                                        url:"/backend/formularios/ajax_mi_calendario",
+                                        url:'<?= site_url('/backend/formularios/ajax_mi_calendario') ?>',
                                         dataType: "json",
                                         data:{
                                             pertenece:idseleccionado
@@ -244,7 +243,7 @@ if(!isset($idagendaeditar) || !is_numeric($idagendaeditar)){
                                     });
                                 });
                                 $.ajax({
-                                    url:"/backend/formularios/listarPertenece",
+                                    url:'<?= site_url('/backend/formularios/listarPertenece') ?>',
                                     dataType: "json",
                                     success: function( data ) {
                                         if(data.code==200){
@@ -276,7 +275,7 @@ if(!isset($idagendaeditar) || !is_numeric($idagendaeditar)){
                             }
                             function cargar_service(idagenda){
                                 $.ajax({
-                                    url:"/backend/formularios/obtener_agenda",
+                                    url:'<?= site_url('/backend/formularios/obtener_agenda') ?>', 
                                     dataType: "json",
                                     data:{
                                         idagenda:idagenda

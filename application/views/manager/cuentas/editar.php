@@ -17,21 +17,29 @@
         <label>Logo</label>
         <div id="file-uploader"></div>
         <input type="hidden" name="logo" value="<?= $cuenta->logo ?>" />
-        <img class="logo" src="<?= $cuenta->logo ? base_url('uploads/logos/' . $cuenta->logo) : base_url('assets/img/simple.png') ?>" alt="logo" />
-        <script>
-            var uploader = new qq.FileUploader({
-                element: document.getElementById('file-uploader'),
-                action: site_url + 'manager/uploader/logo',
-                onComplete: function(id, filename, respuesta) {
-                    $("input[name=logo]").val(respuesta.file_name);
-                    $("img.logo").attr("src", base_url + "uploads/logos/" + respuesta.file_name);
-                }
-            });
-        </script>
-        </br></br>
-        <div class="form-actions">
-            <button class="btn btn-primary" type="submit">Guardar</button>
-            <a class="btn" href="<?= site_url('manager/cuentas') ?>">Cancelar</a>
-        </div>
+        <img class="logo" src="<?= $cuenta->logo ? base_url('uploads/logos/' . $cuenta->logo) : base_url('assets/img/simple.png') ?>" alt="logo" />        
+        
     </fieldset>
+    <fieldset>
+        <legend><?= $title ?> configuraci&oacute;n de agenda</legend>        
+        <label>Clave App</label>
+        <input type="text" name="appkey" readonly="true" disabled="true" value="<?= $calendar->getAppkey() ?>"/>
+        <label>Dominio</label>
+        <input type="text" name="domain" value="<?= $calendar->getDomain() ?>"/>
+    </fieldset>
+    <script>
+        var uploader = new qq.FileUploader({
+            element: document.getElementById('file-uploader'),
+            action: site_url + 'manager/uploader/logo',
+            onComplete: function(id, filename, respuesta) {
+                $("input[name=logo]").val(respuesta.file_name);
+                $("img.logo").attr("src", base_url + "uploads/logos/" + respuesta.file_name);
+            }
+        });
+    </script>
+    </br></br>
+    <div class="form-actions">
+        <button class="btn btn-primary" type="submit">Guardar</button>
+        <a class="btn" href="<?= site_url('manager/cuentas') ?>">Cancelar</a>
+    </div>
 </form>

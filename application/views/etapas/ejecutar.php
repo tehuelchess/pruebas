@@ -19,8 +19,6 @@
     <fieldset>
         <legend><?=$paso->Formulario->nombre?></legend>
         <?php foreach($paso->Formulario->Campos as $c):?>
-            <?php
-             ?>
             <div class="campo control-group" data-id="<?=$c->id?>" <?= $c->dependiente_campo ? 'data-dependiente-campo="' . $c->dependiente_campo.'" data-dependiente-valor="' . $c->dependiente_valor .'" data-dependiente-tipo="' . $c->dependiente_tipo.'" data-dependiente-relacion="'.$c->dependiente_relacion.'"' : '' ?> style="display: <?= $c->isCurrentlyVisible($etapa->id)? 'block' : 'none'?>;" data-readonly="<?=$paso->modo=='visualizacion' || $c->readonly?>" >
             <?=$c->displayConDatoSeguimiento($etapa->id,$paso->modo)?>
             </div>

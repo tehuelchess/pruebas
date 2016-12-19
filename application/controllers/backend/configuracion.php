@@ -581,6 +581,7 @@ class Configuracion extends MY_BackendController {
     function ajax_modal_info(){
         $this->load->view('backend/configuracion/ajax_modal_info');
     }
+
     public function conf_services(){
         $data['title'] = 'Configuración de Services';
         $data['content'] = 'backend/configuracion/conf_services';
@@ -599,6 +600,7 @@ class Configuracion extends MY_BackendController {
         }
         $this->load->view('backend/template', $data);   
     }
+    
     public function datos_services(){
         $appkey=(isset($_POST['appkey']))?$_POST['appkey']:'';
         $domain=(isset($_POST['domain']))?$_POST['domain']:'';

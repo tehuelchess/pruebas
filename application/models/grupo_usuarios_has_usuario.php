@@ -5,4 +5,3 @@ class GrupoUsuariosHasUsuario extends Doctrine_Record {
         $this->hasColumn('grupo_usuarios_id','integer',4,array('primary' => true));
     }
 }
-?>

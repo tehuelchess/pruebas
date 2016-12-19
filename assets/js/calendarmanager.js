@@ -1,6 +1,8 @@
 window.feriados=new Array();
 window.mesvisto='';
 window.idfierados=new Array();
+window.calendar;
+window.dayoff=new Array();
 $(function(){
     var url=$('#urlbase').val()+'manager/diaferiado/EmptyCalendar';
     feriados=cargarDiasFeriados();
@@ -66,8 +68,10 @@ $(function(){
             $(".detallecal").css({'display':'block'});
         }
     };
-
-    var calendar = $('#calendar').calendar(options);
+    /*$('.btn').click(function(){
+        feriados=cargarDiasFeriados_async();
+    });*/
+    calendar = $('#calendar').calendar(options);
     var fecha = new Date();
     //var mesactual=fecha.getMonth() +1;
     cargarPanelLateral();
@@ -76,8 +80,10 @@ $(function(){
     $('.btn-group button[data-calendar-nav]').each(function() {
         var $this = $(this);
         $this.click(function() {
+            //$('.btn-group button[data-calendar-nav]').prop( "disabled", true );
             calendar.navigate($this.data('calendar-nav'));
-            cargarPanelLateral();
+            cargarDiasFeriados_async(calendar.getYear());
+
         });
     });
 
@@ -119,7 +125,7 @@ $(function(){
         $("#agregardia").modal();
     })
 });
-function cargarDiasFeriados(calendar){
+function cargarDiasFeriados(){
     var url=$('#urlbase').val()+'manager/diaferiado/diasFeriados';
     var arrdata=new Array();
     $.ajax({
@@ -133,12 +139,39 @@ function cargarDiasFeriados(calendar){
                 $.each(items, function(index, element) {
                     arrdata[element.date_dayoff]=element.name;
                     idfierados[i]=element.id;
+                    dayoff[element.date_dayoff]=element.id;
                     i++;
                 });
             }
         }
     });
     return arrdata;
+}
+function cargarDiasFeriados_async(year){
+    var url=$('#urlbase').val()+'manager/diaferiado/diasFeriados';
+    var arrdata=new Array();
+    $.ajax({
+        url: url,
+        data:{
+            year:year
+        },
+        dataType: "json",
+        async:true,
+        success: function( data ) {
+            if(data.code==200){
+                var items=data.daysoff;
+                var i=0;
+                $.each(items, function(index, element) {
+                    arrdata[element.date_dayoff]=element.name;
+                    dayoff[element.date_dayoff]=element.id;
+                    idfierados[i]=element.id;
+                    i++;
+                });
+                feriados=arrdata;
+                cargarPanelLateral();
+            }
+        }
+    });
 }
 function cargarPanelLateral(){
     moment.lang('es');
@@ -157,11 +190,16 @@ function cargarPanelLateral(){
             if((index+1)%2==1){
                 impar='impar';
             }
-            var row='<div id="'+k+'-'+ano+'" data-id="'+idfierados[index]+'" data-fecha="'+val+'" class="rowcalendar js_row_calendar '+impar+' clearfix"><div class="labelc">'+val+'</div><div class="detallec">'+desc+'</div></div>';
-            $('#desccalendar').append(row);
-            index++;
+            //calendar
+            if(m[2]==calendar.getYear()){
+                var id=dayoff[k];
+                var row='<div id="'+k+'-'+ano+'" data-id="'+id+'" data-fecha="'+val+'" class="rowcalendar js_row_calendar '+impar+' clearfix"><div class="labelc">'+val+'</div><div class="detallec">'+desc+'</div></div>';
+                $('#desccalendar').append(row);
+            }
         }
+        index++;
     }
+    $('.btn-group button[data-calendar-nav]').prop( "disabled", false );
     if(index==0){
         var row='<div class="rowcalendar js_row_calendar impar clearfix"><div class="labelc"></div><div class="detallec">No se encontraron registros</div></div>';
         $('#desccalendar').append(row);

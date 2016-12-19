@@ -44,7 +44,6 @@
                             }
                         });
                     }
-                    //location.href='<?=site_url('/tramites/miagenda')?>';
                 }else{
                     $('.validacion').html('<div class="alert alert-error"><a class="close" data-dismiss="alert">×</a>'+data.message+' .</div>');
                 }

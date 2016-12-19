@@ -132,5 +132,3 @@ class Uploader extends MY_BackendController {
 
 
 }
-
-?>

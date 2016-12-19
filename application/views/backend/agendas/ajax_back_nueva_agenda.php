@@ -34,7 +34,7 @@ if(isset($editar) && $editar){
             $idagenda=(isset($id) && is_numeric($id))?$id:0;
             echo '<input id="codagenda" name="codagenda" type="hidden" value="'.$idagenda.'" />';
             echo '<div class="alert alert-warning">
-                  <strong>Advertencia!</strong> "Recuerde que la edici&oacute;n de una agenda no eliminar&aacute; citas futuras sobre esta agenda".
+                  <strong>Advertencia!</strong> "Recuerde que la edici&oacute;n de una agenda no eliminar&aacute; citas futuras".
                 </div>';
         }else{
             $idagenda=0;
@@ -43,7 +43,7 @@ if(isset($editar) && $editar){
         ?>
         <label>Nombre</label>
         <input type="text" id="nombre"  name="nombre" value="" />
-        <label>Pertenece A: </label>
+        <label>Pertenece a: </label>
         <select id="selectgrupo" name="grupos_usuarios" class="selectgrupo"></select>
         <input type="hidden" name="tipopertenece" id="tipopertenece" value="" />
         <input type="hidden" name="emailpertenece" id="emailpertenece" value="" />
@@ -54,9 +54,9 @@ if(isset($editar) && $editar){
                 
             </table>
         </div>
-        <input type="checkbox" value="1" name="ignorarferiados" style="float: left;" />
-        <label>&nbsp;&nbsp;Ignorar Feriados</label>
-        <label class="labtiematen">Tiempo de Atenci&oacute;n</label>
+        <input type="checkbox" value="1" id="ignorarferiados" name="ignorarferiados" style="float: left;" />
+        <label>&nbsp;&nbsp;Ignorar feriados</label>
+        <label class="labtiematen">Tiempo de atenci&oacute;n</label>
         <input id="txttatencion" name="tatencion" type="hidden">
         <div class="input-group bootstrap-timepicker timepicker">
             <input id="txttiempoatencion" readonly="readonly" type="text" class="form-control input-small">
@@ -70,7 +70,7 @@ if(isset($editar) && $editar){
             }
             ?>
         </select>
-        <label class="labcustomagend">Tiempo minimo de cancelacion</label>
+        <label class="labcustomagend">Tiempo m&iacute;nimo de cancelaci&oacute;n</label>
         <select id="tmincancelacion" name="tmincancelacion" class="cmbhoras">
             <?php
             for($i=1;$i<=6;$i++){
@@ -151,12 +151,6 @@ if(isset($editar) && $editar){
         });
         cargarDatosEditar();
         eventoadd();
-        //$('.js_btn_add_franja').click(function(){
-            //eventoadd();
-            /*$('.js_btn_add_franja').on( "click", function(e) {
-                eventoadd();
-            });*/
-        //});
     });
     function eventoadd(){
         $('.js_btn_add_franja').off();
@@ -174,18 +168,6 @@ if(isset($editar) && $editar){
     function selection(icon) {
         var originalOption = icon.element;
         return '<i class="fa defaulticonglyp '+$(originalOption).data('icon')+' " style="top: 7px;"></i>&nbsp;&nbsp;' + icon.text;
-    }
-    function ajaxcancelarCita(id){
-        $.ajax({
-            url: "http://localhost/uploads/miagenda.txt",
-            data:{
-                id:id
-            },
-            dataType: "json",
-            success: function( data ) {
-                location.href='<?=site_url('/tramites/miagenda') ?>';
-            }
-        });
     }
     function guardaragenda(){
         var form=$('#formeditagenda');
@@ -247,7 +229,7 @@ if(isset($editar) && $editar){
                 $(ajaxLoader).remove();
                 return sw;
             }else{
-                mensaje_error('Pertenece A',' es obligatorio');
+                mensaje_error('Pertenece a',' es obligatorio');
                 $(ajaxLoader).remove();
                 return false;
             }
@@ -292,6 +274,9 @@ if(isset($editar) && $editar){
                             $('#cmbdias'+idrow).val(dias).trigger("change");
                             
                         });
+                        if(data.calendar.ignore_non_working_days==1){
+                            $("#ignorarferiados").prop("checked", "checked");
+                        }
                         $('#concurrencia').val(data.calendar.concurrency);
                         var tiempoatencion=getTimeSelect(data.calendar.time_attention);
                         $('#txttiempoatencion').timepicker('setTime',tiempoatencion);

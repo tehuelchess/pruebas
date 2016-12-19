@@ -27,5 +27,3 @@ class Uploader extends CI_Controller {
 
 
 }
-
-?>

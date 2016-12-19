@@ -243,7 +243,6 @@ if(!String.prototype.formatNum) {
 		d5: 'Friday',
 		d6: 'Saturday'
 	};
-
 	var browser_timezone = '';
 	try {
 		if($.type(window.jstz) == 'object' && $.type(jstz.determine) == 'function') {
@@ -381,7 +380,7 @@ if(!String.prototype.formatNum) {
 	getHolidays.cache = {};
 
 	function warn(message) {
-		if($.type(window.console) == 'object' && $.type(window.console.warn) == 'function') {
+		if ($.type(window.console) == 'object' && $.type(window.console.warn) == 'function') {
 			window.console.warn('[Bootstrap-Calendar] ' + message);
 		}
 	}
@@ -438,7 +437,7 @@ if(!String.prototype.formatNum) {
 		var end = parseInt(this.options.position.end.getTime());
 
 		data.events = this.getEventsBetween(start, end);
-
+		$("#btnbloqueargeneral").css({'display':'none'});
 		switch(this.options.view) {
 			case 'month':
 				break;
@@ -446,15 +445,33 @@ if(!String.prototype.formatNum) {
 				this._calculate_hour_minutes(data);
 				break;
 			case 'day':
+				$("#btnbloqueargeneral").css({'display':'block'});
 				this._calculate_hour_minutes(data);
 				break;
 		}
 
 		data.start = new Date(this.options.position.start.getTime());
 		data.lang = this.locale;
-
+		var hoy=data.start.getFullYear()+'/'+(data.start.getMonth()+1)+'/'+data.start.getDate();
 		this.context.append(this.options.templates[this.options.view](data));
 		this._update();
+		//$("#btnbloqueargeneral").attr('data-value',hoy);
+
+		/*$("#btnbloqueargeneral").click(function(){
+
+        var urlbase='<?=site_url()?>';
+        //var dia=$(this).attr('data-value');
+        var dia=$("#dvbloquear").val();
+        $("#fechainicio").val(dia+' 00:00');
+        $("#fechafinal").val(dia+' 23:59');
+        $('#agendabloqgen').val($('#cmbagenda').val());
+        var param=$("#frmbloqgener").serialize();
+        $("#modalcancelar").load(urlbase + "agendas/ajax_confirmar_agregar_bloqueo_dia_completo?" + param);
+        $("#modalcancelar").modal();
+      });*/
+
+
+		$("#dvbloquear").val(hoy);
 	};
 
 	Calendar.prototype._format_hour = function(str_hour) {
@@ -962,8 +979,9 @@ if(!String.prototype.formatNum) {
 						if(browser_timezone.length) {
 							params.browser_timezone = browser_timezone;
 						}
+						var $date=self.options.position.start.getFullYear()+'-'+(self.options.position.start.getMonth()+1);
 						$.ajax({
-							url: buildEventsUrl(source, params),
+							url: buildEventsUrl(source, params)+"&date="+$date,
 							dataType: 'json',
 							type: 'GET',
 							async: false
@@ -973,6 +991,7 @@ if(!String.prototype.formatNum) {
 							}
 							if(json.result) {
 								events = json.result;
+								return events;
 							}
 						});
 						return events;
@@ -1026,32 +1045,24 @@ if(!String.prototype.formatNum) {
 
 	Calendar.prototype._update = function() {
 		var self = this;
-
 		$('*[data-toggle="tooltip"]').tooltip({container: this.options.tooltip_container});
 
-		$('*[data-cal-date]').click(function() {
-			if(!$(this).parent().hasClass('dia-festivo') && $(this).children().hasClass('sweventhaycita') ){
-				var view = $(this).data('cal-view');
-				self.options.day = $(this).data('cal-date');
-				self.view(view);
-			}
+		$('.cal-month-box .cal-cell').click(function() {
+      var ignore = 0;
+      if (typeof($('#validarferiado')) !== "undefined") {
+        ignore = $('#validarferiado').val();
+      }
+      if ($(this).children().hasClass('cal-month-day') && (!$(this).children().hasClass('dia-festivo') || ignore==1 ) && $(this).children().hasClass('sweventhaycita')) {
+        var view = $('[data-cal-date]', this).data('cal-view');
+        self.options.day = $('[data-cal-date]', this).data('cal-date');
+        self.view(view);
+      }
 		});
-		$('.cal-cell').dblclick(function() {
-			if(!$(this).children().hasClass('dia-festivo') && $(this).children().hasClass('sweventhaycita')){
 
-				var view = $('[data-cal-date]', this).data('cal-view');
-				self.options.day = $('[data-cal-date]', this).data('cal-date');
-				self.view(view);
-			}
-		});
-		$('.cal-cell').click(function(){
-			if($(this).children().hasClass('cal-month-day') && !$(this).children().hasClass('dia-festivo') && $(this).children().hasClass('sweventhaycita') ){
-				
-				var view = $('[data-cal-date]', this).data('cal-view');
-				self.options.day = $('[data-cal-date]', this).data('cal-date');
-				self.view(view);
-				
-			}
+		$('.cal-year-box .cal-cell').click(function() {
+		  var view = $('[data-cal-date]', this).data('cal-view');
+		  self.options.day = $('[data-cal-date]', this).data('cal-date');
+		  self.view(view);
 		});
 
 		this['_update_' + this.options.view]();

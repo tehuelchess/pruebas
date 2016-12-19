@@ -3,11 +3,11 @@
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
+use Httpful\Request;
+
 class DiaFeriado extends CI_Controller {
-    private $appkey='';
     private $base_services='';
     private $context='';
-    private $records=10;
 
     public function __construct() {
         parent::__construct();
@@ -15,59 +15,57 @@ class DiaFeriado extends CI_Controller {
         require_once APPPATH . 'third_party/httpful/bootstrap.php';
         $this->base_services=$this->config->item('base_service');
         $this->context=$this->config->item('context_service');
-        $this->records=$this->config->item('records');
-        $this->appkey=$this->config->item('appkey');
+        $agendaTemplate = Request::init()
+                ->expectsJson()
+                ->addHeaders(array(
+                    'appkey' => $this->config->item('appkey')
+                ));
+        Request::ini($agendaTemplate);
     }
 
     public function index() {
         $data['cuentas']='';
-        
         $data['title']='D&iacute;as Feriados';
-        $data['content']='manager/diaferiado/index';
-        
+        $data['content']='manager/diaferiado/index';        
         $this->load->view('manager/template',$data);
     }
-    public function EmptyCalendar(){
-        $var='{
-                "success": 1,
-                "result": [
 
-                ]
-            }
-            ';
+    public function EmptyCalendar(){
+        $var='{"success": 1,"result": []}';
         echo $var;
     }
     public function diasFeriados(){
         $code=0;
         $mensaje='';
         $data=array();
+        //$year=(isset($_GET['year']) && is_numeric($_GET['year']) && $_GET['year']>0 )?$_GET['year']:date('Y');
         try{
-            $uri=$this->base_services.''.$this->context.'daysOff';//url del servicio con los parametros
-            $response = \Httpful\Request::get($uri)
-                ->expectsJson()
-                ->addHeaders(array(
-                    'appkey' => $this->appkey                              // heder de appkey
-                ))
-                ->sendIt();
-            $code=$response->code;
+            $uri=$this->base_services.''.$this->context.'daysOff';
+            log_message('debug', 'diasFeriados URI '.$uri);
+            $response = Request::get($uri)->sendIt();
+            log_message('debug', 'diasFeriados Response '.$response);
             if(isset($response->body) && is_array($response->body) && isset($response->body[0]->response->code)){
+                $code=$response->code;
                 $code=$response->body[0]->response->code;
                 $mensaje=$response->body[0]->response->message;
                 foreach($response->body[1]->daysoff as $item){
-                    $tmp=date('d-m',strtotime($item->date_dayoff));
+                    $tmp=date('d-m-Y',strtotime($item->date_dayoff));
                     $data[]=array('date_dayoff'=>$tmp,'name'=>$item->name,'id'=>$item->id);
                 }
             }
         }catch(Exception $err){
+            log_message('error', 'diasFeriados '.$err);
             $mensaje=$err->getMessage();
         }
         $array=array('code'=>$code,'message'=>$mensaje,'daysoff'=>$data);
         echo json_encode($array);
     }
+
     public function ajax_dia_conf_global($fecha){
         $data['fecha'] = $fecha;
         $this->load->view ( 'manager/diaferiado/ajax_dia_calendario', $data );
     }
+
     public function ajax_agregar_dia_feriado(){
         $code=0;
         $mensaje='';
@@ -80,14 +78,10 @@ class DiaFeriado extends CI_Controller {
                 "name": "'.$name.'"
                 }';
             try{
-                $uri=$this->base_services.''.$this->context.'daysOff';//url del servicio con los parametros
-                $response = \Httpful\Request::post($uri)
-                    ->expectsJson()
-                    ->body($json)
-                    ->addHeaders(array(
-                        'appkey' => $this->appkey                             // heder de appkey
-                    ))
-                    ->sendIt();
+                $uri=$this->base_services.''.$this->context.'daysOff';
+                log_message('debug', 'ajax_agregar_dia_feriado URI '.$uri);
+                $response = Request::post($uri)->body($json)->sendIt();
+                log_message('debug', 'ajax_agregar_dia_feriado Response '.$response);
                 $code=$response->code;
                 if(isset($response->body) && is_array($response->body) && isset($response->body[0]->response->code)){
                     $code=$response->body[0]->response->code;
@@ -106,6 +100,7 @@ class DiaFeriado extends CI_Controller {
                     }
                 }
             }catch(Exception $err){
+                log_message('error', 'ajax_agregar_dia_feriado '.$err);
                 $mensaje=$err->getMessage();
             }
         }else{
@@ -114,12 +109,14 @@ class DiaFeriado extends CI_Controller {
         $array=array('code'=>$code,'mensaje'=>$mensaje,'daysoff'=>$data);
         echo json_encode($array);
     }
+
     public function ajax_confirmar_eliminar_dia(){
         $data['selecciono'] =(isset($_GET['select']) && isset($_GET['fecha']) && !empty($_GET['fecha']))?$_GET['select']:0;
         $data['fecha']=(isset($_GET['fecha']))?$_GET['fecha']:'';
         $data['id'] =(isset($_GET['id']))?$_GET['id']:'';
         $this->load->view ( 'manager/diaferiado/ajax_confirmar_eliminar_dia', $data );
     }
+
     public function ajax_eliminar_dia_feriado(){
         $code=0;
         $mensaje='';
@@ -127,13 +124,10 @@ class DiaFeriado extends CI_Controller {
         $id=(isset($_GET['id']) && is_numeric($_GET['id']))?$_GET['id']:0;
         if($id>0){
             try{
-                $uri=$this->base_services.''.$this->context.'daysOff/'.$id;//url del servicio con los parametros
-                $response = \Httpful\Request::delete($uri)
-                    ->expectsJson()
-                    ->addHeaders(array(
-                        'appkey' => $this->appkey                             // heder de appkey
-                    ))
-                    ->sendIt();
+                $uri=$this->base_services.''.$this->context.'daysOff/'.$id;
+                log_message('debug', 'ajax_eliminar_dia_feriado URI '.$uri);
+                $response = Request::delete($uri)->sendIt();
+                log_message('debug', 'ajax_eliminar_dia_feriado Response '.$response);
                 $code=$response->code;
                 if(isset($response->body) && is_array($response->body) && isset($response->body[0]->response->code)){
                     $code=$response->body[0]->response->code;
@@ -145,6 +139,7 @@ class DiaFeriado extends CI_Controller {
                     }
                 }
             }catch(Exception $err){
+                log_message('error', 'ajax_eliminar_dia_feriado '.$err);
                 $mensaje=$err->getMessage();
             }
         }else{
@@ -154,6 +149,3 @@ class DiaFeriado extends CI_Controller {
         echo json_encode($array);
     }
 }
-
-/* End of file welcome.php */
-/* Location: ./application/controllers/welcome.php */
