@@ -200,8 +200,9 @@ class Procesos extends MY_BackendController {
             $tarea->asignacion_notificar=$this->input->post('asignacion_notificar');
             $tarea->setGruposUsuariosFromArray($this->input->post('grupos_usuarios'));
             $tarea->setPasosFromArray($this->input->post('pasos',false));
-            $tarea->paso_confirmacion=$this->input->post('paso_confirmacion');
+            $tarea->setEventosExternosFromArray($this->input->post('eventos_externos',false));
             $tarea->setEventosFromArray($this->input->post('eventos',false));
+            $tarea->paso_confirmacion=$this->input->post('paso_confirmacion');
             $tarea->almacenar_usuario=$this->input->post('almacenar_usuario');
             $tarea->almacenar_usuario_variable=$this->input->post('almacenar_usuario_variable');
             $tarea->acceso_modo=$this->input->post('acceso_modo');
@@ -216,6 +217,7 @@ class Procesos extends MY_BackendController {
             $tarea->vencimiento_notificar_dias=$this->input->post('vencimiento_notificar_dias');
             $tarea->vencimiento_notificar_email=$this->input->post('vencimiento_notificar_email');
             $tarea->previsualizacion=$this->input->post('previsualizacion');
+            $tarea->externa=$this->input->post('externa');
             $tarea->save();
             
             $respuesta->validacion=TRUE;

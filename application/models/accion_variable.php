@@ -25,7 +25,10 @@ class AccionVariable extends Accion {
 
     public function ejecutar(Etapa $etapa) {
         $regla=new Regla($this->extra->expresion);
-        $valor=$regla->evaluar($etapa->id);
+        $filewords = array("file_get_contents", "file_put_contents");
+        $matchfound = preg_match_all("/\b(".implode($filewords,"|").")\b/i", $this->extra->expresion, $matches);
+        $ev = $matchfound? TRUE : FALSE;
+        $valor=$regla->evaluar($etapa->id,$ev);
         
         $dato = Doctrine::getTable('DatoSeguimiento')->findOneByNombreAndEtapaId($this->extra->variable,$etapa->id);
         if (!$dato)

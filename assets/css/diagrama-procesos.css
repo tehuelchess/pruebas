@@ -38,6 +38,16 @@
     z-index: 100;
     font-size: 12px;
 }
+#draw .box.externa{
+    padding: 5px 10px;
+    background: #707070;
+    color: #fff;
+    position: absolute;
+    border-radius: 5px;
+    cursor: move;
+    z-index: 100;
+    font-size: 12px;
+}
 #draw .box.actual{
     background: goldenrod;
 }
@@ -123,6 +133,8 @@
 #draw ._jsPlumb_connector{
     cursor: pointer;
 }
+
+
 
 /*
 .endpoint1{

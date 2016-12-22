@@ -173,6 +173,12 @@ class SaferEval {
             //Serializacion
             'json_encode',
             'json_decode',
+            //File functions
+            'base64_encode',
+            'base64_decode',
+            'file_get_contents',
+            'file_put_contents',
+            'mime_content_type',
             //Booleanos
             'true',
             'false',

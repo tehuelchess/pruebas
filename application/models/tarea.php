@@ -30,6 +30,7 @@ class Tarea extends Doctrine_Record {
         $this->hasColumn('vencimiento_notificar_email');    //Cual es el email donde se debe notificar
         $this->hasColumn('paso_confirmacion');              //Boolean que indica si se debe incorporar una ultima pantalla de confirmacion antes de avanzar la tarea
         $this->hasColumn('previsualizacion');               //Texto de previsualizacion de la tarea al aparecer en las bandejas de entrada.
+        $this->hasColumn('externa');                        //Indica si la tarea es externa para que pueda ejecutar servicios
     }
 
     function setUp() {
@@ -70,6 +71,11 @@ class Tarea extends Doctrine_Record {
             'local' => 'tarea_id',
             'foreign' => 'grupo_usuarios_id',
             'refClass' => 'TareaHasGrupoUsuarios'
+        ));
+
+        $this->hasMany('EventoExterno as EventosExternos', array(
+            'local' => 'id',
+            'foreign' => 'tarea_id'
         ));
 
     }
@@ -225,13 +231,20 @@ class Tarea extends Doctrine_Record {
                 foreach($this->Pasos as $paso)
                     if($paso->id==$p['paso_id'])
                         $paso_id=$p['paso_id'];
+
+                $evento_externo_id=null;
+                foreach($this->EventosExternos as $evento_externo)
+                    if($evento_externo->id==$p['paso_id'])
+                        $evento_externo_id=$p['paso_id'];
                 
                 $evento = new Evento();
                 $evento->regla=$p['regla'];
                 $evento->instante = $p['instante'];
                 $evento->accion_id = $p['accion_id'];
                 $evento->paso_id = $paso_id;
+                $evento->evento_externo_id = $evento_externo_id;
                 $this->Eventos[] = $evento;
+
             }
         }
     }
@@ -341,6 +354,26 @@ class Tarea extends Doctrine_Record {
         );
 
         return $publicArray;
+    }
+
+    public function setEventosExternosFromArray($eventos_externos_array) {
+        //Limpiamos la lista antigua
+        foreach ($this->EventosExternos as $key => $val)
+            unset($this->EventosExternos[$key]);
+
+        //Agregamos los nuevos
+        if (is_array($eventos_externos_array)) {
+            foreach ($eventos_externos_array as $key => $p) {
+                $evento_externo = new EventoExterno();
+                $evento_externo->id=$p['id'];
+                $evento_externo->nombre=$p['nombre'];
+                $evento_externo->metodo = $p['metodo'];
+                $evento_externo->url = $p['url'];
+                $evento_externo->mensaje = trim($p['mensaje']);
+                $evento_externo->regla = $p['regla']? trim($p['regla']) : NULL;
+                $this->EventosExternos[] = $evento_externo;
+            }
+        }
     }
     
 }
