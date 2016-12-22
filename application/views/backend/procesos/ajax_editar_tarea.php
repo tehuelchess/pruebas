@@ -110,6 +110,45 @@
             
             return false;
         });
+
+        //Permite agregar nuevos eventos externos
+        $(".tab-eventos-externos .form-agregar-evento-externo button").click(function(){
+            var $form=$(".tab-eventos-externos .form-agregar-evento-externo");
+            
+            var pos=1+$(".tab-eventos-externos table tbody tr").size();
+            var nombre=$form.find("#nombre").val();
+            var metodo=$form.find(".eventoSentido option:selected").val();
+            var url=$form.find("#url").val();
+            var mensaje=$form.find("#mensaje").val();
+            var regla=$form.find("#regla").val();
+            
+            var html="<tr>";
+            html+="<td>"+pos+"</td>";
+            html+="<td>"+nombre+"</td>";
+            html+="<td>"+metodo+"</td>";
+            html+="<td>"+url+"</td>";
+            html+="<td>"+mensaje+"</td>";
+            html+="<td>"+regla+"</td>";
+            html+='<td>';
+            html+='<input type="hidden" name="eventos_externos['+pos+'][id]" value="" />';
+            html+='<input type="hidden" name="eventos_externos['+pos+'][nombre]" value="'+nombre+'" />';
+            html+='<input type="hidden" name="eventos_externos['+pos+'][metodo]" value="'+metodo+'" />';
+            html+='<input type="hidden" name="eventos_externos['+pos+'][url]" value="'+url+'" />';
+            html+='<input type="hidden" name="eventos_externos['+pos+'][mensaje]" value="'+escapeHtml(mensaje)+'" />';
+            html+='<input type="hidden" name="eventos_externos['+pos+'][regla]" value="'+regla+'" />';
+            html+='<a class="delete" title="Eliminar" href="#"><i class="icon-remove"></i></a>';
+            html+='</td>';
+            html+="</tr>";
+            
+            $(".tab-eventos-externos table tbody").append(html);
+            
+            return false;
+        });
+
+        $(".tab-eventos-externos").on("click",".delete",function(){
+            $(this).closest("tr").remove();
+            return false;
+        });
         
         //$("#modalEditarTarea form input[name=socket_id_emisor]").val(socketId);
         //$("#modalEditarTarea .botonEliminar").attr("href",function(i,href){return href+"?socket_id_emisor="+socketId;})
@@ -317,6 +356,9 @@
                                         <?php foreach ($tarea->Pasos as $p): ?>
                                         <option value="<?=$p->id?>" title="<?=$p->Formulario->nombre?>">Ejecutar Paso <?=$p->orden?></option>
                                         <?php endforeach ?>
+                                        <?php foreach ($tarea->EventosExternos as $ee): ?>
+                                        <option value="<?=$ee->id?>" title="<?=$ee->nombre?>">Evento Externo <?=$ee->nombre?></option>
+                                        <?php endforeach ?>
                                     </select>
                                 </td>
                                 <td>
@@ -339,12 +381,15 @@
                                     <td><a title="Editar" target="_blank" href="<?= site_url('backend/acciones/editar/' . $p->Accion->id) ?>"><?= $p->Accion->nombre ?></a></td>
                                     <td><?= $p->regla ?></td>
                                     <td><?= $p->instante ?></td>
-                                    <td><?=$p->paso_id?'<abbr title="'.$p->Paso->Formulario->nombre.'">Ejecutar Paso '.$p->Paso->orden.'</abbr>':'Ejecutar Tarea'?></td>
+                                    <td><?=$p->paso_id?'<abbr title="'.$p->Paso->Formulario->nombre.'">Ejecutar Paso '.$p->Paso->orden.'</abbr>': ($p->evento_externo_id?'<abbr title="'.$p->EventoExterno->nombre.'">Evento Externo '.$p->EventoExterno->nombre.'</abbr>' : 'Ejecutar Tarea')?></td>
                                     <td>
                                         <input type="hidden" name="eventos[<?= $key + 1 ?>][accion_id]" value="<?= $p->accion_id ?>" />
                                         <input type="hidden" name="eventos[<?= $key + 1 ?>][regla]" value="<?= $p->regla ?>" />
                                         <input type="hidden" name="eventos[<?= $key + 1 ?>][instante]" value="<?= $p->instante ?>" />
-                                        <input type="hidden" name="eventos[<?= $key + 1 ?>][paso_id]" value="<?= $p->paso_id ?>" />
+                                        <?php 
+                                            $paso_ee_id = !is_null($p->paso_id) ? $p->paso_id : $p->evento_externo_id;
+                                        ?>
+                                        <input type="hidden" name="eventos[<?= $key + 1 ?>][paso_id]" value="<?= $paso_ee_id ?>" />
                                         <a class="delete" title="Eliminar" href="#"><i class="icon-remove"></i></a>
                                     </td>
                                 </tr>
@@ -389,7 +434,7 @@
                          <div style="margin-left: 20px;" class="help-block">Tambien se pueden usar variables. Ej: @@email</div>
                     </div>
                 </div>
-                <div class="tab-pane" id="tab7">
+                <div class="tab-eventos-externos tab-pane" id="tab7">
                     <script type="text/javascript">
                         $(document).ready(function(){
                             $("input[name=almacenar_usuario]").click(function(){
@@ -397,6 +442,13 @@
                                     $("#optionalAlmacenarUsuario").removeClass("hide");
                                 else
                                     $("#optionalAlmacenarUsuario").addClass("hide");
+                            });
+
+                            $("input[name=externa]").click(function(){
+                                if(this.checked)
+                                    $("#optionalTareaExterna").removeClass("hide");
+                                else
+                                    $("#optionalTareaExterna").addClass("hide");
                             });
                         });
                     </script>
@@ -406,6 +458,67 @@
                         <div class="input-prepend">
                             <span class="add-on">@@</span><input type="text" name="almacenar_usuario_variable" value="<?= $tarea->almacenar_usuario_variable ?>" />
                         </div>
+                    </div>
+                    <label><input type="checkbox" name="externa" value="1" <?= $tarea->externa ? 'checked' : '' ?> /> ¿Tarea externa?</label>
+                    <div id="optionalTareaExterna" class="<?= $tarea->externa ? '' : 'hide' ?>">
+                    <table class="table">
+                        <thead>
+                            <tr class="form-agregar-evento-externo">
+                                <td>
+                                    <input class="eventoExterno input-medium" id="nombre" type="text" placeholder="Nombre" />
+                                </td>
+                                <td>
+                                    <select class="eventoSentido input-small">
+                                        <option value="GET">GET</option>
+                                        <option value="POST">POST</option>
+                                        <option value="PUT">PUT</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <input class="input-medium" id="url" type="text" placeholder="URL" />
+                                </td>
+                                <td>
+                                    <textarea class="input-big" name="mensaje" id="mensaje" placeholder="Mensaje"></textarea>
+                                </td>
+                                <td>
+                                    <input class="input-medium" id="regla" name="regla" type="text" placeholder="Condición" />
+                                </td>
+                                <td>
+                                    <button type="button" class="btn" title="Agregar"><i class="icon-plus"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>#</th>
+                                <th>Nombre</th>
+                                <th>Metodo</th>
+                                <th>URL</th>
+                                <th>Mensaje</th>
+                                <th>Condición</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($tarea->EventosExternos as $key => $p): ?>
+                                <tr>
+                                    <td><?= $key + 1 ?></td>
+                                    <td><?= $p->nombre ?></td>
+                                    <td><?= $p->metodo ?></td>
+                                    <td><?= $p->url ?></td>
+                                    <td><?= $p->mensaje ?></td>
+                                    <td><?= $p->regla ?></td>
+                                    <td>
+                                        <input type="hidden" name="eventos_externos[<?= $key + 1 ?>][id]" value="<?= $p->id ?>" />
+                                        <input type="hidden" name="eventos_externos[<?= $key + 1 ?>][nombre]" value="<?= $p->nombre ?>" />
+                                        <input type="hidden" name="eventos_externos[<?= $key + 1 ?>][metodo]" value="<?= $p->metodo ?>" />
+                                        <input type="hidden" name="eventos_externos[<?= $key + 1 ?>][url]" value="<?= $p->url ?>" />
+                                        <input type="hidden" name="eventos_externos[<?= $key + 1 ?>][mensaje]" value="<?= htmlspecialchars($p->mensaje) ?>" />
+                                        <input type="hidden" name="eventos_externos[<?= $key + 1 ?>][regla]" value="<?= $p->regla ?>" />
+                                        <a class="delete" title="Eliminar" href="#"><i class="icon-remove"></i></a>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
                     </div>
                 </div>
             </div>

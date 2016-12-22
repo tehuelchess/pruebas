@@ -86,6 +86,7 @@ class Proceso extends Doctrine_Record {
             $element->left=$t->posx;
             $element->top=$t->posy;
             $element->start=$t->inicial;
+            $element->externa=$t->externa;
             //$element->stop=$t->final;
             $modelo->elements[]=clone $element;
         }

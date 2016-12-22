@@ -11,11 +11,11 @@ class Regla {
     
 
     //Evalua la regla de acuerdo a los datos capturados en el tramite tramite_id
-    public function evaluar($etapa_id) {
+    public function evaluar($etapa_id,$ev=FALSE) {
         if (!$this->regla)
             return TRUE;
 
-        $new_regla = $this->getExpresionParaEvaluar($etapa_id);   
+        $new_regla = $this->getExpresionParaEvaluar($etapa_id,$ev);
         $new_regla = 'return ' . $new_regla . ';';
         $CI = & get_instance();
         $CI->load->library('SaferEval');
@@ -28,16 +28,34 @@ class Regla {
     
     //Obtiene la expresion con los reemplazos de variables ya hechos de acuerdo a los datos capturados en el tramite tramite_id.
     //Esta expresion es la que se evalua finalmente en la regla
-    public function getExpresionParaEvaluar($etapa_id){
+    public function getExpresionParaEvaluar($etapa_id,$ev=FALSE){
         $new_regla=$this->regla;
-        $new_regla=preg_replace_callback('/@@(\w+)((->\w+|\[\w+\])*)/', function($match) use ($etapa_id) {
+        $new_regla=preg_replace_callback('/@@(\w+)((->\w+|\[\w+\])*)/', function($match) use ($etapa_id,$ev) {
                     $nombre_dato = $match[1];
                     $accesor=isset($match[2])?$match[2]:'';
                     
                     $dato = Doctrine::getTable('DatoSeguimiento')->findByNombreHastaEtapa($nombre_dato,$etapa_id);                    
                     if ($dato) {
                         $dato_almacenado=eval('$x=json_decode(\''.json_encode($dato->valor,JSON_HEX_APOS).'\'); return $x'.$accesor.';');
-                        $valor_dato='json_decode(\''.json_encode($dato_almacenado).'\')';                        
+                        $valor_dato='json_decode(\''.json_encode($dato_almacenado).'\')';
+                        if($ev){
+                            $etapa = Doctrine::getTable('Etapa')->find($etapa_id);
+                            $campo = Doctrine_Query::create()
+                                                    ->select('c.tipo')
+                                                    ->from('Campo c, c.Formulario f, f.Proceso p')
+                                                    ->where('c.nombre=? AND p.id=?',array($nombre_dato,$etapa->Tarea->Proceso->id))
+                                                    ->execute();
+                            
+                            if($campo[0]->tipo=='documento'){
+                                $files =Doctrine::getTable('File')->findByTramiteIdAndFilename($etapa->Tramite->id,$dato->valor);
+                                if(count($files) > 0){
+                                    foreach($files as $f){
+                                        $ruta = $f->tipo=='documento'? 'uploads/documentos/' : 'uploads/datos/';
+                                        $valor_dato = "'".$ruta.$dato->valor."'";
+                                    }
+                                }
+                            }
+                        }
                     }
                     else {
                         //No reemplazamos el dato
