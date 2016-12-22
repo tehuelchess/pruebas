@@ -449,6 +449,3 @@ class Procesos extends MY_BackendController {
     
 
 }
-
-/* End of file welcome.php */
-/* Location: ./application/controllers/welcome.php */

@@ -6,10 +6,10 @@
         <title><?=Cuenta::cuentaSegunDominio()!='localhost'?Cuenta::cuentaSegunDominio()->nombre_largo:'SIMPLE'?> - <?= $title ?></title>
 
         <!-- Le styles -->
-
+        
         <link href="<?= base_url() ?>assets/css/bootstrap.css" rel="stylesheet">
         <link href="<?= base_url() ?>assets/css/responsive.css" rel="stylesheet">
-        <link href="<?= base_url() ?>assets/css/common.css" rel="stylesheet">
+        <link href="<?= base_url() ?>assets/css/common.css?v=0.2" rel="stylesheet">
         <link href="<?= base_url() ?>assets/js/bootstrap-datepicker/css/datepicker.css" rel="stylesheet">
         <link href="<?= base_url() ?>assets/js/handsontable/dist/handsontable.full.min.css" rel="stylesheet">
         <link href="<?= base_url() ?>assets/js/jquery.chosen/chosen.css" rel="stylesheet">
@@ -18,6 +18,7 @@
         
         <link href="<?= base_url() ?>assets/css/modelador-formularios.css" rel="stylesheet">
         <link href="<?= base_url() ?>assets/css/dashboard.css" rel="stylesheet">
+
 
 
         <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
@@ -29,6 +30,7 @@
         <link rel="shortcut icon" href="<?= base_url() ?>assets/img/favicon.png">
 
         <script src="<?= base_url() ?>assets/js/jquery/jquery-1.8.3.min.js" type="text/javascript"></script>
+
         <script src="<?= base_url() ?>assets/js/bootstrap.min.js" type="text/javascript"></script> <?php //JS base     ?>
         <script src="<?= base_url() ?>assets/js/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
         <script src="<?= base_url() ?>assets/js/handsontable/dist/handsontable.full.min.js" type="text/javascript"></script> <?php //JS para hacer grillas     ?>
@@ -39,6 +41,7 @@
         <script src="<?= base_url() ?>assets/js/jquery.select2/dist/js/i18n/es.js"></script> <?php //Soporte para selects con multiple choices     ?>
         <script src="<?= base_url() ?>assets/js/file-uploader/fileuploader.js"></script> <?php //Soporte para subir archivos con ajax     ?>
         <script src="<?= base_url() ?>assets/js/jquery-ui/js/jquery-ui-1.9.2.custom.min.js" type="text/javascript"></script>
+
         <script src="<?= base_url() ?>assets/js/jquery.ui.touch-punch/jquery.ui.touch-punch.min.js" type="text/javascript"></script> <?php //JS para soportar drag & drop en iPad     ?>
         <script src="<?= base_url() ?>assets/js/jquery.ui.livedraggable/jquery.ui.livedraggable.js" type="text/javascript"></script> <?php //JS para que evento draggable sea live     ?>
         <script src="<?= base_url() ?>assets/js/jquery.doubletap/jquery.doubletap.js" type="text/javascript"></script> <?php //JS para soportar dobleclick en iPad     ?>
@@ -52,7 +55,9 @@
         <script src="<?= base_url() ?>assets/js/backend.js" type="text/javascript"></script>
         <script src="<?= base_url() ?>assets/js/nikEditor/nikEditor.js" type="text/javascript"></script>
 
-
+        <link href="<?= base_url() ?>assets/timepicker/css/timepicker.less" rel="stylesheet">
+        <link href="<?= base_url() ?>assets/timepicker/css/bootstrap-timepicker.min.css" rel="stylesheet">
+        <script src="<?= base_url() ?>assets/timepicker/js/bootstrap-timepicker.js" type="text/javascript"></script>
     </head>
     <body>
 
@@ -82,6 +87,9 @@
                                     <?php if (in_array('super', explode(',',UsuarioBackendSesion::usuario()->rol)) || in_array('gestion', explode(',',UsuarioBackendSesion::usuario()->rol))
                                             || in_array('reportes', explode(',',UsuarioBackendSesion::usuario()->rol))): ?>
                                         <li <?= $this->uri->segment(2) == 'gestion' || !$this->uri->segment(2) ? 'class="active"' : '' ?>><a href="<?= site_url('backend/gestion') ?>">Inicio</a></li>
+                                    <?php endif ?>
+                                    <?php if (in_array('super', explode(',',UsuarioBackendSesion::usuario()->rol))  || in_array('agenda', explode(',',UsuarioBackendSesion::usuario()->rol))): ?>
+                                        <li <?= $this->uri->segment(2) == 'agendas' ? 'class="active"' : '' ?>><a href="<?= site_url('backend/agendas') ?>">Agenda</a></li>
                                     <?php endif ?>
                                     <?php if (in_array('super', explode(',',UsuarioBackendSesion::usuario()->rol))  || in_array('modelamiento', explode(',',UsuarioBackendSesion::usuario()->rol))): ?>
                                         <li <?= $this->uri->segment(2) == 'procesos' || $this->uri->segment(2) == 'formularios' ? 'class="active"' : '' ?>><a href="<?= site_url('backend/procesos') ?>">Modelador de Procesos</a></li>

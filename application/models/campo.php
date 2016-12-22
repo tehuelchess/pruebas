@@ -6,6 +6,7 @@ class Campo extends Doctrine_Record {
     public $estatico=false; //Indica si es un campo estatico, es decir que no es un input con informacion. Ej: Parrafos, titulos, etc.
     public $etiqueta_tamano='large'; //Indica el tamaño default que tendra el campo de etiqueta. Puede ser large o xxlarge.
     public $requiere_nombre=true;    //Indica si requiere que se le ingrese un nombre (Es decir, no generarlo aleatoriamente)
+    public $datos_agenda=false;     // Indica si se deben mostrar los satos adicionales para la agenda.
     
     public static function factory($tipo){
         if($tipo=='text')
@@ -42,7 +43,9 @@ class Campo extends Doctrine_Record {
             $campo=new CampoJavascript();
         else if($tipo=='grid')
             $campo=new CampoGrid();
-        
+        else if($tipo=='agenda')
+            $campo=new CampoAgenda();
+
         $campo->assignInheritanceValues();
         
         return $campo;
@@ -66,6 +69,7 @@ class Campo extends Doctrine_Record {
         $this->hasColumn('valor_default');
         $this->hasColumn('documento_id');
         $this->hasColumn('extra');
+        $this->hasColumn('agenda_campo');
         
         $this->setSubclasses(array(
                 'CampoText'  => array('tipo' => 'text'),
@@ -84,7 +88,8 @@ class Campo extends Doctrine_Record {
                 'CampoParagraph'  => array('tipo' => 'paragraph'),
                 'CampoDocumento'  => array('tipo' => 'documento'),
                 'CampoJavascript'  => array('tipo' => 'javascript'),
-                'CampoGrid'  => array('tipo' => 'grid')
+                'CampoGrid'  => array('tipo' => 'grid'),
+                'CampoAgenda'  => array('tipo' => 'agenda')
             ));
     }
 
@@ -114,7 +119,6 @@ class Campo extends Doctrine_Record {
         $dato = NULL;
         $dato =  Doctrine::getTable('DatoSeguimiento')->findByNombreHastaEtapa($this->nombre,$etapa_id);
         if($this->readonly)$modo='visualizacion';
-        
         return $this->display($modo,$dato,$etapa_id);
     }
     

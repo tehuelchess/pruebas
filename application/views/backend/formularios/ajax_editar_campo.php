@@ -1,3 +1,16 @@
+<?php 
+$idagendaeditar=htmlspecialchars($campo->agenda_campo);
+if(!isset($idagendaeditar) || !is_numeric($idagendaeditar)){
+    $idagendaeditar=0;
+}
+?>
+<style>
+    .fa {
+        float: left;
+        position: relative;
+        line-height: 20px;
+    }
+</style>
 <script type="text/javascript">
     $(document).ready(function(){
         $('.validacion').typeahead({
@@ -86,9 +99,7 @@
         $('#nombre').bind('paste', function (e) {
             e.preventDefault();
         });
-        
     });
-    
 </script>
 
 <div class="modal-header">
@@ -132,15 +143,30 @@
         <?php endif ?>
         
         <?php if (!$campo->estatico): ?>
-            <label class="checkbox"><input type="checkbox" name="readonly" value="1" <?=$campo->readonly?'checked':''?> /> Solo lectura</label>
+            <?php if(isset($campo->datos_agenda) && $campo->datos_agenda){ ?>
+                <label style="display:none;" class="checkbox"><input type="checkbox" name="readonly" value="1" <?=$campo->readonly?'checked':''?> /> Solo lectura</label>    
+            <?php }else{ ?>
+                <label class="checkbox"><input type="checkbox" name="readonly" value="1" <?=$campo->readonly?'checked':''?> /> Solo lectura</label>
+            <?php } ?>
         <?php endif; ?>
         <?php if (!$campo->estatico): ?>
-            <label>Reglas de validación</label>
-            <input class='validacion' type="text" name="validacion" value="<?= $edit ? implode('|', $campo->validacion) : 'required' ?>"/>
+            <?php if(isset($campo->datos_agenda) && $campo->datos_agenda){ ?>
+                <label style="display:none;">Reglas de validación</label>
+                <input style="display:none;" class='validacion' type="text" name="validacion" value="<?= $edit ? implode('|', $campo->validacion) : 'required' ?>"/>
+            <?php }else{ ?>
+                <label>Reglas de validación</label>
+                <input class='validacion' type="text" name="validacion" value="<?= $edit ? implode('|', $campo->validacion) : 'required' ?>"/>
+            <?php } ?>
+            
                <?php endif; ?>
             <?php if(!$campo->estatico):?>
-            <label>Valor por defecto</label>
-            <input type="text" name="valor_default" value="<?=htmlspecialchars($campo->valor_default)?>" />
+                <?php if(isset($campo->datos_agenda) && $campo->datos_agenda){ ?>
+                        <label style="display:none;">Valor por defecto</label>
+                        <input style="display:none;" type="text" name="valor_default" value="<?=htmlspecialchars($campo->valor_default)?>" />
+                <?php }else{ ?>
+                        <label>Valor por defecto</label>
+                        <input type="text" name="valor_default" value="<?=htmlspecialchars($campo->valor_default)?>" />
+                <?php } ?>
             <?php endif ?>
             <div class="campoDependientes">                
                 <label>Visible solo si</label>
@@ -169,6 +195,109 @@
                     <input type="text" name="dependiente_valor" value="<?= isset($campo) ? $campo->dependiente_valor : '' ?>" /><button type="button" class="buttonString btn">String</button><button type="button" class="buttonRegex btn">Regex</button>
                 </span>
                 <input type="hidden" name="dependiente_tipo" value="<?=isset($campo) && $campo->dependiente_tipo? $campo->dependiente_tipo:'string' ?>" />
+                <?php if(isset($campo->datos_agenda) && $campo->datos_agenda): ?>
+                    <label>Pertenece a: </label>
+                    <select id="selectgrupo" class="input-xlarge" name="grupos_usuarios">
+                    </select>
+                    <button class="btn btn_filtrar_agenda vtop" type="button">Filtrar</button>
+                    <label style="margin-top:8px;">Agenda:</label>
+                    <select id="miagenda" class="input-xlarge" name="agenda_campo">
+                        <option value="1">Seleccione(Opcional)</option>
+                    </select>
+                    <script type="text/javascript">
+                            $(function(){
+                                $("#selectgrupo").select2({
+                                    placeholder: "Seleccione(Opcional)",
+                                    allowClear: true,
+                                    multiple:false,
+                                    templateSelection: selection,
+                                    templateResult: format
+                                });
+                                
+                                $("#selectgrupo").change(function(){
+                                    $("#miagenda").html('');
+                                    var idseleccionado=$(this).val();
+                                    $.ajax({
+                                        url:'<?= site_url('/backend/formularios/ajax_mi_calendario') ?>',
+                                        dataType: "json",
+                                        data:{
+                                            pertenece:idseleccionado
+                                        },
+                                        success: function( data ) {
+                                            if(data.code==200){
+                                                var items=data.calendars;
+                                                $('#miagenda').html('');
+                                                if(items.length>0){
+                                                    $("#miagenda").removeAttr('disabled');
+                                                    $.each(items, function(index, element) {
+                                                        $("#miagenda").append('<option value="'+element.id+'">'+element.name+'</option>');
+                                                    });
+                                                    var swedit=<?php echo (isset($edit) && $edit)?1:0; ?>;
+                                                    if(swedit==1){
+                                                        var idagenda=<?= $idagendaeditar ?>;
+                                                        $('#miagenda').val(idagenda);
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    });
+                                });
+                                $.ajax({
+                                    url:'<?= site_url('/backend/formularios/listarPertenece') ?>',
+                                    dataType: "json",
+                                    success: function( data ) {
+                                        if(data.code==200){
+                                            var items=data.resultado.items;
+                                            $.each(items, function(index, element) {
+                                                var icon='iconglyp-user';
+                                                if(element.tipo==1){
+                                                    icon='iconglyp-group';
+                                                }
+                                                $("#selectgrupo").append('<option value="'+element.id+'" data-icon="'+icon+'" >'+element.nombre+'</option>');
+                                            });
+                                        }
+                                        
+                                    }
+                                });
+                                var swedit=<?php echo (isset($edit) && $edit)?1:0; ?>;
+                                if(swedit==1){
+                                    var idagenda=<?= $idagendaeditar ?>;
+                                    cargar_service(idagenda);
+                                }
+                            });
+                            function format(icon) {
+                                var originalOption = icon.element;
+                                return '<i class="fa defaulticonglyp '+$(originalOption).data('icon')+'" style="top: 1px;"></i>&nbsp;&nbsp;' + icon.text;
+                            }
+                            function selection(icon) {
+                                var originalOption = icon.element;
+                                return '<i class="fa defaulticonglyp '+$(originalOption).data('icon')+' " style="top: 7px;"></i>&nbsp;&nbsp;' + icon.text;
+                            }
+                            function cargar_service(idagenda){
+                                $.ajax({
+                                    url:'<?= site_url('/backend/formularios/obtener_agenda') ?>', 
+                                    dataType: "json",
+                                    data:{
+                                        idagenda:idagenda
+                                    },
+                                    success: function( data ) {
+                                        if(data.code==200){
+                                            var options=$('#selectgrupo').find('option');
+                                            var owner=data.calendario_owner;
+                                            var indexpertenece=0;
+                                            var v=0;
+                                            $.each(options,function(index,value){
+                                                if($(value).text().indexOf(owner)>=0){
+                                                    indexpertenece=index;
+                                                }
+                                            });
+                                            $("#selectgrupo").select2("val",options[indexpertenece].value);
+                                        }
+                                    }
+                                });
+                            }
+                    </script>
+                <?php endif; ?>
             </div>
             
             <?=$campo->extraForm()?$campo->extraForm():''?>

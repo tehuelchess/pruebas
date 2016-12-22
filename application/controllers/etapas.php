@@ -1,12 +1,12 @@
 <?php
-
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
 class Etapas extends MY_Controller {
-
+ 
     public function __construct() {
         parent::__construct();
+        require_once(APPPATH.'controllers/agenda.php'); //include Agenda controller
     }
 
     public function inbox() {
@@ -137,7 +137,6 @@ class Etapas extends MY_Controller {
 
     public function ejecutar($etapa_id, $secuencia = 0) {
         $iframe = $this->input->get('iframe');
-
         $etapa = Doctrine::getTable('Etapa')->find($etapa_id);
         if(!$etapa){
             show_404();
@@ -185,7 +184,7 @@ class Etapas extends MY_Controller {
             $data['title'] = $etapa->Tarea->nombre;
             $template = $this->input->get('iframe') ? 'template_iframe' : 'template';
 
-            $config =Doctrine::getTable('CuentaHasConfig')->findOneByIdparAndCuentaId(1,Cuenta::cuentaSegunDominio()->id); 
+            $config =Doctrine::getTable('CuentaHasConfig')->findOneByIdparAndCuentaId(1,Cuenta::cuentaSegunDominio()->id);
             if($config){
                $config =Doctrine::getTable('Config')->findOneByIdAndIdparAndCuentaIdOrCuentaId($config->config_id,$config->idpar,Cuenta::cuentaSegunDominio()->id,0);
                $nombre = $config->nombre;
@@ -198,8 +197,8 @@ class Etapas extends MY_Controller {
                }
                
             }else{
-               $data['template_path'] = 'uploads/themes/default/';
-               $this->load->view('themes/default/template', $data);
+                $data['template_path'] = 'uploads/themes/default/';
+                $this->load->view('themes/default/template', $data);
             }
         }
     }
@@ -264,7 +263,7 @@ class Etapas extends MY_Controller {
                 $etapa->save();
 
                 $etapa->finalizarPaso($paso);
-
+                
                 $respuesta->validacion = TRUE;
 
                 $qs = $this->input->server('QUERY_STRING');
@@ -386,25 +385,48 @@ class Etapas extends MY_Controller {
             exit;
         }
 
-
-        $etapa->avanzar($this->input->post('usuarios_a_asignar'));
-
         $respuesta = new stdClass();
+        //$etapa->avanzar($this->input->post('usuarios_a_asignar'));
         $respuesta->validacion = TRUE;
-
-        if ($this->input->get('iframe'))
+        try{
+            $agenda = new agenda();  
+            $appointments=$agenda->obtener_citas_de_tramite($etapa_id);
+            if(isset($appointments) && is_array($appointments) && (count($appointments)>=1) ){
+                $json='{"ids":[';
+                $i=0;
+                foreach($appointments as $item){
+                    if($i==0){
+                        $json=$json.'"'.$item.'"';
+                    }else{
+                        $json=$json.',"'.$item.'"';
+                    }
+                    $i++;
+                }
+                $json=$json.']}';
+                $agenda->confirmar_citas_grupo($json);
+                $etapa->avanzar($this->input->post('usuarios_a_asignar'));
+            }else{
+                $etapa->avanzar($this->input->post('usuarios_a_asignar'));    
+            }
+        }catch(Exception $err){
+            $respuesta->validacion = false;
+            $respuesta->errores = '<div class="alert alert-error"><a class="close" data-dismiss="alert">×</a>'.$err->getMessage().'</div>';
+            log_message('error',$err->getMessage());
+        }
+        
+        if ($this->input->get('iframe')){
             $respuesta->redirect = site_url('etapas/ejecutar_exito');
-        else
+        }
+        else {
             $respuesta->redirect = site_url();
-
+        }
         echo json_encode($respuesta);
     }
-
+    
     //Pagina que indica que la etapa se completo con exito. Solamente la ven los que acceden mediante iframe.
     public function ejecutar_exito() {
         $data['content'] = 'etapas/ejecutar_exito';
         $data['title'] = 'Etapa completada con éxito';
-
         $this->load->view('template_iframe', $data);
     }
 

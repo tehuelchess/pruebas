@@ -9,8 +9,9 @@
         <link href="<?= base_url() ?>assets/js/handsontable/dist/handsontable.full.min.css" rel="stylesheet">
         <link href="<?= base_url() ?>assets/js/jquery.chosen/chosen.css" rel="stylesheet">
         <link href="<?= base_url() ?>assets/js/file-uploader/fileuploader.css" rel="stylesheet">
-        <link href="<?= base_url() ?>assets/css/common.css" rel="stylesheet">
+        <link href="<?= base_url() ?>assets/css/common.css?v=0.11" rel="stylesheet">
         <link href="<?= base_url() ?>assets/css/frontend.css" rel="stylesheet">
+        
 
         <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
         <!--[if lt IE 9]>
@@ -31,5 +32,6 @@
             var site_url="<?= site_url() ?>";
             var base_url="<?= base_url() ?>";
         </script>
+
         <script src="<?= base_url() ?>assets/js/common.js"></script>
         <script src="<?= base_url() ?>assets/js/nikEditor/nikEditor.js" type="text/javascript"></script>

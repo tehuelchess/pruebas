@@ -69,5 +69,3 @@ class Validador extends MY_Controller {
         return TRUE;
     }
 }
-
-?>

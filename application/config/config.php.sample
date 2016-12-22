@@ -394,5 +394,38 @@ $config['hsm_password']='';
  */
 $config['main_domain']='';
 
+/*
+ * URL del microservicio de agendas 
+ *
+ */ 
+$config['base_service']='http://dev2.arkho.tech/';
+
+/*
+ *  Contexto de aplicación del servicio de agendas. 
+ * 
+ */
+$config['context_service']='v1/';//context del servicio
+
+
+/*  
+ * Identificado de aplicación o cuenta para acceder al microservicio de 
+ * agendas.
+ */
+
+$config['appkey']='mMRUI7s7Nn0yGq0';
+
+/*
+ * Cantidad de registros que se mostrarán por pagina
+ * 
+ */
+$config['records']=10;// numero de registros por pagina
+
+
+/*
+ * Minutos para eliminar una cita si no ha sido confirmada
+ *
+ */
+$config['tiempoconfimacioncita']=30; 
+
 /* End of file config.php */
 /* Location: ./application/config/config.php */

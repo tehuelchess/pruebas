@@ -4,13 +4,14 @@ if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
 class Formularios extends MY_BackendController {
-    
+    private $base_services='';
+    private $context='';
+ 
     public function __construct() {
         parent::__construct();
-
         UsuarioBackendSesion::force_login();
-        
-//        if(UsuarioBackendSesion::usuario()->rol!='super' && UsuarioBackendSesion::usuario()->rol!='modelamiento'){
+        require_once(APPPATH.'controllers/agenda.php'); //include Agenda controller
+        //if(UsuarioBackendSesion::usuario()->rol!='super' && UsuarioBackendSesion::usuario()->rol!='modelamiento'){
         if(!in_array('super', explode(',',UsuarioBackendSesion::usuario()->rol) ) && !in_array( 'modelamiento',explode(',',UsuarioBackendSesion::usuario()->rol))){
             echo 'No tiene permisos para acceder a esta seccion.';
             exit;
@@ -170,13 +171,11 @@ class Formularios extends MY_BackendController {
         
         $this->load->view('backend/formularios/ajax_editar_campo',$data);
     }
-    
+
     public function editar_campo_form($campo_id=NULL){
         $campo=NULL;
         if($campo_id){
             $campo=Doctrine::getTable('Campo')->find($campo_id);
-
-            
         }else{
             $formulario=Doctrine::getTable('Formulario')->find($this->input->post('formulario_id'));
                 $campo=Campo::factory($this->input->post('tipo'));
@@ -224,6 +223,7 @@ class Formularios extends MY_BackendController {
             $campo->datos=$this->input->post('datos');
             $campo->documento_id=$this->input->post('documento_id');
             $campo->extra=$this->input->post('extra');
+            $campo->agenda_campo=$this->input->post('agenda_campo');
             $campo->save();
             
             $respuesta->validacion=TRUE;
@@ -299,25 +299,18 @@ class Formularios extends MY_BackendController {
         return preg_replace('/\|\s*$/','',$validacion);
     }
     
-    public function exportar($formulario_id)
-    {
-
+    public function exportar($formulario_id) {
         $formulario = Doctrine::getTable('Formulario')->find($formulario_id);
-
         $json = $formulario->exportComplete();
-
         header("Content-Disposition: attachment; filename=\"".mb_convert_case(str_replace(' ','-',$formulario->nombre),MB_CASE_LOWER).".simple\"");
         header('Content-Type: application/json');
         echo $json;
-
     }
     
-    public function importar()
-    {
+    public function importar(){
         try {
             $file_path = $_FILES['archivo']['tmp_name'];
             $proceso_id = $this->input->post('proceso_id');
-
             if ($file_path && $proceso_id) {
                 $input = file_get_contents($_FILES['archivo']['tmp_name']);
                 $formulario = Formulario::importComplete($input, $proceso_id);
@@ -329,10 +322,49 @@ class Formularios extends MY_BackendController {
         } catch (Exception $ex) {
             die('Código: '.$ex->getCode().' Mensaje: '.$ex->getMessage());
         }
-        
         redirect($_SERVER['HTTP_REFERER']);
     }
-}
 
-/* End of file welcome.php */
-/* Location: ./application/controllers/welcome.php */
+    public function listarPertenece(){
+        $data=array();
+        $q = Doctrine_Query::create()
+                ->select("id,nombres, apellido_paterno, apellido_materno,email")
+                ->from("Usuario")
+                ->where("registrado = ? AND open_id = ? AND cuenta_id=?",array(1,0,UsuarioBackendSesion::usuario()->cuenta_id));
+        $usuarios = $q->execute();
+        $data[]=array('id'=>0,'nombre'=>'Seleccione');
+        foreach($usuarios as $usuario){
+            $nombre_completo=$usuario->nombres;
+            $trimAP = trim($usuario->apellido_paterno);
+            $trimAM = trim($usuario->apellido_materno);
+            $nombre_completo=(!empty($trimAP))?$nombre_completo.' '.$usuario->apellido_paterno:$nombre_completo;
+            $nombre_completo=(!empty($trimAM))?$nombre_completo.' '.$usuario->apellido_materno:$nombre_completo;
+            $data[]=array('id'=>$usuario->id,'nombre'=>$nombre_completo,'tipo'=>0,'email'=>$usuario->email);
+        }
+        $q = Doctrine_Query::create()
+                ->select("id,nombre")
+                ->from("GrupoUsuarios")
+                ->where("cuenta_id = ?",UsuarioBackendSesion::usuario()->cuenta_id);
+        $grupo_usuarios = $q->execute();
+        foreach($grupo_usuarios as $grupo){
+            $data[]=array('id'=>$grupo->id,'nombre'=>$grupo->nombre,'tipo'=>1,'email'=>'grupo@grupo.com');
+        }
+        $items=array('items'=>$data);
+        $arr=array('code'=>200,'mensaje'=>'Ok','resultado'=>$items);
+        echo json_encode($arr);
+    }
+
+    public function obtener_agenda(){
+        $idagenda=(isset($_GET['idagenda']) && is_numeric($_GET['idagenda']))?$_GET['idagenda']:0;
+        $agenda = new agenda();  
+        $agenda->ajax_obtener_agenda($idagenda);
+    }
+
+    public function ajax_mi_calendario(){
+        $owner=(isset($_GET['pertenece']) && is_numeric($_GET['pertenece']))?$_GET['pertenece']:0;
+        $agenda = new agenda();  
+        $agenda->ajax_mi_calendario($owner);
+    }
+
+        
+}

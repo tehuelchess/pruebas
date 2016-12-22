@@ -2,7 +2,7 @@
 <html lang="es">
     <head>
         <meta charset="utf-8">
-        <meta name="viewport" content="widpth=device-width, initial-scale=1.0">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Tramitador</title>
 
         <!-- Le styles -->
@@ -10,7 +10,7 @@
         <link href="<?= base_url() ?>assets/css/bootstrap.css" rel="stylesheet">
         <link href="<?= base_url() ?>assets/css/responsive.css" rel="stylesheet">
         <link href="<?= base_url() ?>assets/js/file-uploader/fileuploader.css" rel="stylesheet">
-        <link href="<?= base_url() ?>assets/css/common.css" rel="stylesheet">
+        <link href="<?= base_url() ?>assets/css/common.css?v0.1" rel="stylesheet">
 
 
         <script src="<?= base_url() ?>assets/js/jquery/jquery-1.8.3.min.js" type="text/javascript"></script>
@@ -58,6 +58,7 @@
                             <li class="nav-header">Administración</li>
                             <li><a href="<?= site_url('manager/cuentas') ?>">Cuentas</a></li>
                             <li><a href="<?= site_url('manager/usuarios') ?>">Usuarios Backend</a></li>
+                            <li><a href="<?= site_url('manager/diaferiado') ?>">D&iacute;as Feriados</a></li>
                             <li class="nav-header">Estadisticas</li>
                             <li><a href="<?= site_url('manager/estadisticas/cuentas') ?>">Trámites en curso</a></li>
                         </ul>

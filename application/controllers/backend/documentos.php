@@ -219,6 +219,3 @@ class Documentos extends MY_BackendController {
         redirect($_SERVER['HTTP_REFERER']);
     }
 }
-
-/* End of file welcome.php */
-/* Location: ./application/controllers/welcome.php */
