@@ -242,4 +242,153 @@ class API extends MY_BackendController {
         echo json_indent(json_encode($respuesta));
     }
 
+    public function notificar($tramite_id){
+        $t = Doctrine::getTable('Tramite')->find($tramite_id);
+        $etapa_id = $t->getUltimaEtapa()->id;
+        $etapa = Doctrine::getTable('Etapa')->find($etapa_id);
+        $pendientes = Doctrine_Core::getTable('Acontecimiento')->findByEtapaIdAndEstado($etapa_id,0)->count();
+        if($pendientes>0){
+
+            $post = file_get_contents('php://input');
+            $json = json_decode($post);
+            if(count($json)>0){
+                foreach($json as $key=>$value){
+                    $dato=Doctrine::getTable('DatoSeguimiento')->findOneByNombreAndEtapaId($key,$etapa_id);
+                    if(!$dato)
+                        $dato=new DatoSeguimiento();
+                    $key = str_replace("-", "_", $key);
+                    $key = str_replace(" ", "_", $key);
+                    $dato->nombre=$key;
+                    $dato->valor=$value;
+                    $dato->etapa_id=$etapa_id;
+                    $dato->save();
+                }
+            }        
+
+            // Ejecutar eventos antes de la tarea
+            /*
+            $eventos=Doctrine_Query::create()->from('Evento e')
+                    ->where('e.tarea_id = ? AND e.instante = ? AND e.paso_id IS NULL',array($e->Tarea->id,'antes'))
+                    ->execute();
+            foreach ($eventos as $e) {
+                    $r = new Regla($e->regla);
+                    if ($r->evaluar($this->id))
+                        $e->Accion->ejecutar($etapa);
+            }
+            */
+
+            $acontecimientos=Doctrine_Query::create()
+                ->from('Acontecimiento a')
+                ->where('a.etapa_id = ? AND a.estado = ?',array($etapa_id,0))
+                ->orderBy('a.id asc')
+                ->execute();
+
+            
+            foreach($acontecimientos as $clave => $a){
+
+                $evento = Doctrine::getTable('EventoExterno')->find($a->EventoExterno->id);
+                $regla = new Regla($evento->regla);
+                $tarea_id = $a->Etapa->Tarea->id;
+
+                //Ejecutar eventos antes del evento externo
+                $eventos=Doctrine_Query::create()->from('Evento e')
+                    ->where('e.tarea_id = ? AND e.instante = ? AND e.evento_externo_id = ?',array($a->Etapa->Tarea->id,'antes',$evento->id))
+                    ->orderBy('e.id asc')
+                    ->execute();
+                foreach ($eventos as $e) {
+                    $r = new Regla($e->regla);
+                    if ($r->evaluar($etapa_id)){
+                        $e->Accion->ejecutar($etapa);
+                    }
+                }
+
+                if ($regla->evaluar($a->Etapa->id)){
+
+                    $regla = new Regla($evento->mensaje);
+                    $msg = $regla->getExpresionParaOutput($a->Etapa->id);
+                    $regla = new Regla($evento->url);
+                    $url = $regla->getExpresionParaOutput($a->Etapa->id);
+
+                    $ch = curl_init();
+                    curl_setopt($ch, CURLOPT_URL, $url);
+                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+                    curl_setopt($ch, CURLOPT_HEADER, FALSE);
+                    $metodos = array('POST','PUT');
+                    if(in_array($evento->metodo,$metodos)){
+                        curl_setopt($ch, CURLOPT_POST, TRUE);
+                        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $evento->metodo);
+                        curl_setopt($ch, CURLOPT_POSTFIELDS, $msg);
+                    }
+                    curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                        "Content-Type: application/json"
+                    ));
+                    $response = curl_exec($ch);
+                    $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+                    $err = curl_error($ch);
+                    curl_close($ch);
+
+                    if(($httpcode==200 or $httpcode==201) && isJSON($response)){
+                        $js = json_decode($response);
+                        foreach($js as $key=>$value){
+                            $key = str_replace("-", "_", $key);
+                            $key = str_replace(" ", "_", $key);
+                            $dato=Doctrine::getTable('DatoSeguimiento')->findOneByNombreAndEtapaId($key,$a->Etapa->id);
+                            if(!$dato)
+                                $dato=new DatoSeguimiento();
+                            $dato->nombre=$key;
+                            $dato->valor=$value;
+                            $dato->etapa_id=$a->Etapa->id;
+                            $dato->save();
+                        }
+                    }
+                    $a->estado = TRUE;
+                    $a->save();
+
+                    //Ejecutar eventos despues del evento externo
+                    $eventos=Doctrine_Query::create()->from('Evento e')
+                        ->where('e.tarea_id = ? AND e.instante = ? AND e.evento_externo_id = ?',array($tarea_id,'despues',$evento->id))
+                        ->orderBy('e.id asc')
+                        ->execute();
+                    
+                    foreach ($eventos as $e) {
+                        $r = new Regla($e->regla);
+                        if ($r->evaluar($etapa_id))
+                            $e->Accion->ejecutar($etapa);
+                    }
+                }
+            }
+
+            // Ejecutar eventos despues de tareas
+            /*
+            $eventos=Doctrine_Query::create()
+                    ->from('Evento e')
+                    ->where('e.tarea_id = ? AND e.instante = ? AND e.paso_id IS NULL',array($tarea_id,'despues'))
+                    ->orderBy('e.id asc')
+                    ->execute();
+            //echo $eventos->getSqlQuery();
+            //exit;
+            foreach ($eventos as $e) {
+                    $r = new Regla($e->regla);
+                    if ($r->evaluar($etapa_id))
+                        $e->Accion->ejecutar($etapa);           
+            }
+            */
+
+        }  
+
+        $pendientes = Doctrine_Core::getTable('Acontecimiento')->findByEtapaIdAndEstado($etapa_id,0)->count();
+        if($pendientes==0){
+            $tp = $etapa->getTareasProximas();
+            if ($tp->estado == 'completado'){
+                $ejecutar_eventos = FALSE;
+                $t->cerrar($ejecutar_eventos);
+            }else{
+                $etapa->avanzar();
+            }
+        }
+        
+        
+        
+    }
+
 }
