@@ -9,6 +9,7 @@ class Evento extends Doctrine_Record {
         $this->hasColumn('accion_id');
         $this->hasColumn('tarea_id');
         $this->hasColumn('paso_id');
+        $this->hasColumn('evento_externo_id');
     }
 
     function setUp() {
@@ -28,6 +29,11 @@ class Evento extends Doctrine_Record {
             'local'=>'paso_id',
             'foreign'=>'id'
         ));
+
+        $this->hasOne('EventoExterno',array(
+            'local'=>'evento_externo_id',
+            'foreign'=>'id'
+        ));
     }
     
     public function setPasoId($paso_id){
@@ -35,6 +41,13 @@ class Evento extends Doctrine_Record {
             $this->_set ('paso_id', $paso_id);
         else
             $this->_set ('paso_id', null);
+    }
+
+    public function setEventoExternoId($evento_externo_id){
+        if($evento_externo_id!='')
+            $this->_set ('evento_externo_id', $evento_externo_id);
+        else
+            $this->_set ('evento_externo_id', null);
     }
 
 }

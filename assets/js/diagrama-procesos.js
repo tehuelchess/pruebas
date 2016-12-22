@@ -37,7 +37,8 @@ function drawFromModel(model,width,height,tipoconector){
     
     //Creamos los elementos
     $(model.elements).each(function(i,e){
-        $("#draw").append("<div id='"+e.id+"' class='box' style='top: "+e.top+"px; left: "+e.left+"px;'>"+e.name+(e.start==1?'<div class="inicial"></div>':'')+"</div>");
+        externa = e.externa==1?"externa":"";
+        $("#draw").append("<div id='"+e.id+"' class='box "+externa+"' style='top: "+e.top+"px; left: "+e.left+"px;'>"+e.name+(e.start==1?'<div class="inicial"></div>':'')+"</div>");
     });
     
     //Creamos las conexiones

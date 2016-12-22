@@ -152,11 +152,11 @@ class Tramite extends Doctrine_Record {
         return FALSE;
     }
 
-    public function cerrar(){
+    public function cerrar($ejecutar_eventos = TRUE){
         Doctrine_Manager::connection()->beginTransaction();
 
         foreach($this->Etapas as $e){
-            $e->cerrar();
+            $e->cerrar($ejecutar_eventos);
         }
         $this->pendiente = 0;
         $this->ended_at = date('Y-m-d H:i:s');
