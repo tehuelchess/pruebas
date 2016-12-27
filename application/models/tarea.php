@@ -371,6 +371,7 @@ class Tarea extends Doctrine_Record {
                 $evento_externo->url = $p['url'];
                 $evento_externo->mensaje = trim($p['mensaje']);
                 $evento_externo->regla = $p['regla']? trim($p['regla']) : NULL;
+                $evento_externo->opciones = $p['opciones']? trim($p['opciones']) : NULL;
                 $this->EventosExternos[] = $evento_externo;
             }
         }
