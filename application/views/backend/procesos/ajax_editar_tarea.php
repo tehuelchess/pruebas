@@ -121,6 +121,7 @@
             var url=$form.find("#url").val();
             var mensaje=$form.find("#mensaje").val();
             var regla=$form.find("#regla").val();
+            var opciones=$form.find("#opciones").val();
             
             var html="<tr>";
             html+="<td>"+pos+"</td>";
@@ -129,6 +130,7 @@
             html+="<td>"+url+"</td>";
             html+="<td>"+mensaje+"</td>";
             html+="<td>"+regla+"</td>";
+            html+="<td>"+opciones+"</td>";
             html+='<td>';
             html+='<input type="hidden" name="eventos_externos['+pos+'][id]" value="" />';
             html+='<input type="hidden" name="eventos_externos['+pos+'][nombre]" value="'+nombre+'" />';
@@ -136,6 +138,7 @@
             html+='<input type="hidden" name="eventos_externos['+pos+'][url]" value="'+url+'" />';
             html+='<input type="hidden" name="eventos_externos['+pos+'][mensaje]" value="'+escapeHtml(mensaje)+'" />';
             html+='<input type="hidden" name="eventos_externos['+pos+'][regla]" value="'+regla+'" />';
+            html+='<input type="hidden" name="eventos_externos['+pos+'][opciones]" value="'+opciones+'" />';
             html+='<a class="delete" title="Eliminar" href="#"><i class="icon-remove"></i></a>';
             html+='</td>';
             html+="</tr>";
@@ -484,6 +487,9 @@
                                     <input class="input-medium" id="regla" name="regla" type="text" placeholder="Condición" />
                                 </td>
                                 <td>
+                                    <input class="input-big" id="opciones" name="opciones" type="text" placeholder="Opciones" />
+                                </td>
+                                <td>
                                     <button type="button" class="btn" title="Agregar"><i class="icon-plus"></i></button>
                                 </td>
                             </tr>
@@ -494,6 +500,7 @@
                                 <th>URL</th>
                                 <th>Mensaje</th>
                                 <th>Condición</th>
+                                <th>Opciones</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -506,6 +513,7 @@
                                     <td><?= $p->url ?></td>
                                     <td><?= $p->mensaje ?></td>
                                     <td><?= $p->regla ?></td>
+                                    <td><?= $p->opciones ?></td>
                                     <td>
                                         <input type="hidden" name="eventos_externos[<?= $key + 1 ?>][id]" value="<?= $p->id ?>" />
                                         <input type="hidden" name="eventos_externos[<?= $key + 1 ?>][nombre]" value="<?= $p->nombre ?>" />
@@ -513,6 +521,7 @@
                                         <input type="hidden" name="eventos_externos[<?= $key + 1 ?>][url]" value="<?= $p->url ?>" />
                                         <input type="hidden" name="eventos_externos[<?= $key + 1 ?>][mensaje]" value="<?= htmlspecialchars($p->mensaje) ?>" />
                                         <input type="hidden" name="eventos_externos[<?= $key + 1 ?>][regla]" value="<?= $p->regla ?>" />
+                                        <input type="hidden" name="eventos_externos[<?= $key + 1 ?>][opciones]" value="<?= $p->opciones ?>" />
                                         <a class="delete" title="Eliminar" href="#"><i class="icon-remove"></i></a>
                                     </td>
                                 </tr>

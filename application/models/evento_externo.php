@@ -10,6 +10,7 @@ class EventoExterno extends Doctrine_Record {
         $this->hasColumn('mensaje');
         $this->hasColumn('regla');
         $this->hasColumn('tarea_id');
+        $this->hasColumn('opciones');
     }
 
     function setUp() {
