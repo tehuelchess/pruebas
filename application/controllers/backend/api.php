@@ -308,6 +308,8 @@ class API extends MY_BackendController {
                     $msg = $regla->getExpresionParaOutput($a->Etapa->id);
                     $regla = new Regla($evento->url);
                     $url = $regla->getExpresionParaOutput($a->Etapa->id);
+                    $regla = new Regla($evento->opciones);
+                    $opciones = $regla->getExpresionParaOutput($a->Etapa->id);
 
                     $ch = curl_init();
                     curl_setopt($ch, CURLOPT_URL, $url);
@@ -319,9 +321,11 @@ class API extends MY_BackendController {
                         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $evento->metodo);
                         curl_setopt($ch, CURLOPT_POSTFIELDS, $msg);
                     }
-                    curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-                        "Content-Type: application/json"
-                    ));
+                    $opciones_httpheader = array('cache-control: no-cache', 'Content-Type: application/json');
+                    if(!is_null($opciones)){
+                        array_push($opciones_httpheader, $opciones);
+                    }
+                    curl_setopt($ch, CURLOPT_HTTPHEADER, $opciones_httpheader);
                     $response = curl_exec($ch);
                     $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
                     $err = curl_error($ch);

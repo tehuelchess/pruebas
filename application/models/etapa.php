@@ -545,6 +545,8 @@ class Etapa extends Doctrine_Record {
             $mensaje = $regla->getExpresionParaOutput($this->id);
             $regla = new Regla($evento->url);
             $url = $regla->getExpresionParaOutput($this->id);
+            $regla = new Regla($evento->opciones);
+            $opciones = $regla->getExpresionParaOutput($this->id);
             $regla = new Regla($evento->regla);
             
             $acontecimiento = Doctrine::getTable('Acontecimiento')->findOneByEventoExternoIdAndEtapaId($evento->id,$this->id);
@@ -563,9 +565,11 @@ class Etapa extends Doctrine_Record {
                     curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $evento->metodo);
                     curl_setopt($ch, CURLOPT_POSTFIELDS, $mensaje);
                 }
-                curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-                    "Content-Type: application/json"
-                ));
+                $opciones_httpheader = array("cache-control: no-cache", "Content-Type: application/json");
+                if(!is_null($opciones)){
+                    array_push($opciones_httpheader, $opciones);
+                }
+                curl_setopt($ch, CURLOPT_HTTPHEADER, $opciones_httpheader);
                 $response = curl_exec($ch);
                 $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
                 $err = curl_error($ch);
@@ -617,7 +621,13 @@ class Etapa extends Doctrine_Record {
         //Iniciar tareas próximas siempre y cuando todos los eventos externos han sido completados
         $pendientes = Doctrine_Core::getTable('Acontecimiento')->findByEtapaIdAndEstado($this->id,0)->count();
         if($pendientes==0){
-            $etapa->avanzar();
+            $tp = $etapa->getTareasProximas();
+            if ($tp->estado == 'completado'){
+                $ejecutar_eventos = FALSE;
+                $t->cerrar($ejecutar_eventos);
+            }else{
+                $etapa->avanzar();
+            }
         }
     }
     
