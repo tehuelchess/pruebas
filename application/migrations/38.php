@@ -2,7 +2,7 @@
 class Migration_38 extends Doctrine_Migration_Base {
     public function up(){
 
-        $this->addColumn('proceso', 'categoria_id', 'int(10)');
+        $this->addColumn('proceso', 'categoria_id', 'int(10) unsigned');
         $this->addColumn('proceso', 'destacado', 'int(2)');
         $this->addColumn('proceso', 'icon_ref', 'varchar(256)');
 
