@@ -80,7 +80,7 @@
                 <div class="row">
                     <div class="span3">
                         <ul id="sideMenu" class="nav nav-list">    
-                            <li class="iniciar <?= isset($sidebar) && $sidebar == 'disponibles' ? 'active' : '' ?>"><a href="<?= site_url('tramites/disponibles') ?>">Iniciar trámite</a></li>
+                            <li class="iniciar <?= isset($sidebar) && $sidebar == 'disponibles' ? 'active' : '' ?>"><a href="<?= site_url('home/index') ?>">Iniciar trámite</a></li>
                             <?php if (UsuarioSesion::usuario()->registrado): ?>
                                 <?php
                                 $npendientes=Doctrine::getTable('Etapa')->findPendientes(UsuarioSesion::usuario()->id, Cuenta::cuentaSegunDominio())->count();
