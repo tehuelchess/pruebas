@@ -54,7 +54,12 @@ class Categorias extends CI_Controller {
                 // Cuenta
                 $categoria->nombre = $this->input->post('nombre');
                 $categoria->descripcion = $this->input->post('descripcion');
-                $categoria->icon_ref = $this->input->post('logo');
+                //Si no 'nologo.png' es que cargo el logo por defecto, por lo tanto el campo
+                //debe ser null.
+                if( $this->input->post('logo') != "nologo.png"){
+                   $categoria->icon_ref = $this->input->post('logo');
+                }
+    
                 $categoria->save();
                 $id = (int)$categoria->id;
                 
