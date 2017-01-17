@@ -47,6 +47,11 @@ class Cuenta extends Doctrine_Record {
             'local' => 'id',
             'foreign' => 'cuenta_id'
         ));
+        
+        $this->hasMany('Config_general', array(
+            'local' => 'id',
+            'foreign' => 'cuenta'
+        ));
     }
 
     public function updatePosicionesWidgetsFromJSON($json) {

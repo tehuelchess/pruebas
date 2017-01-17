@@ -11,6 +11,9 @@
     <li class="<?=strpos($this->uri->segment(3),'modelador')===0?'active':''?>">
         <a href="<?=site_url('backend/configuracion/modelador')?>">Configuración Modelador</a>
     </li>
+    <li class="<?=strpos($this->uri->segment(3),'recursos_generales')===0?'active':''?>">
+        <a href="<?=site_url('backend/recursos/index')?>">Recursos Generales</a>
+    </li>    
     <li class="nav-header">
         Accesos Frontend
     </li>

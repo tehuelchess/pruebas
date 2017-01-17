@@ -1,44 +1,47 @@
 <script>
-function descargarDocumentos(tramiteId) {
-    $("#modal").load(site_url + "etapas/descargar/" +tramiteId);
-    $("#modal").modal();
-    return false;
-}
-$(document).ready(function() {
-  $('#select_all').click(function(event) {
-      var checked = [];
-      $('#tramites').val();
-      if(this.checked) {
-          $('.checkbox1').each(function() {
-              this.checked = true;
-          });
-      }else{
-          $('.checkbox1').each(function() {
-              this.checked = false;
-          });
-      }
-      $('#tramites').val(checked);
-  });
-});
-function descargarSeleccionados() {
-    var numberOfChecked = $('.checkbox1:checked').length;
-    if(numberOfChecked == 0){
-      alert('Debe seleccionar al menos un trámite');
-      return false;
-    }else{
-      var checked = [];
-      $('.checkbox1').each(function() {
-          if($(this).is(':checked')){
-            checked.push(parseInt($(this).val()));  
-          }
-      });
-      $('#tramites').val(checked);
-      var tramites = $('#tramites').val();
-      $("#modal").load(site_url + "etapas/descargar/" +tramites);
-      $("#modal").modal();
-      return false;  
+    function descargarDocumentos(tramiteId) {
+        $("#modal").load(site_url + "etapas/descargar/" + tramiteId);
+        $("#modal").modal();
+        return false;
     }
-}
+
+    $(document).ready(function() {
+        $('#select_all').click(function(event) {
+            var checked = [];
+            $('#tramites').val();
+            if (this.checked) {
+                $('.checkbox1').each(function() {
+                    this.checked = true;
+                });
+            } else {
+                $('.checkbox1').each(function() {
+                    this.checked = false;
+                });
+            }
+            $('#tramites').val(checked);
+        });
+    });
+
+    function descargarSeleccionados() {
+        var numberOfChecked = $('.checkbox1:checked').length;
+        if (numberOfChecked == 0) {
+            alert('Debe seleccionar al menos un trámite');
+            return false;
+        } else {
+            var checked = [];
+            $('.checkbox1').each(function() {
+                if ($(this).is(':checked')) {
+                    checked.push(parseInt($(this).val()));  
+                }
+            });
+            $('#tramites').val(checked);
+            var tramites = $('#tramites').val();
+            $("#modal").load(site_url + "etapas/descargar/" +tramites);
+            $("#modal").modal();
+
+            return false;
+        }
+    }
 </script>
 
 <h2 style="line-height: 28px;">
@@ -68,108 +71,146 @@ function descargarSeleccionados() {
             </tr>
         </thead>
         <tbody>
-            <?php $registros=false; ?>
+            <?php $registros = false; ?>
+            <?php
+                $cuenta_id = UsuarioSesion::usuario()->cuenta_id;                
+                $cms = new Config_cms_alfresco();
+                $cms->setAccount($cuenta_id);
+                $cms->loadData();
+                $DS = DIRECTORY_SEPARATOR;
+                $pathFile = FCPATH . 'uploads' . $DS . 'datos';
+                
+            ?>
             <?php foreach ($tramites as $t): ?>
-
-                <?php
-                      
-                      $file = false;
-                      if(Doctrine::getTable('File')->findByTramiteId($t->id)->count() > 0){
-                          $file = true;
-                          $registros=true;
-                      }
+                <?php                    
+                    $file = false;
+                    $res = Doctrine::getTable('File')->findByTramiteId($t->id);
+                    
+                    if ($res->count() > 0) {
+                        foreach ($res as $f) {
+                            $file = true;
+                            $registros = true;
+                            $hide_button = false;
+                            
+                            if ($file) {                            
+                                if ($cms->getCheck() == 1) {
+                                    if ($f->alfresco_noderef) {
+                                        $noderef = str_replace('workspace://SpacesStore/', '', $f->alfresco_noderef);                                        
+                                        $alfresco = new Alfresco();                                        
+                                        $fileExist = $alfresco->searchFile($cms, $noderef);
+                                        
+                                        if ($fileExist) {
+                                            $hide_button = false;
+                                        } else {
+                                            $hide_button = '<a href="javascript:;" style="margin-left:10px;text-decoration:none;cursor:default;">Archivo no disponible</a>';
+                                        }
+                                    } else {
+                                        $hide_button = '<a href="javascript:;" style="margin-left:10px;text-decoration:none;cursor:default;">Archivo no disponible</a>';
+                                    }
+                                } else {
+                                    //Desde SIMPLE
+                                    if (file_exists($pathFile . $DS . $f->filename)) {
+                                        $hide_button = false;
+                                    } else {
+                                        $hide_button = '<a href="javascript:;" style="margin-left:10px;text-decoration:none;cursor:default;">Archivo no disponible</a>';
+                                    }
+                                }
+                            } else {
+                                $hide_button = '<a href="javascript:;" style="margin-left:10px;text-decoration:none;cursor:default;">No se ha subido el archivo</a>';
+                            }
+                        }
+                    }
                 ?>
 
                 <tr>
                     <?php if(Cuenta::cuentaSegunDominio()->descarga_masiva): ?>
-                      <?php if($file): ?>
-                      <td><div class="checkbox"><label><input type="checkbox" class="checkbox1" name="select[]" value="<?=$t->id?>"></label></div></td>
-                      <?php else: ?>
-                      <td></td>
-                      <?php endif; ?>
-                      <?php else: ?>
-                      <td></td>
+                        <?php if($file): ?>
+                            <td><div class="checkbox"><label><input type="checkbox" class="checkbox1" name="select[]" value="<?=$t->id?>"></label></div></td>
+                        <?php else: ?>
+                            <td></td>
+                        <?php endif; ?>
+                    <?php else: ?>
+                        <td></td>
                     <?php endif; ?>
-                    <td><?= $t->id ?></td>                   
-                    <td class="name">
+                        <td><?= $t->id ?></td>                   
+                        <td class="name">
                         <?php 
                             $tramite_nro ='';
-                            foreach ($t->getValorDatoSeguimiento() as $tra_nro){
-                               if($tra_nro->nombre == 'tramite_ref'){
+                            foreach ($t->getValorDatoSeguimiento() as $tra_nro) {
+                                if ($tra_nro->nombre == 'tramite_ref') {
                                     $tramite_nro = $tra_nro->valor;
                                 }                              
-                            }                         
-                            echo $tramite_nro != '' ? $tramite_nro : $t->Proceso->nombre;
+                            }                             
+                            $tramite_nro != '' ? $tramite_nro : $t->Proceso->nombre;                            
                         ?>
-                    </td>
-                    <td class="name">  
-                        <?php 
-                            $tramite_descripcion ='';
-                            foreach ($t->getValorDatoSeguimiento() as $tra){
-                                if($tra->nombre == 'tramite_descripcion'){
-                                    $tramite_descripcion = $tra->valor;
-                                }  
-                            }
-                            echo $tramite_descripcion != '' ? $tramite_descripcion : $t->Proceso->nombre;
-                        ?>
-                    </td>
-                    <td>
-                        <?php
-                        $etapas_array = array();
-                        foreach ($t->getEtapasActuales() as $e)
-                            $etapas_array[] = $e->Tarea->nombre;
-                        echo implode(', ', $etapas_array);
-                        ?>
-                    </td>
-                    <td class="time"><?= strftime('%d.%b.%Y', mysql_to_unix($t->updated_at)) ?><br /><?= strftime('%H:%M:%S', mysql_to_unix($t->updated_at)) ?></td>
-                    <td><?= $t->pendiente ? 'Pendiente' : 'Completado' ?></td>
-                    <td class="actions">
-                        <?php $etapas = $t->getEtapasParticipadas(UsuarioSesion::usuario()->id) ?>
-                        <?php if (count($etapas) == 3e4354) : ?>
-                            <a href="<?= site_url('etapas/ver/' . $etapas[0]->id) ?>" class="btn btn-primary">Ver historial</a>
-                        <?php else: ?>
-                            <div class="btn-group">
-                                <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
-                                    Ver historial
-                                    <span class="caret"></span>
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <?php foreach ($etapas as $e): ?>
-                                        <li><a href="<?= site_url('etapas/ver/' . $e->id) ?>"><?= $e->Tarea->nombre ?></a></li>
-                                    <?php endforeach ?>
-                                </ul>
-                            </div>
-                        <?php endif ?>
-                        <?php if(Cuenta::cuentaSegunDominio()->descarga_masiva): ?>
-                          <?php if($file): ?>
-                          <a href="#" onclick="return descargarDocumentos(<?=$t->id?>);" class="btn btn-success"><i class="icon-download icon-white"></i> Descargar</a>
-                          <?php endif; ?>
-                        <?php endif; ?>
+                        </td>
+                        <td class="name">  
+                            <?php 
+                                $tramite_descripcion = '';
+                                foreach ($t->getValorDatoSeguimiento() as $tra) {
+                                    if ($tra->nombre == 'tramite_descripcion') {
+                                        $tramite_descripcion = $tra->valor;
+                                    }  
+                                }
+                                echo $tramite_descripcion != '' ? $tramite_descripcion : $t->Proceso->nombre;
+                            ?>
+                        </td>
+                        <td>
+                            <?php
+                                $etapas_array = array();
+                                foreach ($t->getEtapasActuales() as $e)
+                                    $etapas_array[] = $e->Tarea->nombre;
+                                echo implode(', ', $etapas_array);
+                            ?>
+                        </td>
+                        <td class="time"><?= strftime('%d.%b.%Y', mysql_to_unix($t->updated_at)) ?><br /><?= strftime('%H:%M:%S', mysql_to_unix($t->updated_at)) ?></td>
+                        <td><?= $t->pendiente ? 'Pendiente' : 'Completado' ?></td>
+                        <td class="actions">
+                            <?php $etapas = $t->getEtapasParticipadas(UsuarioSesion::usuario()->id) ?>
+                            <?php if (count($etapas) == 3e4354) : ?>
+                                <a href="<?= site_url('etapas/ver/' . $etapas[0]->id) ?>" class="btn btn-primary">Ver historial</a>
+                            <?php else: ?>
+                                <div class="btn-group">
+                                    <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
+                                        Ver historial
+                                        <span class="caret"></span>
+                                    </a>
+                                    <ul class="dropdown-menu">
+                                        <?php foreach ($etapas as $e): ?>
+                                            <li><a href="<?= site_url('etapas/ver/' . $e->id) ?>"><?= $e->Tarea->nombre ?></a></li>
+                                        <?php endforeach ?>
+                                    </ul>
+                                </div>
+                            <?php endif ?>
+                            <?php if(Cuenta::cuentaSegunDominio()->descarga_masiva): ?>
+                                <?php if($file): ?>
+                                    <?php if ($hide_button) :?>
+                                        <?php echo $hide_button; ?>
+                                    <?php else :?>
+                                        <a href="#" onclick="return descargarDocumentos(<?=$t->id?>);" class="btn btn-success"><i class="icon-download icon-white"></i> Descargar</a>
+                                    <?php endif; ?>
+                                <?php endif; ?>
+                            <?php endif; ?>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
 
-                    </td>
-                </tr>
-            <?php endforeach; ?>
-        </tbody>
-    </table>
-
-    <?php if(Cuenta::cuentaSegunDominio()->descarga_masiva): ?>
-      <?php if($registros): ?>
-      <div class="pull-right">
-      <div class="checkbox">
-      <input type="hidden" id="tramites" name="tramites" />
-      <label>
-       <input type="checkbox" id="select_all" name="select_all" /> Seleccionar todos
-       <a href="#" onclick="return descargarSeleccionados();" class="btn btn-success preventDoubleRequest"><i class="icon-download icon-white"></i> Descargar seleccionados</a>
-      </label>
-
-      </div>
-      </div>
-      <div class="modal hide fade" id="modal">
-
-      </div>
-      <?php endif; ?>
+        <?php if(Cuenta::cuentaSegunDominio()->descarga_masiva): ?>
+            <?php if($registros): ?>
+        <div class="pull-right">
+            <div class="checkbox">
+                <input type="hidden" id="tramites" name="tramites" />
+                <label>
+                    <input type="checkbox" id="select_all" name="select_all" /> Seleccionar todos
+                    <a href="#" onclick="return descargarSeleccionados();" class="btn btn-success preventDoubleRequest"><i class="icon-download icon-white"></i> Descargar seleccionados</a>
+                </label>
+            </div>
+        </div>
+        <div class="modal hide fade" id="modal"></div>
     <?php endif; ?>
-
+<?php endif; ?>
     <p><?= $links ?></p>   
 <?php else: ?>
     <p>Ud no ha participado en trámites.</p>

@@ -4,9 +4,10 @@ class Campo extends Doctrine_Record {
     
     public $requiere_datos=true;    //Indica si requiere datos seleccionables. Como las opciones de un checkbox, select, etc.
     public $estatico=false; //Indica si es un campo estatico, es decir que no es un input con informacion. Ej: Parrafos, titulos, etc.
-    public $etiqueta_tamano='large'; //Indica el tamaño default que tendra el campo de etiqueta. Puede ser large o xxlarge.
+    public $etiqueta_tamano='large'; //Indica el tamano default que tendra el campo de etiqueta. Puede ser large o xxlarge.
     public $requiere_nombre=true;    //Indica si requiere que se le ingrese un nombre (Es decir, no generarlo aleatoriamente)
-    public $datos_agenda=false;     // Indica si se deben mostrar los satos adicionales para la agenda.
+    public $datos_agenda=false;     // Indica si se deben mostrar los datos adicionales para la agenda.
+    public $datos_recursos = false; // Indica si se deben mostrar los datos adicionales para recursos.
     
     public static function factory($tipo){
         if($tipo=='text')
@@ -45,7 +46,9 @@ class Campo extends Doctrine_Record {
             $campo=new CampoGrid();
         else if($tipo=='agenda')
             $campo=new CampoAgenda();
-
+        else if($tipo=='recurso')
+            $campo=new CampoRecurso();
+        
         $campo->assignInheritanceValues();
         
         return $campo;
@@ -89,7 +92,8 @@ class Campo extends Doctrine_Record {
                 'CampoDocumento'  => array('tipo' => 'documento'),
                 'CampoJavascript'  => array('tipo' => 'javascript'),
                 'CampoGrid'  => array('tipo' => 'grid'),
-                'CampoAgenda'  => array('tipo' => 'agenda')
+                'CampoAgenda'  => array('tipo' => 'agenda'),
+                'CampoRecurso'  => array('tipo' => 'recurso')
             ));
     }
 

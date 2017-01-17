@@ -36,7 +36,7 @@ class Config_general extends Doctrine_Record {
             $result = Doctrine_Query::create ()
             ->select('COUNT(componente) AS cuenta')
             ->from ('Config_general')
-            ->where ("componente = ? AND cuenta = ? AND llave = ?",array('token_services',$this->cuenta,$this->llave))
+            ->where ("componente = ? AND cuenta = ? AND llave = ?",array($this->componente,$this->cuenta,$this->llave))
             ->execute ();
             if($result[0]->cuenta>=1){
                 $q=Doctrine_Query::create()

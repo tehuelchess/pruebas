@@ -9,10 +9,9 @@ class Agenda extends MY_Controller {
     private $context='';
     private $records=10;
  
-    public function __construct() {
+    public function __construct() {        
         parent::__construct();
-        //require_once(APPPATH.'third_party/httpful/bootstrap.php');
-        include APPPATH . 'third_party/httpful/bootstrap.php';
+        //require_once APPPATH . 'third_party/httpful/bootstrap.php';
         $this->base_services=$this->config->item('base_service');
         $this->context=$this->config->item('context_service');
         $this->records=empty($this->config->item('records'))?10:$this->config->item('records');

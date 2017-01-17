@@ -2,7 +2,7 @@
 
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
-
+    
 class Formularios extends MY_BackendController {
     private $base_services='';
     private $context='';
@@ -10,8 +10,8 @@ class Formularios extends MY_BackendController {
     public function __construct() {
         parent::__construct();
         UsuarioBackendSesion::force_login();
-        require_once(APPPATH.'controllers/agenda.php'); //include Agenda controller
-        //if(UsuarioBackendSesion::usuario()->rol!='super' && UsuarioBackendSesion::usuario()->rol!='modelamiento'){
+        require_once(APPPATH.'controllers/agenda.php'); //include Agenda controller        
+        
         if(!in_array('super', explode(',',UsuarioBackendSesion::usuario()->rol) ) && !in_array( 'modelamiento',explode(',',UsuarioBackendSesion::usuario()->rol))){
             echo 'No tiene permisos para acceder a esta seccion.';
             exit;
@@ -365,6 +365,54 @@ class Formularios extends MY_BackendController {
         $agenda = new agenda();  
         $agenda->ajax_mi_calendario($owner);
     }
-
+    
+    /**
+     * Despliega la tabla con los recursos de alfresco
+     * 
+     * @return string
+     */
+    public function displayListResources()
+    {        
+        $local_data = array();
+        $cuenta_id = UsuarioBackendSesion::usuario()->cuenta_id;
+        $cms = new Config_cms_alfresco();
+        $cms->setAccount($cuenta_id);
+        $cms->loadData();
+        $folder = $cms->getRootFolder();
+        $alfresco = new Alfresco();
         
+        if ($cms->getCheck()) {
+            // Cargo recursos locales
+            $resp_local = $alfresco->searchFolder($cms, $folder . '/RESOURCES', true);
+            $local_data['error'] = $alfresco->error;
+            
+            if ($alfresco->error === null) {
+                $local_data['data'] = $alfresco->listFiles($resp_local);
+                $local_data['error'] = $alfresco->error;
+            }
+            
+            // Cargo recursos globales
+            $resp_global = $alfresco->searchFolder($cms, 'RESOURCES', true);
+            $global_data['error'] = $alfresco->error;
+            
+            if ($alfresco->error === null) {
+                $global_data['data'] = $alfresco->listFiles($resp_global);
+                $global_data['error'] = $alfresco->error;
+            }
+        }
+        
+        if ($global_data['error'] === null && $local_data['error'] === null) {
+            $data = array_merge($global_data['data'], $local_data['data']);            
+            usort($data, array($alfresco, 'cmp'));
+            $error = false;
+        } else {
+            $data = array();
+            $error = $global_data['error'] . '<br />' . $local_data['error'];
+        }
+        
+        $items = array('items' => $data);
+        $arr = array('error' => $error, 'resultado' => $items);
+        
+        echo json_encode($arr);
+    }    
 }

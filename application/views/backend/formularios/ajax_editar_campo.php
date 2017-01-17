@@ -5,10 +5,17 @@ if(!isset($idagendaeditar) || !is_numeric($idagendaeditar)){
 }
 ?>
 <style>
-    .fa {
-        float: left;
-        position: relative;
-        line-height: 20px;
+    ul.dropdown-menu {
+        z-index: 999999;
+    }
+    .select2-container--open {
+        width: 56% !important;
+    }
+    .select2-dropdown--above {
+        width: 56% !important;
+    }
+    .select2-search__field {
+        width: 97.5% !important;
     }
 </style>
 <script type="text/javascript">
@@ -184,9 +191,6 @@ if(!isset($idagendaeditar) || !is_numeric($idagendaeditar)){
 		                <?php endforeach; ?>
 		            </ul>
 		        </div>
-<!--                 <select class="input-medium" name="dependiente_campo"> -->
-                	
-<!--                 </select> -->
                 <div class="btn-group" style="margin-bottom: 9px;">
                     <button type="button" class="buttonIgualdad btn">=</button><button type="button" class="buttonDesigualdad btn">!=</button>
                 </div>
@@ -195,6 +199,78 @@ if(!isset($idagendaeditar) || !is_numeric($idagendaeditar)){
                     <input type="text" name="dependiente_valor" value="<?= isset($campo) ? $campo->dependiente_valor : '' ?>" /><button type="button" class="buttonString btn">String</button><button type="button" class="buttonRegex btn">Regex</button>
                 </span>
                 <input type="hidden" name="dependiente_tipo" value="<?=isset($campo) && $campo->dependiente_tipo? $campo->dependiente_tipo:'string' ?>" />
+                <?php  if (isset($campo->datos_recursos) && $campo->datos_recursos): ?>
+                    <label style="margin-top:8px;">Archivos</label>
+                    <select style="width:100%" id="archivo" name="archivo" disabled="disabled">
+                        <option selected="selected" value="">Seleccione una opci&oacute;n</option>
+                    </select>
+                    
+                    <script type="text/javascript">
+                        $(function() {
+                            $("#archivo").select2({                                
+                                allowClear: false,
+                                multiple: false,
+                                width: 'copy',
+                                templateSelection: format,
+                                templateResult: format
+                            });
+                            $("#archivo").change(function(){
+                                $("#resource_alfresco").empty();
+                                var obj = $(this);
+                                var option;
+                                var id;
+                                var noderef;
+                                var mimetype;
+                                var filename;
+                                
+                                id = obj.val();
+                                noderef = obj.find(':selected').attr('data-noderef');
+                                mimetype = obj.find(':selected').attr('data-mimetype');
+                                filename = obj.find(':selected').attr('data-name');
+                                
+                                option = '<option name="' + noderef + '" selected>' + noderef + '</option>';
+                                $('#resource_alfresco').append(option);
+                                option = '<option name="' + mimetype + '" selected>' + mimetype + '</option>';
+                                $('#resource_alfresco').append(option);
+                                option = '<option name="' + filename + '" selected>' + filename + '</option>';
+                                $('#resource_alfresco').append(option);
+                                option = '<option name="' + id + '" selected>' + id + '</option>';
+                                $('#resource_alfresco').append(option);
+                            });
+                            $.ajax({
+                                url: "<?= site_url('/backend/formularios/displaylistresources') ?>",
+                                dataType: "json",
+                                success: function(data) {
+                                    if (!data.error) {
+                                        var item = $('#resource_alfresco option:last-child').text();
+                                        var identificador;
+                                        var icon;
+                                        var items = data.resultado.items;
+                                        $.each(items, function(index, element) {
+                                            if (element.global) {
+                                                icon = 'glyphicon-globe';
+                                            } else {
+                                                icon = 'glyphicon-home';
+                                            }
+                                            identificador = element.identificador + '-' + icon;
+                                            
+                                            $("#archivo").append('<option value="' + identificador + '" data-icon="' + icon + '" data-noderef="' + element.noderef + '" data-name="' + element.nombre + '" data-mimetype="' + element.mimetype + '" >' + element.identificador + '</option>');
+                                            if (item == identificador) {
+                                                $("#archivo").select2("val", identificador);    
+                                            }
+                                        });
+                                        $("#archivo").prop("disabled", false);
+                                    }
+                                }
+                            });
+                        });
+                        function format(icon) {
+                            var originalOption = icon.element;                            
+                            return '<span class="glyphicon '+$(originalOption).data('icon')+'" style="top: 1px;"></span>&nbsp;&nbsp;' + icon.text;
+                        }
+                    </script>
+                <?php endif; ?>
+                
                 <?php if(isset($campo->datos_agenda) && $campo->datos_agenda): ?>
                     <label>Pertenece a: </label>
                     <select id="selectgrupo" class="input-xlarge" name="grupos_usuarios">

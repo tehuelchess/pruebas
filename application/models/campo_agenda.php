@@ -27,4 +27,10 @@ class CampoAgenda extends Campo{
         return $display;
     }
     
+    public function backendExtraValidate()
+    {
+        $CI = &get_instance();
+        $CI->form_validation->set_rules('agenda_campo', 'Calendario', 'required');
+    }
+    
 }

@@ -7,10 +7,9 @@ class Configuracion extends MY_BackendController {
 
     public function __construct() {
         parent::__construct();
-
-        UsuarioBackendSesion::force_login();
         
-//        if(UsuarioBackendSesion::usuario()->rol!='super' && UsuarioBackendSesion::usuario()->rol!='configuracion'){
+        UsuarioBackendSesion::force_login();        
+
         if(!in_array('super', explode(',',UsuarioBackendSesion::usuario()->rol) ) && !in_array( 'configuracion',explode(',',UsuarioBackendSesion::usuario()->rol))){
             echo 'No tiene permisos para acceder a esta seccion.';
             exit;
@@ -188,9 +187,6 @@ class Configuracion extends MY_BackendController {
         }else{
             $usuario->delete();
         }
-
-        
-
         redirect('backend/configuracion/usuarios');
     }
     
@@ -434,15 +430,6 @@ class Configuracion extends MY_BackendController {
         
     }
 
-    //public function modelador(){
-      //  $data['cuenta']=Doctrine::getTable('Cuenta')->find(UsuarioBackendSesion::usuario()->cuenta_id);
-        //print_r($data['cuenta']);
-        //exit;
-      //  $data['title'] = 'Configuración Modelador';
-      //  $data['content'] = 'backend/configuracion/modelador';
-      //  $this->load->view('backend/template', $data);
-  //  }
-
     public function modelador($conector_id=''){
         if (!$conector_id==''){
             $cuenta_id = UsuarioBackendSesion::usuario()->cuenta_id;
@@ -479,14 +466,7 @@ class Configuracion extends MY_BackendController {
             $this->load->view('backend/template', $data);
         }
     }
-    public function feriados(){
-        $data['title'] = 'Feriados';
-        $data['content'] = 'backend/configuracion/feriados';
-        $this->load->view('backend/template', $data);
-    }
-
-
-
+ 
     function check_existe_usuario($email){
         $u=Doctrine::getTable('Usuario')->findOneByUsuario($email);
         if(!$u)
@@ -537,91 +517,5 @@ class Configuracion extends MY_BackendController {
         header('Content-Type: application/json');
         echo json_encode($usuarios->toArray());
 
-    }
-    function nueva_conf_cms(){
-        $url=(isset($_POST['url']))?$_POST['url']:'';
-        $username=(isset($_POST['user']))?$_POST['user']:'';
-        $pass=(isset($_POST['pass']))?$_POST['pass']:'';
-        $carpeta=(isset($_POST['carpeta']))?$_POST['carpeta']:'';
-        $titulo=(isset($_POST['titulo']))?$_POST['titulo']:'';
-        $descripcion=(isset($_POST['descripcion']))?$_POST['descripcion']:'';
-        $chkintegracioncms=(isset($_POST['chkintegracioncms']))?$_POST['chkintegracioncms']:0;
-        $mensaje='';
-        $code=0;
-        if($chkintegracioncms==1){
-            try{
-                $cms=new Config_cms_alfresco();
-                $cms->setUrlCMS($url);
-                $cms->setUserName($username);
-                $cms->setPassword($pass);
-                $cms->setCarpetaRaiz($carpeta);
-                $cms->setTitulo($titulo);
-                $cms->setCuenta(UsuarioBackendSesion::usuario()->cuenta_id);
-                $cms->setDescripcion($descripcion);
-                $cms->setCheck($chkintegracioncms);
-
-                $cms->save();
-                $code=200;
-            }catch(Exception $err){
-                $mensaje=$err->getMessage();
-            }
-        }else{
-            try{
-                $cms=new Config_cms_alfresco();
-                $cms->setCheck($chkintegracioncms);
-                $cms->setCuenta(UsuarioBackendSesion::usuario()->cuenta_id);
-                $cms->updateCheck();
-                $code=200;
-            }catch(Exception $err){
-                $mensaje=$err->getMessage();
-            }
-        }
-        echo json_encode(array('code'=>$code,'mensaje'=>$mensaje));
-    }
-    function ajax_modal_info(){
-        $this->load->view('backend/configuracion/ajax_modal_info');
-    }
-
-    public function conf_services(){
-        $data['title'] = 'Configuración de Services';
-        $data['content'] = 'backend/configuracion/conf_services';
-        $data['appkey']='';
-        $data['domain']='';
-        try{
-            $service=new Connect_services();
-            $service->setCuenta(UsuarioBackendSesion::usuario()->cuenta_id);
-            $service->load_data();
-
-            $data['appkey']=$service->getAppkey();
-            $data['domain']=$service->getDomain();
-
-        }catch(Exception $err){
-            echo 'Error: '.$err->getMessage();
-        }
-        $this->load->view('backend/template', $data);   
-    }
-    
-    public function datos_services(){
-        $appkey=(isset($_POST['appkey']))?$_POST['appkey']:'';
-        $domain=(isset($_POST['domain']))?$_POST['domain']:'';
-        $uri=(isset($_POST['uri']))?$_POST['uri']:'';
-        $context=(isset($_POST['context']))?$_POST['context']:'';
-        $records=(isset($_POST['records']))?$_POST['records']:0;
-        $mensaje='';
-        $code=0;
-        try{
-            $service=new Connect_services();
-            $service->setAppkey($appkey);
-            $service->setDomain($domain);
-            /*$service->setBaseService($uri);
-            $service->setContext($context);
-            $service->setNumeroRegistroPagina($records);*/
-            $service->setCuenta(UsuarioBackendSesion::usuario()->cuenta_id);
-            $service->save();
-            $code=200;
-        }catch(Exception $err){
-            $mensaje=$err->getMessage();
-        }
-        echo json_encode(array('code'=>$code,'mensaje'=>$mensaje));
-    }
+    }    
 }

@@ -397,15 +397,14 @@ $config['main_domain']='';
 /*
  * URL del microservicio de agendas 
  *
- */ 
-$config['base_service']='http://dev2.arkho.tech/';
+ */
+$config['base_service']='http://dev2.arkho.tech/'; 
 
 /*
  *  Contexto de aplicación del servicio de agendas. 
  * 
  */
 $config['context_service']='v1/';//context del servicio
-
 
 /*  
  * Identificado de aplicación o cuenta para acceder al microservicio de 
@@ -420,12 +419,36 @@ $config['appkey']='mMRUI7s7Nn0yGq0';
  */
 $config['records']=10;// numero de registros por pagina
 
-
 /*
  * Minutos para eliminar una cita si no ha sido confirmada
  *
  */
 $config['tiempoconfimacioncita']=30; 
 
-/* End of file config.php */
-/* Location: ./application/config/config.php */
+/*
+ * Configuracion Alfresco
+ *
+ */
+// Usuario generico para autenticacion en alfresco
+$config['user_alfresco'] = 'simple';
+// Usuario generico para autenticacion en alfresco
+$config['password_alfresco'] = '123456';
+// URL base servicios Alfresco
+$config['base_url_service_alfresco'] = 'http://dev3.arkho.tech:8080';
+// URL servicios API Alfresco crear nodo
+$config['url_service_alfresco_create_folder'] = '/alfresco/service/api/site/folder/simple/documentLibrary/';
+// URL servicios API Alfresco buscar nodo
+$config['url_service_alfresco_search_folder'] = '/alfresco/service/slingshot/doclib/doclist/folders/site/simple/documentLibrary/';
+// URL servicios API Alfresco subir archivo
+$config['url_service_alfresco_upload_file'] = '/alfresco/service/api/upload';
+// URL servicios API Alfresco eliminar archivo
+$config['url_service_alfresco_delete_file'] = '/alfresco/service/slingshot/doclib/action/file/site/simple/documentLibrary/';
+// URL servicios API Alfresco activa dublincore metadata
+$config['url_service_alfresco_enable_dublincore_metadata'] = '/alfresco/s/slingshot/doclib/action/aspects/node/';
+// URL servicios API Alfresco agrega dublincore metadata
+$config['url_service_alfresco_add_dublincore_metadata'] = '/alfresco/service/api/metadata/node/';
+// URL servicios API Alfresco buscar archivo
+$config['url_service_alfresco_search_file'] = '/alfresco/service/slingshot/doclib2/node/workspace/SpacesStore/';
+// Copyrights archivos subidos a alfresco
+$config['copyrights_files_uploaded_alfresco'] = 'El contenido de este archivo está protegido por derechos de propiedad intelectual y privada. Ministerio Secretaría General de la República';
+

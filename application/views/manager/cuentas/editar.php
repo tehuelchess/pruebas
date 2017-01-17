@@ -27,6 +27,13 @@
         <label>Dominio</label>
         <input type="text" name="domain" value="<?= $calendar->getDomain() ?>"/>
     </fieldset>
+    <fieldset>
+        <legend><?= $title ?> configuraci&oacute;n de Alfresco CMS</legend>        
+        <label>Usuario</label>
+        <input type="text" name="user" value="<?= $cms->getUserName() ?>" autocomplete="off"/>
+        <label>Clave</label>
+        <input type="password" name="password" value="<?= $cms->getPassword() ?>" autocomplete="off"/>
+    </fieldset>
     <script>
         var uploader = new qq.FileUploader({
             element: document.getElementById('file-uploader'),

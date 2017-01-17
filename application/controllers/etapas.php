@@ -1,12 +1,12 @@
 <?php
+
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
 class Etapas extends MY_Controller {
- 
+
     public function __construct() {
-        parent::__construct();
-        require_once(APPPATH.'controllers/agenda.php'); //include Agenda controller
+        parent::__construct();        
     }
 
     public function inbox() {
@@ -137,6 +137,7 @@ class Etapas extends MY_Controller {
 
     public function ejecutar($etapa_id, $secuencia = 0) {
         $iframe = $this->input->get('iframe');
+
         $etapa = Doctrine::getTable('Etapa')->find($etapa_id);
         if(!$etapa){
             show_404();
@@ -184,7 +185,7 @@ class Etapas extends MY_Controller {
             $data['title'] = $etapa->Tarea->nombre;
             $template = $this->input->get('iframe') ? 'template_iframe' : 'template';
 
-            $config =Doctrine::getTable('CuentaHasConfig')->findOneByIdparAndCuentaId(1,Cuenta::cuentaSegunDominio()->id);
+            $config =Doctrine::getTable('CuentaHasConfig')->findOneByIdparAndCuentaId(1,Cuenta::cuentaSegunDominio()->id); 
             if($config){
                $config =Doctrine::getTable('Config')->findOneByIdAndIdparAndCuentaIdOrCuentaId($config->config_id,$config->idpar,Cuenta::cuentaSegunDominio()->id,0);
                $nombre = $config->nombre;
@@ -197,8 +198,8 @@ class Etapas extends MY_Controller {
                }
                
             }else{
-                $data['template_path'] = 'uploads/themes/default/';
-                $this->load->view('themes/default/template', $data);
+               $data['template_path'] = 'uploads/themes/default/';
+               $this->load->view('themes/default/template', $data);
             }
         }
     }
@@ -244,9 +245,14 @@ class Etapas extends MY_Controller {
                     //Almacenamos los campos que no sean readonly y que esten disponibles (que su campo dependiente se cumpla)
 
                     if ($c->isEditableWithCurrentPOST($etapa_id)) {
+                        $oldFilename = '';
                         $dato = Doctrine::getTable('DatoSeguimiento')->findOneByNombreAndEtapaId($c->nombre, $etapa->id);
-                        if (!$dato)
+                        if (!$dato) {
                             $dato = new DatoSeguimiento();
+                        } else {
+                            $oldFilename = $dato->valor;
+                        }
+                        
                         $dato->nombre = $c->nombre;
                         $dato->valor = $this->input->post($c->nombre)=== false?'' :  $this->input->post($c->nombre);
                         
@@ -256,14 +262,99 @@ class Etapas extends MY_Controller {
                                 }
                             }
                         
+                        // Subir el archivo a Alfresco
+                        if ($c->tipo == 'file' && $this->input->post($c->nombre) != '') {
+                            $DS = DIRECTORY_SEPARATOR;
+                            $upload_path = FCPATH . 'uploads' . $DS . 'datos' . $DS . $this->input->post($c->nombre);
+                            if (file_exists($upload_path)) {                                
+                                $cms = new Config_cms_alfresco();                                
+                                $cms->setAccount($etapa->Tramite->Proceso->cuenta_id);
+                                $cms->loadData();
+                                
+                                if ($cms->getCheck() && $cms->getUserName() != '' && $cms->getPassword() != '') {
+                                    $alfresco = new Alfresco();
+                                    $folderRoot = strtoupper(Alfresco::sanitizeFolderTitle($cms->getRootFolder()));
+                                    $folderProceso = strtoupper($etapa->Tramite->Proceso->id . '-' . Alfresco::sanitizeFolderTitle($etapa->Tramite->Proceso->nombre));
+                                    $folderTramite = $etapa->Tramite->id;
+                                    $resp = false;
+
+                                    if (!empty($folderRoot)) {
+                                        // Verifico si la carpeta con el nombre del proceso existe
+                                        $pathFolder = $folderRoot . '/' . $folderProceso;
+                                        $resp = $alfresco->searchFolder($cms, $pathFolder);
+
+                                        if ($alfresco->error === null) {
+
+                                            // No existe la carpeta, se debe crear
+                                            if (!$resp) {
+
+                                                // Se crea la carpeta del proceso
+                                                $resp = $alfresco->createFolder(
+                                                    $cms, 
+                                                    $folderProceso, 
+                                                    $etapa->Tramite->Proceso->nombre, 
+                                                    $etapa->Tramite->Proceso->nombre, 
+                                                    $folderRoot
+                                                );
+
+                                                if ($alfresco->error === null && $resp) {
+
+                                                    // Se crea la carpeta del tramite
+                                                    $resp = $alfresco->createFolder(
+                                                        $cms, 
+                                                        $folderTramite, 
+                                                        'Trámite con identificador ' . $folderTramite,
+                                                        'Trámite con identificador ' . $folderTramite,
+                                                        $folderRoot . '/' . $folderProceso
+                                                    );
+                                                }
+                                            } else {
+                                                $pathFolder = $folderRoot . '/' . $folderProceso . '/' . $folderTramite;
+                                                $resp = $alfresco->searchFolder($cms, $pathFolder);
+
+                                                if ($alfresco->error === null) {
+
+                                                    // No existe la carpeta, se debe crear
+                                                    if (!$resp) {
+
+                                                        // Se crea la carpeta del tramite
+                                                        $resp = $alfresco->createFolder(
+                                                            $cms, 
+                                                            $folderTramite, 
+                                                            'Trámite con identificador ' . $folderTramite,
+                                                            'Trámite con identificador ' . $folderTramite,
+                                                            $folderRoot . '/' . $folderProceso
+                                                        );
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    } else {
+                                        $alfresco->error = 'El folder root no existe';
+                                    }                                
+
+                                    if ($resp) {                                    
+                                        $path = $folderRoot . '/' . $folderProceso . '/' . $folderTramite;
+                                        $resp = $alfresco->uploadFile($cms, $path, $this->input->post($c->nombre), $c->etiqueta, $etapa, $oldFilename);
+                                    }
+
+                                    //Hubo error en algun punto al subir el archivo
+                                    if (!$resp || $alfresco->error !== null) {
+                                        $respuesta->validacion = FALSE;
+                                        $respuesta->errores = '<div class="alert alert-error"><a class="close" data-dismiss="alert">×</a>' . $alfresco->error . '</div>' ? $alfresco->error : '<div class="alert alert-error"><a class="close" data-dismiss="alert">×</a>Ocurri&oacute; un error al subir el archivo</div>';
+                                        echo json_encode($respuesta);
+                                        exit;
+                                    }
+                                }
+                            }
+                        }
+                        
                         $dato->etapa_id = $etapa->id;
                         $dato->save();
                     }
                 }
                 $etapa->save();
-
-                $etapa->finalizarPaso($paso);
-                
+                $etapa->finalizarPaso($paso);                
                 $respuesta->validacion = TRUE;
 
                 $qs = $this->input->server('QUERY_STRING');
@@ -385,11 +476,13 @@ class Etapas extends MY_Controller {
             exit;
         }
 
-        $respuesta = new stdClass();
-        //$etapa->avanzar($this->input->post('usuarios_a_asignar'));
+        $respuesta = new stdClass();        
         $respuesta->validacion = TRUE;
         try{
-            $agenda = new agenda();  
+            require_once 'agenda.php';
+            
+            $agenda = new agenda();
+            
             $appointments=$agenda->obtener_citas_de_tramite($etapa_id);
             if(isset($appointments) && is_array($appointments) && (count($appointments)>=1) ){
                 $json='{"ids":[';
@@ -404,10 +497,8 @@ class Etapas extends MY_Controller {
                 }
                 $json=$json.']}';
                 $agenda->confirmar_citas_grupo($json);
-                $etapa->avanzar($this->input->post('usuarios_a_asignar'));
-            }else{
-                $etapa->avanzar($this->input->post('usuarios_a_asignar'));    
             }
+            $etapa->avanzar($this->input->post('usuarios_a_asignar'));
         }catch(Exception $err){
             $respuesta->validacion = false;
             $respuesta->errores = '<div class="alert alert-error"><a class="close" data-dismiss="alert">×</a>'.$err->getMessage().'</div>';
@@ -510,6 +601,7 @@ class Etapas extends MY_Controller {
             }
             if(count($files) > 0){
                 //Recorriendo los archivos
+                $countfile=1;
                 foreach ($files as $f) {
                     $tr = Doctrine::getTable('Tramite')->find($t);
                     $participado = $tr->usuarioHaParticipado(UsuarioSesion::usuario()->id);
@@ -537,13 +629,45 @@ class Etapas extends MY_Controller {
                         copy($path,$new_file);
                         $this->zip->read_file($new_file);
                         //Eliminación del archivo para no ocupar espacio en disco
-                        unlink($new_file);
+                        unlink($new_file);               
                     }elseif ($f->tipo == 'dato' && !empty($nombre_documento)){
+                        $swrepo=false;
+                        $cms=null;
+                        try{
+                            $cms=new Config_cms_alfresco();
+                            $cms->setAccount(UsuarioSesion::usuario()->cuenta_id);
+                            $cms->loadData();    
+                            if($cms->getCheck()==1){
+                                $swrepo=true;
+                            }
+                        }catch(Exception $err){
+                            echo $err->getMessage();
+                        }
+                        if($swrepo){
+                            try{
+                                $noderef = str_replace('://', '/', $f->alfresco_noderef);
+                                $alfresco = new Alfresco();
+                                $file_data=$alfresco->getFile($cms, $noderef);
+                                if($cms!=null){
+                                    $df = finfo_open();
+                                    $mime_type = finfo_buffer($df, $file_data, FILEINFO_MIME_TYPE);
+                                    $pathfile=$ruta_tmp.''.$f->filename;
+                                    file_put_contents($pathfile, $file_data);
+                                    $this->zip->read_file($pathfile);
+                                    unlink($pathfile);
+                                    $countfile++;
+                                }
+                            }catch(Exception $err){
+                                echo $err->getMessage();
+                            }
+                        }else{
                         $path = $ruta_generados.$f->filename;
-                        $this->zip->read_file($path);
+                            $this->zip->read_file($path);    
+                        }
                     }
                 }
                 if(count($tramites) > 1){
+                    log_message('debug', 'tramites: '.count($tramites));
                     $tr = Doctrine::getTable('Tramite')->find($t);
                     $tramite_nro ='';
                     foreach ($tr->getValorDatoSeguimiento() as $tra_nro){
@@ -572,7 +696,6 @@ class Etapas extends MY_Controller {
                 $nombre = $fecha."_".$t."_".$tramite_nro;
                 $this->zip->read_file($ruta_tmp.$nombre.'.zip');
             }
-            
             //Eliminando los archivos antes de descargar
             foreach ($tramites as $t){;
                 $tr = Doctrine::getTable('Tramite')->find($t);
@@ -600,5 +723,4 @@ class Etapas extends MY_Controller {
             $this->zip->download($nombre.'.zip');
         }
     }
-
 }

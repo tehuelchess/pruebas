@@ -1,5 +1,6 @@
 <?php
 require_once('campo.php');
+require_once('config_cms.php');
 class CampoFile extends Campo {
     
     public $requiere_datos=false;
@@ -19,33 +20,117 @@ class CampoFile extends Campo {
         
         $etapa = Doctrine::getTable('Etapa')->find($etapa_id);
         
-        $display='<label class="control-label">' . $this->etiqueta . (in_array('required', $this->validacion) ? '' : ' (Opcional)') . '</label>';
-        $display.='<div class="controls">';
-        $display.='<div class="file-uploader" data-action="'.site_url('uploader/datos/'.$this->id.'/'.$etapa->id).'" '. ($modo=='visualizacion'?' hidden':'') .' "></div>';
-        $display.='<input id="'.$this->id.'" type="hidden" name="' . $this->nombre . '" value="' . ($dato ? htmlspecialchars($dato->valor) : '') . '" />';
+        $display = '<label class="control-label">' . $this->etiqueta . (in_array('required', $this->validacion) ? '' : ' (Opcional)') . '</label>';
+        $display .= '<div class="controls">';
+        $display .= '<div class="file-uploader" data-action="'.site_url('uploader/datos/'.$this->id.'/'.$etapa->id).'" '. ($modo=='visualizacion'?' hidden':'') .' "></div>';
+        $display .= '<input id="'.$this->id.'" type="hidden" name="' . $this->nombre . '" value="' . ($dato ? htmlspecialchars($dato->valor) : '') . '" />';
         
-        if ($dato){
-            $file=Doctrine::getTable('File')->findOneByTipoAndFilename('dato',$dato->valor);
-            if($file){
-                $display.='<p class="link"><a href="' . site_url('uploader/datos_get/'.$file->filename).'?id='.$file->id.'&amp;token='.$file->llave.'" target="_blank">' . htmlspecialchars ($dato->valor) . '</a>';
-                if(!($modo=='visualizacion'))
-                    $display.='(<a class="remove" href="#">X</a>)</p>';
-            }else{
+        if ($dato) {
+            try {
+                $cms = new Config_cms_alfresco();
+                $cms->setAccount($etapa->Tramite->Proceso->cuenta_id);
+                $cms->loadData();
+                
+                if ($cms->getCheck() == 1) {
+                    $file = Doctrine::getTable('File')->findOneByTipoAndFilename('dato', $dato->valor);
+                    if ($file) {
+                        $urifile = $file->filename;
+                        $urltmp = str_replace('://', '/', $file->alfresco_noderef);                        
+                        $base = base64_encode($urltmp);
+                        $display .= '<p class="link"><a href="' . site_url('alfrescocms/showfiledata?etapa_id=' . $etapa_id . '&base=' . $base . '&filename=' . $file->filename) . '" target="_blank">' . $urifile . '</a>';
+                        
+                        if (!($modo == 'visualizacion'))
+                            $display .= '(<a class="remove" href="#">X</a>)</p>';
+                    } else {
+                        $display .= '<p class="link">No se ha subido archivo.</p>';
+                    }
+                } else {
+                    $file = Doctrine::getTable('File')->findOneByTipoAndFilename('dato', $dato->valor);
+                    if ($file) {
+                        $display .= '<p class="link"><a href="' . site_url('uploader/datos_get/' . $file->filename) . '?id=' . $file->id . '&amp;token=' . $file->llave . '" target="_blank">' . htmlspecialchars ($dato->valor) . '</a>';
+                        
+                        if (!($modo == 'visualizacion'))
+                            $display.= '(<a class="remove" href="#">X</a>)</p>';
+                    } else {
+                        $display .= '<p class="link">No se ha subido archivo.</p>';
+                    }
+                }
+            } catch(Exception $err) {
                 $display.='<p class="link">No se ha subido archivo.</p>';
-            }
+            }  
         }
         else
             $display.='<p class="link"></p>';
-        
-        if($this->ayuda)
-            $display.='<span class="help-block">'.$this->ayuda.'</span>';
-        
-        $display.='</div>';
+
+            if ($this->ayuda)
+                $display .= '<span class="help-block">' . $this->ayuda . '</span>';
+
+        $display .= '</div>';
 
         return $display;
     }
 
-    
+    private function obtenerExt($mime){
+        switch($mime){
+            case "image/jpeg":
+                return '.jpg';
+            break;
+            case "image/png":
+                return '.png';
+            break;
+            case "image/gif":
+                return '.gif';
+            break;
+            case "application/pdf":
+                return '.pdf';
+            break;
+            case "application/msword":
+                return '.doc';
+            break;
+            case "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
+                return '.docx';
+            break;
+            case "application/vnd.ms-excel":
+                return '.xls';
+            break;
+            case "application/vnd.ms-excel":
+                return '.xls';
+            break;
+            case "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
+                return '.xlsx';
+            break;
+            case "application/vnd.ms-project":
+                return '.mpp';
+            break;
+            case "application/vnd.visio":
+                return '.vsd';
+            break;
+            case "application/vnd.ms-powerpoint":
+                return '.ppt';
+            break;
+            case "application/vnd.openxmlformats-officedocument.presentationml.presentation":
+                return '.pptx';
+            break;
+            case "application/zip":
+                return '.zip';
+            break;
+            case "application/x-rar-compressed":
+                return '.rar';
+            break;
+            case "application/vnd.oasis.opendocument.text":
+                return '.odt';
+            break;
+            case "application/vnd.oasis.opendocument.presentation":
+                return '.odp';
+            break;
+            case "application/vnd.oasis.opendocument.graphics":
+                return '.ods';
+            break;
+            default:
+                return '';
+            break;
+        }
+    }
     public function extraForm() {
         $filetypes=array();
         if(isset($this->extra->filetypes))

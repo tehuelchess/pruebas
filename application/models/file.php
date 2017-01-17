@@ -12,6 +12,7 @@ class File extends Doctrine_Record {
         $this->hasColumn('validez');
         $this->hasColumn('validez_habiles');
         $this->hasColumn('tramite_id');
+        $this->hasColumn('alfresco_noderef');
     }
 
     function setUp() {

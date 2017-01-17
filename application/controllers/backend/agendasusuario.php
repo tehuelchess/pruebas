@@ -12,7 +12,7 @@ class AgendasUsuario extends MY_BackendController {
 
     public function __construct() {
         parent::__construct();
-        include APPPATH . 'third_party/httpful/bootstrap.php';
+        //include APPPATH . 'third_party/httpful/bootstrap.php';
         UsuarioSesion::force_login();
         $this->base_services=$this->config->item('base_service');
         $this->context=$this->config->item('context_service');
