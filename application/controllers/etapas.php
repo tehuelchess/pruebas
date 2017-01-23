@@ -600,7 +600,7 @@ class Etapas extends MY_Controller {
                 $files =Doctrine::getTable('File')->findByTramiteIdAndTipo($t,$tipoDocumento);
             }
             if(count($files) > 0){
-                //Recorriendo los archivos
+                //Recorriendo los archivo
                 $countfile=1;
                 foreach ($files as $f) {
                     $tr = Doctrine::getTable('Tramite')->find($t);
@@ -619,7 +619,9 @@ class Etapas extends MY_Controller {
                             $tramite_nro = $tra_nro->valor;
                         }
                     }
-                    if($f->tipo == 'documento' && !empty($nombre_documento)){
+                    
+                    if( $f->alfresco_noderef == null  && !empty($nombre_documento)){
+                        //log_message('warning',"Se esta recuperando el archivo $nombre_documento desde FS");
                         $path = $ruta_documentos.$f->filename;
                         $tramite_nro = $tramite_nro != '' ? $tramite_nro : $tr->Proceso->nombre;
                         $tramite_nro = str_replace(" ","",$tramite_nro);
@@ -630,7 +632,7 @@ class Etapas extends MY_Controller {
                         $this->zip->read_file($new_file);
                         //Eliminación del archivo para no ocupar espacio en disco
                         unlink($new_file);               
-                    }elseif ($f->tipo == 'dato' && !empty($nombre_documento)){
+                    }elseif(!empty($nombre_documento)){
                         $swrepo=false;
                         $cms=null;
                         try{

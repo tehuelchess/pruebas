@@ -129,7 +129,7 @@ class AlfrescoCms extends MY_Controller
         $logs = '';
         
         $CI =& get_instance();        
-        echo "Z>".$CI->config->item('migrate_enable')." \n";
+        
         if( !$CI->config->item('migrate_enable') ){
             echo "Migración deshabilitada.<bt/>\n";
         }
@@ -175,7 +175,6 @@ class AlfrescoCms extends MY_Controller
             
             echo "Creando log de archivos: ".$pathFile;
             
-            print_r($logs);
             // Si el archivo existe lo elimino
             if (file_exists($pathFile))
                 @unlink($pathFile);
@@ -215,7 +214,7 @@ class AlfrescoCms extends MY_Controller
             $logs = '';            
             
             foreach ($results as $item) {
-
+               
                 if ($item->filename != '' && (int)$item->tramite_id > 0 &&
                      (int)$item->proceso_id > 0 && 
                     $item->nombre_proceso != '') {
@@ -229,9 +228,9 @@ class AlfrescoCms extends MY_Controller
                             isset($data_config[$cuenta_id]['root_folder']) && !empty($data_config[$cuenta_id]['root_folder'])) {
                             
                             $DS = DIRECTORY_SEPARATOR;
-                            $dir = ($item->tipo == 'dato') ? 'datos' : 'documentos';
-                            $pathFileUpload = FCPATH . 'uploads' . $DS . $dir . $DS . $item->filename;
-
+                            $source_dir = ($item->tipo == 'dato') ? 'datos' : 'documentos';
+                            $pathFileUpload = FCPATH . 'uploads' . $DS . $source_dir . $DS . $item->filename;
+                            
                             if (file_exists($pathFileUpload)) {
                                 $this->_cms->setAccount($cuenta_id);
                                 $this->_cms->setUserName($data_config[$cuenta_id]['user']);
@@ -245,7 +244,9 @@ class AlfrescoCms extends MY_Controller
                                 $etapa->Tramite->Proceso->cuenta_id = $cuenta_id;
                                 
                                 $DS = DIRECTORY_SEPARATOR;
-                                $upload_path = FCPATH . 'uploads' . $DS . 'datos' . $DS . $item->filename;
+                                
+                                $upload_path = FCPATH . 'uploads' . $DS . $source_dir . $DS . $item->filename;
+                                
                                 if (file_exists($upload_path)) {
                                     
                                     $folderRoot = strtoupper(Alfresco::sanitizeFolderTitle($this->_cms->getRootFolder()));
@@ -310,7 +311,7 @@ class AlfrescoCms extends MY_Controller
 
                                     if ($resp) {                                    
                                         $path = $folderRoot . '/' . $folderProceso . '/' . $folderTramite;
-                                        $resp = $this->_alfresco->uploadFile($this->_cms, $path, $item->filename, $item->filename, $etapa,'','',array(),false);
+                                        $resp = $this->_alfresco->uploadFile($this->_cms, $path, $item->filename, $item->filename, $etapa,'','',array(),false,$source_dir);
                                     }
                                 }
                                 

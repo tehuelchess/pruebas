@@ -247,7 +247,7 @@ class Alfresco
 
                 // Verifico que se haya configurado Alfresco
                 if ($cms->getUserName() != '' && $cms->getPassword() != '') {
-            
+
                     $json = array(
                         'name' => self::sanitizeFolderTitle($folderName),
                         'title' => $folderTitle,
@@ -255,7 +255,7 @@ class Alfresco
                         'type' => $type
                     );
                     $url = $this->baseUrl . self::$pathCreateFolder . $folderPath;
-
+                    
                     $response = Request::post($url)
                         ->body(json_encode($json))
                         ->authenticateWith($cms->getUserName(), $cms->getPassword())
@@ -289,9 +289,9 @@ class Alfresco
             // OJO ELIMINAR ESTE CODIGO EN CUANTO SE SOLUCIONE EL BUG DE CREAR CARPETAS Y
             // DESCOMENTAR EL CODIGO DE ABAJO
             $res = true;
-            
+            //echo $err->getMessage();
             //$this->error = $ex->getMessage();
-            //log_message('error', $ex->getMessage());
+            //log_message('warning', $ex->getMessage());
         }
         
        return $res;
@@ -447,7 +447,7 @@ class Alfresco
                         } else {
                             log_message('error', 'No se pudo obtener archivo desde el repositorio');
                             $this->error = 'No se pudo obtener archivo desde el repositorio';
-                            throw new Exception('No se pudo obtener archivo desde el repositorio');
+                            throw new Exception('No se pudo obtener archivo desde el repositorio: Error '.$response->code);
                         }
                     }
                 }
@@ -562,7 +562,7 @@ class Alfresco
      * @param array $metadata
      * @return boolean
      */
-    public function uploadFile($cms, $path, $filename, $labelField = '', $etapa = null, $description = '', $oldFilename = '', $metadata = array(),$deleteFile=true)
+    public function uploadFile($cms, $path, $filename, $labelField = '', $etapa = null, $description = '', $oldFilename = '', $metadata = array(),$deleteFile=true,$source_dir = 'datos')
     {
         try {
             
@@ -580,14 +580,14 @@ class Alfresco
                     if (!empty($filename) && !empty($path)) {                
                         $url = $this->baseUrl . self::$pathUploadFile;
                         $DS = DIRECTORY_SEPARATOR;
-                        $pathFile = FCPATH . 'uploads' . $DS . 'datos' . $DS . $filename;
+                        $pathFile = FCPATH . 'uploads' . $DS . $source_dir . $DS . $filename;
                         $path = rtrim(ltrim($path, '/'), '/');
                         $nombreProceso = (is_object($etapa) ? $etapa->Tramite->Proceso->nombre : '');
                         $descripcion = !empty($description) ? $description : $labelField . ' ' . $nombreProceso;
                                 
                         // Se sube el archivo                                
                         $client = new Client();
-
+                        
                         $response = $client->post($url, [
                             'auth' => [
                                 $cms->getUserName(),
@@ -736,4 +736,47 @@ class Alfresco
         
         return $folder_title;
     }
+    /**
+     * Chquea que exista la ruta, sino existe la crea.
+     * 
+     * @param type $alfresco Instancia de Objeto Alfreco
+     * @param type $cms Instancia del controlador para CMS
+     * @param type $root Nombre de la carpeta Raíz
+     * @param type $descroot Descripción de la carpeta 
+     * @param type $proc Carpeta para clasificar procesos de simple
+     * @param type $nombre_proc Nombre de la carpeta del tramite
+     * @param type $tramite nombre de la carpeta que identifica una instancia de tramite
+     */
+    public static function checkAndCreateFullPath($alfresco,$cms,$root,$descroot,$proc,$nombre_proc,$tramite){
+        //check root
+        try{
+         if( !$alfresco->searchFolder($cms, $root)){
+             $sitio = Cuenta::cuentaSegunDominio()->nombre_largo;
+            if(!$alfresco->createFolder($cms, $root,
+                     $sitio,
+                     $descroot)){
+                error_log("error","no se pudo crear la carpeta raíz: ".$root);
+            }
+         }
+         //Check la carpeta de proceso
+         if(!$alfresco->searchFolder($cms, $root.'/'.$proc)){
+             if($alfresco->createFolder($cms, $proc ,$nombre_proc,$nombre_proc,$root)){
+                 error_log("error","no se pudo crear la carpeta de proceso ".$proc);
+             }
+         }
+         //crea l a carpeta de proceso
+         if(!$alfresco->searchFolder($cms, $root.'/'.$proc.'/'.$tramite)){
+             if($alfresco->createFolder($cms, 
+                     $tramite,
+                     "Trámite con identificador ".$tramite ,
+                     "Trámite con identificador ".$tramite,
+                     $root.'/'.$proc)){
+                 error_log("error","no se pudo crear la carpeta de proceso ".$tramite);
+             }
+         }
+        }catch(Exception $e){
+            error_log("Error al realizar la operación checkAndCreateFolder: ".$e->getMessage());
+        }
+    }
+    
 }

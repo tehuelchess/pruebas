@@ -156,6 +156,7 @@ class Documento extends Doctrine_Record {
 
         if ($filename) {
             $obj->Output($uploadDirectory . $filename, 'F');
+            
             if (!$copia && $this->hsm_configuracion_id) {
                 $client = new SoapClient($CI->config->item('hsm_url'));
 
@@ -178,8 +179,9 @@ class Documento extends Doctrine_Record {
         } else {
             $obj->Output($filename);
         }
-
-
+        //Subir archivo
+        $this->writeFile($filename);
+        
 
         return;
     }
@@ -213,6 +215,50 @@ class Documento extends Doctrine_Record {
         }
         
         return $documento;
+    }
+    
+    
+    /**
+     * 
+     * @param type $filename Nombre del archivo 
+     * @param type $contenido
+     * @param type $etapa
+     */
+    private function writeFile($filename){
+        //Inicializar los datos:
+        $cms = new Config_cms_alfresco();
+        $alfresco = new Alfresco();
+        try{
+            $cuenta_id = Cuenta::cuentaSegunDominio()->id;   
+            $cms->setAccount($cuenta_id);
+            $cms->loadData(); 
+            //Genrar la metadata
+            $file=Doctrine_Query::create()
+                   ->from('File f, f.Tramite t, t.Etapas e, e.Usuario u')
+                   ->where('f.filename = ? AND u.id = ?',array($filename,UsuarioSesion::usuario()->id))
+                   ->fetchOne();
+
+            
+            $folderRoot = strtoupper(Alfresco::sanitizeFolderTitle($cms->getRootFolder()));
+            $folderProceso = strtoupper($file->Tramite->Proceso->id . '-' . Alfresco::sanitizeFolderTitle($file->Tramite->Proceso->nombre));
+            $folderTramite = $file->Tramite->id;
+            
+            $path = $folderRoot . '/' . $folderProceso . '/' . $folderTramite;
+
+            $friendlyName=str_replace(' ','-',convert_accented_characters(mb_convert_case($file->Tramite->Proceso->Cuenta->nombre.' '.$file->Tramite->Proceso->nombre,MB_CASE_LOWER).'-'.$file->id)).'.'.pathinfo($path,PATHINFO_EXTENSION);
+            Alfresco::checkAndCreateFullPath($alfresco,
+                 $cms, 
+                 $folderRoot,
+                 "Carpeta para tramites del sitio: ".$folderRoot,
+                 $folderProceso,
+                 $file->Tramite->Proceso->nombre,
+                 $folderTramite);
+           $resp = $alfresco->uploadFile($cms, $path, $filename, $friendlyName, $file ,'','',array(),true,"documentos");
+
+        }catch(Exception $e){
+            error_log("Error al escribir el archivo $filename en CMS: ".$e->getMessage());
+        }
+        
     }
 
 }

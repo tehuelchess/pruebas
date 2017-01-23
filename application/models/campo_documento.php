@@ -35,7 +35,7 @@ class CampoDocumento extends Campo {
         }
 
         $etapa=Doctrine::getTable('Etapa')->find($etapa_id);
-
+       
         if (!$dato) {   //Generamos el documento, ya que no se ha generado
             $file=$this->Documento->generar($etapa->id);
 
@@ -45,6 +45,7 @@ class CampoDocumento extends Campo {
             $dato->etapa_id = $etapa->id;
             $dato->save();
         }else{
+            #Aca se genera el archivo y tambien se baja
             $file=Doctrine::getTable('File')->findOneByTipoAndFilename('documento',$dato->valor);
             if($etapa->pendiente && isset($this->extra->regenerar) && $this->extra->regenerar){
                 $file->delete();
@@ -54,7 +55,7 @@ class CampoDocumento extends Campo {
             }
         }
 
-        $display = '<p><a class="btn btn-success" target="_blank" href="' . site_url('documentos/get/' . $file->filename) . '?id='.$file->id.'&amp;token='.$file->llave.'"><i class="icon-download-alt icon-white"></i> ' . $this->etiqueta . '</a></p>';
+        $display = '<p><a class="btn btn-success" target="_blank" href="' . site_url('documentos/get/' . $file->filename) . '?id='.$file->id.'&amp;token='.$file->llave.'"><i class="icon-download-alt icon-white"></i> ' . $this->etiqueta ."test". '</a></p>';
 
         return $display;
     }
@@ -147,7 +148,7 @@ class CampoDocumento extends Campo {
         </div>';
 
         return $display;
-    }
+    } 
     
     
     public function backendExtraFields() {
