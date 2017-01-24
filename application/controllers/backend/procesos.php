@@ -95,7 +95,7 @@ class Procesos extends MY_BackendController {
         $data['proceso'] = $proceso;
         $data['title'] = 'Modelador';
         $data['content'] = 'backend/procesos/editar';
-        $data['iconos'] = $iconos;
+        //$data['iconos'] = $iconos;
         
         $this->load->view('backend/template', $data);
     }

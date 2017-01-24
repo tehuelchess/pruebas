@@ -312,6 +312,7 @@ class Doctrine_Migration
      */
     public function migrate($to = null, $dryRun = false)
     {
+        log_message("debug","iniciando la migración para ".$to);
         $this->clearErrors();
 
         $this->_createMigrationTable();
@@ -327,10 +328,12 @@ class Doctrine_Migration
 
             $this->_doMigrate($to);
         } catch (Exception $e) {
+            log_message("error","Error en la migración: ".$e->getMessage());
             $this->addError($e);
         }
 
         if ($this->hasErrors()) {
+            log_message("error","Se han encontrado errores en la migración");
             $this->_connection->rollback();
 
             if ($dryRun) {
@@ -347,6 +350,7 @@ class Doctrine_Migration
                     return $to;
                 }
             } else {
+                log_message("info","aplicando la versión: ".$to);
                 $this->_connection->commit();
                 $this->setCurrentVersion($to);
                 return $to;

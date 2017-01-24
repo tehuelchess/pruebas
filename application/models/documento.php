@@ -79,9 +79,10 @@ class Documento extends Doctrine_Record {
 
         //Renderizamos     
         $this->render($file->id, $file->llave_copia, $etapa->id, $file->filename, false);
+        $this->writeFile($file->filename);
         $filename_copia = $filename_uniqid . '.copia.pdf';
         $this->render($file->id, $file->llave_copia, $etapa->id,$filename_copia, true);
-
+    
         return $file;
     }
 
@@ -180,9 +181,7 @@ class Documento extends Doctrine_Record {
             $obj->Output($filename);
         }
         //Subir archivo
-        $this->writeFile($filename);
         
-
         return;
     }
     
@@ -237,7 +236,10 @@ class Documento extends Doctrine_Record {
                    ->from('File f, f.Tramite t, t.Etapas e, e.Usuario u')
                    ->where('f.filename = ? AND u.id = ?',array($filename,UsuarioSesion::usuario()->id))
                    ->fetchOne();
-
+            if($file == NULL){
+                log_message("Error","No se pudo recuperar el archivo ".$filename);
+                return;
+            }
             
             $folderRoot = strtoupper(Alfresco::sanitizeFolderTitle($cms->getRootFolder()));
             $folderProceso = strtoupper($file->Tramite->Proceso->id . '-' . Alfresco::sanitizeFolderTitle($file->Tramite->Proceso->nombre));
@@ -253,8 +255,12 @@ class Documento extends Doctrine_Record {
                  $folderProceso,
                  $file->Tramite->Proceso->nombre,
                  $folderTramite);
-           $resp = $alfresco->uploadFile($cms, $path, $filename, $friendlyName, $file ,'','',array(),true,"documentos");
-
+           
+           if($alfresco->uploadFile($cms, $path, $filename, $friendlyName, $file ,'','',array(),true,"documentos")){
+            log_message("info","Se ha copiado el archivo correctamente: ");
+           }else{
+               log_message("error","No ha podido copiar el archivo a CMS".$alfresco->error);
+           }
         }catch(Exception $e){
             error_log("Error al escribir el archivo $filename en CMS: ".$e->getMessage());
         }

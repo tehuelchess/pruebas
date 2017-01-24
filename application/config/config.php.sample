@@ -429,6 +429,8 @@ $config['tiempoconfimacioncita']=30;
  * Configuracion Alfresco
  *
  */
+//Especifica como se llamará el site en CMS. Por defecto es simple.
+$config['cms_site'] = 'simple';
 // Usuario generico para autenticacion en alfresco
 $config['user_alfresco'] = 'simple';
 // Usuario generico para autenticacion en alfresco
@@ -451,4 +453,6 @@ $config['url_service_alfresco_add_dublincore_metadata'] = '/alfresco/service/api
 $config['url_service_alfresco_search_file'] = '/alfresco/service/slingshot/doclib2/node/workspace/SpacesStore/';
 // Copyrights archivos subidos a alfresco
 $config['copyrights_files_uploaded_alfresco'] = 'El contenido de este archivo está protegido por derechos de propiedad intelectual y privada. Ministerio Secretaría General de la República';
+//Habilita la migración de archivos
+$config['migrate_enable'] = true;
 

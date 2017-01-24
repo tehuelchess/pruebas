@@ -18,6 +18,7 @@ class Alfresco
     private $baseUrl;
     private $user;
     private $password;
+    private $site;
     public static $pathSearchFile;
     public static $pathSearchFolder;
     public static $pathCreateFolder;
@@ -36,6 +37,7 @@ class Alfresco
         $this->baseUrl = $CI->config->item('base_url_service_alfresco');
         $this->user = $CI->config->item('user_alfresco');
         $this->password = $CI->config->item('password_alfresco');
+        $this->site = $CI->config->item('cms_site') == NULL ? 'simple' :  $CI->config->item('cms_site');
         
         self::$pathSearchFile = $CI->config->item('url_service_alfresco_search_file');
         self::$pathCreateFolder = $CI->config->item('url_service_alfresco_create_folder');
@@ -587,48 +589,16 @@ class Alfresco
                                 
                         // Se sube el archivo                                
                         $client = new Client();
-                        
-                        $response = $client->post($url, [
-                            'auth' => [
-                                $cms->getUserName(),
-                                $cms->getPassword()
-                            ],
-                            'multipart' => [
-                                [
-                                    'name' => 'filedata',
-                                    'contents' => fopen($pathFile, 'r')
-                                ],
-                                [
-                                    'name' => 'siteid',
-                                    'contents' => 'simple'
-                                ],
-                                [
-                                    'name' => 'containerid',
-                                    'contents' => 'documentLibrary'
-                                ],
-                                [
-                                    'name' => 'uploadDirectory',
-                                    'contents' => '/' . $path
-                                ],
-                                [
-                                    'name' => 'description',
-                                    'contents' => $descripcion
-                                ],
-                                [
-                                    'name' => 'contenttype',
-                                    'contents' => 'cm:content'
-                                ],
-                                [
-                                    'name' => 'thumbnails',
-                                    'contents' => 'doclib'
-                                ],
-                                [
-                                    'name' => 'overwrite',
-                                    'contents' => 'true'
-                                ]
-                            ]
-                        ]);
-
+                    
+                        $noderef = null;
+                        if(is_object($etapa) && property_exists($etapa, 'alfresco_noderef')){
+                            $noderef = $etapa->alfresco_noderef;
+                        }
+                        log_message("info","Subiendo archivo a CMS: ".'/' . $path);
+                        $body = $this->createBody($cms, $pathFile, $descripcion,'/'.$path,$this->site,$noderef);
+                        log_message("debug","Sitio: ".$this->site);
+                        $response = $client->post($url, $body);
+                     
                         if ($response->getStatusCode() == 200) {
                             $resp = json_decode($response->getBody(), true);                            
 
@@ -663,7 +633,7 @@ class Alfresco
                             }
 
                             $resp_metadata = $this->addMetadata($cms, $resp['nodeRef'], $metadata);
-
+                            
                             if ($resp_metadata) {
 
                                 // Guardo el nodeRef generado al subir el archivo a Alfresco
@@ -716,6 +686,39 @@ class Alfresco
     }
     
     /**
+     * 
+     * @param type $cms Instancia de objeto 
+     * @param type $pathFile Path del archivo local
+     * @param type $descripcion Descripción del archivo
+     * @param type $updaloadidir Directorio donde se subira el archivo
+     * @param type $site Nombre del sitio
+     * @param type $noderef ID Referencia de referencia en CMS 
+     * @return string
+     */
+    private function createBody($cms,$pathFile,$descripcion,$updaloadidir = '/',$site='simple',$noderef = null){
+           $data = ["auth"=>null,"multipart"=>null];
+            $data['auth'] = [ $cms->getUserName(),
+                              $cms->getPassword()];
+            $data['multipart'][] = array('name' => 'filedata','contents' => fopen($pathFile, 'r'));
+            $data['multipart'][] = array('name' => 'containerid','contents' => 'documentLibrary');   
+            $data['multipart'][] = array('name' => 'description','contents' => $descripcion);
+            $data['multipart'][] = array('name' => 'contenttype','contents' => 'cm:content');        
+            $data['multipart'][] = array('name' => 'thumbnails','contents' => 'doclib');
+            $data['multipart'][] = array('name' => 'overwrite','contents' => 'true');
+            
+            if($noderef){
+                log_message("debug","Seleccionando update de nueva versión");
+               $data['multipart'][] = array('name' => 'updateNodeRef','contents'=>$noderef);
+            }else{
+                 log_message("debug","Upload normal");
+                $data['multipart'][] = array('name' => 'uploadDirectory','contents'=>$updaloadidir);
+                $data['multipart'][] = array('name' => "siteid",'contents'=>$site);
+                
+            }
+            return $data;
+    }
+    
+    /**
      * Retorna un string con caracteres validos
      * 
      * @param string $title
@@ -736,8 +739,7 @@ class Alfresco
         
         return $folder_title;
     }
-    /**
-     * Chquea que exista la ruta, sino existe la crea.
+     /* Chquea que exista la ruta, si no existe la crea.
      * 
      * @param type $alfresco Instancia de Objeto Alfreco
      * @param type $cms Instancia del controlador para CMS
@@ -755,13 +757,15 @@ class Alfresco
             if(!$alfresco->createFolder($cms, $root,
                      $sitio,
                      $descroot)){
-                error_log("error","no se pudo crear la carpeta raíz: ".$root);
+                log_message("error","no se pudo crear la carpeta raíz: ".$root);
+                log_message("error",$alfresco->error);
             }
          }
          //Check la carpeta de proceso
          if(!$alfresco->searchFolder($cms, $root.'/'.$proc)){
              if($alfresco->createFolder($cms, $proc ,$nombre_proc,$nombre_proc,$root)){
-                 error_log("error","no se pudo crear la carpeta de proceso ".$proc);
+                 log_message("error","no se pudo crear la carpeta de proceso ".$proc);
+                 log_message("error",$alfresco->error);
              }
          }
          //crea l a carpeta de proceso
@@ -771,11 +775,12 @@ class Alfresco
                      "Trámite con identificador ".$tramite ,
                      "Trámite con identificador ".$tramite,
                      $root.'/'.$proc)){
-                 error_log("error","no se pudo crear la carpeta de proceso ".$tramite);
+                 log_message("error","no se pudo crear para el tramite ".$tramite);
+                 log_message("error",$alfresco->error);
              }
          }
         }catch(Exception $e){
-            error_log("Error al realizar la operación checkAndCreateFolder: ".$e->getMessage());
+            log_message("Error al realizar la operación checkAndCreateFolder: ".$e->getMessage());
         }
     }
     
