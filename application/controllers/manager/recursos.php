@@ -42,16 +42,51 @@ class Recursos extends CI_Controller
         $data = array();
         
         try {            
-            $response = $this->alfresco->searchFolder($this->_cms, $this->pathFolder, true);
-            if(!$response){  //sino existe la crea
+            
+            $count = 0;
+            do{
+              $response = $this->alfresco->searchFolder($this->_cms, $this->pathFolder, true);
+              if(!$response){  //sino existe la crea
                 $this->alfresco->createFolder($this->_cms, $this->pathFolder, "Recursos SIMPLE", "Carpeta con recursos documentales generales de SIMPLE");
-            }
+              }
+              log_message('debug','Check de respuesta, intento'.$count);
+              
+              if($this->isValidResponse($response)){
+                  break;
+              }else{
+                  sleep(1); //Esperar un segundo para realizar un retry
+              }
+            }while($count++ <= 3);
+            log_message("debug","saliendo");
             $data = $this->alfresco->listFiles($response);
         } catch(Exception $err) {
             log_message('error', $err->getMessage());
         }
         
         return $data;
+    }
+    
+    private function isValidResponse($response) {
+        try{
+            log_message('debug',"check file");
+              $code = isset($response->code) ? $response->code : 0;
+              if ($code == 200) {
+                    if (isset($response->body->items) && is_array($response->body->items)) {
+                        foreach($response->body->items as $item) {
+                            log_message('debug','Check: '.$item->title);
+                            if($item->description =='' || $item->title ==''){
+                                log_message("debug","Haciendo retry, archivo no recupera metadata");
+                                return false;
+                            }
+                        }
+                    }
+              }
+
+            }catch(Exception $e){
+                log_error('error','Error al realizar el check: '.$e->getMessage());
+                return false;
+            }
+        return true;
     }
     
     public function ajaxViewEdit()
