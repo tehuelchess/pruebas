@@ -37,16 +37,17 @@ class Alfresco
         $this->baseUrl = $CI->config->item('base_url_service_alfresco');
         $this->user = $CI->config->item('user_alfresco');
         $this->password = $CI->config->item('password_alfresco');
-        $this->site = $CI->config->item('cms_site') == NULL ? 'simple' :  $CI->config->item('cms_site');
+        $this->site = $CI->config->item('cms_site') === null ? 'simple' :  $CI->config->item('cms_site');
         
-        self::$pathSearchFile = $CI->config->item('url_service_alfresco_search_file');
-        self::$pathCreateFolder = $CI->config->item('url_service_alfresco_create_folder');
-        self::$pathSearchFolder = $CI->config->item('url_service_alfresco_search_folder');
-        self::$pathEnableMetadata = $CI->config->item('url_service_alfresco_enable_dublincore_metadata');
-        self::$pathAddMetadata = $CI->config->item('url_service_alfresco_add_dublincore_metadata');
-        self::$pathDeleteFile = $CI->config->item('url_service_alfresco_delete_file');
-        self::$pathUploadFile = $CI->config->item('url_service_alfresco_upload_file');
-        self::$copyrightFiles = $CI->config->item('copyrights_files_uploaded_alfresco');
+        self::$pathSearchFile = str_replace("{SITE}",$this->site, $CI->config->item('url_service_alfresco_search_file'));
+        self::$pathCreateFolder = str_replace("{SITE}",$this->site,$CI->config->item('url_service_alfresco_create_folder'));
+        self::$pathSearchFolder = str_replace("{SITE}",$this->site,$CI->config->item('url_service_alfresco_search_folder'));
+        log_message("debug",$this->site." -> ".self::$pathSearchFolder);
+        self::$pathEnableMetadata = str_replace("{SITE}",$this->site,$CI->config->item('url_service_alfresco_enable_dublincore_metadata'));
+        self::$pathAddMetadata = str_replace("{SITE}",$this->site,$CI->config->item('url_service_alfresco_add_dublincore_metadata'));
+        self::$pathDeleteFile = str_replace("{SITE}",$this->site,$CI->config->item('url_service_alfresco_delete_file'));
+        self::$pathUploadFile = str_replace("{SITE}",$this->site,$CI->config->item('url_service_alfresco_upload_file'));
+        self::$copyrightFiles = str_replace("{SITE}",$this->site,$CI->config->item('copyrights_files_uploaded_alfresco'));
         self::$header = array('Content-Type' => 'application/json');      
     }
     
@@ -182,6 +183,7 @@ class Alfresco
      */
     public function searchFolder($cms, $pathFolder, $returnObject = false)
     {
+        log_message("debug","Creando path: ".$pathFolder);
         $res = false;
         $this->error = null;
         
@@ -194,6 +196,7 @@ class Alfresco
                     
                     // Verifico si la carpeta con el nombre del proceso existe
                     $url = $this->baseUrl . self::$pathSearchFolder . $pathFolder;
+                    log_message("debug","Buscando: ".$url);
                     $response = Request::get($url)
                         ->expectsJson()
                         ->authenticateWith($cms->getUserName(), $cms->getPassword())
@@ -205,9 +208,10 @@ class Alfresco
                         $this->error = $response->body->error->briefSummary;
                         log_message('error', $response->body->error->briefSummary);
                     } else {
-
+                        log_message("debug","newfolder http: ".$response->code);
                         // Si no encontro la carpeta del proceso                        
-                        if ($response->code == 404) {
+                        if ($response->code == 404 || $response->code == 410) {
+                            log_message("debug","La carpeta no existe");
                             $res = false;
                         } elseif ($response->code == 200) {
                             $res = $returnObject ? $response : true;
@@ -242,7 +246,9 @@ class Alfresco
     {
         $res = false;
         $this->error = null;
-        
+        if($folderName == null){
+            throw new Exception("El nombre de la carpeta no puede estar vacio");
+        }
         try {
             // Verifico que se este implementando Alfresco
             if ($cms instanceof Config_cms_alfresco && $cms->getCheck()) {
@@ -257,22 +263,23 @@ class Alfresco
                         'type' => $type
                     );
                     $url = $this->baseUrl . self::$pathCreateFolder . $folderPath;
-                    
-                    $response = Request::post($url)
+                    log_message("debug","creando: ".$url);
+                    $response = Request::post($url,null,null,"text/plain")
                         ->body(json_encode($json))
                         ->authenticateWith($cms->getUserName(), $cms->getPassword())
                         ->addHeaders(self::$header)
                         ->sendIt();            
-
+                    log_message("debug","Carpeta creada: ");
                     // Si hay un error en la API de Alfresco
                     if (isset($response->body->error)) {
                         $this->error = $response->body->error->briefSummary;
-                        log_message('error', $response->body->error->briefSummary);
+                        log_message('error', "..".$response->body->error->briefSummary);
                     } else {            
                         // Si hay un error en la API de Alfresco
+                        log_message("error","Erro de API");
                         if (isset($response->body->error)) {
                             $this->error = $response->body->error->briefSummary;
-                            log_message('error', $response->body->error->briefSummary);
+                            log_message('error', "Error en API: ".$response->body->error->briefSummary);
                         } else {
                             // Si no encontro la carpeta del proceso
                             if (isset($response->code)) {
@@ -290,9 +297,10 @@ class Alfresco
         } catch(Exception $err) {
             // OJO ELIMINAR ESTE CODIGO EN CUANTO SE SOLUCIONE EL BUG DE CREAR CARPETAS Y
             // DESCOMENTAR EL CODIGO DE ABAJO
-            $res = true;
-            //echo $err->getMessage();
-            //$this->error = $ex->getMessage();
+            log_message("error", "Error al crear carpeta: ".$ex->getMessage());
+            $res = false;
+  
+            $this->error = $ex->getMessage();
             //log_message('warning', $ex->getMessage());
         }
         
@@ -319,7 +327,7 @@ class Alfresco
                 if ($cms->getUserName() != '' && $cms->getPassword() != '') {
                     if ($nodeRef) {
                         $url = $this->baseUrl . self::$pathEnableMetadata . $nodeRef;
-                        $body = '{"added" : ["cm:dublincore"], "removed" : []}';
+                        $body = '{"added" : ["cm:dublincore"], "removed" : []}'."\n";
 
                         $response = Request::post($url)
                             ->expectsJson()
@@ -739,7 +747,8 @@ class Alfresco
         
         return $folder_title;
     }
-     /* Chquea que exista la ruta, si no existe la crea.
+    /**
+     * Chquea que exista la ruta, si no existe la crea.
      * 
      * @param type $alfresco Instancia de Objeto Alfreco
      * @param type $cms Instancia del controlador para CMS
@@ -767,6 +776,8 @@ class Alfresco
                  log_message("error","no se pudo crear la carpeta de proceso ".$proc);
                  log_message("error",$alfresco->error);
              }
+         }else{
+             
          }
          //crea l a carpeta de proceso
          if(!$alfresco->searchFolder($cms, $root.'/'.$proc.'/'.$tramite)){

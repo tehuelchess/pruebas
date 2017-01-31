@@ -188,7 +188,8 @@ class Config_cms_alfresco
             
             $res = true;
         } catch(Exception $err) {
-            throw new Exception($err->getMessage());
+            
+            throw new Exception("Error al guardar: ".$err->getMessage());
         }
         
         return $res;
@@ -204,10 +205,9 @@ class Config_cms_alfresco
             $resp = $alfresco->searchFolder($this, $this->rootFolder);
             
             if ($alfresco->error === null) {
-
                 // No existe la carpeta, se debe crear
-                if (!$resp) {
-
+                if (!$resp){
+                    log_message("debug","No existe la carpeta");
                     // Se crea la carpeta raiz
                     $resp = $alfresco->createFolder(
                         $this, 
@@ -215,9 +215,9 @@ class Config_cms_alfresco
                         $this->title, 
                         $this->desc
                     );
-
-                    if ($alfresco->error === null) {
-                        
+                    log_message("info","Carpeta creada ".$this->rootFolder);
+                    if ($alfresco->error === null || trim($alfresco->error)==='') {
+                        log_message("debug","Creando carpeta resources");
                         // Se crea la carpeta RESOURCES
                         $resp = $alfresco->searchFolder($this, $this->rootFolder . '/RESOURCES');
                         if ($alfresco->error === null && !$resp) {
@@ -228,9 +228,10 @@ class Config_cms_alfresco
                             throw new Exception($alfresco->error);
                         }
                     } else {
-                        throw new Exception($alfresco->error);
+                        throw new Exception("Error al crear la carpetea: ".$alfresco->error);
                     }
                 } else {
+                    log_message("debug","Existe la carpeta");
                     // Se crea la carpeta RESOURCES
                     $resp = $alfresco->searchFolder($this, $this->rootFolder . '/RESOURCES');
                     if ($alfresco->error === null && !$resp) {
@@ -242,10 +243,10 @@ class Config_cms_alfresco
                     }
                 }
             } else {
-                throw new Exception($alfresco->error);
+                throw new Exception("Existen errores al buscar la carpeta. ".$alfresco->error);
             }
         } catch(Exception $err) {
-            throw new Exception($err->getMessage(), $err->getCode());
+            throw new Exception("newFolderAccount : ".$err->getMessage(), $err->getCode());
         }
     }
     

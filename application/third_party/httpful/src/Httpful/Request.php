@@ -802,7 +802,7 @@ class Request
      * @param string $mime Mime Type to Use
      * @return Request
      */
-    public static function init($method = null, $mime = null)
+    public static function init($method = null, $mime = null,$excepcted_mime = null)
     {
         // Setup our handlers, can call it here as it's idempotent
         Bootstrap::init();
@@ -810,13 +810,13 @@ class Request
         // Setup the default template if need be
         if (!isset(self::$_template))
             self::_initializeDefaults();
-
+        $excepcted_mime = ($excepcted_mime == null ) ? $mime : $excepcted_mime;
         $request = new Request();
         return $request
                ->_setDefaults()
                ->method($method)
                ->sendsType($mime)
-               ->expectsType($mime);
+               ->expectsType($excepcted_mime);
     }
 
     /**
@@ -907,7 +907,7 @@ class Request
             $headers[] = $this->buildUserAgent();
         }
 
-        $headers[] = "Content-Type: {$this->content_type}";
+        //$headers[] = "Content-Type: {$this->content_type}";
 
         // allow custom Accept header if set
         if (!isset($this->headers['Accept'])) {
@@ -920,7 +920,7 @@ class Request
 
             $headers[] = $accept;
         }
-
+        
         // Solve a bug on squid proxy, NONE/411 when miss content length
         if (!isset($this->headers['Content-Length']) && !$this->isUpload()) {
             $this->headers['Content-Length'] = 0;
@@ -1125,9 +1125,9 @@ class Request
      * @param string $mime MIME to use for Content-Type
      * @return Request
      */
-    public static function post($uri, $payload = null, $mime = null)
+    public static function post($uri, $payload = null, $mime = null,$excepcted_mime=null)
     {
-        return self::init(Http::POST)->uri($uri)->body($payload, $mime);
+        return self::init(Http::POST,null,$excepcted_mime)->uri($uri)->body($payload, $mime);
     }
 
     /**

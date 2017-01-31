@@ -43,6 +43,9 @@ class Recursos extends CI_Controller
         
         try {            
             $response = $this->alfresco->searchFolder($this->_cms, $this->pathFolder, true);
+            if(!$response){  //sino existe la crea
+                $this->alfresco->createFolder($this->_cms, $this->pathFolder, "Recursos SIMPLE", "Carpeta con recursos documentales generales de SIMPLE");
+            }
             $data = $this->alfresco->listFiles($response);
         } catch(Exception $err) {
             log_message('error', $err->getMessage());
