@@ -39,16 +39,9 @@ class Recursos extends CI_Controller
     
     private function view()
     {        
-        $data = array();
-        
-        try {                        
-            $response = $this->alfresco->searchFolder($this->_cms, $this->pathFolder, true);
-            $data = $this->alfresco->listFiles($response);
-        } catch(Exception $err) {
-            log_message('error', $err->getMessage());
-        }
-        
-        return $data;
+
+        return Alfresco::listFilesFrom($this->_cms, $this->alfresco, $this->pathFolder);
+
     }
     
     public function ajaxViewEdit()
@@ -161,12 +154,7 @@ class Recursos extends CI_Controller
         $mensaje = 'No se pudo eliminar el archivo';
         
         try {
-            
-            $this->alfresco->deleteFile($this->_cms, $this->pathFolder . '/' . $nombre);
-            if ($this->alfresco->error === null) {
-                $error = false;
-                $mensaje = '';
-            }
+             $error = Alfresco::eliminarArchivo($this->_cms,$this->alfresco,$this->pathFolder,$nombre);
         } catch(Exception $err) {
             log_message('error', $err->getMessage());
         }

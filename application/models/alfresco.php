@@ -145,6 +145,7 @@ class Alfresco
                     foreach($response->body->items as $item) {                            
                         $object = new stdClass();
                         $object->nombre = $item->fileName;
+                        
                         $object->descripcion = (isset($item->description)) ? $item->description : '';
                         $object->noderef = $item->nodeRef;
                         $object->tipo = $item->type;
@@ -196,7 +197,7 @@ class Alfresco
                     
                     // Verifico si la carpeta con el nombre del proceso existe
                     $url = $this->baseUrl . self::$pathSearchFolder . $pathFolder;
-                    log_message("debug","Buscando: ".$url);
+                    
                     $response = Request::get($url)
                         ->expectsJson()
                         ->authenticateWith($cms->getUserName(), $cms->getPassword())
@@ -793,6 +794,83 @@ class Alfresco
         }catch(Exception $e){
             log_message("Error al realizar la operación checkAndCreateFolder: ".$e->getMessage());
         }
+    }
+    /**
+     * Lista un set de archivos deade una ruta de alfresco
+     * @param type $cms Instancia de CMS_ALFRESCO
+     * @param type $alfresco Instancia del la clase alfresco
+     * @param type $pathFolder Ruta que se quiere listar
+     * @return type
+     */
+    public static function listFilesFrom($cms,$alfresco,$pathFolder,$retrurnObject = true){
+        $data = array();
+        
+        try {            
+            
+            $count = 0;
+            do{
+              $response = $alfresco->searchFolder($cms, $pathFolder, $retrurnObject);
+              if(!$response){  //sino existe la crea
+                $alfresco->createFolder($cms, $pathFolder, "Recursos SIMPLE", "Carpeta con recursos documentales generales de SIMPLE");
+              }
+              log_message('debug','Check de respuesta, intento'.$count);
+              
+              if(Alfresco::isValidResponse($response)){
+                  break;
+              }else{
+                  sleep(1); //Esperar un segundo para realizar un retry
+              }
+            }while($count++ <= 3);
+            log_message("debug","saliendo");
+            $data = $alfresco->listFiles($response);
+        } catch(Exception $err) {
+            log_message('error', $err->getMessage());
+        }
+        
+        return $data;
+    }
+    
+    private static function isValidResponse($response) {
+        try{
+            log_message('debug',"check file");
+              $code = isset($response->code) ? $response->code : 0;
+              if ($code == 200) {
+                    if (isset($response->body->items) && is_array($response->body->items)) {
+                        foreach($response->body->items as $item) {
+                            log_message('debug','Check: '.$item->title);
+                            if($item->description =='' || $item->title ==''){
+                                log_message("debug","Haciendo retry, archivo no recupera metadata");
+                                return false;
+                            }
+                        }
+                    }
+              }
+
+            }catch(Exception $e){
+                log_error('error','Error al realizar el check: '.$e->getMessage());
+                return false;
+            }
+        return true;
+    }
+    
+    public static function eliminarArchivo($cms,$alfresco,$pathFolder,$nombre){
+         $retryCount = 1;
+         $retval = true;
+            do{
+                
+                $alfresco->deleteFile($cms, $pathFolder . '/' . $nombre);
+                if ($alfresco->error === null) {
+                    $retval = false;
+                    break;
+                }
+                log_message('warn','Retry para eliminar');
+                sleep(1);
+                if($retryCount++ >= 3){
+                    log_message('error','Se ha superado los reintentod de elimianr el archivo: '.$nombre);
+                    throw new Exception('Se ha superado el maximo de reintentos para eliminar el archivo '.$nombre);
+                }
+            }while($retryCount < 5);
+        return $retval;
     }
     
 }

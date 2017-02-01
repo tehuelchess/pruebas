@@ -226,7 +226,9 @@
                         tbody.html('<tr><td colspan="4">No existen recursos</td></tr>');
                     }
                 } else {
-                    alert(data.error);
+                    //alert('No se ha podido eliminar el archivo: '+ data.error);
+                    $('.validacion').html('<div class="alert alert-error"><a class="close" data-dismiss="alert">×</a>No se ha podido eliminar el archivo: '+data.error+'</div>');
+           
                 }
             }
         });
