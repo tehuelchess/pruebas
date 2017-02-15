@@ -54,6 +54,8 @@ class AccionEnviarCorreo extends Accion {
 
         if(isset($this->extra->adjunto)){
             $attachments = explode(",",trim($this->extra->adjunto));
+            $array_files = array();
+            $ruta_tmp = 'uploads/tmp/';
             foreach ($attachments as $a) {
                 $regla=new Regla($a);
                 $filename=$regla->getExpresionParaOutput($etapa->id);
@@ -62,9 +64,36 @@ class AccionEnviarCorreo extends Accion {
                     ->where('f.filename = ? AND t.id = ?',array($filename,$etapa->Tramite->id))
                     ->fetchOne();
                 if($file){
-                    $folder = $file->tipo=='dato' ? 'datos' : 'documentos';
-                    if(file_exists('uploads/'.$folder.'/'.$filename)){
-                        $CI->email->attach('uploads/'.$folder.'/'.$filename);
+                    //integración con alfresco
+                    $swrepo=false;
+                    $cms=null;
+                    try{
+                        $cms=new Config_cms_alfresco();
+                        $cms->setAccount(UsuarioSesion::usuario()->cuenta_id);
+                        $cms->loadData();    
+                        if($cms->getCheck()==1){
+                            $swrepo=true;
+                        }
+                    }catch(Exception $err){
+                        echo $err->getMessage();
+                    }
+                    if($swrepo){
+                        try{
+                            $noderef = str_replace('://', '/', $file->alfresco_noderef);
+                            $alfresco = new Alfresco();
+                            $file_data=$alfresco->getFile($cms, $noderef);
+                            if($cms!=null){
+                                $df = finfo_open();
+                                $mime_type = finfo_buffer($df, $file_data, FILEINFO_MIME_TYPE);
+                                $pathfile=$ruta_tmp.''.$file->filename;
+                                file_put_contents($pathfile, $file_data);
+                                $CI->email->attach($pathfile);
+                                array_push($array_files, $file->filename);
+                                $countfile++;
+                            }
+                        }catch(Exception $err){
+                            echo $err->getMessage();
+                        }
                     }
                 }
             }
@@ -73,6 +102,10 @@ class AccionEnviarCorreo extends Accion {
         $CI->email->subject($subject);
         $CI->email->message($message);
         $CI->email->send();
+
+        foreach($array_files as $file){
+            unlink($ruta_tmp.$file);
+        }
     }
 
 }
