@@ -420,12 +420,9 @@ $config['appkey']='mMRUI7s7Nn0yGq0';
  */
 $config['records']=10;// numero de registros por pagina
 
-
 /*
  * Minutos para eliminar una cita si no ha sido confirmada
  *
  */
 $config['tiempoconfimacioncita']=30; 
 
-/* End of file config.php */
-/* Location: ./application/config/config.php */
