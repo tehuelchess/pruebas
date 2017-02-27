@@ -624,7 +624,7 @@ class Etapa extends Doctrine_Record {
             $tp = $etapa->getTareasProximas();
             if ($tp->estado == 'completado'){
                 $ejecutar_eventos = FALSE;
-                $t->cerrar($ejecutar_eventos);
+                $this->Tramite->cerrar($ejecutar_eventos);
             }else{
                 $etapa->avanzar();
             }
