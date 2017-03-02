@@ -36,7 +36,7 @@ class CampoComunas extends Campo{
                     updateRegiones();
                     
                     function updateRegiones(){
-                        $.getJSON("https://apis.modernizacion.cl/dpa/regiones?callback=?",function(data){
+                        $.getJSON("https://apis.digital.gob.cl/dpa/regiones?callback=?",function(data){
                             var html="<option value=\'\'>Seleccione region</option>";
                             $(data).each(function(i,el){
                                 html+="<option data-id=\""+el.codigo+"\" value=\""+el.nombre+"\">"+el.nombre+"</option>";
@@ -57,7 +57,7 @@ class CampoComunas extends Campo{
                         if(!regionId)
                             return;
                         
-                        $.getJSON("https://apis.modernizacion.cl/dpa/regiones/"+regionId+"/comunas?callback=?",function(data){
+                        $.getJSON("https://apis.digital.gob.cl/dpa/regiones/"+regionId+"/comunas?callback=?",function(data){
                             var html="<option value=\'\'>Seleccione comuna</option>";
                             if(data){
                                 $(data).each(function(i,el){

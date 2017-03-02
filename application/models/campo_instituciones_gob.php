@@ -29,7 +29,7 @@ class CampoInstitucionesGob extends Campo{
                     updateEntidades();
                     
                     function updateEntidades(){
-                        $.getJSON("https://apis.modernizacion.cl/instituciones/api/entidades?callback=?",function(data){
+                        $.getJSON("https://apis.digital.gob.cl/instituciones/api/entidades?callback=?",function(data){
                             var html="<option></option>";
                             $(data.items).each(function(i,el){
                                 html+="<option value=\""+el.nombre+"\" data-id=\""+el.codigo+"\">"+el.nombre+"</option>";
@@ -48,7 +48,7 @@ class CampoInstitucionesGob extends Campo{
                     
                     function updateInstituciones(entidadId){
                         
-                        $.getJSON("https://apis.modernizacion.cl/instituciones/api/entidades/"+entidadId+"/instituciones?callback=?",function(data){
+                        $.getJSON("https://apis.digital.gob.cl/instituciones/api/entidades/"+entidadId+"/instituciones?callback=?",function(data){
                             var html="<option></option>";
                             if(data){
                                 $(data.items).each(function(i,el){
