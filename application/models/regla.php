@@ -46,7 +46,7 @@ class Regla {
                                                     ->where('c.nombre=? AND p.id=?',array($nombre_dato,$etapa->Tarea->Proceso->id))
                                                     ->execute();
                             
-                            if($campo[0]->tipo=='documento'){
+                            if($campo[0]->tipo=='documento' or $campo[0]->tipo=='file'){
                                 $files =Doctrine::getTable('File')->findByTramiteIdAndFilename($etapa->Tramite->id,$dato->valor);
                                 if(count($files) > 0){
                                     foreach($files as $f){
