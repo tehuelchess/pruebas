@@ -543,6 +543,7 @@ class Etapa extends Doctrine_Record {
 
             $regla = new Regla($evento->mensaje);
             $mensaje = $regla->getExpresionParaOutput($this->id);
+            $mensaje = json_encode($mensaje);
             $regla = new Regla($evento->url);
             $url = $regla->getExpresionParaOutput($this->id);
             $regla = new Regla($evento->opciones);
@@ -624,7 +625,7 @@ class Etapa extends Doctrine_Record {
             $tp = $etapa->getTareasProximas();
             if ($tp->estado == 'completado'){
                 $ejecutar_eventos = FALSE;
-                $t->cerrar($ejecutar_eventos);
+                $this->Tramite->cerrar($ejecutar_eventos);
             }else{
                 $etapa->avanzar();
             }
