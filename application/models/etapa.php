@@ -543,7 +543,7 @@ class Etapa extends Doctrine_Record {
 
             $regla = new Regla($evento->mensaje);
             $mensaje = $regla->getExpresionParaOutput($this->id);
-            $mensaje = json_encode($mensaje);
+            //$mensaje = json_encode($mensaje);
             $regla = new Regla($evento->url);
             $url = $regla->getExpresionParaOutput($this->id);
             $regla = new Regla($evento->opciones);
