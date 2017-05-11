@@ -543,7 +543,6 @@ class Etapa extends Doctrine_Record {
 
             $regla = new Regla($evento->mensaje);
             $mensaje = $regla->getExpresionParaOutput($this->id);
-            //$mensaje = json_encode($mensaje);
             $regla = new Regla($evento->url);
             $url = $regla->getExpresionParaOutput($this->id);
             $regla = new Regla($evento->opciones);
@@ -564,7 +563,8 @@ class Etapa extends Doctrine_Record {
                 if(in_array($evento->metodo,$metodos)){
                     curl_setopt($ch, CURLOPT_POST, TRUE);
                     curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $evento->metodo);
-                    curl_setopt($ch, CURLOPT_POSTFIELDS, $mensaje);
+                    $mensaje_json = !empty($evento->regla) ? json_encode($mensaje) : $mensaje;
+                    curl_setopt($ch, CURLOPT_POSTFIELDS, $mensaje_json);
                 }
                 $opciones_httpheader = array("cache-control: no-cache", "Content-Type: application/json");
                 if(!is_null($opciones)){
