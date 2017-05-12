@@ -563,7 +563,11 @@ class Etapa extends Doctrine_Record {
                 if(in_array($evento->metodo,$metodos)){
                     curl_setopt($ch, CURLOPT_POST, TRUE);
                     curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $evento->metodo);
-                    $mensaje_json = !empty($evento->regla) ? json_encode($mensaje) : $mensaje;
+                    $mensaje_json = $mensaje;
+                    if(!empty($evento->regla)){
+                        $mensaje_json = json_decode($mensaje_json);
+                        $mensaje_json = json_encode($mensaje_json);
+                    }
                     curl_setopt($ch, CURLOPT_POSTFIELDS, $mensaje_json);
                 }
                 $opciones_httpheader = array("cache-control: no-cache", "Content-Type: application/json");
