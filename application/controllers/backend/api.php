@@ -395,4 +395,33 @@ class API extends MY_BackendController {
         
     }
 
+    public function testjson($evento){
+        $this->_auth();
+        $evento = Doctrine_Query::create()
+                        ->from('EventoExterno e')
+                        ->where('id = ?', array($evento))
+                        ->fetchOne();
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $evento->url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+        curl_setopt($ch, CURLOPT_HEADER, FALSE);
+        curl_setopt($ch, CURLOPT_POST, TRUE);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST,"POST");
+        $mensaje_json = json_decode($mensaje,true);
+        $mensaje_json = json_encode($mensaje_json,JSON_UNESCAPED_SLASHES);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $evento->mensaje);
+        $opciones_httpheader = array("cache-control: no-cache", "Content-Type: application/json");
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $opciones_httpheader);
+        $response = curl_exec($ch);
+        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        echo 'code--'.$httpcode."<br>";
+        $err = curl_error($ch);
+        echo 'error--'.$err."<br>";
+        curl_close($ch);
+        if(($httpcode==200 or $httpcode==201) && isJSON($response)){
+            $json = json_decode($response);
+            print_r($json);
+        }
+    }
+
 }
