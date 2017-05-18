@@ -566,7 +566,7 @@ class Etapa extends Doctrine_Record {
                     $mensaje_json = $mensaje;
                     if(!empty($evento->regla)){
                         $mensaje_json = json_decode($mensaje_json,true);
-                        $mensaje_json = json_encode($mensaje_json,JSON_UNESCAPED_SLASHES);
+                        $mensaje_json = json_encode($mensaje_json);
                     }
                     curl_setopt($ch, CURLOPT_POSTFIELDS, $mensaje_json);
                 }
