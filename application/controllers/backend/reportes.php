@@ -181,25 +181,7 @@ class Reportes extends MY_BackendController {
     	$tramites_pendientes=0;        
         $etapas_cantidad=0;
     	
-    	foreach($proceso->Tramites as $tramite){
-    		
-            $etapas_cantidad = Doctrine_query::create()->from('Etapa e')->
-                    where('e.tramite_id = ?',$tramite->id)->count();
-    		
-            if ($tramite->pendiente == 0){
-                    $tramites_completos++;
-                    
-            }else if($etapas_cantidad > 0){   
-                
-                if ($tramite->getTareasVencidas()->count() > 0)
-                    $tramites_vencidos++;
-
-                $tramites_pendientes++;
-            } 
-    	}
     	
-    	$promedio_tramite = $proceso->getDiasPorTramitesAvg();
-    	$promedio_tramite = $promedio_tramite[0]['avg'];
     	
     	
     	
@@ -276,6 +258,26 @@ class Reportes extends MY_BackendController {
        				'total_rows'=>$ntramites,
        				'per_page'=>$per_page
        		));
+
+      foreach($proceso->Tramites as $tramite){
+        
+            $etapas_cantidad = Doctrine_query::create()->from('Etapa e')->
+                    where('e.tramite_id = ?',$tramite->id)->count();
+        
+            if ($tramite->pendiente == 0){
+                    $tramites_completos++;
+                    
+            }else if($etapas_cantidad > 0){   
+                
+                if ($tramite->getTareasVencidas()->count() > 0)
+                    $tramites_vencidos++;
+
+                $tramites_pendientes++;
+            } 
+      }
+      
+      $promedio_tramite = $proceso->getDiasPorTramitesAvg();
+      $promedio_tramite = $promedio_tramite[0]['avg'];
        		
        		
        		$data['tramites_vencidos']= $tramites_vencidos;
