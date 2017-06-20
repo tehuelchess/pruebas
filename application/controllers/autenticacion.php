@@ -169,7 +169,7 @@ class Autenticacion extends MY_Controller {
                 $this->email->from('simple@'.$this->config->item('main_domain'), 'Simple');
             $this->email->to($usuario->email);
             $this->email->subject('Reestablecer contraseña');
-            $this->email->message('<p>Haga click en el siguiente link para reestablecer su contraseña:</p><p><a href="'.site_url('autenticacion/reestablecer?id='.$usuario->id.'&reset_token='.$random).'">'.site_url('autenticacion/reestablecer?id='.$usuario->id.'&reset_token='.$random).'</a></p>');
+            $this->email->message('<p>Haga click en el siguiente link para reestablecer su contraseña:</p><p><a href="'.site_url('autenticacion/reestablecer?id='.$usuario->id.'&reset_token='.$random).'">'.site_url('autenticacion/reestablecer?id='.$usuario->id.'&reset_token='.$usuario->reset_token).'</a></p>');
             $this->email->send();
             
             $this->session->set_flashdata('message','Se le ha enviado un correo con instrucciones de como reestablecer su contraseña.');
@@ -199,10 +199,10 @@ class Autenticacion extends MY_Controller {
             exit;
         }
         
-        $usuario_input=new Usuario();
-        $usuario_input->reset_token=$reset_token;
+        //$usuario_input=new Usuario();
+        //$usuario_input->reset_token=$reset_token;
         
-        if(!is_null($usuario->reset_token) or $usuario->reset_token!=$usuario_input->reset_token or is_array($reset_token)){
+        if($usuario->reset_token!=$reset_token or is_array($reset_token)){
             echo 'Token incorrecto';
             exit;
         }
@@ -227,10 +227,12 @@ class Autenticacion extends MY_Controller {
             exit;
         }
         
-        $usuario_input=new Usuario();
-        $usuario_input->reset_token=$reset_token;
+        //$usuario_input=new Usuario();
+        //$usuario_input->reset_token=$reset_token;
+
         
-        if(!is_null($usuario->reset_token) or $usuario->reset_token!=$usuario_input->reset_token or is_array($reset_token)){
+        
+        if($usuario->reset_token!=$reset_token or is_array($reset_token)){
             echo 'Token incorrecto';
             exit;
         }
