@@ -169,7 +169,7 @@ class Autenticacion extends MY_Controller {
                 $this->email->from('simple@'.$this->config->item('main_domain'), 'Simple');
             $this->email->to($usuario->email);
             $this->email->subject('Reestablecer contraseña');
-            $this->email->message('<p>Haga click en el siguiente link para reestablecer su contraseña:</p><p><a href="'.site_url('autenticacion/reestablecer?id='.$usuario->id.'&reset_token='.$random).'">'.site_url('autenticacion/reestablecer?id='.$usuario->id.'&reset_token='.$usuario->reset_token).'</a></p>');
+            $this->email->message('<p>Haga click en el siguiente link para reestablecer su contraseña:</p><p><a href="'.site_url('autenticacion/reestablecer?id='.$usuario->id.'&reset_token='.$usuario->reset_token).'">'.site_url('autenticacion/reestablecer?id='.$usuario->id.'&reset_token='.$usuario->reset_token).'</a></p>');
             $this->email->send();
             
             $this->session->set_flashdata('message','Se le ha enviado un correo con instrucciones de como reestablecer su contraseña.');
