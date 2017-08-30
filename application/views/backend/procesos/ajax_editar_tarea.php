@@ -179,7 +179,12 @@
             </ul>
             <div class="tab-content">
                 <div class="tab-pane active" id="tab1">
-                    <label><strong>Nombre</strong></label>
+                    <label>
+                        <strong>Nombre</strong>
+                        <a href="/assets/ayuda/simple/backend/modelamiento-del-proceso/disenador.html#pestana_definicion" target="_blank">
+                            <span class="glyphicon glyphicon-info-sign"></span>
+                        </a>
+                    </label>
                     <div class="row-fluid">
                         <div class="span12">
                             <input class="span12" name="nombre" type="text" value="<?= $tarea->nombre ?>" />
@@ -189,7 +194,7 @@
                     <label><strong>Activación</strong></label>
                     <div class="row-fluid">
                         <div class="span6">
-                            <label class="checkbox"><input name="inicial" value="1" type="checkbox" <?= $tarea->inicial ? 'checked' : '' ?>> Tarea Inicial</label>
+                            <label class="checkbox"><input name="inicial" id="inicial" value="1" type="checkbox" <?= $tarea->inicial ? 'checked' : '' ?>> Tarea Inicial</label>
                             <label class="checkbox"><input name="final" value="1" type="checkbox" <?= $tarea->final ? 'checked' : '' ?>> Tarea Final</label>
                         </div>
                         <div class="span6">
@@ -201,9 +206,18 @@
                                         else
                                             $("#activacionEntreFechas").hide();  
                                     }).change();
-                                
+                                    $("#inicial").click(function() {
+                                        if($('#inicial').prop('checked')) {
+                                            $("#DivExponer").show();
+                                        } else {
+                                            $("#DivExponer").hide();
+                                        }
+                                    });
                                 });
                             </script>
+                            <div id="DivExponer" style="display:none;">
+                                <label class="checkbox"><input name="exponer" value="1" type="checkbox">Exponer trámite</label>    
+                            </div>
                             <label class="radio"><input name="activacion" value="si" type="radio" <?= $tarea->activacion == 'si' ? 'checked' : '' ?>>Tarea activada</label>
                             <label class="radio"><input name="activacion" value="entre_fechas" type="radio" <?= $tarea->activacion == 'entre_fechas' ? 'checked' : '' ?>>Tarea activa entre fechas</label>
                             <div id="activacionEntreFechas" class="hide" style="margin-left: 20px;">
@@ -238,7 +252,11 @@
                             });
                         });
                     </script>
-                    <label>Regla de asignación</label>
+                    <label>Regla de asignación
+                        <a href="/assets/ayuda/simple/backend/modelamiento-del-proceso/disenador.html#pestana_asignacion" target="_blank">
+                            <span class="glyphicon glyphicon-info-sign"></span>
+                        </a>
+                    </label>
                     <label class="radio" rel="tooltip" title="Los usuarios se asignan en forma ciclica. Se van turnando dentro del grupo de usuarios en forma circular."><input type="radio" name="asignacion" value="ciclica" <?= $tarea->asignacion == 'ciclica' ? 'checked' : '' ?> /> Cíclica</label>
                     <label class="radio" rel="tooltip" title="Al finalizar la tarea anterior, se le pregunta al usuario a quien se le va a asignar esta tarea."><input type="radio" name="asignacion" value="manual" <?= $tarea->asignacion == 'manual' ? 'checked' : '' ?> /> Manual</label>
                     <label class="radio" rel="tooltip" title="La tarea queda sin asignar, y los usuarios mismos deciden asignarsela segun corresponda."><input type="radio" name="asignacion" value="autoservicio" <?= $tarea->asignacion == 'autoservicio' ? 'checked' : '' ?> /> Auto Servicio</label>
@@ -260,6 +278,11 @@
                             });
                         });
                     </script>
+                    <label>Nivel de Acceso
+                        <a href="/assets/ayuda/simple/backend/modelamiento-del-proceso/disenador.html#pestana_usuarios" target="_blank">
+                            <span class="glyphicon glyphicon-info-sign"></span>
+                        </a>
+                    </label>
                     <label class='radio'><input type="radio" name="acceso_modo" value="publico" <?= $tarea->acceso_modo == 'publico' ? 'checked' : '' ?> /> Cualquier persona puede acceder.</label>
                     <label class='radio'><input type="radio" name="acceso_modo" value="registrados" <?= $tarea->acceso_modo == 'registrados' ? 'checked' : '' ?> /> Sólo los usuarios registrados.</label>
                     <label class='radio'><input type="radio" name="acceso_modo" value="claveunica" <?= $tarea->acceso_modo == 'claveunica' ? 'checked' : '' ?> /> Sólo los usuarios registrados con ClaveUnica.</label>
@@ -293,6 +316,9 @@
                                 </td>
                                 <td>
                                     <input class="pasoRegla" type="text" placeholder="Escribir regla condición aquí" />
+                                    <a href="/assets/ayuda/simple/backend/modelamiento-del-proceso/reglas-de-negocio-y-reglas-de-validacion.html" target="_blank">
+                                        <span class="glyphicon glyphicon-info-sign"></span>
+                                    </a>
                                 </td>
                                 <td>
                                     <select class="pasoModo input-small">
@@ -330,7 +356,11 @@
                             <?php endforeach; ?>
                         </tbody>
                     </table>
-                    <label class="checkbox"><input type="checkbox" name="paso_confirmacion" value="1" <?=$tarea->paso_confirmacion?'checked':''?> > Incluir último paso de confirmación antes de avanzar la tarea.</label>
+                    <label class="checkbox"><input type="checkbox" name="paso_confirmacion" value="1" <?=$tarea->paso_confirmacion?'checked':''?> > Incluir último paso de confirmación antes de avanzar la tarea.
+                        <a href="/assets/ayuda/simple/backend/modelamiento-del-proceso/disenador.html#pestana_pasos" target="_blank">
+                            <span class="glyphicon glyphicon-info-sign"></span>
+                        </a>
+                    </label>
                 </div>
                 <div class="tab-eventos tab-pane" id="tab5">
                     <table class="table">
@@ -399,6 +429,11 @@
                             <?php endforeach; ?>
                         </tbody>
                     </table>
+                    <label class="checkbox">Para mayor información puedes consultar en el siguiente enlace. 
+                        <a href="/assets/ayuda/simple/backend/modelamiento-del-proceso/disenador.html#pestana_eventos" target="_blank">
+                            <span class="glyphicon glyphicon-info-sign"></span>
+                        </a>
+                    </label>
                 </div>
                 <div class="tab-pane" id="tab6">
                     <script>
@@ -418,7 +453,14 @@
                             }).change();
                         });
                     </script>
-                    <label class="checkbox"><input type="checkbox" name="vencimiento" value="1" <?=$tarea->vencimiento?'checked':''?> /> ¿La etapa tiene vencimiento?</label>
+                    <label class="checkbox">
+                        <input type="checkbox" name="vencimiento" value="1" <?=$tarea->vencimiento?'checked':''?> /> ¿La etapa tiene vencimiento?
+                        <a href="/assets/ayuda/simple/backend/modelamiento-del-proceso/disenador.html#pestana_vencimiento" target="_blank">
+                            <span class="glyphicon glyphicon-info-sign"></span>
+                        </a>
+                    </label>
+
+
                     <div id="vencimientoConfig" class="hide" style="margin-left: 20px;">
                         La etapa se vencera
                         <input type="text" name="vencimiento_valor" class="input-mini" value="<?= $tarea->vencimiento_valor?$tarea->vencimiento_valor:5 ?>" />
@@ -455,7 +497,13 @@
                             });
                         });
                     </script>
-                    <label><input type="checkbox" name="almacenar_usuario" value="1" <?= $tarea->almacenar_usuario ? 'checked' : '' ?> /> ¿Almacenar el identificador del usuario que lleva a cabo esta tarea?</label>
+                    <label><input type="checkbox" name="almacenar_usuario" value="1" <?= $tarea->almacenar_usuario ? 'checked' : '' ?> /> ¿Almacenar el identificador del usuario que lleva a cabo esta tarea?
+
+                        <a href="/assets/ayuda/simple/backend/modelamiento-del-proceso/disenador.html#pestana_otros" target="_blank">
+                            <span class="glyphicon glyphicon-info-sign"></span>
+                        </a>
+
+                    </label>
                     <div id="optionalAlmacenarUsuario" class="<?= $tarea->almacenar_usuario ? '' : 'hide' ?>">
                         <label>Variable</label>
                         <div class="input-prepend">
@@ -532,10 +580,6 @@
                 </div>
             </div>
         </div>
-
-
-
-
     </form>
 </div>
 <div class="modal-footer">
