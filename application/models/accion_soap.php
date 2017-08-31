@@ -136,12 +136,12 @@ class AccionSoap extends Accion {
             if ($error){
                 $result['response_soap']= $error;   
             }else{
-                $result['response_soap']= $client->document;//$client->response;
+                $result['response_soap']= $result_soap;//$client->document;//$client->response;
             }
 
 
             foreach($result as $key=>$value){
-                $xml=simplexml_load_string($value);
+                /*$xml=simplexml_load_string($value);
                 if($xml){
                     log_message('info', 'ES UN XML ::::::::::::::::::::::::::::: '.$this->varDump(" ::::::::::::: ES XML "), FALSE);                    
                     $valor = get_object_vars($xml);
@@ -149,12 +149,12 @@ class AccionSoap extends Accion {
                     log_message('info', 'NO ES XML ::::::::::::::::::::::::::::: '.$this->varDump(" :::::::::::::::: NO ES XML"), FALSE); 
                     $valor = json_encode($value);
                     log_message('info', 'object: '.$this->varDump($valor), FALSE); 
-                }
+                }*/
                 $dato=Doctrine::getTable('DatoSeguimiento')->findOneByNombreAndEtapaId($key,$etapa->id);
                 if(!$dato)
                     $dato=new DatoSeguimiento();
                     $dato->nombre=$key;
-                    $dato->valor=$valor;
+                    $dato->valor=$value;
                     $dato->etapa_id=$etapa->id;
                     $dato->save();
             }
