@@ -129,30 +129,32 @@ class AccionSoap extends Accion {
             }
             
             //Se EJECUTA el llamado Soap
-            $result = $client->call($this->extra->operacion, $request,null,'',false,null,'rpc','literal', true);
-            $error = $client->getError(); 
+            $result_soap = $client->call($this->extra->operacion, $request,null,'',false,null,'rpc','literal', true);
+            log_message('info', 'Result: '.$this->varDump($result_soap), FALSE);
+            log_message('info', 'Client data: '.$this->varDump($client->document), FALSE);
+            $error = $client->getError();
             if ($error){
                 $result['response_soap']= $error;   
             }else{
-                $result['response_soap']= $client->response; 
+                $result['response_soap']= $client->document;//$client->response;
             }
 
 
             foreach($result as $key=>$value){
-                //$xml=simplexml_load_string($value);
-                /*if($xml){
+                $xml=simplexml_load_string($value);
+                if($xml){
                     log_message('info', 'ES UN XML ::::::::::::::::::::::::::::: '.$this->varDump(" ::::::::::::: ES XML "), FALSE);                    
                     $valor = get_object_vars($xml);
                 }else{
                     log_message('info', 'NO ES XML ::::::::::::::::::::::::::::: '.$this->varDump(" :::::::::::::::: NO ES XML"), FALSE); 
                     $valor = json_encode($value);
                     log_message('info', 'object: '.$this->varDump($valor), FALSE); 
-                }*/
+                }
                 $dato=Doctrine::getTable('DatoSeguimiento')->findOneByNombreAndEtapaId($key,$etapa->id);
                 if(!$dato)
                     $dato=new DatoSeguimiento();
                     $dato->nombre=$key;
-                    $dato->valor=$value;
+                    $dato->valor=$valor;
                     $dato->etapa_id=$etapa->id;
                     $dato->save();
             }
