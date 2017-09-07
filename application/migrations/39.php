@@ -23,7 +23,7 @@ class Migration_39 extends Doctrine_Migration_Base {
             )
         );
 
-        $this->createTable('seguridad', $columns, array('primary' => array('id'))); 
+        $this->createTable('seguridad', $columns, array('primary' => array('id')));
     }
 
     public function postUp() {

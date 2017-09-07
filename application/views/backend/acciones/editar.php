@@ -14,6 +14,7 @@
 </ul>
   
 
+
 <form id="plantillaForm" class="ajaxForm" method="POST" onsubmit="return ()" action="<?=site_url('backend/acciones/editar_form/'.($edit?$accion->id:''))?>">
     <fieldset>
         <?php if(!$edit):?>
@@ -34,6 +35,18 @@
             <a href="/assets/ayuda/simple/backend/modelamiento-del-proceso/acciones.html#variable" target="_blank">
                 <span class="glyphicon glyphicon-info-sign"></span>
             </a>
+        <?php } else if ($tipo == "rest") { ?>
+            <a href="/assets/ayuda/simple/backend/modelamiento-del-proceso/acciones.html#webservice-rest" target="_blank">
+                <span class="glyphicon glyphicon-info-sign"></span>
+            </a>
+        <?php } else if ($tipo == "soap") { ?>
+            <a href="/assets/ayuda/simple/backend/modelamiento-del-proceso/acciones.html#webservice-soap" target="_blank">
+                <span class="glyphicon glyphicon-info-sign"></span>
+            </a>
+        <?php } else if ($tipo == "callback") { ?>
+            <a href="/assets/ayuda/simple/backend/modelamiento-del-proceso/acciones.html#callback" target="_blank">
+                <span class="glyphicon glyphicon-info-sign"></span>
+            </a>
         <?php } ?>
         </legend>
         <div class="validacion"></div>
@@ -47,7 +60,11 @@
         <input type="text" readonly value="<?=$edit?$accion->tipo:$tipo?>" />
 
         <?php
-        if($tipo == "rest" || $tipo == "soap" || $accion->tipo == "rest" || $accion->tipo == "soap") {
+        log_message("INFO", "En view editar, tipo: ".$tipo, FALSE);
+        $key='';
+        ($tipo ? $key = $tipo : $key = $accion->tipo);
+        log_message("INFO", "En view editar, $key: ".$key, FALSE);
+        if($tipo == "rest" || $tipo == "soap" || $tipo == "callback" || $accion->tipo == "rest" || $accion->tipo == "soap" || $accion->tipo == "callback" || $accion->tipo == "iniciar_tramite" || $tipo == "iniciar_tramite" || $accion->tipo == "continuar_tramite" || $tipo == "continuar_tramite"){
             echo $accion->displaySecurityForm($proceso->id);
         }else{
             echo $accion->displayForm();
@@ -61,4 +78,22 @@
     </fieldset>
 </form>
 </div>
-<script src="<?= base_url() ?>assets/js/CrearDivHeader.js"></script>
+<?php
+    switch ($key) {
+        case "rest":
+            ?><script src="<?= base_url() ?>assets/js/accion_rest.js"></script><?
+            break;
+        case "soap":
+            ?><script src="<?= base_url() ?>assets/js/accion_soap.js"></script><?
+            break;
+        case "callback":
+            ?><script src="<?= base_url() ?>assets/js/accion_callback.js"></script><?
+            break;
+        case "tramite_simple":
+            ?><script src="<?= base_url() ?>assets/js/accion_tramite_simple.js"></script><?
+            break;
+        default:
+            ?><script src="<?= base_url() ?>assets/js/accion_otras.js"></script><?
+            break;
+    }
+?>

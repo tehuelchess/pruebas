@@ -9,6 +9,9 @@ uploads/firmas
 uploads/logos
 uploads/logos_certificados
 uploads/timbres
+uploads/timbres
+uploads/wsdl
+application/logs
 application/libraries/tcpdf/cache
 sphinx/index
 sphinx/run
@@ -19,4 +22,7 @@ composer.lock
 composer.phar
 vendor
 .DS_Store
+logs
 application/logs/log-*.php
+wsdl
+.wsdl

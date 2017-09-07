@@ -16,8 +16,13 @@ class AccionSoap extends Accion {
                     <a class="btn btn-default" id="btn-consultar" ><i class="icon-search icon"></i> Consultar</a>
                     <a class="btn btn-default" href="#modalImportarWsdl" data-toggle="modal" ><i class="icon-upload icon"></i> Importar</a>
                 </div>';
+
         $display.= '<label>Timeout</label>';
         $display.='<input type="text" placeholder="Tiempo en segundos..." name="extra[timeout]" value="' . ($this->extra ? $this->extra->timeout : '') . '" />';
+
+        $display.= '<label>N&uacute;mero reintentos</label>';
+        $display.='<input type="text" name="extra[timeout_reintentos]" value="' . ($this->extra ? $this->extra->timeout_reintentos : '3') . '" />';
+
         $display.='
                 <div id="divMetodos" class="col-md-12">
                     <label>Métodos</label>
@@ -129,45 +134,50 @@ class AccionSoap extends Accion {
             }
             
             //Se EJECUTA el llamado Soap
-            $result_soap = $client->call($this->extra->operacion, $request,null,'',false,null,'rpc','literal', true);
-            log_message('info', 'Result: '.$this->varDump($result_soap), FALSE);
-            log_message('info', 'Client data: '.$this->varDump($client->document), FALSE);
+            $result = $client->call($this->extra->operacion, $request,null,'',false,null,'rpc','literal', true);
+
             $error = $client->getError();
+            log_message("INFO", "Error SOAP ".$this->varDump($error), FALSE);
+
+            //se verifica si existe numero de reintentos
+            if(isset($error) && strpos($error, 'timed out') !== false){
+                log_message("INFO", "Reintentando ".$this->extra->timeout_reintentos." veces.", FALSE);
+                $intentos = 1;
+                while($intentos < $this->extra->timeout_reintentos && strpos($error, 'timed out') !== false){
+                    log_message("INFO", "Reintento Nro: ".$intentos, FALSE);
+                    $result = $client->call($this->extra->operacion, $request,null,'',false,null,'rpc','literal', true);
+                    $error = $client->getError();
+                    log_message("INFO", "Error SOAP ".$error, FALSE);
+                    $intentos++;
+                }
+            }
+
+            log_message('info', 'Result: '.$this->varDump($result), FALSE);
+            log_message('info', 'Client data: '.$this->varDump($client->document), FALSE);
 
             if ($error){
                 $result['response_soap']= $error;   
             }else{
-                $result['response_soap']= $this->utf8ize($result_soap);//$client->document;//$client->response;
+                $result['response_soap']= $this->utf8ize($result);
+                //$result['response_soap']= $client->response;
             }
 
-            log_message('info', 'Result a variable: '.$this->varDump($result), FALSE);
+
             foreach($result as $key=>$value){
 
                 log_message('info', 'key '.$key.': '.$this->varDump($value), FALSE);
 
-                /*$xml=simplexml_load_string($value);
-                if($xml){
-                    log_message('info', 'ES UN XML ::::::::::::::::::::::::::::: '.$this->varDump(" ::::::::::::: ES XML "), FALSE);                    
-                    $valor = get_object_vars($xml);
-                }else{
-                    log_message('info', 'NO ES XML ::::::::::::::::::::::::::::: '.$this->varDump(" :::::::::::::::: NO ES XML"), FALSE); 
-                    $valor = json_encode($value);
-                }*/
                 $dato=Doctrine::getTable('DatoSeguimiento')->findOneByNombreAndEtapaId($key,$etapa->id);
-                if(!$dato){
-                    log_message('info', 'Dato no existe, se crea nuevo', FALSE);
+
+                if(!$dato)
                     $dato=new DatoSeguimiento();
-                }
                 $dato->nombre=$key;
                 $dato->valor=$value;
                 $dato->etapa_id=$etapa->id;
-                log_message('info', 'Nombre dato a guardar: '.$this->varDump($dato->nombre), FALSE);
-                log_message('info', 'Valor dato a guardar: '.$this->varDump($dato->valor), FALSE);
-                log_message('info', 'etapa_id dato a guardar: '.$this->varDump($dato->etapa_id), FALSE);
                 $dato->save();
             }
         }catch (Exception $e){
-            log_message('info', 'Exception: '.$this->varDump($e), FALSE);
+            log_message("INFO", "Exception: ".$this->varDump($e), FALSE);
             $dato=Doctrine::getTable('DatoSeguimiento')->findOneByNombreAndEtapaId("error_soap",$etapa->id);
             if(!$dato)
                 $dato=new DatoSeguimiento();
@@ -177,6 +187,7 @@ class AccionSoap extends Accion {
             $dato->save();
         }
     }
+
     function varDump($data){
         ob_start();
         //var_dump($data);
@@ -191,17 +202,15 @@ class AccionSoap extends Accion {
             if (is_array($d))
                 foreach ($d as $k => $v)
                     $d[$k] = $this->utf8ize($v);
-
             else if(is_object($d))
                 foreach ($d as $k => $v)
                     $d->$k = $this->utf8ize($v);
-
             else
                 return utf8_encode($d);
         }catch (Exception $e){
             log_message('info', 'Exception utf8ize: '.$this->varDump($e), FALSE);
         }
-
         return $d;
     }
+
 }

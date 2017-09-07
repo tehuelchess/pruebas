@@ -9,7 +9,7 @@ class Acciones extends MY_BackendController {
         parent::__construct();
 
         UsuarioBackendSesion::force_login();
-        
+
 //        if(UsuarioBackendSesion::usuario()->rol!='super' && UsuarioBackendSesion::usuario()->rol!='modelamiento'){
         if( !in_array('super', explode(',',UsuarioBackendSesion::usuario()->rol) ) && !in_array( 'modelamiento',explode(',',UsuarioBackendSesion::usuario()->rol))){
             echo 'No tiene permisos para acceder a esta seccion.';
@@ -32,7 +32,7 @@ class Acciones extends MY_BackendController {
 
         $this->load->view('backend/template', $data);
     }
-    
+
     public function ajax_seleccionar($proceso_id){
         $proceso = Doctrine::getTable('Proceso')->find($proceso_id);
 
@@ -40,11 +40,11 @@ class Acciones extends MY_BackendController {
             echo 'Usuario no tiene permisos para listar los formularios de este proceso';
             exit;
         }
-        
+
         $data['proceso_id']=$proceso_id;
         $this->load->view('backend/acciones/ajax_seleccionar',$data);
     }
-    
+
     public function seleccionar_form($proceso_id){
         $proceso = Doctrine::getTable('Proceso')->find($proceso_id);
 
@@ -52,7 +52,7 @@ class Acciones extends MY_BackendController {
             echo 'Usuario no tiene permisos para listar los formularios de este proceso';
             exit;
         }
-        
+
         $this->form_validation->set_rules('tipo','Tipo','required');
 
         $respuesta=new stdClass();
@@ -64,10 +64,10 @@ class Acciones extends MY_BackendController {
             $respuesta->validacion=FALSE;
             $respuesta->errores=validation_errors();
         }
-        
+
         echo json_encode($respuesta);
     }
-    
+
     public function crear($proceso_id,$tipo){
         $proceso = Doctrine::getTable('Proceso')->find($proceso_id);
 
@@ -75,7 +75,9 @@ class Acciones extends MY_BackendController {
             echo 'Usuario no tiene permisos para listar los formularios de este proceso';
             exit;
         }
-        
+
+        log_message("INFO", "Creando formulario para trámite", FALSE);
+
         if($tipo=='enviar_correo')
             $accion=new AccionEnviarCorreo();
         else if($tipo=='webservice')
@@ -86,17 +88,30 @@ class Acciones extends MY_BackendController {
             $accion=new AccionRest();
         else if($tipo=='soap')
             $accion=new AccionSoap();
+        else if($tipo=='callback')
+            $accion=new AccionCallback();
+        else if($tipo=='iniciar_tramite')
+            $accion=new AccionIniciarTramite();
+        else if($tipo=='continuar_tramite')
+            $accion=new AccionContinuarTramite();
+
+
         $data['edit']=FALSE;
         $data['proceso']=$proceso;
         $data['tipo']=$tipo;
         $data['accion']=$accion;
-         
+
+        log_message("INFO", "Creando formulario para trámite, tipo: ".$data['tipo'], FALSE);
+
         $data['content']='backend/acciones/editar';
         $data['title']='Crear Acción';
         $this->load->view('backend/template',$data);
     }
-    
+
     public function editar($accion_id){
+
+        log_message("INFO", "####En Editar, id: ".$accion_id, FALSE);
+
         $accion = Doctrine::getTable('Accion')->find($accion_id);
         if ($accion->Proceso->cuenta_id != UsuarioBackendSesion::usuario()->cuenta_id) {
             echo 'Usuario no tiene permisos para listar los formularios de este proceso';
@@ -109,7 +124,7 @@ class Acciones extends MY_BackendController {
         $data['title']='Editar Acción';
         $this->load->view('backend/template',$data);
     }
-    
+
     public function editar_form($accion_id=NULL){
         $accion=NULL;
         if($accion_id){
@@ -125,15 +140,21 @@ class Acciones extends MY_BackendController {
                 $accion=new AccionRest();
             else if($this->input->post('tipo')=='soap')
                 $accion=new AccionSoap();
+            else if($this->input->post('tipo')=='callback')
+                $accion=new AccionCallback();
+            else if($this->input->post('tipo')=='iniciar_tramite')
+                $accion=new AccionIniciarTramite();
+            else if($this->input->post('tipo')=='continuar_tramite')
+                $accion=new AccionContinuarTramite();
             $accion->proceso_id=$this->input->post('proceso_id');
             $accion->tipo=$this->input->post('tipo');
         }
-        
+
         if($accion->Proceso->cuenta_id!=UsuarioBackendSesion::usuario()->cuenta_id){
             echo 'Usuario no tiene permisos para editar esta accion.';
             exit;
         }
-        
+
         $this->form_validation->set_rules('nombre','Nombre','required');
         $accion->validateForm();
         if(!$accion_id){
@@ -144,43 +165,44 @@ class Acciones extends MY_BackendController {
         $respuesta=new stdClass();
         if($this->form_validation->run()==TRUE){
             if(!$accion){
-                
+
             }
-            
+
             $accion->nombre=$this->input->post('nombre');
             $accion->extra=$this->input->post('extra',false);
             $accion->save();
-            
+
             $respuesta->validacion=TRUE;
             $respuesta->redirect=site_url('backend/acciones/listar/'.$accion->Proceso->id);
         }else{
             $respuesta->validacion=FALSE;
             $respuesta->errores=validation_errors();
         }
-        
+
         echo json_encode($respuesta);
     }
-    
+
     public function eliminar($accion_id){
         $accion=Doctrine::getTable('Accion')->find($accion_id);
-        
+
         if($accion->Proceso->cuenta_id!=UsuarioBackendSesion::usuario()->cuenta_id){
             echo 'Usuario no tiene permisos para eliminar esta accion.';
             exit;
         }
-        
+
         $proceso=$accion->Proceso;
         $fecha = new DateTime ();
-         
+
         // Auditar
+        $fecha = new DateTime();
         $registro_auditoria = new AuditoriaOperaciones ();
-        $registro_auditoria->fecha = $fecha->format ( "Y-m-d H:i:s" );
+        $registro_auditoria->fecha = $fecha->format( "Y-m-d H:i:s" );
         $registro_auditoria->operacion = 'Eliminación de Acción';
         $usuario = UsuarioBackendSesion::usuario ();
         $registro_auditoria->usuario = $usuario->nombre . ' ' . $usuario->apellidos . ' <' . $usuario->email . '>';
         $registro_auditoria->proceso = $proceso->nombre;
         $registro_auditoria->cuenta_id = UsuarioBackendSesion::usuario()->cuenta_id;
-        
+
         //Detalles
         $accion_array['proceso'] = $proceso->toArray(false);
         $accion_array['accion'] = $accion->toArray(false);
@@ -190,7 +212,7 @@ class Acciones extends MY_BackendController {
         $accion->delete();
         redirect('backend/acciones/listar/'.$proceso->id);
     }
-    
+
     public function exportar($accion_id)
     {
 
@@ -203,7 +225,7 @@ class Acciones extends MY_BackendController {
         echo $json;
 
     }
-    
+
     public function importar()
     {
         try {
@@ -213,20 +235,20 @@ class Acciones extends MY_BackendController {
             if ($file_path && $proceso_id) {
                 $input = file_get_contents($_FILES['archivo']['tmp_name']);
                 $accion = Accion::importComplete($input, $proceso_id);
-                $accion->proceso_id = $proceso_id;            
-                $accion->save();            
+                $accion->proceso_id = $proceso_id;
+                $accion->save();
             } else {
                 die('No se especificó archivo o ID proceso');
             }
         } catch (Exception $ex) {
             die('Código: '.$ex->getCode().' Mensaje: '.$ex->getMessage());
         }
-        
+
         redirect($_SERVER['HTTP_REFERER']);
     }
 
     public function functions_soap(){
-        $url=$this->input->post('urlsoap'); 
+        $url=$this->input->post('urlsoap');
         $client = new SoapClient($url);
         $result['functions']=$client->__getFunctions();
         $result['types']=$client->__getTypes();
@@ -279,7 +301,7 @@ class Acciones extends MY_BackendController {
             die('Código: '.$ex->getCode().' Mensaje: '.$ex->getMessage());
         }
         exit;
-    }  
+    }
 
     public function converter_json(){
         $array=$this->input->post('myArrClean');
@@ -364,6 +386,49 @@ class Acciones extends MY_BackendController {
         }
         $json=json_encode($array2);
         print_r($json);
+        exit;
+    }
+
+    public function getTareasCallback(){
+        log_message('info','En getTareasCallback', FALSE);
+        $id_proceso = $this->input->post('idProceso');
+        log_message('info','Input: '.$id_proceso, FALSE);
+        $tareas_con_callback = Doctrine::getTable('Proceso')->findCallbackProceso($id_proceso);
+
+        //log_message("INFO", "####tareas_con_callback: ".$this->varDump($tareas_con_callback), FALSE);
+        foreach ($tareas_con_callback as $tarea) {
+            log_message("INFO", "Id tarea: ".$tarea["id_tarea"], FALSE);
+            log_message("INFO", "Nombre tarea: ".$tarea["nombre"], FALSE);
+        }
+
+        $json=json_encode($tareas_con_callback);
+
+        $respuesta = "{\"data\": ".$json."}";
+
+        log_message("INFO", "Respuesta json: ".$respuesta, FALSE);
+
+        echo $respuesta;
+        exit;
+    }
+
+    public function getTareasProceso(){
+        log_message('info','En getTareasProceso', FALSE);
+        $id_proceso = $this->input->post('idProceso');
+        log_message('info','Input: '.$id_proceso, FALSE);
+        $tareas = Doctrine::getTable('Proceso')->findTareasProceso($id_proceso);
+
+        foreach ($tareas as $tarea) {
+            log_message("INFO", "Id tarea: ".$tarea["id_tarea"], FALSE);
+            log_message("INFO", "Nombre tarea: ".$tarea["nombre"], FALSE);
+        }
+
+        $json=json_encode($tareas);
+
+        $respuesta = "{\"data\": ".$json."}";
+
+        log_message("INFO", "Respuesta json: ".$respuesta, FALSE);
+
+        echo $respuesta;
         exit;
     }
 }
