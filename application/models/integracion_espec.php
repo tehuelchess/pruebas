@@ -33,13 +33,13 @@ class FormNormalizer{
      * @return type
      * @throws Exception
      */        
-    function normalizarFormulario($json,$form,$value_list=NULL){
+    function normalizarFormulario($json,$form_id,$value_list=NULL){
         
-        if($form==NULL){
+        if($form_id==NULL){
             throw new Exception("El formulario viene sin ID");
         }
         $pasos = array();
-        $form->Proceso->id;
+        //$form->Proceso->id;
 //        getEtapaPorTareaId($id_tarea, $id_proceso)
         
 //         $conexiones=  Doctrine_Query::create()
@@ -47,7 +47,7 @@ class FormNormalizer{
 //                ->where('p.activo=1 AND p.id = ?',$this->id)
 //                ->execute();
        
-        $retval['form'] = array('id' => $form->id, 'campos' => array() );
+        $retval['form'] = array('id' => $form_id, 'campos' => array() );
         //print_r($json);die;
         
         foreach( $json['Campos'] as $campo){
@@ -104,7 +104,7 @@ class FormNormalizer{
             if( $tarea->proceso_id === $proceso_id ){  //Si pertenece al proceso
                 foreach($tarea->Pasos as $paso ){ //Se extraen los pasos
                     //print_r($paso);
-                    if( $id_paso != NULL && $paso->paso->Formulario->id != $id_paso ){
+                    if( $id_paso != NULL && $paso->Formulario->id != $id_paso ){
                         continue;
                     }
                     $formSimple = 
