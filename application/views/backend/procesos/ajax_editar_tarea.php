@@ -177,6 +177,7 @@
                 <li><a href="#tab6">Vencimiento</a></li>
                 <li><a href="#tab7">Otros</a></li>
                 <li><a href="#tab8">Datos</a></li>
+                <li><a href="#tab9">Cuentas</a></li>
             </ul>
             <div class="tab-content">
                 <div class="tab-pane active" id="tab1">
@@ -658,6 +659,44 @@
                         </div>
                     </div>
                 </div>
+
+
+
+                <div class="tab-datos-expuestos tab-pane" id="tab9">
+                    <div class="row-fluid">
+                        <div class="span12"><h5>Cuentas a las que desea dar acceso para iniciar este proceso
+                                <a href="/assets/ayuda/simple/backend/modelamiento-del-proceso/disenador.html#pestana_datos" target="_blank">
+                                    <span class="glyphicon glyphicon-info-sign"></span>
+                                </a></h5></div>
+                    </div>
+                    <div class="row-fluid">
+                        <div class="span12" style="overflow-y: auto; height:280px;width:96%;border:.5px solid;border-radius: 5px;border-color:#DDDDDD;">
+                            <div class="campo control-group">
+                            <label class="control-label">Suscriptores:</label>
+                            <div class="controls">
+                                <?foreach ($cuentas as $cuenta) {?>
+                                <label class="checkbox">
+                                    <input type="checkbox" name="cuentas_con_permiso[]" id="cuenta_<? echo $cuenta->id; ?>" value="<? echo $cuenta->id; ?>">
+                                    <? echo $cuenta->nombre;?>
+                                </label><?
+                                    foreach ($cuentas_con_permiso as $cuenta_permiso) {
+                                        if($cuenta_permiso["id"] == $cuenta->id){?>
+                                            <script type="text/javascript">
+                                                $("#cuenta_"+<? echo $cuenta->id; ?>).prop('checked',true);
+                                            </script>
+                                        <?
+                                        break;
+                                        }
+                                    }
+                                }
+                            ?>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
             </div>
         </div>
     </form>

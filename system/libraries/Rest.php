@@ -109,10 +109,10 @@ class REST
         }
         isset($config['timeout']) && $this->timeout = $config['timeout'];
         isset($config['send_cookies']) && $this->send_cookies = $config['send_cookies'];
-        
+
         isset($config['api_name']) && $this->api_name = $config['api_name'];
         isset($config['api_key']) && $this->api_key = $config['api_key'];
-        
+
         isset($config['http_auth']) && $this->http_auth = $config['http_auth'];
         isset($config['http_user']) && $this->http_user = $config['http_user'];
         isset($config['http_pass']) && $this->http_pass = $config['http_pass'];
@@ -288,6 +288,7 @@ class REST
         if ($this->ssl_verify_peer === FALSE)
         {
             $this->_ci->curl->ssl(FALSE);
+            log_message('info', 'No verifica ssl', FALSE);
         }
         elseif ($this->ssl_verify_peer === TRUE)
         {
@@ -321,8 +322,11 @@ class REST
 
         // We still want the response even if there is an error code over 400
         $this->_ci->curl->option('failonerror', FALSE);
+        $this->_ci->curl->option(CURLOPT_SSL_VERIFYPEER, FALSE);
 
         // Call the correct method with parameters
+        log_message('info', 'response desde el  REST CLIENT method: '.$this->varDump($method), FALSE);
+        log_message('info', 'response desde el  REST CLIENT params: '.$this->varDump($params), FALSE);
         $this->_ci->curl->{$method}($params);
 
         // Execute and return the response from the REST server

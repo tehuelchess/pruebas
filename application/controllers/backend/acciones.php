@@ -90,6 +90,8 @@ class Acciones extends MY_BackendController {
             $accion=new AccionSoap();
         else if($tipo=='callback')
             $accion=new AccionCallback();
+        else if($tipo=='webhook')
+            $accion=new AccionSubcriptores();
         else if($tipo=='iniciar_tramite')
             $accion=new AccionIniciarTramite();
         else if($tipo=='continuar_tramite')
@@ -142,6 +144,8 @@ class Acciones extends MY_BackendController {
                 $accion=new AccionSoap();
             else if($this->input->post('tipo')=='callback')
                 $accion=new AccionCallback();
+            else if($this->input->post('tipo')=='webhook')
+                $accion=new AccionSubcriptores();
             else if($this->input->post('tipo')=='iniciar_tramite')
                 $accion=new AccionIniciarTramite();
             else if($this->input->post('tipo')=='continuar_tramite')
@@ -423,6 +427,30 @@ class Acciones extends MY_BackendController {
         }
 
         $json=json_encode($tareas);
+
+        $respuesta = "{\"data\": ".$json."}";
+
+        log_message("INFO", "Respuesta json: ".$respuesta, FALSE);
+
+        echo $respuesta;
+        exit;
+    }
+
+    public function getProcesosCuentas(){
+        log_message('info','En getProcesosCuentas', FALSE);
+        $id_cuenta = $this->input->post('idCuenta');
+        $id_cuenta_origen = $this->input->post('idCuentaOrigen');
+        $todos = $this->input->post('todos');
+        log_message('info','Input cuenta: '.$id_cuenta, FALSE);
+        log_message('info','Input todos: '.$todos, FALSE);
+        if($todos){
+            $tramites_disponibles = Doctrine::getTable('Proceso')->findProcesosExpuestos($id_cuenta);
+        }else{
+            $proceso_cuenta = new ProcesoCuenta();
+            $tramites_disponibles = $proceso_cuenta->findProcesosExpuestosConPermiso($id_cuenta, $id_cuenta_origen);
+        }
+
+        $json=json_encode($tramites_disponibles);
 
         $respuesta = "{\"data\": ".$json."}";
 

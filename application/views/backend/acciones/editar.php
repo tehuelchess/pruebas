@@ -11,6 +11,7 @@
     <li><a href="<?= site_url('backend/documentos/listar/' . $proceso->id) ?>">Documentos</a></li>
     <li class="active"><a href="<?= site_url('backend/acciones/listar/' . $proceso->id) ?>">Acciones</a></li>
     <li><a href="<?= site_url('backend/Admseguridad/listar/' . $proceso->id) ?>">Seguridad</a></li>
+    <li><a href="<?= site_url('backend/Suscriptores/listar/' . $proceso->id) ?>">Suscriptores Externos</a></li>
 </ul>
   
 
@@ -47,6 +48,10 @@
             <a href="/assets/ayuda/simple/backend/modelamiento-del-proceso/acciones.html#callback" target="_blank">
                 <span class="glyphicon glyphicon-info-sign"></span>
             </a>
+        <?php } else if ($tipo == "webhook") { ?>
+            <a href="/assets/ayuda/simple/backend/modelamiento-del-proceso/acciones.html#webhook" target="_blank">
+                <span class="glyphicon glyphicon-info-sign"></span>
+            </a>
         <?php } ?>
         </legend>
         <div class="validacion"></div>
@@ -66,6 +71,8 @@
         log_message("INFO", "En view editar, $key: ".$key, FALSE);
         if($tipo == "rest" || $tipo == "soap" || $tipo == "callback" || $accion->tipo == "rest" || $accion->tipo == "soap" || $accion->tipo == "callback" || $accion->tipo == "iniciar_tramite" || $tipo == "iniciar_tramite" || $accion->tipo == "continuar_tramite" || $tipo == "continuar_tramite"){
             echo $accion->displaySecurityForm($proceso->id);
+        }else if($tipo == "webhook" || $accion->tipo == "webhook"){
+            echo $accion->displaySuscriptorForm($proceso->id);
         }else{
             echo $accion->displayForm();
         }
@@ -89,7 +96,7 @@
         case "callback":
             ?><script src="<?= base_url() ?>assets/js/accion_callback.js"></script><?
             break;
-        case "tramite_simple":
+        case "iniciar_tramite":
             ?><script src="<?= base_url() ?>assets/js/accion_tramite_simple.js"></script><?
             break;
         default:

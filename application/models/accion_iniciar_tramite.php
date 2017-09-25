@@ -7,13 +7,41 @@ class AccionIniciarTramite extends Accion {
 
         log_message("INFO", "En accion trámite", FALSE);
 
-        $tramites_disponibles = Doctrine::getTable('Proceso')->findProcesosExpuestos("");
-
         $tareas_proceso = Doctrine::getTable('Proceso')->findTareasProceso($proceso_id);
 
-        $data = Doctrine::getTable('Proceso')->find($proceso_id);
-        $conf_seguridad = $data->Admseguridad;
+        $proceso = Doctrine::getTable('Proceso')->find($proceso_id);
+
+        if (isset($this->extra->cuentaSel)){
+            $tramites_disponibles = Doctrine::getTable('Proceso')->findProcesosExpuestos($this->extra->cuentaSel);
+            $cuenta = Doctrine::getTable('Cuenta')->find($this->extra->cuentaSel);
+        }else{
+            $tramites_disponibles = Doctrine::getTable('Proceso')->findProcesosExpuestos($proceso->cuenta_id);
+            $cuenta = Doctrine::getTable('Cuenta')->find($proceso->cuenta_id);
+        }
+
         $display ='
+                <label>Cuentas</label>
+                <select id="cuentaSel" name="extra[cuentaSel]">
+                    <option value="'.$cuenta->id.'">'.$cuenta->nombre.'</option>';
+
+        $proceso_cuenta = new ProcesoCuenta();
+        $cuentas_con_permiso = $proceso_cuenta->findCuentasAcceso($cuenta->id);
+        if(isset($cuentas_con_permiso) && count($cuentas_con_permiso) > 0){
+            foreach ($cuentas_con_permiso as $cuentas_permiso) {
+                if (isset($this->extra->cuentaSel) && $this->extra->cuentaSel == $cuentas_permiso["id"]){
+                    $display.='<option value="'.$cuentas_permiso["id"].'" selected>'.$cuentas_permiso["nombre"].'</option>';
+                }else{
+                    $display.='<option value="'.$cuentas_permiso["id"].'">'.$cuentas_permiso["nombre"].'</option>';
+                }
+            }
+        }
+
+        $display.='</select>';
+
+        $display.='<input type="hidden" name="cuenta_actual_id" id="cuenta_actual_id" value="'.$cuenta->id.'" />';
+        $display.='<input type="hidden" name="cuenta_actual_nombre" id="cuenta_actual_nombre" value="'.$cuenta->nombre.'" />';
+
+        $display.='
                 <label>Trámites disponibles</label>
                 <select id="tramiteSel" name="extra[tramiteSel]">
                     <option value="">Seleccione...</option>';
@@ -27,11 +55,6 @@ class AccionIniciarTramite extends Accion {
                 }
 
         $display.='</select>';
-
-        /*$display.='
-                <label>Tareas disponibles del trámite para retorno</label>
-                <select id="tareaRetornoSel" name="extra[tareaRetornoSel]">';
-        $display.='</select>';*/
 
         $display.='
                 <label>Tarea desde la cual desea continuar el proceso</label>
@@ -63,6 +86,8 @@ class AccionIniciarTramite extends Accion {
     public function validateForm() {
         $CI = & get_instance();
         $CI->form_validation->set_rules('extra[tramiteSel]', 'Trámite', 'required');
+        $CI->form_validation->set_rules('extra[tareaRetornoSel]', 'Tarea retorno', 'required');
+        $CI->form_validation->set_rules('extra[request]', 'Request', 'required');
     }
 
     public function ejecutar(Etapa $etapa) {
