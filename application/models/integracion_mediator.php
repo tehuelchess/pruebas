@@ -104,13 +104,13 @@ class IntegracionMediator{
         //Paso uno, obtener las tareas que son de inicio
         //Trae todos los formularios del proceso, si no se especifica tarea ni paso
         $result = array();
-        log_message("INFO", "Busqueda de siguiente formulario", FALSE);
+        log_message("debug", "Busqueda de siguiente formulario: $proceso_id , $id_tarea , $id_paso", FALSE);
         if($id_tarea== NULL && $id_paso == NULL){  //traer todos los formularios
             $tramite = Doctrine::getTable('Proceso')->find($proceso_id);
 
             foreach($tramite->Formularios as $form){
                 $json = json_decode($form->exportComplete(),true);
-                array_push($result,$this->c($json,$form));
+                array_push($result,$this->normalizarFormulario($json,$form));
 
             }
             return $result;
@@ -125,16 +125,20 @@ class IntegracionMediator{
             log_message("INFO", "Comprobando proceso id: ".$tarea->proceso_id, FALSE);
             if( $tarea->proceso_id === $proceso_id ){  //Si pertenece al proceso
                 foreach($tarea->Pasos as $paso ){ //Se extraen los pasos
-                    if( $id_paso != NULL && $paso->Formulario->id != $id_paso ){
+                    log_message('debug','recuperando pasos'.$paso->orden);
+                    if( $id_paso != NULL && $paso->orden != $id_paso ){
                         continue;
                     }
+                    log_message('debug','Form id: '.$paso->Formulario->id);
                     $formSimple = 
                             Doctrine::getTable('Formulario') ->find($paso->Formulario->id)->exportComplete();
                     $json = json_decode($formSimple,true);
 
                     array_push($result,$this->normalizarFormulario($json,$paso->Formulario));
                 }
-                
+                if(empty($result)){
+                    throw new Exception("Paso $id_paso no  ha sido encontrado",404);
+                }
                 return $result;
             }
             
@@ -259,13 +263,8 @@ class IntegracionMediator{
             throw new Exception("Etapa no fue encontrada", 404);
         }
         
-        $respuesta = new stdClass();
-        $validar_formulario = FALSE;
-        // Almacenamos los campos
-
         log_message("INFO", "Tramite id desde etapa: ".$etapa->tramite_id, FALSE);
 
-        
         if ($etapa->tramite_id != $id_proceso) {
             throw new Exception("Etapa no pertenece al proceso ingresado", 412);
         }
@@ -278,7 +277,6 @@ class IntegracionMediator{
         if ($etapa->vencida()) {
             throw new Exception("Esta etapa se encuentra vencida", 412);
         }
-        //AuditoriaOperaciones::registrarAuditoria($etapa->Tarea->Proceso->nombre, "Iniciar Proceso", "Auditoria", $body);
 
         try{
             //obtener el primer paso de la secuencia o el pasado por parámetro
@@ -294,8 +292,6 @@ class IntegracionMediator{
                 
                 $formulario = $paso->Formulario;
 
-                $respuesta = new stdClass();
-                $validar_formulario = FALSE;
                 // Almacenamos los campos
                 $campos = $formulario->Campos;
                 $this->validarCamposObligatorios($body,$formulario);
