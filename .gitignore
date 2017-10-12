@@ -26,3 +26,5 @@ logs
 application/logs/log-*.php
 wsdl
 .wsdl
+.sonar/
+sonar-project.properties
