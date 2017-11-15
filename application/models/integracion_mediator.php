@@ -26,7 +26,7 @@ class IntegracionMediator{
         switch ($campo['tipo']){
             case "documento": 
             case "subtitle" :
-            case "paragaph":
+            case "paragraph":
             case "title":
             case "recaptcha":
             case "javascript":
@@ -74,6 +74,13 @@ class IntegracionMediator{
                 }
             }
 
+            log_message("INFO", "Tipo Campo: ".$campo['tipo'], FALSE);
+
+            $valor = ($value_list!=NULL) ? $value_list[$campo['nombre']] : "";
+            if($campo['tipo'] == "paragraph" || $campo['tipo'] == "subtitle" || $campo['tipo'] == "title"){
+                $valor = $campo['etiqueta'];
+            }
+
             $record = array(
                     "nombre" => $campo['nombre'],
                     "tipo_control" => $campo['tipo'],
@@ -82,7 +89,7 @@ class IntegracionMediator{
                     "obligatorio" => $obligatorio,
                     "solo_lectura" => ($campo['readonly']==0) ? false : true,
                     "dominio_valores" => ($this->mapType($campo) == "grid") ? $campo["extra"] :$campo['datos'],
-                    "valor" => ($value_list!=NULL) ? $value_list[$campo['nombre']] : "",
+                    "valor" => $valor,
                     "direccion" => ($this->varDireccion($campo)));
                 
             
@@ -574,14 +581,14 @@ class IntegracionMediator{
                             log_message('debug',''.get_class($etapas[0]));
                             log_message('debug',''.  $this->varDump(get_class_methods($etapas[0])));
                             if(count($etapas) === 1 && $etapas[0].isFinal ){
-                                //Etapa vacia y final, termina todo
+                                //Etapa vacia y final, termina
                                 $forms=array();
                                 $estado = 'finalizado';
                             }else if(count($etapas) === 1 && !$etapas[0].isFinal){
                                 //Obtener las nuevas etapas
                             }
                         }else{
-                            $estado = 'activo';
+                            $estado = $this->obtenerEstadoProceso($forms, $etapas[0], $id_proceso);
                         }
                     }
 
@@ -598,10 +605,10 @@ class IntegracionMediator{
             $secuencia = 0;  //debe resetarse el paso
         }else{
             //Procesar pasos de una misma etapa
-            $estado = 'activo';
             $paso = $etapa->getPasoEjecutable($secuencia);
             $etapa->iniciarPaso($paso);
             $forms[] = $this->obtenerFormulario($paso->formulario_id,$etapa->id);
+            $estado = $this->obtenerEstadoProceso($forms, $etapa, $id_proceso);
         }
         
         $campos = new Campo();
@@ -614,6 +621,28 @@ class IntegracionMediator{
 
         
         return $result;
+    }
+
+    private function obtenerEstadoProceso($forms, $etapa, $id_proceso){
+        log_message("debug", "Verificando campos en proxima etapa", FALSE);
+        $tieneCamposIN = false;
+        foreach ($forms[0]['form']['campos'] as $record){
+            log_message("debug", "Direcccion campo: ".$record["direccion"], FALSE);
+            if($record["direccion"] == 'IN'){
+                $tieneCamposIN = true;
+                break;
+            }
+        }
+        log_message("debug", "Hay campos IN: ".$tieneCamposIN, FALSE);
+        $estado = 'activo';
+        if(!$tieneCamposIN){
+            $next_etapa = $this->obtenerProximaEtapa($etapa, $id_proceso);
+            if($next_etapa === NULL){
+                $etapa->avanzar();
+                $estado = 'finalizado';
+            }
+        }
+        return $estado;
     }
     /**
      * 
