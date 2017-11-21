@@ -359,13 +359,21 @@ class Procesos extends MY_BackendController {
         $conexion->save();
     }
     
-    public function ajax_editar_conexiones($proceso_id,$tarea_origen_identificador) {
-        $conexiones=  Doctrine_Query::create()
-            ->from('Conexion c, c.TareaOrigen t')
-            ->where('t.proceso_id=? AND t.identificador=?', array($proceso_id, $tarea_origen_identificador))
-            ->execute();
+    public function ajax_editar_conexiones($proceso_id,$tarea_origen_identificador,$union = null){
 
-        if ($conexiones[0]->TareaOrigen->Proceso->cuenta_id!=UsuarioBackendSesion::usuario()->cuenta_id) {
+        if(!is_null($union)){
+            $conexiones=  Doctrine_Query::create()
+                ->from('Conexion c, c.TareaDestino t')
+                ->where('t.proceso_id=? AND t.identificador=?',array($proceso_id,$tarea_origen_identificador))
+                ->execute();
+        }else{
+            $conexiones=  Doctrine_Query::create()
+                ->from('Conexion c, c.TareaOrigen t')
+                ->where('t.proceso_id=? AND t.identificador=?',array($proceso_id,$tarea_origen_identificador))
+                ->execute();
+        }
+
+        if($conexiones[0]->TareaOrigen->Proceso->cuenta_id!=UsuarioBackendSesion::usuario()->cuenta_id){
             echo 'Usuario no tiene permisos para editar estas conexiones.';
             exit;
         }
