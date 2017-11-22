@@ -255,6 +255,14 @@ class Etapa extends Doctrine_Record {
             }
             $usuario_id = $usuario->id;
         }
+
+        if($this->Tarea->acceso_modo == 'grupos_usuarios' || $this->Tarea->acceso_modo == 'registrados'){
+            $usuario = Doctrine::getTable('Usuario')->findOneByUsuario($usuario_id);
+            if(!$usuario){
+                $usuario = Doctrine::getTable('Usuario')->find($usuario_id);
+            }
+            $usuario_id = $usuario->id;
+        }
         
         if (!$this->canUsuarioAsignarsela($usuario_id))
             return;
